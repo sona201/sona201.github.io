@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>vim on Example Site</title>
-        <link>https://example.com/tags/vim/</link>
-        <description>Recent content in vim on Example Site</description>
+        <title>vim on 卡塞尔</title>
+        <link>https://ricardo.io/tags/vim/</link>
+        <description>Recent content in vim on 卡塞尔</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Fri, 06 Apr 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/vim/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 06 Apr 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://ricardo.io/tags/vim/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>chenlin</title>
-        <link>https://example.com/p/chenlin/</link>
+        <link>https://ricardo.io/p/chenlin/</link>
         <pubDate>Fri, 06 Apr 2012 00:00:00 +0000</pubDate>
         
-        <guid>https://example.com/p/chenlin/</guid>
+        <guid>https://ricardo.io/p/chenlin/</guid>
         <description>&lt;h2 id=&#34;q2-成果&#34;&gt;Q2 成果&lt;/h2&gt;
 &lt;hr&gt;
 &lt;p&gt;容灾&lt;/p&gt;
@@ -61,10 +61,10 @@
         </item>
         <item>
         <title>spf13-vim 3.0 release and new website</title>
-        <link>https://example.com/p/spf13-vim-3-0-release-and-new-website/</link>
+        <link>https://ricardo.io/p/spf13-vim-3-0-release-and-new-website/</link>
         <pubDate>Fri, 06 Apr 2012 00:00:00 +0000</pubDate>
         
-        <guid>https://example.com/p/spf13-vim-3-0-release-and-new-website/</guid>
+        <guid>https://ricardo.io/p/spf13-vim-3-0-release-and-new-website/</guid>
         <description>&lt;h1 id=&#34;django_source_interpretation&#34;&gt;django_source_Interpretation&lt;/h1&gt;
 &lt;p&gt;django 源码阅读&lt;/p&gt;
 &lt;h2 id=&#34;写在前面&#34;&gt;写在前面&lt;/h2&gt;
