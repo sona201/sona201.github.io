@@ -1838,8 +1838,9 @@ handler = WSGIHandler()  -&amp;gt;  handler(environ, start_response)  -&amp;gt; 
     &gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Git submodule 子模块的管理和使用
 &lt;a class=&#34;link&#34; href=&#34;https://www.jianshu.com/p/9000cd49822c&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://www.jianshu.com/p/9000cd49822c&lt;/a&gt;
-主题优化&lt;/p&gt;
+    &gt;Git submodule简书&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Git submodule git-scm&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&#34;博客安装&#34;&gt;博客安装&lt;/h1&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
