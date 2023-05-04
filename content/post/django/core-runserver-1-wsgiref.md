@@ -1,3 +1,12 @@
+---
+title: "django wsgiref"
+description: "This is an category for wsgiref"
+style:
+    background: "#2a9d8f"
+    color: "#fff"
+categories: ["django"]
+tags: ["django", "ptyhon", "wsgiref"]
+---
 django 封装模型采用 wsgiref 模块
 ```python
 from wsgiref.simple_server import make_server

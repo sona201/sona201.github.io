@@ -2,6 +2,7 @@
 baseurl: https://sona201.git.io
 # 语言编码(中文: zh-CN)
 languageCode: en-us
+# languageCode: zh-CN
 # 设置使用的主题名称 (默认储存在 /themes/THEMENAME/)
 theme: hugo-theme-stack
 # 分页
@@ -9,13 +10,13 @@ paginate: 5
 title: Cassell
 
 languages:
-    zh-cn:
-        languageName: 中文
-        title: 卡塞尔
-        weight: 1
     en:
         languageName: English
         title: Cassells
+        weight: 1
+    zh-cn:
+        languageName: 中文
+        title: 卡塞尔
         weight: 2
 
 # Change it to your Disqus shortname before using
@@ -28,6 +29,7 @@ googleAnalytics:
 # Available values: ar, bn, ca, de, el, en, es, fr, hu, id, it, ja, ko, nl, pt-br, th, uk, zh-cn, zh-hk, zh-tw
 # 默认的内容语言
 DefaultContentLanguage: zh-cn
+# DefaultContentLanguage: en
 
 # Set hasCJKLanguage to true if DefaultContentLanguage is in [zh-cn ja ko]
 # This will make .Summary and .WordCount behave correctly for CJK languages.
@@ -197,14 +199,13 @@ params:
 
 menu:
     main:
-        - identifier: home
-          name: tags
+        - identifier: tags
+          name: Tags
           url: /tags
           weight: 100
           params:
-            icon: home
+            icon: tag
             newTab: true
-
 
     social:
         - identifier: github

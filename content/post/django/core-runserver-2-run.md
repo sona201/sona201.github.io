@@ -1,3 +1,13 @@
+---
+title: "django runserver"
+description: "This is an category for runserver"
+style:
+    background: "#2a9d8f"
+    color: "#fff"
+categories: ["django"]
+tags: ["django", "ptyhon", "runserver"]
+---
+
 启动命令
 ```
 python3 manage.py runserver 0.0.0.0:8000

@@ -1,3 +1,12 @@
+---
+title: "django WSGIHandler"
+description: "This is an category for WSGIHandler"
+style:
+    background: "#2a9d8f"
+    color: "#fff"
+categories: ["django"]
+tags: ["django", "ptyhon", "WSGIHandler"]
+---
 ## WSGIHandler
 ```python
 class WSGIHandler(base.BaseHandler):

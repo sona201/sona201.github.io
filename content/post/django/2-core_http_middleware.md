@@ -1,3 +1,12 @@
+---
+title: "django middleware"
+description: "This is an category for middleware"
+style:
+    background: "#2a9d8f"
+    color: "#fff"
+categories: ["django"]
+tags: ["django", "ptyhon", "middleware"]
+---
 ## MIDDLEWARE/get_response
 
 5.2 django处理http请求源码
