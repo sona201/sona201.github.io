@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>tcp on 卡塞尔</title>
+        <title>tcp on Cassell</title>
         <link>https://sona201.git.io/tags/tcp/</link>
-        <description>Recent content in tcp on 卡塞尔</description>
+        <description>Recent content in tcp on Cassell</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language><atom:link href="https://sona201.git.io/tags/tcp/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>tcp实验</title>
