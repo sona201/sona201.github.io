@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://sona201.git.io/</loc>
-    <lastmod>2022-11-14T00:34:58+08:00</lastmod>
+    <lastmod>2023-02-01T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -15,23 +15,21 @@
                 href="https://sona201.git.io/"
                 />
   </url><url>
+    <loc>https://sona201.git.io/archives/</loc>
+    <lastmod>2023-02-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://sona201.git.io/page/</loc>
+    <lastmod>2023-02-01T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://sona201.git.io/posts/hugo-framework/</loc>
     <lastmod>2022-11-14T00:34:58+08:00</lastmod>
   </url><url>
     <loc>https://sona201.git.io/post/</loc>
     <lastmod>2022-11-14T00:34:58+08:00</lastmod>
   </url><url>
-    <loc>https://sona201.git.io/archives/</loc>
-    <lastmod>2019-05-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://sona201.git.io/page/</loc>
-    <lastmod>2019-05-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://sona201.git.io/tags/.vimrc/</loc>
-    <lastmod>2015-12-23T00:00:00+00:00</lastmod>
+    <loc>https://sona201.git.io/about/</loc>
   </url><url>
     <loc>https://sona201.git.io/categories/</loc>
-    <lastmod>2015-12-23T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -43,17 +41,35 @@
                 href="https://sona201.git.io/categories/"
                 />
   </url><url>
-    <loc>https://sona201.git.io/categories/</loc>
-    <lastmod>2015-12-23T00:00:00+00:00</lastmod>
+    <loc>https://sona201.git.io/tags/django/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/plugins/</loc>
-    <lastmod>2015-12-23T00:00:00+00:00</lastmod>
+    <loc>https://sona201.git.io/categories/django/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/spf13-vim/</loc>
-    <lastmod>2015-12-23T00:00:00+00:00</lastmod>
+    <loc>https://sona201.git.io/posts/django-middleware/</loc>
+  </url><url>
+    <loc>https://sona201.git.io/posts/django-runserver/</loc>
+  </url><url>
+    <loc>https://sona201.git.io/posts/django-wsgihandler/</loc>
+  </url><url>
+    <loc>https://sona201.git.io/posts/django-wsgiref/</loc>
+  </url><url>
+    <loc>https://sona201.git.io/tags/https/</loc>
+  </url><url>
+    <loc>https://sona201.git.io/post/kubenertes/</loc>
+  </url><url>
+    <loc>https://sona201.git.io/links/</loc>
+  </url><url>
+    <loc>https://sona201.git.io/post/linux/</loc>
+  </url><url>
+    <loc>https://sona201.git.io/tags/middleware/</loc>
+  </url><url>
+    <loc>https://sona201.git.io/tags/ptyhon/</loc>
+  </url><url>
+    <loc>https://sona201.git.io/tags/runserver/</loc>
+  </url><url>
+    <loc>https://sona201.git.io/search/</loc>
   </url><url>
     <loc>https://sona201.git.io/tags/</loc>
-    <lastmod>2015-12-23T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -65,42 +81,29 @@
                 href="https://sona201.git.io/tags/"
                 />
   </url><url>
-    <loc>https://sona201.git.io/tags/vim/</loc>
-    <lastmod>2015-12-23T00:00:00+00:00</lastmod>
+    <loc>https://sona201.git.io/tags/tcp/</loc>
   </url><url>
-    <loc>https://sona201.git.io/posts/chenlinxxx/</loc>
-    <lastmod>2015-12-23T00:00:00+00:00</lastmod>
+    <loc>https://sona201.git.io/categories/tcp/</loc>
   </url><url>
-    <loc>https://sona201.git.io/categories/%E8%AE%A1%E5%88%92/</loc>
-    <lastmod>2015-12-23T00:00:00+00:00</lastmod>
+    <loc>https://sona201.git.io/posts/tcp%E5%AE%9E%E9%AA%8C/</loc>
   </url><url>
-    <loc>https://sona201.git.io/categories/django/2-core_http_middleware/</loc>
+    <loc>https://sona201.git.io/tags/wireshark/</loc>
   </url><url>
-    <loc>https://sona201.git.io/categories/django/core-handlers-base/</loc>
+    <loc>https://sona201.git.io/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/</loc>
   </url><url>
-    <loc>https://sona201.git.io/categories/django/core-runserver-1-wsgiref/</loc>
+    <loc>https://sona201.git.io/posts/wireshark%E6%8A%80%E5%B7%A7/</loc>
   </url><url>
-    <loc>https://sona201.git.io/categories/django/core-runserver-2-run/</loc>
+    <loc>https://sona201.git.io/tags/wsgihandler/</loc>
   </url><url>
-    <loc>https://sona201.git.io/categories/kubenertes/</loc>
+    <loc>https://sona201.git.io/tags/wsgiref/</loc>
   </url><url>
-    <loc>https://sona201.git.io/links/</loc>
+    <loc>https://sona201.git.io/posts/wsgiref/</loc>
   </url><url>
-    <loc>https://sona201.git.io/search/</loc>
+    <loc>https://sona201.git.io/posts/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
   </url><url>
-    <loc>https://sona201.git.io/categories/tcp/%E5%AE%9E%E9%AA%8C/</loc>
+    <loc>https://sona201.git.io/tags/%E6%8A%80%E5%B7%A7/</loc>
   </url><url>
-    <loc>https://sona201.git.io/categories/linux/</loc>
-  </url><url>
-    <loc>https://sona201.git.io/categories/tcp/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/</loc>
-  </url><url>
-    <loc>https://sona201.git.io/categories/tcp/wireshark%E6%8A%80%E5%B7%A7/</loc>
-  </url><url>
-    <loc>https://sona201.git.io/categories/django/wsgiref/</loc>
-  </url><url>
-    <loc>https://sona201.git.io/categories/think/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
-  </url><url>
-    <loc>https://sona201.git.io/%E5%85%B3%E4%BA%8E/</loc>
+    <loc>https://sona201.git.io/tags/%E5%AE%9E%E9%AA%8C/</loc>
   </url><url>
     <loc>https://sona201.git.io/%E5%A4%A9%E9%A9%AC%E8%A1%8C%E7%A9%BA/</loc>
   </url>
