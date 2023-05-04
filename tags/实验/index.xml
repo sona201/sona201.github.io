@@ -2,15 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>实验 on Cassell</title>
-        <link>https://sona201.git.io/tags/%E5%AE%9E%E9%AA%8C/</link>
+        <link>https://sona201.github.io/tags/%E5%AE%9E%E9%AA%8C/</link>
         <description>Recent content in 实验 on Cassell</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>en-us</language><atom:link href="https://sona201.git.io/tags/%E5%AE%9E%E9%AA%8C/index.xml" rel="self" type="application/rss+xml" /><item>
+        <language>en-us</language><atom:link href="https://sona201.github.io/tags/%E5%AE%9E%E9%AA%8C/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>tcp实验</title>
-        <link>https://sona201.git.io/posts/tcp%E5%AE%9E%E9%AA%8C/</link>
+        <link>https://sona201.github.io/posts/tcp%E5%AE%9E%E9%AA%8C/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/posts/tcp%E5%AE%9E%E9%AA%8C/</guid>
+        <guid>https://sona201.github.io/posts/tcp%E5%AE%9E%E9%AA%8C/</guid>
         <description>&lt;p&gt;抓包:
 两台服务器，一台启动python http服务，上面有一个2G的文件。另一台下载。
 怎么抓包，在那台机器上抓包，是不是指定来源ip就可以了？

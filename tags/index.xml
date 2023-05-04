@@ -2,95 +2,95 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Tags on Cassell</title>
-        <link>https://sona201.git.io/tags/</link>
+        <link>https://sona201.github.io/tags/</link>
         <description>Recent content in Tags on Cassell</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>en-us</language><atom:link href="https://sona201.git.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <language>en-us</language><atom:link href="https://sona201.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>django</title>
-        <link>https://sona201.git.io/tags/django/</link>
+        <link>https://sona201.github.io/tags/django/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/tags/django/</guid>
+        <guid>https://sona201.github.io/tags/django/</guid>
         <description></description>
         </item>
         <item>
         <title>https</title>
-        <link>https://sona201.git.io/tags/https/</link>
+        <link>https://sona201.github.io/tags/https/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/tags/https/</guid>
+        <guid>https://sona201.github.io/tags/https/</guid>
         <description></description>
         </item>
         <item>
         <title>middleware</title>
-        <link>https://sona201.git.io/tags/middleware/</link>
+        <link>https://sona201.github.io/tags/middleware/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/tags/middleware/</guid>
+        <guid>https://sona201.github.io/tags/middleware/</guid>
         <description></description>
         </item>
         <item>
         <title>ptyhon</title>
-        <link>https://sona201.git.io/tags/ptyhon/</link>
+        <link>https://sona201.github.io/tags/ptyhon/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/tags/ptyhon/</guid>
+        <guid>https://sona201.github.io/tags/ptyhon/</guid>
         <description></description>
         </item>
         <item>
         <title>runserver</title>
-        <link>https://sona201.git.io/tags/runserver/</link>
+        <link>https://sona201.github.io/tags/runserver/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/tags/runserver/</guid>
+        <guid>https://sona201.github.io/tags/runserver/</guid>
         <description></description>
         </item>
         <item>
         <title>tcp</title>
-        <link>https://sona201.git.io/tags/tcp/</link>
+        <link>https://sona201.github.io/tags/tcp/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/tags/tcp/</guid>
+        <guid>https://sona201.github.io/tags/tcp/</guid>
         <description></description>
         </item>
         <item>
         <title>wireshark</title>
-        <link>https://sona201.git.io/tags/wireshark/</link>
+        <link>https://sona201.github.io/tags/wireshark/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/tags/wireshark/</guid>
+        <guid>https://sona201.github.io/tags/wireshark/</guid>
         <description></description>
         </item>
         <item>
         <title>WSGIHandler</title>
-        <link>https://sona201.git.io/tags/wsgihandler/</link>
+        <link>https://sona201.github.io/tags/wsgihandler/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/tags/wsgihandler/</guid>
+        <guid>https://sona201.github.io/tags/wsgihandler/</guid>
         <description></description>
         </item>
         <item>
         <title>wsgiref</title>
-        <link>https://sona201.git.io/tags/wsgiref/</link>
+        <link>https://sona201.github.io/tags/wsgiref/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/tags/wsgiref/</guid>
+        <guid>https://sona201.github.io/tags/wsgiref/</guid>
         <description></description>
         </item>
         <item>
         <title>技巧</title>
-        <link>https://sona201.git.io/tags/%E6%8A%80%E5%B7%A7/</link>
+        <link>https://sona201.github.io/tags/%E6%8A%80%E5%B7%A7/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/tags/%E6%8A%80%E5%B7%A7/</guid>
+        <guid>https://sona201.github.io/tags/%E6%8A%80%E5%B7%A7/</guid>
         <description></description>
         </item>
         <item>
         <title>实验</title>
-        <link>https://sona201.git.io/tags/%E5%AE%9E%E9%AA%8C/</link>
+        <link>https://sona201.github.io/tags/%E5%AE%9E%E9%AA%8C/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://sona201.git.io/tags/%E5%AE%9E%E9%AA%8C/</guid>
+        <guid>https://sona201.github.io/tags/%E5%AE%9E%E9%AA%8C/</guid>
         <description></description>
         </item>
         

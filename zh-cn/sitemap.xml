@@ -2,109 +2,109 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://sona201.git.io/</loc>
+    <loc>https://sona201.github.io/</loc>
     <lastmod>2023-02-01T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://sona201.git.io/en/"
+                href="https://sona201.github.io/en/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="https://sona201.git.io/"
+                href="https://sona201.github.io/"
                 />
   </url><url>
-    <loc>https://sona201.git.io/archives/</loc>
+    <loc>https://sona201.github.io/archives/</loc>
     <lastmod>2023-02-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://sona201.git.io/page/</loc>
+    <loc>https://sona201.github.io/page/</loc>
     <lastmod>2023-02-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://sona201.git.io/posts/hugo-framework/</loc>
+    <loc>https://sona201.github.io/posts/hugo-framework/</loc>
     <lastmod>2022-11-14T00:34:58+08:00</lastmod>
   </url><url>
-    <loc>https://sona201.git.io/post/</loc>
+    <loc>https://sona201.github.io/post/</loc>
     <lastmod>2022-11-14T00:34:58+08:00</lastmod>
   </url><url>
-    <loc>https://sona201.git.io/about/</loc>
+    <loc>https://sona201.github.io/about/</loc>
   </url><url>
-    <loc>https://sona201.git.io/categories/</loc>
+    <loc>https://sona201.github.io/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://sona201.git.io/en/categories/"
+                href="https://sona201.github.io/en/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="https://sona201.git.io/categories/"
+                href="https://sona201.github.io/categories/"
                 />
   </url><url>
-    <loc>https://sona201.git.io/tags/django/</loc>
+    <loc>https://sona201.github.io/tags/django/</loc>
   </url><url>
-    <loc>https://sona201.git.io/categories/django/</loc>
+    <loc>https://sona201.github.io/categories/django/</loc>
   </url><url>
-    <loc>https://sona201.git.io/posts/django-middleware/</loc>
+    <loc>https://sona201.github.io/posts/django-middleware/</loc>
   </url><url>
-    <loc>https://sona201.git.io/posts/django-runserver/</loc>
+    <loc>https://sona201.github.io/posts/django-runserver/</loc>
   </url><url>
-    <loc>https://sona201.git.io/posts/django-wsgihandler/</loc>
+    <loc>https://sona201.github.io/posts/django-wsgihandler/</loc>
   </url><url>
-    <loc>https://sona201.git.io/posts/django-wsgiref/</loc>
+    <loc>https://sona201.github.io/posts/django-wsgiref/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/https/</loc>
+    <loc>https://sona201.github.io/tags/https/</loc>
   </url><url>
-    <loc>https://sona201.git.io/post/kubenertes/</loc>
+    <loc>https://sona201.github.io/post/kubenertes/</loc>
   </url><url>
-    <loc>https://sona201.git.io/links/</loc>
+    <loc>https://sona201.github.io/links/</loc>
   </url><url>
-    <loc>https://sona201.git.io/post/linux/</loc>
+    <loc>https://sona201.github.io/post/linux/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/middleware/</loc>
+    <loc>https://sona201.github.io/tags/middleware/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/ptyhon/</loc>
+    <loc>https://sona201.github.io/tags/ptyhon/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/runserver/</loc>
+    <loc>https://sona201.github.io/tags/runserver/</loc>
   </url><url>
-    <loc>https://sona201.git.io/search/</loc>
+    <loc>https://sona201.github.io/search/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/</loc>
+    <loc>https://sona201.github.io/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://sona201.git.io/en/tags/"
+                href="https://sona201.github.io/en/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="https://sona201.git.io/tags/"
+                href="https://sona201.github.io/tags/"
                 />
   </url><url>
-    <loc>https://sona201.git.io/tags/tcp/</loc>
+    <loc>https://sona201.github.io/tags/tcp/</loc>
   </url><url>
-    <loc>https://sona201.git.io/categories/tcp/</loc>
+    <loc>https://sona201.github.io/categories/tcp/</loc>
   </url><url>
-    <loc>https://sona201.git.io/posts/tcp%E5%AE%9E%E9%AA%8C/</loc>
+    <loc>https://sona201.github.io/posts/tcp%E5%AE%9E%E9%AA%8C/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/wireshark/</loc>
+    <loc>https://sona201.github.io/tags/wireshark/</loc>
   </url><url>
-    <loc>https://sona201.git.io/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/</loc>
+    <loc>https://sona201.github.io/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/</loc>
   </url><url>
-    <loc>https://sona201.git.io/posts/wireshark%E6%8A%80%E5%B7%A7/</loc>
+    <loc>https://sona201.github.io/posts/wireshark%E6%8A%80%E5%B7%A7/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/wsgihandler/</loc>
+    <loc>https://sona201.github.io/tags/wsgihandler/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/wsgiref/</loc>
+    <loc>https://sona201.github.io/tags/wsgiref/</loc>
   </url><url>
-    <loc>https://sona201.git.io/posts/wsgiref/</loc>
+    <loc>https://sona201.github.io/posts/wsgiref/</loc>
   </url><url>
-    <loc>https://sona201.git.io/posts/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
+    <loc>https://sona201.github.io/posts/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/%E6%8A%80%E5%B7%A7/</loc>
+    <loc>https://sona201.github.io/tags/%E6%8A%80%E5%B7%A7/</loc>
   </url><url>
-    <loc>https://sona201.git.io/tags/%E5%AE%9E%E9%AA%8C/</loc>
+    <loc>https://sona201.github.io/tags/%E5%AE%9E%E9%AA%8C/</loc>
   </url><url>
-    <loc>https://sona201.git.io/%E5%A4%A9%E9%A9%AC%E8%A1%8C%E7%A9%BA/</loc>
+    <loc>https://sona201.github.io/%E5%A4%A9%E9%A9%AC%E8%A1%8C%E7%A9%BA/</loc>
   </url>
 </urlset>
