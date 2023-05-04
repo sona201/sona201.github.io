@@ -12,11 +12,11 @@ title: Cassell
 languages:
     en:
         languageName: English
-        title: Cassells
+        title: Cassell
         weight: 1
     zh-cn:
         languageName: 中文
-        title: 卡塞尔
+        title: Cassell
         weight: 2
 
 # Change it to your Disqus shortname before using
