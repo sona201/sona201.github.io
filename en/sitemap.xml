@@ -2,40 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://sona201.git.io/en/</loc>
+    <loc>https://sona201.github.io/en/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="https://sona201.git.io/"
+                href="https://sona201.github.io/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://sona201.git.io/en/"
+                href="https://sona201.github.io/en/"
                 />
   </url><url>
-    <loc>https://sona201.git.io/en/categories/</loc>
+    <loc>https://sona201.github.io/en/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="https://sona201.git.io/categories/"
+                href="https://sona201.github.io/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://sona201.git.io/en/categories/"
+                href="https://sona201.github.io/en/categories/"
                 />
   </url><url>
-    <loc>https://sona201.git.io/en/tags/</loc>
+    <loc>https://sona201.github.io/en/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="https://sona201.git.io/tags/"
+                href="https://sona201.github.io/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://sona201.git.io/en/tags/"
+                href="https://sona201.github.io/en/tags/"
                 />
   </url>
 </urlset>

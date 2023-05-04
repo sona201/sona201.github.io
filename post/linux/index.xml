@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>linux on Cassell</title>
-        <link>https://sona201.git.io/post/linux/</link>
+        <link>https://sona201.github.io/post/linux/</link>
         <description>Recent content in linux on Cassell</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>en-us</language><atom:link href="https://sona201.git.io/post/linux/index.xml" rel="self" type="application/rss+xml" />
+        <language>en-us</language><atom:link href="https://sona201.github.io/post/linux/index.xml" rel="self" type="application/rss+xml" />
     </channel>
 </rss>
