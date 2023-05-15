@@ -40,3 +40,9 @@ R.I.P(Requiescat in pace)
 关于数字遗产这件事，今天看到laike9m的文章[people-die-but-long-live-github](https://laike9m.com/blog/people-die-but-long-live-github,122/)，感叹人的第二次消失有时候也挺容易的。
 
 也同时感慨，人要做什么才会有意义。这个问题需要好好问问自己。想到和菜头的一篇文章，讲一个美国的地勤偷飞机，然后完成了自己的梦想，最后与飞机一起坠毁[文章链接，故事在结尾](https://mp.weixin.qq.com/s/2fQTwQAZU3qYyb0WU60jmQ)，有时候对别的朋友圈生活嗤之以鼻，但也会羡慕。媳妇儿却很简单，想去尝试下那种生活。今年的计划，去趟香港，开开眼。
+
+##### 文章链接
+[infoQ-纪念陈皓（左耳朵耗子）](https://mp.weixin.qq.com/s/q1QDxN_6PfgWi-oqtZ-32w) \
+[和菜头-仅有他汀是不够的](https://mp.weixin.qq.com/s/jYu3cBCZnKtrbaCHsUjx3g) \
+[laike9m-R.I.P. 陈皓](https://laike9m.com/blog/rip-chen-hao,147/) \
+[laixintao-缅怀陈皓](https://www.kawabangga.com/posts/5068) \
