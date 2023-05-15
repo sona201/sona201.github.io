@@ -45,4 +45,4 @@ R.I.P(Requiescat in pace)
 [infoQ-纪念陈皓（左耳朵耗子）](https://mp.weixin.qq.com/s/q1QDxN_6PfgWi-oqtZ-32w) \
 [和菜头-仅有他汀是不够的](https://mp.weixin.qq.com/s/jYu3cBCZnKtrbaCHsUjx3g) \
 [laike9m-R.I.P. 陈皓](https://laike9m.com/blog/rip-chen-hao,147/) \
-[laixintao-缅怀陈皓](https://www.kawabangga.com/posts/5068) \
+[laixintao-缅怀陈皓](https://www.kawabangga.com/posts/5068)
