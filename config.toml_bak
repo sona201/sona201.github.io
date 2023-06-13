@@ -1,0 +1,28 @@
+baseURL = "/"
+languageCode = "zh-cn"
+title = "卡塞尔的博客"
+theme = "hugo-theme-cassell"
+preserveTaxonomyNames = true
+paginate = 10 #frontpage pagination
+hasCJKLanguage = true
+
+[outputs]
+home = ["HTML", "RSS"]
+
+[params]
+hero_bg = "img/home-bg-road.jpg"
+SEOTitle = "wubin1989的博客 | wubin1989 Blog"
+description = "wubin1989，程序员, 摄影爱好者, 背包客 | 这里是 wubin1989 的博客，边走边看，边读边写。"
+keyword = "wubin1989, wubin1989, wubin1989的网络日志, wubin1989的博客, wubin1989 Blog, 博客, 个人网站, 互联网, Web, Nodejs, Reactjs, SaaS, Golang, 微服务, Microservice"
+slogan = "跨过高山，走过四季，不忘初心，永不言弃"
+brief_info = "全栈工程师/背包客/摄影爱好者"
+info = "常年写reactjs、vuejs、java和golang，专注微服务架构和devops相关，喜欢旅游、爬山、外语"
+avatar = "img/avatar-wubin1989.jpg" 
+
+image_404 = "img/404-bg.jpg"
+title_404 = "你来到了没有知识的荒原 :("
+
+[taxonomies]
+tag = "tags"
+category = "categories"
+archive = "archives"
