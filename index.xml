@@ -308,8 +308,8 @@
 &lt;p&gt;最后就是hugo的使用，跟主题修改了，现在还没做好，慢慢改&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;是否需要英文版面&lt;/li&gt;
-&lt;li&gt;决定有哪几个大分类&lt;/li&gt;
-&lt;li&gt;评论系统&lt;/li&gt;
+&lt;li&gt;决定有哪几个大分类
+[-] 评论系统&lt;/li&gt;
 &lt;li&gt;最后就是样式优化，参考: &lt;a class=&#34;link&#34; href=&#34;https://blog.skk.moe/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://blog.skk.moe/&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -401,6 +401,26 @@
 &lt;/div&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://hugocn.netlify.app/configuration.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;hugo 配置讲解&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;路径配置最关键&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;最新部署&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;主题搭建参考链接&lt;a class=&#34;link&#34; href=&#34;https://www.jianshu.com/p/0b9aecff290c&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.jianshu.com/p/0b9aecff290c&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这个链接配置是从零开始，最后搭建出一个样式，但里面教你操作的配置是toml文件，但似乎用的是yaml文件，这个需要了解下。&lt;/p&gt;
+&lt;p&gt;在使用toml配置方式启动时，报错&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;WARN 2023/05/26 13:59:29 found no layout file for &amp;#34;JSON&amp;#34; for layout &amp;#34;search&amp;#34; for kind &amp;#34;page&amp;#34;: You should create a template file which matches Hugo Layouts Lookup Rules for this combination.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Rebuilt in 47 ms
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这个后面也要看看是什么问题。&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://qwqaq.com/2022/04/migrate-to-hugo/#%E5%88%B6%E4%BD%9C%E4%B8%BB%E9%A2%98&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://qwqaq.com/2022/04/migrate-to-hugo/#%E5%88%B6%E4%BD%9C%E4%B8%BB%E9%A2%98&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这个链接讲内容很详细，但没有讲怎么搞配置文件。所以要结合上面一篇文章&lt;/p&gt;
 </description>
         </item>
         <item>
