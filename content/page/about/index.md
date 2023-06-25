@@ -1,13 +1,11 @@
 ---
-title: About
+title: about
 description: Hugo, the world's fastest framework for building websites
 date: '2019-02-28'
 aliases:
   - about-us
   - about-hugo
   - contact
-license: CC BY-NC-ND
-lastmod: '2020-10-09'
 menu:
     main: 
         weight: -90
@@ -15,20 +13,15 @@ menu:
             icon: user
 ---
 
-Written in Go, Hugo is an open source static site generator available under the [Apache Licence 2.0.](https://github.com/gohugoio/hugo/blob/master/LICENSE) Hugo supports TOML, YAML and JSON data file types, Markdown and HTML content files and uses shortcodes to add rich content. Other notable features are taxonomies, multilingual mode, image processing, custom output formats, HTML/CSS/JS minification and support for Sass SCSS workflows.
+关于名字，来源于江南的小说<<龙族>>。s特别喜欢龙族里的主人公的设定，毕竟代表了大部分卑微的小孩。也喜欢在光环下面，但那遥不可及。。。
 
-Hugo makes use of a variety of open source projects including:
+博客是我一直向往的东西，最早从17年开始接触，搭建了wordpress，感觉后台麻烦，又尝试博客园，CSDN，为兼容markdown格式，又尝试了掘金。
 
-* https://github.com/yuin/goldmark
-* https://github.com/alecthomas/chroma
-* https://github.com/muesli/smartcrop
-* https://github.com/spf13/cobra
-* https://github.com/spf13/viper
+总之，折腾了好久，也断了很久，看到大佬们自己搭建，稳定维护，又开始羡慕，历史总是一个循环。
+看到有人在平台上写的内容被屏蔽，下架，也很没有动力，确实平台会给你带来推广，也会帮助到别人，但那些博客多数也是抄的笔记，这样似乎不能提升自己。
+差生文具多，应该就是指的这个。
 
-Hugo is ideal for blogs, corporate websites, creative portfolios, online magazines, single page applications or even a website with thousands of pages.
+不止一位大佬说过，其实你只要坚持，真的能超过90%的人，甚至95-99%的人。
 
-Hugo is for people who want to hand code their own website without worrying about setting up complicated runtimes, dependencies and databases.
+人生，真的是一场马拉松，偶尔的胜利不能代表什么。最重要的是开心
 
-Websites built with Hugo are extremelly fast, secure and can be deployed anywhere including, AWS, GitHub Pages, Heroku, Netlify and any other hosting provider.
-
-Learn more and contribute on [GitHub](https://github.com/gohugoio).
