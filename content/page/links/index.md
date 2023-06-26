@@ -49,3 +49,8 @@ https://blog.skk.moe/post/use-nextjs-and-hexo-to-rebuild-my-blog/
 
 博客渊源介绍: 很早发现的一个博客，不止是影响我一个人，无限唏嘘 \
 他其实也是我半个导师吧，现在我还有很多想法回去看看，不过一个月过去了，没有开始看的那么多了 https://coolshell.cn/articles/21672.html
+
+### 七、博客地址: https://www.manjusaka.blog
+
+博客渊源介绍: Manjusaka，之前看过他的相关博客，但印象最深的是我转发给媳妇儿的一篇关于信仰 \
+她也很喜欢奥特曼 https://www.manjusaka.blog/posts/2023/06/19/why-do-I-love-ultraman/index.html
