@@ -5,7 +5,7 @@
         <link>https://sona201.github.io/post/</link>
         <description>Recent content in Posts on Cassell</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>en-us</language>
+        <language>zh-CN</language>
         <lastBuildDate>Fri, 19 May 2023 01:05:14 +0800</lastBuildDate><atom:link href="https://sona201.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Tc_实验</title>
         <link>https://sona201.github.io/posts/tc_%E5%AE%9E%E9%AA%8C/</link>
@@ -2915,6 +2915,25 @@ rt，丢包率，curl速度怎么查看？使用&amp;ndash;help，需要谷歌�
 &lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://qwqaq.com/2022/04/migrate-to-hugo/#%E5%88%B6%E4%BD%9C%E4%B8%BB%E9%A2%98&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://qwqaq.com/2022/04/migrate-to-hugo/#%E5%88%B6%E4%BD%9C%E4%B8%BB%E9%A2%98&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;这个链接讲内容很详细，但没有讲怎么搞配置文件。所以要结合上面一篇文章&lt;/p&gt;
+&lt;p&gt;关于博客搭建(建站之初link)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.kermsite.com/p/hugostack%E4%B8%BB%E9%A2%98&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://blog.kermsite.com/p/hugostack%E4%B8%BB%E9%A2%98&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://stack-theme-mod.vercel.app/2022/stack-theme-mod/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://stack-theme-mod.vercel.app/2022/stack-theme-mod/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://stack.jimmycai.com/guide/modify-theme&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://stack.jimmycai.com/guide/modify-theme&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://viflythink.com/Migrate_from_Material_to_Stack/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://viflythink.com/Migrate_from_Material_to_Stack/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://xrg.fj.cn/p/hugo-stack%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%96%B0%E5%B0%8F%E8%AE%B0/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://xrg.fj.cn/p/hugo-stack%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%96%B0%E5%B0%8F%E8%AE%B0/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://xrg.fj.cn/p/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%971/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://xrg.fj.cn/p/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%971/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://xrg.fj.cn/p/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%972/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://xrg.fj.cn/p/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%972/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://viflythink.com/links/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://viflythink.com/links/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
         </item>
         <item>

@@ -15,14 +15,11 @@
                 href="https://sona201.github.io/"
                 />
   </url><url>
-    <loc>https://sona201.github.io/links-%E5%8F%8B%E9%93%BE/</loc>
-    <lastmod>2023-07-03T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://sona201.github.io/page/</loc>
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
   </url><url>
-    <loc>https://sona201.github.io/about/</loc>
-    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
+    <loc>https://sona201.github.io/%E5%8F%8B%E9%93%BE/</loc>
+    <lastmod>2023-07-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/categories/</loc>
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
@@ -78,6 +75,9 @@
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/wmem/</loc>
+    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/%E5%85%B3%E4%BA%8E/</loc>
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/%E6%8A%80%E5%B7%A7/</loc>
@@ -149,7 +149,19 @@
     <loc>https://sona201.github.io/posts/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
   </url><url>
-    <loc>https://sona201.github.io/%E5%A4%A9%E9%A9%AC%E8%A1%8C%E7%A9%BA/</loc>
+    <loc>https://sona201.github.io/categories/development/</loc>
+    <lastmod>2023-07-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/thinding/</loc>
+    <lastmod>2023-07-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/categories/thinking/</loc>
+    <lastmod>2023-07-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/website-slug-url/</loc>
+    <lastmod>2023-07-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/%E9%BE%99%E6%97%8F/</loc>
     <lastmod>2023-07-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/archives/</loc>

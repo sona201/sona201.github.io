@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Development on Cassell</title>
+        <link>https://sona201.github.io/categories/development/</link>
+        <description>Recent content in Development on Cassell</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Thu, 06 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://sona201.github.io/categories/development/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>建站之初</title>
+        <link>https://sona201.github.io/website-slug-url/</link>
+        <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+        
+        <guid>https://sona201.github.io/website-slug-url/</guid>
+        <description>&lt;h1 id=&#34;django_source_interpretation&#34;&gt;django_source_Interpretation&lt;/h1&gt;
+&lt;p&gt;django 源码阅读&lt;/p&gt;
+&lt;h2 id=&#34;写在前面&#34;&gt;写在前面&lt;/h2&gt;
+&lt;p&gt;根据视频学习django
+记录学习历程&lt;/p&gt;
+&lt;p&gt;一直学习都是 狗熊掰玉米,掰一个仍一个。&lt;/p&gt;
+&lt;p&gt;想系统的学习, 没有头绪, 找了n 个xmind ,手抄一遍, 都是不顶用, 只停留在方法论上, 从没有真正执行过&lt;/p&gt;
+&lt;p&gt;学了django-restful, 以为自己入门了, 但看文档还是挺吃力, 还有就是知其然不知其所以然.
+啰啰嗦嗦的说了一堆, 总之就是一直以来都感觉自己在门外徘徊, 极力想找突破口, 总是坚持不了几天. 亦或坚持看完视屏, 但没有在脑子里留下什么&lt;/p&gt;
+&lt;p&gt;这个是为了记录下学习django 源码的笔记, 也算自己思考过, 反复钻研视频留下的笔记&lt;/p&gt;
+&lt;p&gt;视频地址: &lt;a class=&#34;link&#34; href=&#34;https://www.bilibili.com/video/BV173411s79r/?spm_id_from=pageDriver&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.bilibili.com/video/BV173411s79r/?spm_id_from=pageDriver&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;感谢作者沈奇才无私奉献, 已买实体书《深入理解Django》. 再次感谢作者&lt;/p&gt;
+&lt;p&gt;最早看入门的视频, 太累, 跟不上也不是我特别关心的点, 然后我就大概看了前面的5个视频, 然后开始看我最需要的请求那一章
+作者的视频是用vscode搭建, 因为不熟悉, 也一直没有搭建好. 后面就不再纠结这个, 使用pycharm, 配置3.10的环境, 使用的是4.0.5版本&lt;/p&gt;
+&lt;p&gt;很多时候我总是纠结是不是一样的环境, 版本, 配置. 入门时跟着教程的印象太深刻, 太担心有问题不能处理, 总是忘记我看视屏的初衷
+看最初的几个视屏环境也没有配置好, 就无脑看视频, 但总是看完就忘, 最近把看完的视频内容自己在本地环境回忆, 温故而知新, 于是有了开始学习的动力, 写笔记的动力&lt;/p&gt;
+&lt;p&gt;共勉&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;core/runserver&lt;/p&gt;
+&lt;p&gt;view/&lt;/p&gt;
+&lt;p&gt;逻辑思路
+实战演练的内容需要加上
+模拟实验&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
