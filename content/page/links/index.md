@@ -55,3 +55,10 @@ https://blog.skk.moe/post/use-nextjs-and-hexo-to-rebuild-my-blog/
 
 博客渊源介绍: Manjusaka，之前看过他的相关博客，但印象最深的是我转发给媳妇儿的一篇关于信仰 \
 她也很喜欢奥特曼 https://www.manjusaka.blog/posts/2023/06/19/why-do-I-love-ultraman/index.html
+
+### 八、博客地址: https://einverne.github.io/
+
+博客渊源介绍: 无意间搜索发现的博客，意外的发现很简约，没有花里胡哨的主题，只有内容
+收藏他的博客是 https://einverne.github.io/post/2023/05/the-great-depression.html 美国大萧条 读书笔记 \
+https://einverne.github.io/post/2023/05/nonviolent-communication.html 非暴力沟通 读书笔记 \
+是他博客的样式让我又想自己尽快学习搞个主题
