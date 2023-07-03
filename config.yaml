@@ -1,8 +1,8 @@
 # 主机名 例如: http://blog.com/
 baseurl: https://sona201.github.io
 # 语言编码(中文: zh-CN)
-languageCode: en-us
-# languageCode: zh-CN
+# languageCode: en-us
+languageCode: zh-CN
 # 设置使用的主题名称 (默认储存在 /themes/THEMENAME/)
 theme: hugo-theme-stack
 # 分页
@@ -10,12 +10,12 @@ paginate: 5
 title: Cassell
 
 languages:
-    en:
-        languageName: English
-        title: Cassell
-        weight: 1
     zh-cn:
         languageName: 中文
+        title: Cassell
+        weight: 1
+    en:
+        languageName: English
         title: Cassell
         weight: 2
 
@@ -52,7 +52,7 @@ params:
 
     footer:
         since: 2020
-        customText:
+        customText: "记录自己"
 
     dateFormat:
         published: Jan 02, 2006
