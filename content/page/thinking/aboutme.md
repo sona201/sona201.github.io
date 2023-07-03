@@ -1,9 +1,9 @@
 ---
 title: "建站之初"
-description: "spf13-vim is a cross platform distribution of vim plugins and resources for Vim."
-tags: [ ".vimrc", "plugins", "spf13-vim", "vim" ]
-lastmod: 2015-12-23
-date: "2012-04-06"
+description: "关于博客的一些乱七八糟想法"
+date: "2023-04-06"
+lastmod: "2023-07-03"
+tags: [ "thinding", "龙族"]
 categories:
   - "Development"
   - "VIM"

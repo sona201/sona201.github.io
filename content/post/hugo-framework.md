@@ -1,6 +1,9 @@
 ---
 title: "Hugo Framework"
-date: 2022-11-14T00:34:58+08:00
+description: "hugo的一些乱七八糟记录"
+date: "2022-11-14T00:34:58+08:00"
+lastmod: "2023-07-03T13:05:14+08:00"
+
 
 ---
 

@@ -1,13 +1,13 @@
 ---
 title: Think
-description: 思想
-date: '2019-02-28'
+description: "思想"
+date: "2023-04-06"
+lastmod: "2023-07-03"
 aliases:
   - about-us
   - about-hugo
   - contact
 license: CC BY-NC-ND
-lastmod: '2020-10-09'
 menu:
     main: 
         weight: 0

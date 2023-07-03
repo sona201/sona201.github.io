@@ -1,5 +1,7 @@
 ---
 title: "Wsgiref"
+date: "2023-05-05"
+lastmod: "2023-07-03"
 image: 
 style:
     background: "#2a9d8f"

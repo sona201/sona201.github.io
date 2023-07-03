@@ -1,6 +1,8 @@
 ---
 title: "django wsgiref"
 description: "This is an category for wsgiref"
+date: "2023-05-05"
+lastmod: "2023-07-03"
 style:
     background: "#2a9d8f"
     color: "#fff"

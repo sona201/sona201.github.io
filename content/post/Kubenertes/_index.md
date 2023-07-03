@@ -1,6 +1,8 @@
 ---
 title: "Kubenertes"
 description: "This is an category for kubenertes"
+date: "2023-05-05"
+lastmod: "2023-07-03"
 slug: "kubenertes"
 # image: "hutomo-abrianto-l2jk-uxb1BY-unsplash.jpg"
 style:

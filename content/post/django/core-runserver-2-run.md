@@ -1,6 +1,8 @@
 ---
 title: "django runserver"
 description: "This is an category for runserver"
+date: "2023-05-05"
+lastmod: "2023-07-03"
 style:
     background: "#2a9d8f"
     color: "#fff"
