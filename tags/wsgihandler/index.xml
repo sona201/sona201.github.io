@@ -5,10 +5,11 @@
         <link>https://sona201.github.io/tags/wsgihandler/</link>
         <description>Recent content in WSGIHandler on Cassell</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>en-us</language><atom:link href="https://sona201.github.io/tags/wsgihandler/index.xml" rel="self" type="application/rss+xml" /><item>
+        <language>en-us</language>
+        <lastBuildDate>Fri, 05 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://sona201.github.io/tags/wsgihandler/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>django WSGIHandler</title>
         <link>https://sona201.github.io/posts/django-wsgihandler/</link>
-        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        <pubDate>Fri, 05 May 2023 00:00:00 +0000</pubDate>
         
         <guid>https://sona201.github.io/posts/django-wsgihandler/</guid>
         <description>&lt;h2 id=&#34;wsgihandler&#34;&gt;WSGIHandler&lt;/h2&gt;
