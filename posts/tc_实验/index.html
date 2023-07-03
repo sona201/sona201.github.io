@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='排查python server当时的系统信息 发现并没有异常，仅记录device eth0 entered promiscuous mode表示当时网卡 eth0 进入混杂模式,应该与当时启用tcpd'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='tcp的tc实验记录'>
 <title>Tc_实验</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/tc_%E5%AE%9E%E9%AA%8C/'>
 
 <link rel="stylesheet" href="/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='Tc_实验'>
-<meta property='og:description' content='排查python server当时的系统信息 发现并没有异常，仅记录device eth0 entered promiscuous mode表示当时网卡 eth0 进入混杂模式,应该与当时启用tcpd'>
+<meta property='og:description' content='tcp的tc实验记录'>
 <meta property='og:url' content='https://sona201.github.io/posts/tc_%E5%AE%9E%E9%AA%8C/'>
 <meta property='og:site_name' content='Cassell'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='wmem' /><meta property='article:tag' content='tc' /><meta property='article:tag' content='实验' /><meta property='article:published_time' content='2023-05-19T01:05:14&#43;08:00'/><meta property='article:modified_time' content='2023-05-19T01:05:14&#43;08:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='wmem' /><meta property='article:tag' content='tc' /><meta property='article:tag' content='实验' /><meta property='article:published_time' content='2023-05-19T01:05:14&#43;08:00'/><meta property='article:modified_time' content='2023-07-03T13:05:14&#43;08:00'/>
 <meta name="twitter:title" content="Tc_实验">
-<meta name="twitter:description" content="排查python server当时的系统信息 发现并没有异常，仅记录device eth0 entered promiscuous mode表示当时网卡 eth0 进入混杂模式,应该与当时启用tcpd">
+<meta name="twitter:description" content="tcp的tc实验记录">
     <link rel="shortcut icon" href="/image/favicon.ico" />
 
     </head>
@@ -378,6 +378,10 @@
         </h2>
     
         
+        <h3 class="article-subtitle">
+            tcp的tc实验记录
+        </h3>
+        
     </div>
 
     
@@ -673,7 +677,19 @@
 
         <span>Licensed under CC BY-NC-SA 4.0</span>
     </section>
-    </footer>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 Jul 03, 2023 13:05 &#43;0800
+        </span>
+    </section></footer>
 
 
     
@@ -703,12 +719,12 @@
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
+    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark技巧</h2>
+            <h2 class="article-title">Wireshark本地劫持https</h2>
         </div>
     </a>
 </article>
@@ -716,12 +732,12 @@
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
+    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark本地劫持https</h2>
+            <h2 class="article-title">Wireshark技巧</h2>
         </div>
     </a>
 </article>

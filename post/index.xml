@@ -233,6 +233,737 @@
 &lt;/div&gt;</description>
         </item>
         <item>
+        <title>Wireshark本地劫持https</title>
+        <link>https://sona201.github.io/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/</link>
+        <pubDate>Fri, 19 May 2023 01:05:14 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/</guid>
+        <description>&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.jianshu.com/p/b3cc1299e03e&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;相关文章&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;方案: 手动启动浏览器，让浏览器把证书放到指定目录，wireshark去读取，然后解析，就可以得到解密后的包了，等同于http请求抓包&lt;/p&gt;
+&lt;h3 id=&#34;一启动浏览器&#34;&gt;一、启动浏览器&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在终端执行命令，打开新的 Chrome 浏览器&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --user-data-dir=/tmp/chrome --ssl-key-log-file=/tmp/.ssl-key.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;二配置wireshark&#34;&gt;二、配置wireshark&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;打开 Wireshark ，Wireshark - Perferences - Protocols - TLS ，在 (Pre)-Master-Secret log filename 输入 /tmp/.ssl-key.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshrk_config.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshrk_config&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;三抓包&#34;&gt;三、抓包&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;打开浏览器，发出请求，开始抓包
+&lt;img src=&#34;https://sona201.github.io/image/start_chrome.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;start_chrome&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;四异常情况&#34;&gt;四、异常情况&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;异常情况暂未遇到过，这个先记录一下&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;出现 Opening in existing browser session. &lt;br&gt;
+解决方式：关闭掉用命令启动的 Chrome，然后重新运行 Chrome 启动命令&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ ps -ef | grep /tmp/.ssl | awk &amp;#39;NR==1{print $2}&amp;#39; | xargs  kill -9
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --user-data-dir=/tmp/chrome --ssl-key-log-file=/tmp/.ssl-key.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;参考文章&#34;&gt;参考文章&lt;/h3&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.gfkui.com/2018/03/30/%E4%BD%BF%E7%94%A8wireshark%E5%88%86%E6%9E%90https/index.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;使用wireshark分析https&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Wireshark技巧</title>
+        <link>https://sona201.github.io/posts/wireshark%E6%8A%80%E5%B7%A7/</link>
+        <pubDate>Fri, 19 May 2023 01:05:14 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/wireshark%E6%8A%80%E5%B7%A7/</guid>
+        <description>&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://developer.aliyun.com/article/100476&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;相关文章&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;wireshark你一定会喜欢的技巧摘要&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;修改seq的为绝对值 relative
+&lt;img src=&#34;https://sona201.github.io/image/seq_relative_num.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;seq_relative_num&#34;
+	
+	
+&gt;&lt;/li&gt;
+&lt;li&gt;配置rt
+&lt;img src=&#34;https://sona201.github.io/image/rt_time.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;rt_time&#34;
+	
+	
+&gt;&lt;/li&gt;
+&lt;li&gt;分析&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kawabangga.com/posts/4794&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;分析图&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;wireshark https 抓包 tls contains &amp;ldquo;baidu.com&amp;rdquo;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;wireshark 没有权限
+&lt;img src=&#34;https://sona201.github.io/image/permission_denied.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;permission_denied&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;或者下图&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/permission_denied_wireshark.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;permission_denied_wireshark&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;命令行赋权&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;直接简单粗暴的777&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo chmod 777 /dev/bpf*
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;查看当前用户名，给当前用户赋权&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo chown clin:wheel /dev/bpf*
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;本来这个命令都不打算记录，但最近在自己电脑上重新安装就出现一次，还是老老实实的记录下&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;一抓包&#34;&gt;一、抓包&lt;/h3&gt;
+&lt;p&gt;拿到一个网络包时，我们总是希望它尽可能小。因为操作一个大包相当费时，有时甚至会死机。如果让初学者分析1GB以上的包，估计会被打击得信心全无。所以抓包时应该尽量只抓必要的部分。有很多方法可以实现这一点。&lt;/p&gt;
+&lt;p&gt;1．只抓包头。一般能抓到的每个包（称为“帧”更准确，但是出于表达习惯，本书可能会经常用“包”代替“帧”和“分段”）的最大长度为1514字节，启用了Jumbo Frame（巨型帧）之后可达9000字节以上，而大多数时候我们只需要IP头或者TCP头就足够分析了。在Wireshark上可以这样抓到包头：单击菜单栏上的Capture&amp;ndash;&amp;gt;Options，然后在弹出的窗口上定义“Limit each packet to”的值。我一般设个偏大的数字：80字节，也就是说每个包只抓前80字节。这样TCP层、网络层和数据链路层的信息都可以包括在内（见图1）。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;3.0之前版本wireshark更改方式&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_limit_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;package_limit_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;图一&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;3.0之后的版本&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_limit.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;package_limit&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;如果问题涉及应用层，就应该再加上应用层协议头的长度。如果你像我一样经常忘记不同协议头的长度，可以输入一个大点的值。即便设成200字节，也比1514字节小多了。&lt;br&gt;
+以上是使用Wireshark抓包时的建议。用tcpdump命令抓包时可以用“-s”参数达到相同效果。比如以下命令只抓eth0上每个包的前80字节，并把结果存到/tmp/tcpdump.cap文件中。&lt;/p&gt;
+&lt;p&gt;使用&lt;code&gt;tcpdump&lt;/code&gt;指定抓包字节命令&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[root@server_1 /]# tcpdump -i eth0 -s 80 -w /tmp/tcpdump.cap
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;2．只抓必要的包。服务器上的网络连接可能非常多，而我们只需要其中的一小部分。Wireshark的Capture Filter可以在抓包时过滤掉不需要的包。比如在成百上千的网络连接中，我们只对IP为10.32.200.131的包感兴趣，那就可以在Wireshark上这样设置：单击菜单栏上的Capture&amp;ndash;&amp;gt;Options，然后在Capture Filter中输入“host 10.32.200.131”（见图2）。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;老版本&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_filter_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;package_filter_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;图二&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Version 4.0.5版本&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_filter.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;package_filter&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h4 id=&#34;wireshark官方的过滤文档httpswikiwiresharkorgcapturefilters&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://wiki.wireshark.org/CaptureFilters&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;wireshark官方的过滤文档&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;用tcpdump命令抓包时，也可以用“host”参数达到相同效果。比如以下命令只抓与10.32.200.131通信的包，并把结果存到/tmp/tcpdump.cap文件中。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[root@server_1 /]# tcpdump -i eth0 host 10.32.200.131 -w /tmp/tcpdump.cap
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;注意设置capture-filter之前务必三思以免把有用的包也过滤掉尤其是容易被忽略的广播包当然有时候再怎么考虑也会失算比如我有一次把对方的ip地址设为filter结果一个包都没抓到最后只能去掉filter再抓才发现是nat网络地址转换设备把对方的ip地址改掉了&#34;&gt;注意：设置Capture Filter之前务必三思，以免把有用的包也过滤掉，尤其是容易被忽略的广播包。当然有时候再怎么考虑也会失算，比如我有一次把对方的IP地址设为filter，结果一个包都没抓到。最后只能去掉filter再抓，才发现是NAT（网络地址转换）设备把对方的IP地址改掉了。&lt;/h4&gt;
+&lt;p&gt;抓的包除了要小，最好还能为每步操作打上标记。这样的包一目了然，赏心悦目。比如要在Windows上抓一个包含三步操作的问题，我会这样抓。&lt;/p&gt;
+&lt;p&gt;想指定ping，发送三次包，每次只发送一个&lt;code&gt;ping&lt;/code&gt;包(&lt;code&gt;count&lt;/code&gt;)，不通次数发送的&lt;code&gt;ping&lt;/code&gt;的&lt;code&gt;size&lt;/code&gt;大小不一样，&lt;/p&gt;
+&lt;p&gt;windows机器指定ping方式&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（1）ping &amp;lt;IP&amp;gt; -n 1 -l 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（2）操作步骤1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（3）ping &amp;lt;IP&amp;gt; -n 1 -l 2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（4）操作步骤2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（5）ping &amp;lt;IP&amp;gt; -n 1 -l 3
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（6）操作步骤3
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;windows ping命令解释&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;用法: ping [-t] [-a] [-n count] [-l size] [-f] [-i TTL] [-v TOS]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            [-r count] [-s count] [[-j host-list] | [-k host-list]]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            [-w timeout] [-R] [-S srcaddr] [-c compartment] [-p]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            [-4] [-6] target_name
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;选项:
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -t             Ping 指定的主机，直到停止。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   若要查看统计信息并继续操作，请键入 Ctrl+Break；
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   若要停止，请键入 Ctrl+C。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -a             将地址解析为主机名。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -n count       要发送的回显请求数。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -l size        发送缓冲区大小。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -f             在数据包中设置“不分段”标记(仅适用于 IPv4)。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -i TTL         生存时间。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -v TOS         服务类型(仅适用于 IPv4。该设置已被弃用，
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   对 IP 标头中的服务类型字段没有任何
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   影响)。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -r count       记录计数跃点的路由(仅适用于 IPv4)。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -s count       计数跃点的时间戳(仅适用于 IPv4)。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -j host-list   与主机列表一起使用的松散源路由(仅适用于 IPv4)。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -k host-list    与主机列表一起使用的严格源路由(仅适用于 IPv4)。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -w timeout     等待每次回复的超时时间(毫秒)。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -R             同样使用路由标头测试反向路由(仅适用于 IPv6)。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   根据 RFC 5095，已弃用此路由标头。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   如果使用此标头，某些系统可能丢弃
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   回显请求。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -S srcaddr     要使用的源地址。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -c compartment 路由隔离舱标识符。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -p             Ping Hyper-V 网络虚拟化提供程序地址。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -4             强制使用 IPv4。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -6             强制使用 IPv6。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;mac/linux ping命令执行&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ping &amp;lt;IP&amp;gt; -c 1 -s 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;操作步骤1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ping &amp;lt;IP&amp;gt; -c 1 -s 2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;操作步骤2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ping &amp;lt;IP&amp;gt; -c 1 -s 3
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;操作步骤3
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_ping_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;package_ping_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这个抓包在mac上命令方式不一样，导致我一直没有执行成功&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_ping_mac.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;package_ping_mac&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;如图3所示，如果我需要分析步骤1，则只要看146～183之间的包即可。注意到146号包最底下的“Data（1 byte）”了吗？byte的数目表示是第几步，这样就算在步骤很多的情况下也不会混乱。 &lt;br&gt;
+抓包的技巧还有很多，比如可以写一个脚本来循环抓包，等侦察到某事件时自动停止。一位工程师即便不懂网络分析，但如果能抓得一手好包，也是一项很了不起的技能了。&lt;/p&gt;
+&lt;h3 id=&#34;二个性化设置&#34;&gt;二、个性化设置&lt;/h3&gt;
+&lt;p&gt;Wireshark的默认设置堪称友好，但不同用户的从事领域和使用习惯各有不同，所以有时需要根据自己的情况对配置略作修改。&lt;/p&gt;
+&lt;p&gt;1．我经常需要参照服务器上的日志时间，找到发生问题时的网络包。所以就把Wireshark的时间调成跟服务器一样的格式。单击Wireshark的View&amp;ndash;&amp;gt;Time Display Format&amp;ndash;&amp;gt;Date and Time of Day，就可以实现此设置（见图4）。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_time_set.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_time_set&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;图四&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本设置&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_time_display_format.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_time_display_format&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;2．不同类型的网络包可以自定义颜色，比如网络管理员可能会把OSPF等协议或者与Spanning Tree Protocol（生成树协议）相关的网络包设成最显眼的颜色。而文件服务器的管理员则更关心FTP、SMB和NFS协议的颜色。我们可以通过View &amp;ndash;&amp;gt;Coloring Rules来设置颜色。如果同事已经有一套非常适合你工作内容的配色方案，可以请他从Coloring Rules窗口导出，然后导入到你的Wireshark里（见图5）。记得下次和他吃饭时主动买单，要知道配一套养眼的颜色可要花不少时间。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_color_rule_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_color_rule_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;图五&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_color_rule.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_color_rule&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;3．更多的设置可以在Edit&amp;ndash;&amp;gt;Preferences窗口中完成。这个窗口的设置精度可以达到一些协议的细节。比如在此窗口单击Protocols&amp;ndash;&amp;gt;TCP就可以看到多个TCP相关选项，将鼠标停在每一项上都会有详细介绍。假如经常要对Sequence Number做加减运算，不妨选中Relative sequence numbers（见图6），这样会使Sequence number看上去比实际小很多。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_tcp_config_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_tcp_config_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_tcp_config.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_tcp_config&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;4．如果你在其他时区的服务器上抓包，然后下载到自己的电脑上分析，最好把自己电脑的时区设成跟抓包的服务器一样。这样，Wireshark显示的时间才能匹配服务器上日志的时间。比如说，服务器的日志显示2/13/2014 13:01:32有一个错误信息。那我们要在自己电脑上调整时区之后，才能到Wireshark上检查2/13/2014 13:01:32左右的包，否则就得先换算时间。&lt;/p&gt;
+&lt;p&gt;三、过滤
+很多时候，解决问题的过程就是层层过滤，直至找到关键包。前面已经介绍过抓包时的Capture Filter功能了。其实在包抓下来之后，还可以进一步过滤，而且这一层的过滤功能更加强大。下图表示一个&amp;quot;IP为10.32.106.50，且TCP端口为445&amp;quot;的过滤表达式。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_ip_port_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_filter_ip_port_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_ip_port.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_filter_ip_port&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;要说过滤的作用与技巧，就算专门写一本小册子都不为过。篇幅所限，本文只能&amp;quot;过滤&amp;quot;出最适合初学者的部分。&lt;/p&gt;
+&lt;p&gt;1．如果已知某个协议发生问题，可以用协议名称过滤一下。以Windows Domain的身份验证问题为例，如果已知该域的验证协议是Kerberos，那么就在Filter框输入Kerberos作为关键字过滤。除了纯粹的Kerberos包，你还将得到Session Setup之类包含Kerberos的包。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_Kerberos.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_filter_Kerberos&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;用协议过滤时务必考虑到协议间的依赖性。比如NFS共享挂载失败，问题可能发生在挂载时所用的mount协议，也可能发生在mount之前的portmap协议。这种情况下就需要用&amp;quot;portmap || mount&amp;quot;来过滤了。如果不懂协议间的依赖关系怎么办？我也没有好办法，只能暂时放弃这个技巧，等熟悉了该协议后再用。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_portmap_mount.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_filter_portmap_mount&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;2．IP地址加port号是最常用的过滤方式。除了手工输入ip.addreq &amp;amp;&amp;amp;tcp.porteq&amp;lt;端口号&amp;gt;之类的过滤表达式，Wireshark还提供了更快捷的方式：右键单击感兴趣的包，选择Follow TCP/UDP Stream（选择TCP还是UDP要视传输层协议而定）就可以自动过滤。而且该Stream的对话内容会在新弹出的窗口中显示出来。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_stream_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_filter_stream_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_stream.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_filter_stream&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;经常有人在论坛上问，Wireshark是按照什么过滤出一个TCP/UDP Stream的？答案就是：两端的IP加port。单击Wireshark的Statistics&amp;ndash;&amp;gt;Conversations，再单击TCP或者UDP标签就可以看到所有的Stream。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_ip_port_stream_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_ip_port_stream_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_ip_port_stream.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_ip_port_stream&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;3．用鼠标帮助过滤。我们有时因为Wireshark而苦恼，并不是因为它功能不够，而是强大到难以驾驭。比如在过滤时，有成千上万的条件可供选择，但怎么写才是合乎语法的？虽然 &lt;a class=&#34;link&#34; href=&#34;http://www.wireshark.org/docs/dfref/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;http://www.wireshark.org/docs/dfref/&lt;/a&gt; 提供了参考，但经常查找毕竟太费时费力了。Wireshark考虑到了这个需求，右键单击Wireshark上感兴趣的内容，然后选择Prepare a Filter&amp;ndash;&amp;gt;Selected，就会在Filter框中自动生成过滤表达式。在有复杂需求的时候，还可以选择And、Or等选项来生成一个组合的过滤表达式。&lt;/p&gt;
+&lt;p&gt;假如右键单击之后选择的不是Prepare a Filter，而是Apply as Filter&amp;ndash;&amp;gt;Selected，则该过滤表达式生成之后还会自动执行。图12显示了在一个SMB包的SMB Command: Read AndX上右键单击，并选择Selected之后，所有的Read包都会被过滤出来。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_selected_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_filter_selected_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_selected.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_filter_selected&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;4．我们可以把过滤后得到的网络包存在一个新的文件里，因为小文件更方便操作。单击Wireshark的File&amp;ndash;&amp;gt;Save As，选中Displayed单选按钮再保存，得到的新文件就是过滤后的部分。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_save_as_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_save_as_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;有时候你会发现，保存后的文件再打开时会显示很多错误。这是因为过滤后得到的不再是一个完整的TCP Stream，就像抓包时漏抓了很多一样。所以选择Displayed选项时要慎重考虑。&lt;/p&gt;
+&lt;p&gt;注意：有些Wireshark版本把这个功能移到了菜单File&amp;ndash;&amp;gt;Export Specified Packets…选项中，如下图所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_save_as_export.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_save_as_export&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_save_as1.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_save_as1&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_save_as2.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_save_as2&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;总体来说，过滤是Wireshark中最有趣，最难，也是最有价值之处，值得我们用心学习。&lt;/p&gt;
+&lt;p&gt;四、让Wireshark自动分析
+有些类型的问题，我们根本不需要研究包里的细节，直接交给Wireshark分析就行了。&lt;/p&gt;
+&lt;p&gt;1．单击Wireshark的Analyze&amp;ndash;&amp;gt;Expert Info Composite，就可以在不同标签下看到不同级别的提示信息。比如重传的统计、连接的建立和重置统计，等等。在分析网络性能和连接问题时，我们经常需要借助这个功能。下图是TCP包的重传统计。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_analyze_expert_info_composite_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_analyze_expert_info_composite_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_analyze_expert_infomation.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_analyze_expert_infomation&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;2．单击Statistics&amp;ndash;&amp;gt;Service Response Time，再选定协议名称，可以得到响应时间的统计表。我们在衡量服务器性能时经常需要此统计结果。图16展示的是SMB2读写操作的响应时间。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statstics_response_time_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_statstics_response_time_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;4.0.5版本的协议很少，甚至没有看到tcp协议，把所有协议看了，只有NCP、SMB两种协议有内容，内容不像分析数据。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statstics_response_time_ncp.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_statstics_response_time_ncp&#34;
+	
+	
+&gt;
+&lt;img src=&#34;https://sona201.github.io/image/wireshark_statstics_response_time_smb.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_statstics_response_time_smb&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;3．单击Statistics&amp;ndash;&amp;gt;TCP Stream Graph，可以生成几类统计图。比如我曾经用Time-Sequence Graph (Stevens)生成了下图。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statistics_stevens_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_statistics_stevens_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statistics_stevens.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_statistics_stevens&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;从老图中可以看出25～40秒，以及65～75秒之间没有传输数据。进一步研究，发现发送方内存不足，所以偶尔出现暂停现象，添加内存后问题就解决了。&lt;/p&gt;
+&lt;p&gt;为什么Wireshark要把这个图称为“Stevens”呢？我猜是为了向《TCP/IP Illustrated》的作者Richard Stevens致敬。这也是我非常喜欢的一套书，在此推荐给所有读者。&lt;/p&gt;
+&lt;p&gt;4．单击Statistics&amp;ndash;&amp;gt;Summary，可以看到一些统计信息，比如平均流量等，这有助于我们推测负载状况。比如下图中的网络包才1.594Mbit/s，说明流量低得很。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statistics_summary_old.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_statistics_summary_old&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本没有找到 Statistics&amp;ndash;&amp;gt;Summary 选项，但找到 Statistics&amp;ndash;&amp;gt;Conversations(对话)，但看起来结果差不多&lt;/p&gt;
+&lt;p&gt;Version 4.0.5版本没有找到 Statistics&amp;ndash;&amp;gt;Summary 选项，但找到 Statistics&amp;ndash;&amp;gt;Capture File Properties，菜单改了&lt;/p&gt;
+&lt;p&gt;参考最新菜单解释&lt;a class=&#34;link&#34; href=&#34;https://www.wireshark.org/docs/wsug_html_chunked/ChUseStatisticsMenuSection.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.wireshark.org/docs/wsug_html_chunked/ChUseStatisticsMenuSection.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statistics_summary.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_statistics_summary&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;五、最容易上手的搜索功能
+与很多软件一样，Wireshark也可以通过“Ctrl+F”搜索关键字。假如我们怀疑包里含有“error”一词，就可以按下“Ctrl+F”之后选中“String”单选按钮，然后在Filter中输入“error”进行搜索。很多应用层的错误都可以靠这个方法锁定问题包。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_search_error.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;wireshark_filter_search_error&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;一篇文章不可能涵盖所有技巧，本文就到此为止。最后要分享的，是我认为最“笨”但也是最重要的一个技巧——勤加练习。只要练到这些技巧都变成习惯，就可以算登堂入室了。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>Haoel</title>
         <link>https://sona201.github.io/posts/haoel/</link>
         <pubDate>Mon, 15 May 2023 22:33:26 +0800</pubDate>
@@ -2109,737 +2840,6 @@ rt，丢包率，curl速度怎么查看？使用&amp;ndash;help，需要谷歌�
 &lt;/div&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;参数相关&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;更新了配置后，直接服务也启动失败，wget也异常了。&lt;/p&gt;
-</description>
-        </item>
-        <item>
-        <title>Wireshark本地劫持https</title>
-        <link>https://sona201.github.io/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/</link>
-        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-        
-        <guid>https://sona201.github.io/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/</guid>
-        <description>&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.jianshu.com/p/b3cc1299e03e&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;相关文章&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;方案: 手动启动浏览器，让浏览器把证书放到指定目录，wireshark去读取，然后解析，就可以得到解密后的包了，等同于http请求抓包&lt;/p&gt;
-&lt;h3 id=&#34;一启动浏览器&#34;&gt;一、启动浏览器&lt;/h3&gt;
-&lt;blockquote&gt;
-&lt;p&gt;在终端执行命令，打开新的 Chrome 浏览器&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --user-data-dir=/tmp/chrome --ssl-key-log-file=/tmp/.ssl-key.log
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;h3 id=&#34;二配置wireshark&#34;&gt;二、配置wireshark&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;打开 Wireshark ，Wireshark - Perferences - Protocols - TLS ，在 (Pre)-Master-Secret log filename 输入 /tmp/.ssl-key.log
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshrk_config.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshrk_config&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;h3 id=&#34;三抓包&#34;&gt;三、抓包&lt;/h3&gt;
-&lt;blockquote&gt;
-&lt;p&gt;打开浏览器，发出请求，开始抓包
-&lt;img src=&#34;https://sona201.github.io/image/start_chrome.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;start_chrome&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h3 id=&#34;四异常情况&#34;&gt;四、异常情况&lt;/h3&gt;
-&lt;blockquote&gt;
-&lt;p&gt;异常情况暂未遇到过，这个先记录一下&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;出现 Opening in existing browser session. &lt;br&gt;
-解决方式：关闭掉用命令启动的 Chrome，然后重新运行 Chrome 启动命令&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ ps -ef | grep /tmp/.ssl | awk &amp;#39;NR==1{print $2}&amp;#39; | xargs  kill -9
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --user-data-dir=/tmp/chrome --ssl-key-log-file=/tmp/.ssl-key.log
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;h3 id=&#34;参考文章&#34;&gt;参考文章&lt;/h3&gt;
-&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.gfkui.com/2018/03/30/%E4%BD%BF%E7%94%A8wireshark%E5%88%86%E6%9E%90https/index.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;使用wireshark分析https&lt;/a&gt;&lt;/p&gt;
-</description>
-        </item>
-        <item>
-        <title>Wireshark技巧</title>
-        <link>https://sona201.github.io/posts/wireshark%E6%8A%80%E5%B7%A7/</link>
-        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-        
-        <guid>https://sona201.github.io/posts/wireshark%E6%8A%80%E5%B7%A7/</guid>
-        <description>&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://developer.aliyun.com/article/100476&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;相关文章&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;wireshark你一定会喜欢的技巧摘要&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;修改seq的为绝对值 relative
-&lt;img src=&#34;https://sona201.github.io/image/seq_relative_num.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;seq_relative_num&#34;
-	
-	
-&gt;&lt;/li&gt;
-&lt;li&gt;配置rt
-&lt;img src=&#34;https://sona201.github.io/image/rt_time.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;rt_time&#34;
-	
-	
-&gt;&lt;/li&gt;
-&lt;li&gt;分析&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kawabangga.com/posts/4794&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;分析图&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;wireshark https 抓包 tls contains &amp;ldquo;baidu.com&amp;rdquo;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;wireshark 没有权限
-&lt;img src=&#34;https://sona201.github.io/image/permission_denied.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;permission_denied&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;或者下图&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/permission_denied_wireshark.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;permission_denied_wireshark&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;命令行赋权&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;直接简单粗暴的777&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo chmod 777 /dev/bpf*
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;查看当前用户名，给当前用户赋权&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo chown clin:wheel /dev/bpf*
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;blockquote&gt;
-&lt;p&gt;本来这个命令都不打算记录，但最近在自己电脑上重新安装就出现一次，还是老老实实的记录下&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h3 id=&#34;一抓包&#34;&gt;一、抓包&lt;/h3&gt;
-&lt;p&gt;拿到一个网络包时，我们总是希望它尽可能小。因为操作一个大包相当费时，有时甚至会死机。如果让初学者分析1GB以上的包，估计会被打击得信心全无。所以抓包时应该尽量只抓必要的部分。有很多方法可以实现这一点。&lt;/p&gt;
-&lt;p&gt;1．只抓包头。一般能抓到的每个包（称为“帧”更准确，但是出于表达习惯，本书可能会经常用“包”代替“帧”和“分段”）的最大长度为1514字节，启用了Jumbo Frame（巨型帧）之后可达9000字节以上，而大多数时候我们只需要IP头或者TCP头就足够分析了。在Wireshark上可以这样抓到包头：单击菜单栏上的Capture&amp;ndash;&amp;gt;Options，然后在弹出的窗口上定义“Limit each packet to”的值。我一般设个偏大的数字：80字节，也就是说每个包只抓前80字节。这样TCP层、网络层和数据链路层的信息都可以包括在内（见图1）。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;3.0之前版本wireshark更改方式&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_limit_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;package_limit_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;图一&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;3.0之后的版本&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_limit.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;package_limit&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;如果问题涉及应用层，就应该再加上应用层协议头的长度。如果你像我一样经常忘记不同协议头的长度，可以输入一个大点的值。即便设成200字节，也比1514字节小多了。&lt;br&gt;
-以上是使用Wireshark抓包时的建议。用tcpdump命令抓包时可以用“-s”参数达到相同效果。比如以下命令只抓eth0上每个包的前80字节，并把结果存到/tmp/tcpdump.cap文件中。&lt;/p&gt;
-&lt;p&gt;使用&lt;code&gt;tcpdump&lt;/code&gt;指定抓包字节命令&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[root@server_1 /]# tcpdump -i eth0 -s 80 -w /tmp/tcpdump.cap
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;2．只抓必要的包。服务器上的网络连接可能非常多，而我们只需要其中的一小部分。Wireshark的Capture Filter可以在抓包时过滤掉不需要的包。比如在成百上千的网络连接中，我们只对IP为10.32.200.131的包感兴趣，那就可以在Wireshark上这样设置：单击菜单栏上的Capture&amp;ndash;&amp;gt;Options，然后在Capture Filter中输入“host 10.32.200.131”（见图2）。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;老版本&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_filter_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;package_filter_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;图二&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Version 4.0.5版本&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_filter.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;package_filter&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;h4 id=&#34;wireshark官方的过滤文档httpswikiwiresharkorgcapturefilters&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://wiki.wireshark.org/CaptureFilters&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;wireshark官方的过滤文档&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;用tcpdump命令抓包时，也可以用“host”参数达到相同效果。比如以下命令只抓与10.32.200.131通信的包，并把结果存到/tmp/tcpdump.cap文件中。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[root@server_1 /]# tcpdump -i eth0 host 10.32.200.131 -w /tmp/tcpdump.cap
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;h4 id=&#34;注意设置capture-filter之前务必三思以免把有用的包也过滤掉尤其是容易被忽略的广播包当然有时候再怎么考虑也会失算比如我有一次把对方的ip地址设为filter结果一个包都没抓到最后只能去掉filter再抓才发现是nat网络地址转换设备把对方的ip地址改掉了&#34;&gt;注意：设置Capture Filter之前务必三思，以免把有用的包也过滤掉，尤其是容易被忽略的广播包。当然有时候再怎么考虑也会失算，比如我有一次把对方的IP地址设为filter，结果一个包都没抓到。最后只能去掉filter再抓，才发现是NAT（网络地址转换）设备把对方的IP地址改掉了。&lt;/h4&gt;
-&lt;p&gt;抓的包除了要小，最好还能为每步操作打上标记。这样的包一目了然，赏心悦目。比如要在Windows上抓一个包含三步操作的问题，我会这样抓。&lt;/p&gt;
-&lt;p&gt;想指定ping，发送三次包，每次只发送一个&lt;code&gt;ping&lt;/code&gt;包(&lt;code&gt;count&lt;/code&gt;)，不通次数发送的&lt;code&gt;ping&lt;/code&gt;的&lt;code&gt;size&lt;/code&gt;大小不一样，&lt;/p&gt;
-&lt;p&gt;windows机器指定ping方式&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（1）ping &amp;lt;IP&amp;gt; -n 1 -l 1
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（2）操作步骤1
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（3）ping &amp;lt;IP&amp;gt; -n 1 -l 2
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（4）操作步骤2
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（5）ping &amp;lt;IP&amp;gt; -n 1 -l 3
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;（6）操作步骤3
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;windows ping命令解释&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;用法: ping [-t] [-a] [-n count] [-l size] [-f] [-i TTL] [-v TOS]
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            [-r count] [-s count] [[-j host-list] | [-k host-list]]
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            [-w timeout] [-R] [-S srcaddr] [-c compartment] [-p]
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            [-4] [-6] target_name
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;选项:
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -t             Ping 指定的主机，直到停止。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   若要查看统计信息并继续操作，请键入 Ctrl+Break；
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   若要停止，请键入 Ctrl+C。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -a             将地址解析为主机名。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -n count       要发送的回显请求数。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -l size        发送缓冲区大小。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -f             在数据包中设置“不分段”标记(仅适用于 IPv4)。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -i TTL         生存时间。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -v TOS         服务类型(仅适用于 IPv4。该设置已被弃用，
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   对 IP 标头中的服务类型字段没有任何
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   影响)。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -r count       记录计数跃点的路由(仅适用于 IPv4)。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -s count       计数跃点的时间戳(仅适用于 IPv4)。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -j host-list   与主机列表一起使用的松散源路由(仅适用于 IPv4)。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -k host-list    与主机列表一起使用的严格源路由(仅适用于 IPv4)。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -w timeout     等待每次回复的超时时间(毫秒)。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -R             同样使用路由标头测试反向路由(仅适用于 IPv6)。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   根据 RFC 5095，已弃用此路由标头。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   如果使用此标头，某些系统可能丢弃
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                   回显请求。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -S srcaddr     要使用的源地址。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -c compartment 路由隔离舱标识符。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -p             Ping Hyper-V 网络虚拟化提供程序地址。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -4             强制使用 IPv4。
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    -6             强制使用 IPv6。
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;mac/linux ping命令执行&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ping &amp;lt;IP&amp;gt; -c 1 -s 1
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;操作步骤1
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ping &amp;lt;IP&amp;gt; -c 1 -s 2
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;操作步骤2
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ping &amp;lt;IP&amp;gt; -c 1 -s 3
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;操作步骤3
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_ping_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;package_ping_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;这个抓包在mac上命令方式不一样，导致我一直没有执行成功&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/package_ping_mac.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;package_ping_mac&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;如图3所示，如果我需要分析步骤1，则只要看146～183之间的包即可。注意到146号包最底下的“Data（1 byte）”了吗？byte的数目表示是第几步，这样就算在步骤很多的情况下也不会混乱。 &lt;br&gt;
-抓包的技巧还有很多，比如可以写一个脚本来循环抓包，等侦察到某事件时自动停止。一位工程师即便不懂网络分析，但如果能抓得一手好包，也是一项很了不起的技能了。&lt;/p&gt;
-&lt;h3 id=&#34;二个性化设置&#34;&gt;二、个性化设置&lt;/h3&gt;
-&lt;p&gt;Wireshark的默认设置堪称友好，但不同用户的从事领域和使用习惯各有不同，所以有时需要根据自己的情况对配置略作修改。&lt;/p&gt;
-&lt;p&gt;1．我经常需要参照服务器上的日志时间，找到发生问题时的网络包。所以就把Wireshark的时间调成跟服务器一样的格式。单击Wireshark的View&amp;ndash;&amp;gt;Time Display Format&amp;ndash;&amp;gt;Date and Time of Day，就可以实现此设置（见图4）。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_time_set.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_time_set&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;图四&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本设置&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_time_display_format.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_time_display_format&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;2．不同类型的网络包可以自定义颜色，比如网络管理员可能会把OSPF等协议或者与Spanning Tree Protocol（生成树协议）相关的网络包设成最显眼的颜色。而文件服务器的管理员则更关心FTP、SMB和NFS协议的颜色。我们可以通过View &amp;ndash;&amp;gt;Coloring Rules来设置颜色。如果同事已经有一套非常适合你工作内容的配色方案，可以请他从Coloring Rules窗口导出，然后导入到你的Wireshark里（见图5）。记得下次和他吃饭时主动买单，要知道配一套养眼的颜色可要花不少时间。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_color_rule_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_color_rule_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;图五&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_color_rule.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_color_rule&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;3．更多的设置可以在Edit&amp;ndash;&amp;gt;Preferences窗口中完成。这个窗口的设置精度可以达到一些协议的细节。比如在此窗口单击Protocols&amp;ndash;&amp;gt;TCP就可以看到多个TCP相关选项，将鼠标停在每一项上都会有详细介绍。假如经常要对Sequence Number做加减运算，不妨选中Relative sequence numbers（见图6），这样会使Sequence number看上去比实际小很多。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_tcp_config_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_tcp_config_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_tcp_config.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_tcp_config&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;4．如果你在其他时区的服务器上抓包，然后下载到自己的电脑上分析，最好把自己电脑的时区设成跟抓包的服务器一样。这样，Wireshark显示的时间才能匹配服务器上日志的时间。比如说，服务器的日志显示2/13/2014 13:01:32有一个错误信息。那我们要在自己电脑上调整时区之后，才能到Wireshark上检查2/13/2014 13:01:32左右的包，否则就得先换算时间。&lt;/p&gt;
-&lt;p&gt;三、过滤
-很多时候，解决问题的过程就是层层过滤，直至找到关键包。前面已经介绍过抓包时的Capture Filter功能了。其实在包抓下来之后，还可以进一步过滤，而且这一层的过滤功能更加强大。下图表示一个&amp;quot;IP为10.32.106.50，且TCP端口为445&amp;quot;的过滤表达式。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_ip_port_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_filter_ip_port_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_ip_port.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_filter_ip_port&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;要说过滤的作用与技巧，就算专门写一本小册子都不为过。篇幅所限，本文只能&amp;quot;过滤&amp;quot;出最适合初学者的部分。&lt;/p&gt;
-&lt;p&gt;1．如果已知某个协议发生问题，可以用协议名称过滤一下。以Windows Domain的身份验证问题为例，如果已知该域的验证协议是Kerberos，那么就在Filter框输入Kerberos作为关键字过滤。除了纯粹的Kerberos包，你还将得到Session Setup之类包含Kerberos的包。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_Kerberos.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_filter_Kerberos&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;用协议过滤时务必考虑到协议间的依赖性。比如NFS共享挂载失败，问题可能发生在挂载时所用的mount协议，也可能发生在mount之前的portmap协议。这种情况下就需要用&amp;quot;portmap || mount&amp;quot;来过滤了。如果不懂协议间的依赖关系怎么办？我也没有好办法，只能暂时放弃这个技巧，等熟悉了该协议后再用。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_portmap_mount.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_filter_portmap_mount&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;2．IP地址加port号是最常用的过滤方式。除了手工输入ip.addreq &amp;amp;&amp;amp;tcp.porteq&amp;lt;端口号&amp;gt;之类的过滤表达式，Wireshark还提供了更快捷的方式：右键单击感兴趣的包，选择Follow TCP/UDP Stream（选择TCP还是UDP要视传输层协议而定）就可以自动过滤。而且该Stream的对话内容会在新弹出的窗口中显示出来。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_stream_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_filter_stream_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_stream.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_filter_stream&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;经常有人在论坛上问，Wireshark是按照什么过滤出一个TCP/UDP Stream的？答案就是：两端的IP加port。单击Wireshark的Statistics&amp;ndash;&amp;gt;Conversations，再单击TCP或者UDP标签就可以看到所有的Stream。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_ip_port_stream_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_ip_port_stream_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_ip_port_stream.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_ip_port_stream&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;3．用鼠标帮助过滤。我们有时因为Wireshark而苦恼，并不是因为它功能不够，而是强大到难以驾驭。比如在过滤时，有成千上万的条件可供选择，但怎么写才是合乎语法的？虽然 &lt;a class=&#34;link&#34; href=&#34;http://www.wireshark.org/docs/dfref/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;http://www.wireshark.org/docs/dfref/&lt;/a&gt; 提供了参考，但经常查找毕竟太费时费力了。Wireshark考虑到了这个需求，右键单击Wireshark上感兴趣的内容，然后选择Prepare a Filter&amp;ndash;&amp;gt;Selected，就会在Filter框中自动生成过滤表达式。在有复杂需求的时候，还可以选择And、Or等选项来生成一个组合的过滤表达式。&lt;/p&gt;
-&lt;p&gt;假如右键单击之后选择的不是Prepare a Filter，而是Apply as Filter&amp;ndash;&amp;gt;Selected，则该过滤表达式生成之后还会自动执行。图12显示了在一个SMB包的SMB Command: Read AndX上右键单击，并选择Selected之后，所有的Read包都会被过滤出来。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_selected_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_filter_selected_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_selected.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_filter_selected&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;4．我们可以把过滤后得到的网络包存在一个新的文件里，因为小文件更方便操作。单击Wireshark的File&amp;ndash;&amp;gt;Save As，选中Displayed单选按钮再保存，得到的新文件就是过滤后的部分。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_save_as_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_save_as_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;有时候你会发现，保存后的文件再打开时会显示很多错误。这是因为过滤后得到的不再是一个完整的TCP Stream，就像抓包时漏抓了很多一样。所以选择Displayed选项时要慎重考虑。&lt;/p&gt;
-&lt;p&gt;注意：有些Wireshark版本把这个功能移到了菜单File&amp;ndash;&amp;gt;Export Specified Packets…选项中，如下图所示。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_save_as_export.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_save_as_export&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_save_as1.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_save_as1&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_save_as2.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_save_as2&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;总体来说，过滤是Wireshark中最有趣，最难，也是最有价值之处，值得我们用心学习。&lt;/p&gt;
-&lt;p&gt;四、让Wireshark自动分析
-有些类型的问题，我们根本不需要研究包里的细节，直接交给Wireshark分析就行了。&lt;/p&gt;
-&lt;p&gt;1．单击Wireshark的Analyze&amp;ndash;&amp;gt;Expert Info Composite，就可以在不同标签下看到不同级别的提示信息。比如重传的统计、连接的建立和重置统计，等等。在分析网络性能和连接问题时，我们经常需要借助这个功能。下图是TCP包的重传统计。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_analyze_expert_info_composite_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_analyze_expert_info_composite_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_analyze_expert_infomation.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_analyze_expert_infomation&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;2．单击Statistics&amp;ndash;&amp;gt;Service Response Time，再选定协议名称，可以得到响应时间的统计表。我们在衡量服务器性能时经常需要此统计结果。图16展示的是SMB2读写操作的响应时间。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statstics_response_time_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_statstics_response_time_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;4.0.5版本的协议很少，甚至没有看到tcp协议，把所有协议看了，只有NCP、SMB两种协议有内容，内容不像分析数据。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statstics_response_time_ncp.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_statstics_response_time_ncp&#34;
-	
-	
-&gt;
-&lt;img src=&#34;https://sona201.github.io/image/wireshark_statstics_response_time_smb.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_statstics_response_time_smb&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;3．单击Statistics&amp;ndash;&amp;gt;TCP Stream Graph，可以生成几类统计图。比如我曾经用Time-Sequence Graph (Stevens)生成了下图。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statistics_stevens_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_statistics_stevens_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本的样式&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statistics_stevens.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_statistics_stevens&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;从老图中可以看出25～40秒，以及65～75秒之间没有传输数据。进一步研究，发现发送方内存不足，所以偶尔出现暂停现象，添加内存后问题就解决了。&lt;/p&gt;
-&lt;p&gt;为什么Wireshark要把这个图称为“Stevens”呢？我猜是为了向《TCP/IP Illustrated》的作者Richard Stevens致敬。这也是我非常喜欢的一套书，在此推荐给所有读者。&lt;/p&gt;
-&lt;p&gt;4．单击Statistics&amp;ndash;&amp;gt;Summary，可以看到一些统计信息，比如平均流量等，这有助于我们推测负载状况。比如下图中的网络包才1.594Mbit/s，说明流量低得很。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statistics_summary_old.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_statistics_summary_old&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本没有找到 Statistics&amp;ndash;&amp;gt;Summary 选项，但找到 Statistics&amp;ndash;&amp;gt;Conversations(对话)，但看起来结果差不多&lt;/p&gt;
-&lt;p&gt;Version 4.0.5版本没有找到 Statistics&amp;ndash;&amp;gt;Summary 选项，但找到 Statistics&amp;ndash;&amp;gt;Capture File Properties，菜单改了&lt;/p&gt;
-&lt;p&gt;参考最新菜单解释&lt;a class=&#34;link&#34; href=&#34;https://www.wireshark.org/docs/wsug_html_chunked/ChUseStatisticsMenuSection.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://www.wireshark.org/docs/wsug_html_chunked/ChUseStatisticsMenuSection.html&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_statistics_summary.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_statistics_summary&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;五、最容易上手的搜索功能
-与很多软件一样，Wireshark也可以通过“Ctrl+F”搜索关键字。假如我们怀疑包里含有“error”一词，就可以按下“Ctrl+F”之后选中“String”单选按钮，然后在Filter中输入“error”进行搜索。很多应用层的错误都可以靠这个方法锁定问题包。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/wireshark_filter_search_error.jpeg&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;wireshark_filter_search_error&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;一篇文章不可能涵盖所有技巧，本文就到此为止。最后要分享的，是我认为最“笨”但也是最重要的一个技巧——勤加练习。只要练到这些技巧都变成习惯，就可以算登堂入室了。&lt;/p&gt;
 </description>
         </item>
         <item>
