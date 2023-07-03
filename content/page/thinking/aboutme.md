@@ -1,13 +1,18 @@
 ---
 title: "建站之初"
-description: "关于博客的一些乱七八糟想法"
+description: "关于博客的一些天马行空想法"
 date: "2023-04-06"
 lastmod: "2023-07-03"
 tags: [ "thinding", "龙族"]
 categories:
   - "Development"
-  - "VIM"
-slug: "spf13-vim-3-0-release-and-new-website"
+  - "thinking"
+slug: "website-slug-url"
+menu:
+    main: 
+        weight: 100
+        params:
+            icon: user-center
 ---
 
 # django_source_Interpretation
