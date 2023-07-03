@@ -1,5 +1,5 @@
 ---
-title: "Search"
+title: "搜索"
 description: "搜索"
 date: 2023-02-01
 slug: "search"

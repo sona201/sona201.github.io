@@ -1,5 +1,5 @@
 ---
-title: Links-友链
+title: "友链"
 description: 卡塞尔学院的时光是最刻苦铭心的
 date: 2023-07-03
 menu:
