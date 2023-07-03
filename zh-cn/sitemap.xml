@@ -19,7 +19,10 @@
     <lastmod>2023-07-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/page/</loc>
-    <lastmod>2023-07-03T00:00:00+00:00</lastmod>
+    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/about/</loc>
+    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/categories/</loc>
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
@@ -140,6 +143,9 @@
     <loc>https://sona201.github.io/posts/wsgiref/</loc>
     <lastmod>2023-07-03T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://sona201.github.io/posts/tcp%E5%AE%9E%E9%AA%8C/</loc>
+    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
+  </url><url>
     <loc>https://sona201.github.io/posts/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
   </url><url>
@@ -154,10 +160,5 @@
   </url><url>
     <loc>https://sona201.github.io/posts/hugo-framework/</loc>
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
-  </url><url>
-    <loc>https://sona201.github.io/about/</loc>
-    <lastmod>2019-02-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://sona201.github.io/posts/tcp%E5%AE%9E%E9%AA%8C/</loc>
   </url>
 </urlset>
