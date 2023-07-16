@@ -1,6 +1,6 @@
 ---
 title: 'Study_think'
-description: "纪念陈皓离世"
+description: "思考学习方式，学习思维"
 date: '2023-07-16T11:15:33+08:00'
 lastmod: '2023-07-16T11:15:33+08:00'
 categories: ["think"]
