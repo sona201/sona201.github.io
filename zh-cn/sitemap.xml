@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://sona201.github.io/</loc>
-    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -15,14 +15,8 @@
                 href="https://sona201.github.io/"
                 />
   </url><url>
-    <loc>https://sona201.github.io/page/</loc>
-    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
-  </url><url>
-    <loc>https://sona201.github.io/%E5%8F%8B%E9%93%BE/</loc>
-    <lastmod>2023-07-03T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://sona201.github.io/categories/</loc>
-    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -34,14 +28,14 @@
                 href="https://sona201.github.io/categories/"
                 />
   </url><url>
-    <loc>https://sona201.github.io/tags/https/</loc>
-    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
-  </url><url>
     <loc>https://sona201.github.io/post/</loc>
-    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/posts/study_think/</loc>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/</loc>
-    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -52,6 +46,39 @@
                 hreflang="zh-cn"
                 href="https://sona201.github.io/tags/"
                 />
+  </url><url>
+    <loc>https://sona201.github.io/categories/think/</loc>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/%E9%98%B6%E6%A2%AF%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/%E9%87%8C%E7%A8%8B%E7%A2%91%E6%95%88%E5%BA%94/</loc>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/%E9%A9%AC%E6%8B%89%E6%9D%BE/</loc>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/%E5%B1%B1%E7%94%B0%E6%9C%AC%E4%B8%80/</loc>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/%E5%B0%8F%E6%AD%A5%E5%AD%90%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/%E5%AD%A6%E4%B9%A0%E5%8F%8D%E6%80%9D/</loc>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/</loc>
+    <lastmod>2023-07-16T11:15:33+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/page/</loc>
+    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/%E5%8F%8B%E9%93%BE/</loc>
+    <lastmod>2023-07-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/https/</loc>
+    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/tc/</loc>
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
@@ -87,9 +114,6 @@
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/posts/haoel/</loc>
-    <lastmod>2023-07-03T13:05:14+08:00</lastmod>
-  </url><url>
-    <loc>https://sona201.github.io/categories/think/</loc>
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/%E9%99%88%E7%9A%93/</loc>
