@@ -6,7 +6,54 @@
         <description>Recent content on Cassell</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Sun, 16 Jul 2023 11:15:33 +0800</lastBuildDate><atom:link href="https://sona201.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 19 Jul 2023 23:19:42 +0800</lastBuildDate><atom:link href="https://sona201.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>blog-theme</title>
+        <link>https://sona201.github.io/posts/blog-theme/</link>
+        <pubDate>Wed, 19 Jul 2023 23:19:42 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/blog-theme/</guid>
+        <description>&lt;h2 id=&#34;博客折腾&#34;&gt;博客折腾&lt;/h2&gt;
+&lt;p&gt;这两天折腾博客，总是遇到困难就想放弃。想法无非就是博客的主题哪哪不好看，不满意。人生呐，很难满足(就是想安慰自己不努力)。
+不过早就明白了，博客的本质还是要内容好，而不是花里胡哨的样子。但都想有点虚荣心。&lt;/p&gt;
+&lt;p&gt;这两天还是看见了一个基本满意的主题，但作者是外国人，估计对中文支持有点问题。其次是主题本地测试跑不起来，感觉是自愿获取被墙拦截了。
+好像代码也有bug，本着偷懒原则，暂停折腾。这两天折腾的结果只有心累，还是跟原来一样，想速成，一点耐心都没有，硬生生找了两个主题跟着敲了一遍代码。
+有点样子了，但又嫌弃太慢，不能立马写出我想要的主题，又开始改动原来的主题。于是想了想，开个主题，给自己挖个坑，慢慢填吧。&lt;/p&gt;
+&lt;h2 id=&#34;折腾记录&#34;&gt;折腾记录&lt;/h2&gt;
+&lt;h3 id=&#34;跟着简书上的文章写&#34;&gt;跟着简书上的文章写&lt;/h3&gt;
+&lt;p&gt;最初的想法是，类似于学习demo一样，找个中文版本，跟着手敲一遍，想想大概就能搞定了。抱着这个想法，我打开了第一个收藏链接&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.jianshu.com/p/0b9aecff290c&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;如何创建自己的hugo主题&lt;/a&gt;，天真的我，看内容写的非常详细，还贴了很多代码。
+我想，只要我跟着后面做，铁定就会了。事实是，跟着后面做，根本跑不起来，只记录了大概得过程，最后的截图更像是hugo的 bootstrip 主题替换的结果。
+不知道是我跟着写的步骤不对，还是被欺骗了。代码也没有贴上，大概理清楚了 hugo 的架构&lt;/p&gt;
+&lt;h3 id=&#34;疯狂搜索一目十行&#34;&gt;疯狂搜索，一目十行&lt;/h3&gt;
+&lt;p&gt;疯狂谷歌 &amp;ldquo;hugo 主题开发&amp;rdquo; , 找到两个比较靠谱的方案，都是有经验的，而且把博客主题代码放在 github 上。&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://io-oi.me/tech/developing-a-hugo-theme/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://io-oi.me/tech/developing-a-hugo-theme/&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://blog.gimo.me/posts/creating-a-hugo-theme/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://blog.gimo.me/posts/creating-a-hugo-theme/&lt;/a&gt; &lt;br&gt;
+我想，这总能行了吧，大家对 hugo 主题开发的基本功要求不一样，或者我的基础太差。实在是跟不上，半天想搞起来确实费劲。但经验确实值得参考。&lt;/p&gt;
+&lt;p&gt;后面也看了 &lt;a class=&#34;link&#34; href=&#34;https://qwqaq.com/2022/04/migrate-to-hugo/#%E5%88%B6%E4%BD%9C%E4%B8%BB%E9%A2%98&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;转向 Hugo：主题制作指北&lt;/a&gt;
+确实很详细，但不是我想要的一步一步带着我写好，其实他已经提醒了很多，给了官网的链接，已经想跟着官网写，最后还是放弃了。官网写的感觉并不友好。
+最后发现问题是我对 golang 不熟悉，其实这 hugo 可以当成一个 python 的 jinja2 模板来理解。可能本质就是一样。&lt;/p&gt;
+&lt;h3 id=&#34;找一个已经写出来的博客跟着做&#34;&gt;找一个已经写出来的博客跟着做&lt;/h3&gt;
+&lt;p&gt;跟着一个靠谱的写一个主题，最后的效果还是有点问题，熟悉了架构
+主要是自己不想从零开始写主题，更多的是想修改一个现有主题&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这个博客的代码其实也有一点点的问题，比如链接失效，最新版本不一致，但幸好都找到替代方案。最后代码成功的运行起来了。
+结果这才发现是我想要的功能，大概怎么实现，距离实现的目标还差多少。&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;回归最初的目的&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;我在友链的文章里写了好几个主题是我喜欢的风格，但作者都没有开源，想到我最初的目标就是把博客搭建起来，然后修改成自己喜欢的样子。
+增加一些想要的功能，仅此而已，对现有主题的不满没有那么夸张，只是在看到别人折腾主题的过程，发现更多的细节，自己也先要，或者也要踩坑。
+由此慢慢偏离最初的目的，现在功能基本都满足自己，只剩一些样式的问题，干脆开个坑，慢慢积累，反正我也不是那种一鼓作气搞定一切的人。
+或许，慢慢来，比较快。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>Study_think</title>
         <link>https://sona201.github.io/posts/study_think/</link>
         <pubDate>Sun, 16 Jul 2023 11:15:33 +0800</pubDate>
@@ -80,22 +127,19 @@
         <pubDate>Mon, 03 Jul 2023 00:00:00 +0000</pubDate>
         
         <guid>https://sona201.github.io/%E5%8F%8B%E9%93%BE/</guid>
-        <description>&lt;ul&gt;
-&lt;li&gt;title: 龙族&lt;/li&gt;
-&lt;li&gt;description: 卡塞尔学院的时光是最刻苦铭心的&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;大佬的博客&#34;&gt;大佬的博客&lt;/h2&gt;
-&lt;p&gt;本质上是我收藏了很多博客，但迟迟没看，干脆就移步到这里&lt;/p&gt;
-&lt;h3 id=&#34;一博客地址-httpsblogmwishme&#34;&gt;一、博客地址: &lt;a class=&#34;link&#34; href=&#34;https://blog.mwish.me/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://blog.mwish.me/&lt;/a&gt;&lt;/h3&gt;
+        <description>&lt;blockquote&gt;
+&lt;p&gt;平时喜欢用chrome书签收集博客文章，收藏再看，最后大都没有下文了。想自己也好好整理博客，干脆就重新整理到这里，也算是单项友链&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;感觉文章很有深度记录下httpsblogmwishme&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.mwish.me/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;感觉文章很有深度，记录下&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;博客渊源介绍: 这个好像是一个学生，但好厉害发现这个博客主要是因为&lt;a class=&#34;link&#34; href=&#34;https://blog.mwish.me/2022/11/24/SOSP-11-Windows-Azure-Storage/#Introduction&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;对象存储的文章&lt;/a&gt;吸引，虽然没看，但感觉能写出这么详细的文章的人真的很厉害。&lt;/p&gt;
-&lt;h3 id=&#34;二博客地址-httpsstrrldev&#34;&gt;二、博客地址: &lt;a class=&#34;link&#34; href=&#34;https://strrl.dev/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://strrl.dev/&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;跟着大佬后面自己每周记录周报给自己复习回顾使用httpsstrrldev&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://strrl.dev/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;跟着大佬后面自己每周记录周报，给自己复习回顾使用&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;博客渊源介绍: 最早是在推上无意间发现的，感觉写的东西很厉害，最近发现大佬也会有烦恼，润或者英语，说他是大佬的一个原因是因为他有创业的想法，我感觉很厉害。至少目前我完全没有，能在这个行业混下去就已经很不错了。他的一个&lt;a class=&#34;link&#34; href=&#34;https://strrl.dev/post/weekly-report/2022/52-2022%E6%80%BB%E7%BB%93/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;周报&lt;/a&gt;讲到创业&lt;/p&gt;
-&lt;h3 id=&#34;三博客地址-httpswwwkawabanggacom&#34;&gt;三、博客地址: &lt;a class=&#34;link&#34; href=&#34;https://www.kawabangga.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://www.kawabangga.com/&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;laixintao经常打开他的博客当wiki用httpswwwkawabanggacom&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kawabangga.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;laixintao，经常打开他的博客当wiki用&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;博客渊源介绍: 好像也是推特上发现的，他自己发的。他也是一个播客: 捕蛇者说 的主持之一，lanxintao。&lt;br&gt;
 他的很多文章我都有看，感觉他的博客技术比我高一层，(至少我目前看是这样，有种似乎可以摸到的感觉)。但大佬的技术还是很厉害。 &lt;br&gt;
 特别喜欢他的几篇博客&lt;/p&gt;
@@ -107,35 +151,43 @@
 &lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kawabangga.com/posts/3773&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;编译LFS的一些经验&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h3 id=&#34;四博客地址-httpsblogskkmoe&#34;&gt;四、博客地址: &lt;a class=&#34;link&#34; href=&#34;https://blog.skk.moe/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://blog.skk.moe/&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;最初喜欢博客的样子httpsblogskkmoe&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.skk.moe/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;最初喜欢博客的样子&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;博客渊源介绍: 大概也是在推上看到的，主要是看他的布局样式很好看，就很像要拥有一个 &lt;br&gt;
 &lt;a class=&#34;link&#34; href=&#34;https://blog.skk.moe/post/use-nextjs-and-hexo-to-rebuild-my-blog/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://blog.skk.moe/post/use-nextjs-and-hexo-to-rebuild-my-blog/&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&#34;五博客地址-httpsblogskkmoe&#34;&gt;五、博客地址: &lt;a class=&#34;link&#34; href=&#34;https://blog.skk.moe/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://blog.skk.moe/&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;laike9m捕蛇者说播客作者之一httpslaike9mcom&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://laike9m.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;laike9m，捕蛇者说播客作者之一&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;博客渊源介绍: 捕蛇者说的另一个作者，在陈皓过世后的发了&lt;a class=&#34;link&#34; href=&#34;https://laike9m.com/blog/rip-chen-hao,147/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;一篇博客&lt;/a&gt; &lt;br&gt;
 里面提到了一个新奇的观点，这个目前我是比较接受的 &lt;a class=&#34;link&#34; href=&#34;https://laike9m.com/blog/people-die-but-long-live-github,122/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://laike9m.com/blog/people-die-but-long-live-github,122/&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&#34;六博客地址-httpscoolshellcn&#34;&gt;六、博客地址: &lt;a class=&#34;link&#34; href=&#34;https://coolshell.cn/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://coolshell.cn/&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;陈皓一个永远不会更新的博客httpscoolshellcn&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://coolshell.cn/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;陈皓，一个永远不会更新的博客&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;博客渊源介绍: 很早发现的一个博客，不止是影响我一个人，无限唏嘘 &lt;br&gt;
 他其实也是我半个导师吧，现在我还有很多想法回去看看，不过一个月过去了，没有开始看的那么多了 &lt;a class=&#34;link&#34; href=&#34;https://coolshell.cn/articles/21672.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://coolshell.cn/articles/21672.html&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&#34;七博客地址-httpswwwmanjusakablog&#34;&gt;七、博客地址: &lt;a class=&#34;link&#34; href=&#34;https://www.manjusaka.blog&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://www.manjusaka.blog&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;一个热爱奥特曼的公益少年httpswwwmanjusakablog&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.manjusaka.blog&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;一个热爱奥特曼的公益少年&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;博客渊源介绍: Manjusaka，之前看过他的相关博客，但印象最深的是我转发给媳妇儿的一篇关于信仰 &lt;br&gt;
 她也很喜欢奥特曼 &lt;a class=&#34;link&#34; href=&#34;https://www.manjusaka.blog/posts/2023/06/19/why-do-I-love-ultraman/index.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://www.manjusaka.blog/posts/2023/06/19/why-do-I-love-ultraman/index.html&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&#34;八博客地址-httpseinvernegithubio&#34;&gt;八、博客地址: &lt;a class=&#34;link&#34; href=&#34;https://einverne.github.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;https://einverne.github.io/&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;感觉记录了很多内容留着慢慢啃httpseinvernegithubio&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://einverne.github.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;感觉记录了很多内容，留着慢慢啃&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;博客渊源介绍: 无意间搜索发现的博客，意外的发现很简约，没有花里胡哨的主题，只有内容
 收藏他的博客是 &lt;a class=&#34;link&#34; href=&#34;https://einverne.github.io/post/2023/05/the-great-depression.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://einverne.github.io/post/2023/05/the-great-depression.html&lt;/a&gt; 美国大萧条 读书笔记 &lt;br&gt;
 &lt;a class=&#34;link&#34; href=&#34;https://einverne.github.io/post/2023/05/nonviolent-communication.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://einverne.github.io/post/2023/05/nonviolent-communication.html&lt;/a&gt; 非暴力沟通 读书笔记 &lt;br&gt;
 是他博客的样式让我又想自己尽快学习搞个主题&lt;/p&gt;
+&lt;h3 id=&#34;一个感觉k8s挺厉害的老外博客httpsneonmirrorsnet&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://neonmirrors.net/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;一个感觉k8s挺厉害的老外博客&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;博客渊源介绍: 搜主题时看到的，又喜欢上了，果然博爱。但这个主题跟上面第八个主题很相近，应该是我喜欢的类型了。
+简约而不简单，这个主题样式相对好看些，间距也相对舒服些，要是自己在这个上面优化的话，大概率是加个评论跟文章目录。&lt;/p&gt;
+&lt;p&gt;意外发下博主的文章都是k8s相关的，想想留着，总归要用的。&lt;/p&gt;
+&lt;h3 id=&#34;zhaohuabing-cncf-ambassadorhttpswwwzhaohuabingcom&#34;&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.zhaohuabing.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;zhaohuabing-CNCF Ambassador&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;博客渊源介绍: 搜索博客主题时，发现一篇入门博客主题就是博主发的，点进看demo，居然又是个k8s大佬，不管三七二十一，先粉了再说。&lt;/p&gt;
 </description>
         </item>
         <item>
@@ -3084,15 +3136,12 @@ rt，丢包率，curl速度怎么查看？使用&amp;ndash;help，需要谷歌�
 </description>
         </item>
         <item>
-        <title>建站之初</title>
-        <link>https://sona201.github.io/website-slug-url/</link>
-        <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+        <title>django-study</title>
+        <link>https://sona201.github.io/posts/django-study/</link>
+        <pubDate>Thu, 06 Apr 2023 23:19:42 +0800</pubDate>
         
-        <guid>https://sona201.github.io/website-slug-url/</guid>
-        <description>&lt;h1 id=&#34;django_source_interpretation&#34;&gt;django_source_Interpretation&lt;/h1&gt;
-&lt;p&gt;django 源码阅读&lt;/p&gt;
-&lt;h2 id=&#34;写在前面&#34;&gt;写在前面&lt;/h2&gt;
-&lt;p&gt;根据视频学习django
+        <guid>https://sona201.github.io/posts/django-study/</guid>
+        <description>&lt;p&gt;根据视频学习django
 记录学习历程&lt;/p&gt;
 &lt;p&gt;一直学习都是 狗熊掰玉米,掰一个仍一个。&lt;/p&gt;
 &lt;p&gt;想系统的学习, 没有头绪, 找了n 个xmind ,手抄一遍, 都是不顶用, 只停留在方法论上, 从没有真正执行过&lt;/p&gt;

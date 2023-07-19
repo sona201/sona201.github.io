@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>thinking on Cassell</title>
-        <link>https://sona201.github.io/categories/thinking/</link>
-        <description>Recent content in thinking on Cassell</description>
+        <title>study on Cassell</title>
+        <link>https://sona201.github.io/tags/study/</link>
+        <description>Recent content in study on Cassell</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Thu, 06 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://sona201.github.io/categories/thinking/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>建站之初</title>
-        <link>https://sona201.github.io/website-slug-url/</link>
-        <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+        <lastBuildDate>Thu, 06 Apr 2023 23:19:42 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/study/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>django-study</title>
+        <link>https://sona201.github.io/posts/django-study/</link>
+        <pubDate>Thu, 06 Apr 2023 23:19:42 +0800</pubDate>
         
-        <guid>https://sona201.github.io/website-slug-url/</guid>
-        <description>&lt;h1 id=&#34;django_source_interpretation&#34;&gt;django_source_Interpretation&lt;/h1&gt;
-&lt;p&gt;django 源码阅读&lt;/p&gt;
-&lt;h2 id=&#34;写在前面&#34;&gt;写在前面&lt;/h2&gt;
-&lt;p&gt;根据视频学习django
+        <guid>https://sona201.github.io/posts/django-study/</guid>
+        <description>&lt;p&gt;根据视频学习django
 记录学习历程&lt;/p&gt;
 &lt;p&gt;一直学习都是 狗熊掰玉米,掰一个仍一个。&lt;/p&gt;
 &lt;p&gt;想系统的学习, 没有头绪, 找了n 个xmind ,手抄一遍, 都是不顶用, 只停留在方法论上, 从没有真正执行过&lt;/p&gt;
