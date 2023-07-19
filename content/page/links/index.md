@@ -1,6 +1,6 @@
 ---
 title: "友链"
-description: 卡塞尔学院的时光是最刻苦铭心的
+description: 收藏的链接，珍贵的资料
 date: 2023-07-03
 menu:
     main: 
