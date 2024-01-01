@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>2023 on Ricardo</title>
+        <link>https://sona201.github.io/categories/2023/</link>
+        <description>Recent content in 2023 on Ricardo</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Mon, 01 Jan 2024 21:36:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/categories/2023/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>2023年终总结</title>
+        <link>https://sona201.github.io/posts/week33/</link>
+        <pubDate>Mon, 01 Jan 2024 21:36:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/week33/</guid>
+        <description>&lt;p&gt;2023年做了那些事:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;坚持写周报，虽然很水，质量有待提高&lt;/li&gt;
+&lt;li&gt;java 学习计划报废&lt;/li&gt;
+&lt;li&gt;学习k8s，勉强及格&lt;/li&gt;
+&lt;li&gt;django 学习计划报废&lt;/li&gt;
+&lt;li&gt;搞定博客，但还想继续优化主题&lt;/li&gt;
+&lt;li&gt;双拼音输入法，也算是一个坑&lt;/li&gt;
+&lt;li&gt;搞了一个 plantegg 的星球，学习了 tcp 相关的知识，但还是没用起来。因该是方向错了，不应该上来就搞 tcp，而是在应用层看看&lt;/li&gt;
+&lt;li&gt;看完 wireshark 这本书&lt;/li&gt;
+&lt;li&gt;看完《蛤蟆先生去看心里医生》&lt;/li&gt;
+&lt;li&gt;看完《认知觉醒》&lt;/li&gt;
+&lt;li&gt;学习英语，多邻国坚持了 57 天，确实有些是通过零点的bug 混过去的，2024 年希望能坚持 ARST 打卡&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
