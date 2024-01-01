@@ -7,7 +7,7 @@ image:
 style:
     background: "#2a9d8f"
     color: "#fff"
-slug: "week33"
+slug: "2023-year-end-summary"
 categories: ["year", "2023"]
 tags: ["年终总结"]
 ---
