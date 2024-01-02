@@ -22,3 +22,5 @@ https://github.com/olOwOlo/hugo-theme-even/blob/master/exampleSite/config.toml
 https://olowolo.com/post/hugo-quick-start/
 
 https://jinli.cyou/p/%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%9A%84%E5%BB%BA%E7%AB%8B%E8%BF%87%E7%A8%8B%E4%B8%89hugo%E4%B8%BB%E9%A2%98stack%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8E%E4%BC%98%E5%8C%96/
+
+[修改主题样式 css](https://guanqr.com/tech/website/hugo-shortcodes-customization/)
