@@ -1,29 +1,186 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>博客 on 卡塞尔的博客</title>
-    <link>/tags/%E5%8D%9A%E5%AE%A2/</link>
-    <description>Recent content in 博客 on 卡塞尔的博客</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Sun, 06 Aug 2023 22:20:00 +0800</lastBuildDate><atom:link href="/tags/%E5%8D%9A%E5%AE%A2/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>shaoxing</title>
-      <link>/post/travel/travel-shaoxing/</link>
-      <pubDate>Sun, 06 Aug 2023 22:20:00 +0800</pubDate>
-      
-      <guid>/post/travel/travel-shaoxing/</guid>
-      <description>说走就走的旅行 周四晚上临时决定去绍兴玩, 但却没有合适的回城票, 周五发现居然有票了. 早上 7.30 出发去虹桥火车站, 特意选了小红书介绍的(虹桥2号航站</description>
-    </item>
-    
-    <item>
-      <title>blog-theme</title>
-      <link>/post/think/blog-theme/</link>
-      <pubDate>Wed, 19 Jul 2023 23:19:42 +0800</pubDate>
-      
-      <guid>/post/think/blog-theme/</guid>
-      <description>博客折腾 这两天折腾博客，总是遇到困难就想放弃。想法无非就是博客的主题哪哪不好看，不满意。人生呐，很难满足(就是想安慰自己不努力)。 不过早就明</description>
-    </item>
-    
-  </channel>
+    <channel>
+        <title>博客 on Ricardo</title>
+        <link>https://sona201.github.io/tags/%E5%8D%9A%E5%AE%A2/</link>
+        <description>Recent content in 博客 on Ricardo</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sun, 06 Aug 2023 22:20:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/%E5%8D%9A%E5%AE%A2/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>shaoxing</title>
+        <link>https://sona201.github.io/posts/travel-shaoxing/</link>
+        <pubDate>Sun, 06 Aug 2023 22:20:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/travel-shaoxing/</guid>
+        <description>&lt;h3 id=&#34;说走就走的旅行&#34;&gt;说走就走的旅行&lt;/h3&gt;
+&lt;p&gt;周四晚上临时决定去绍兴玩, 但却没有合适的回城票, 周五发现居然有票了. &lt;br&gt;
+早上 7.30 出发去虹桥火车站, 特意选了小红书介绍的(虹桥2号航站楼)捷径, 第一次上候车厅 2 楼, 从二楼看候车厅, 感受到密密麻麻的人群. &lt;br&gt;
+之前都是从高楼上俯瞰, 感受个人的渺小, 但第一次从高空俯瞰这么密集的人群, 心里还是很震撼的.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/hongqiao_people.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;虹桥人&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;绍兴东湖&#34;&gt;绍兴东湖&lt;/h3&gt;
+&lt;p&gt;这次去绍兴计划先去东湖, 直接打车去, 攻略上说这里的风景不错, 因为与鲁迅故居那一片景点离的远, 所以先来东湖看风景, 然后再去鲁迅故里. &lt;br&gt;
+亲近大自然能让人有种原理工作的感受, 毕竟在这样的环境里不会给你各种需要工作的暗示, 远离城市, 忘记工作, 这感觉挺好. &lt;br&gt;
+东湖的景色最不能错过的就是在船上看山, 有些一线天的角度, 让人感叹大自然的鬼斧神工. 后来听边上的人讲, 这是人工景色, 赶紧百科一波.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/donghu_yixiantian.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;东湖一线天&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/donghu.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;东湖&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;东湖所在地，原为一座青石山，秦始皇东巡时曾在此驻驾饮马，故被称为箬篑山。汉代以后，箬篑山成了绍兴的一处石料场，经过千百年的凿穿斧削，又是采用特殊的取石方法，搬走了半座青山，并形成了高达50多米的悬崖峭壁。劳动者取石还普遍深入到地下20多米，有的甚至四五十米处，日子一久，形成了长过200米，宽约80米的清水塘。清末，绍兴著名乡贤陶浚宣眼光独到，利用采石场筑起围墙，对水面稍加拓宽，遂成山水相映的东湖。东湖经过百年的人工装扮，成为一处巧夺天工的山水大盆景。 &amp;ndash;百度百科&lt;/p&gt;
+&lt;h3 id=&#34;鲁迅故里&#34;&gt;鲁迅故里&lt;/h3&gt;
+&lt;p&gt;东湖游玩的时间多了, 回宾馆休息了一会儿去鲁迅故居, 鲁迅故居的那一片称之为鲁迅故里, 包含鲁迅祖屋, 鲁迅纪念馆, 三味书屋. &lt;br&gt;
+鲁迅的并不是一个平民子弟, 祖父做官, 青少年逢家道中落, 走向不一样的道路. 鲁迅的两个弟弟, 一个周作人(评价是汉奸文人), 周建人(浙江省长) &lt;br&gt;
+相关的内容是参观后才查资料了解的, 不过看到这些后, 再结合历史, 人在历史的车轮面前太无力了, 或者也可以说, 是历史创造了他们, 他们成就了历史. &lt;br&gt;
+绍兴的名人很多, 王羲之(书圣故里)/蔡元培/鲁迅三兄弟, 算是一种良性循环, 我猜也许跟周建人当官有关, 扶持当地教育事业有关.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/baicaoyuan.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;百草园&#34;
+	
+	
+&gt;
+&lt;img src=&#34;https://sona201.github.io/image/sanweishuwu.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;三味书屋&#34;
+	
+	
+&gt;
+&lt;img src=&#34;https://sona201.github.io/image/luxun_zuowei.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;鲁迅座位&#34;
+	
+	
+&gt;
+&lt;img src=&#34;https://sona201.github.io/image/caiyuanpei_guju.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;蔡元培故居&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;美食&#34;&gt;美食&lt;/h3&gt;
+&lt;p&gt;绍兴的特产其实就是黄酒, 应该是与时俱进, 产生了一些新奇的玩意儿. 黄酒奶茶, 黄酒冰棍; 这两个至少原来是没有的, 应该是后来某个商人开发的.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/shaoxing_naicha.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;绍兴黄酒奶茶&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;晚上在肯德基吹着空调思考去哪里吃, 原计划要找一家饭店好好吃一顿, 最后想直接去仓桥直街(商业街)逛逛, 看看有没有好吃的. &lt;br&gt;
+最后被一家心心念的醉蟹的小店吸引了, 点了几个特色菜, 醉蟹/醉虾/绍三鲜, 终于感觉这次旅游圆满了, 当时只顾吃忘记拍照了(饿死鬼附身).&lt;/p&gt;
+&lt;h3 id=&#34;思考&#34;&gt;思考&lt;/h3&gt;
+&lt;p&gt;这段是刚刚想到加上的, 跟媳妇儿聊到旅游的时候发现鲁迅的祖宅没有周作人的相关简介信息. 在听到鲁迅是三兄弟, 但在祖宅里只介绍了周树人/周建人, 没有周作人的信息. &lt;br&gt;
+当时参观的时候认为周作人可能比较平平无奇, 只是一个普通人罢了, 后来查百科才知道并不是.&lt;/p&gt;
+&lt;p&gt;俗话总说: 历史总是赢家写的. 这个只能概括战争史, 我想说: 历史书上只给你想让你看见的.&lt;/p&gt;
+&lt;p&gt;了解周作人的相关生平: 他的文学造诣甚至比鲁迅更高, 但他似乎不在乎站队, 对这点不知道怎么评价, 有得有失吧.&lt;/p&gt;
+&lt;h5 id=&#34;百度百科相关介绍&#34;&gt;百度百科相关介绍&lt;/h5&gt;
+&lt;blockquote&gt;
+&lt;p&gt;全国性抗战时期曾任伪华北政务委员会教育总署督办。抗战结束后被捕入狱，1949年释放，晚年主要从事翻译工作。著有《自己的园地》《雨天的书》《谈龙集》《鲁迅的故家》 《鲁迅小说中的人物》 《知堂文集》《知堂回想录》等，译有《日本狂言选》《伊索寓言》《路吉阿诺斯对话集》等&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;听说他是个&amp;quot;反派&amp;quot;的时候, 有种想抓住他一切把柄, 认为他就是亲日, 甚至取日本人做老婆. 但后来发现, 周建人也是取的日本人, 周作人/周建人 他两的老婆还是姐妹, 只能说我太天真, 有些东西真的没法评价.&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>blog-theme</title>
+        <link>https://sona201.github.io/posts/blog-theme/</link>
+        <pubDate>Wed, 19 Jul 2023 23:19:42 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/blog-theme/</guid>
+        <description>&lt;h2 id=&#34;博客折腾&#34;&gt;博客折腾&lt;/h2&gt;
+&lt;p&gt;这两天折腾博客，总是遇到困难就想放弃。想法无非就是博客的主题哪哪不好看，不满意。人生呐，很难满足(就是想安慰自己不努力)。
+不过早就明白了，博客的本质还是要内容好，而不是花里胡哨的样子。但都想有点虚荣心。&lt;/p&gt;
+&lt;p&gt;这两天还是看见了一个基本满意的主题，但作者是外国人，估计对中文支持有点问题。其次是主题本地测试跑不起来，感觉是自愿获取被墙拦截了。
+好像代码也有bug，本着偷懒原则，暂停折腾。这两天折腾的结果只有心累，还是跟原来一样，想速成，一点耐心都没有，硬生生找了两个主题跟着敲了一遍代码。
+有点样子了，但又嫌弃太慢，不能立马写出我想要的主题，又开始改动原来的主题。于是想了想，开个主题，给自己挖个坑，慢慢填吧。&lt;/p&gt;
+&lt;h2 id=&#34;折腾记录&#34;&gt;折腾记录&lt;/h2&gt;
+&lt;h3 id=&#34;跟着简书上的文章写&#34;&gt;跟着简书上的文章写&lt;/h3&gt;
+&lt;p&gt;最初的想法是，类似于学习demo一样，找个中文版本，跟着手敲一遍，想想大概就能搞定了。抱着这个想法，我打开了第一个收藏链接&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.jianshu.com/p/0b9aecff290c&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;如何创建自己的hugo主题&lt;/a&gt;，天真的我，看内容写的非常详细，还贴了很多代码。
+我想，只要我跟着后面做，铁定就会了。事实是，跟着后面做，根本跑不起来，只记录了大概得过程，最后的截图更像是hugo的 bootstrip 主题替换的结果。
+不知道是我跟着写的步骤不对，还是被欺骗了。代码也没有贴上，大概理清楚了 hugo 的架构&lt;/p&gt;
+&lt;h3 id=&#34;疯狂搜索一目十行&#34;&gt;疯狂搜索，一目十行&lt;/h3&gt;
+&lt;p&gt;疯狂谷歌 &amp;ldquo;hugo 主题开发&amp;rdquo; , 找到两个比较靠谱的方案，都是有经验的，而且把博客主题代码放在 github 上。&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://io-oi.me/tech/developing-a-hugo-theme/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://io-oi.me/tech/developing-a-hugo-theme/&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://blog.gimo.me/posts/creating-a-hugo-theme/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://blog.gimo.me/posts/creating-a-hugo-theme/&lt;/a&gt; &lt;br&gt;
+我想，这总能行了吧，大家对 hugo 主题开发的基本功要求不一样，或者我的基础太差。实在是跟不上，半天想搞起来确实费劲。但经验确实值得参考。&lt;/p&gt;
+&lt;p&gt;后面也看了 &lt;a class=&#34;link&#34; href=&#34;https://qwqaq.com/2022/04/migrate-to-hugo/#%E5%88%B6%E4%BD%9C%E4%B8%BB%E9%A2%98&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;转向 Hugo：主题制作指北&lt;/a&gt;
+确实很详细，但不是我想要的一步一步带着我写好，其实他已经提醒了很多，给了官网的链接，已经想跟着官网写，最后还是放弃了。官网写的感觉并不友好。
+最后发现问题是我对 golang 不熟悉，其实这 hugo 可以当成一个 python 的 jinja2 模板来理解。可能本质就是一样。&lt;/p&gt;
+&lt;h3 id=&#34;找一个已经写出来的博客跟着做&#34;&gt;找一个已经写出来的博客跟着做&lt;/h3&gt;
+&lt;p&gt;跟着一个靠谱的写一个主题，最后的效果还是有点问题，熟悉了架构
+主要是自己不想从零开始写主题，更多的是想修改一个现有主题&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这个博客的代码其实也有一点点的问题，比如链接失效，最新版本不一致，但幸好都找到替代方案。最后代码成功的运行起来了。
+结果这才发现是我想要的功能，大概怎么实现，距离实现的目标还差多少。&lt;/p&gt;
+&lt;p&gt;给自己挖了个坑，虽然跟着这个做出了一个完全不能用的主题，但还是勇敢的把这行代码加在现在的主题上。我一直想做成上下布局的结构。
+想修改当前主题，一直不知道怎么下手，慌忙之间把一些基础知识都搞忘记了，最后发现居然就是加了一行 html ,本质上还是有很多坑。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/hugo_theme_header.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;hugo_theme_header&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;回归最初的目的&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;我在友链的文章里写了好几个主题是我喜欢的风格，但作者都没有开源，想到我最初的目标就是把博客搭建起来，然后修改成自己喜欢的样子。
+增加一些想要的功能，仅此而已，对现有主题的不满没有那么夸张，只是在看到别人折腾主题的过程，发现更多的细节，自己也先要，或者也要踩坑。
+由此慢慢偏离最初的目的，现在功能基本都满足自己，只剩一些样式的问题，干脆开个坑，慢慢积累，反正我也不是那种一鼓作气搞定一切的人。
+或许，慢慢来，比较快。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
 </rss>
