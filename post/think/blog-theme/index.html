@@ -1,0 +1,450 @@
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html
+  class="not-ready lg:text-base"
+  style="--bg: #faf8f1"
+  lang="zh-cn"
+>
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+
+  
+  <title>blog-theme - 卡塞尔的博客</title>
+
+  
+  <meta name="theme-color" />
+
+  
+  
+  
+  
+  <meta name="description" content="博客折腾 这两天折腾博客，总是遇到困难就想放弃。想法无非就是博客的主题哪哪不好看，不满意。人生呐，很难满足(就是想安慰自己不努力)。 不过早就明" />
+  <meta name="author" content="Ricardo" />
+  
+
+  
+  
+  
+  
+  
+  
+  <link rel="preload stylesheet" as="style" href="/main.min.css" />
+
+  
+  
+  
+  
+  
+  <link rel="preload" as="image" href="/theme.svg" />
+
+  
+  
+  
+  
+  
+
+  
+  
+  <link rel="preload" as="image" href="/github.svg" />
+  
+  <link rel="preload" as="image" href="/rss.svg" />
+  
+  
+
+  
+  
+
+  
+  
+  
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css"
+  integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI"
+  crossorigin="anonymous"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js"
+  integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t"
+  crossorigin="anonymous"
+></script>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js"
+  integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05"
+  crossorigin="anonymous"
+></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () =>
+        renderMathInElement(document.body, {
+          
+          
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+          ],
+          
+          throwOnError : false
+        })
+    );
+</script>
+
+  
+  
+  
+
+  
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  
+  <meta name="generator" content="Hugo 0.101.0" />
+
+  
+  
+  
+  
+  
+  <meta itemprop="name" content="blog-theme">
+<meta itemprop="description" content="博客折腾记录"><meta itemprop="datePublished" content="2023-07-19T23:19:42+08:00" />
+<meta itemprop="dateModified" content="2023-07-19T23:19:42+08:00" />
+<meta itemprop="wordCount" content="1273">
+<meta itemprop="keywords" content="博客,主题," />
+  
+  <meta property="og:title" content="blog-theme" />
+<meta property="og:description" content="博客折腾记录" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/think/blog-theme/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-07-19T23:19:42+08:00" />
+<meta property="article:modified_time" content="2023-07-19T23:19:42+08:00" />
+
+
+  
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="blog-theme"/>
+<meta name="twitter:description" content="博客折腾记录"/>
+
+  
+  
+  
+  <link rel="canonical" href="/post/think/blog-theme/" />
+  
+  
+</head>
+
+  <body class="text-black duration-200 ease-out dark:text-white">
+    <header class="mx-auto flex h-[4.5rem] max-w-3xl px-8 lg:justify-center">
+  <div class="relative z-50 mr-auto flex items-center">
+    <a
+      class="-translate-x-[1px] -translate-y-[1px] text-2xl font-semibold"
+      href="/"
+      >卡塞尔的博客</a
+    >
+    <div
+      class="btn-dark text-[0] ml-4 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.svg)_left_center/cover_no-repeat] dark:invert dark:[background-position:right]"
+      role="button"
+      aria-label="Dark"
+    ></div>
+  </div>
+
+  <div
+    class="btn-menu relative z-50 -mr-8 flex h-[4.5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"
+    role="button"
+    aria-label="Menu"
+  ></div>
+
+  
+
+  <script>
+    
+    const htmlClass = document.documentElement.classList;
+    setTimeout(() => {
+      htmlClass.remove('not-ready');
+    }, 10);
+
+    
+    const btnMenu = document.querySelector('.btn-menu');
+    btnMenu.addEventListener('click', () => {
+      htmlClass.toggle('open');
+    });
+
+    
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    const lightBg = '#faf8f1'.replace(/"/g, '');
+    const setDark = (isDark) => {
+      metaTheme.setAttribute('content', isDark ? '#000' : lightBg);
+      htmlClass[isDark ? 'add' : 'remove']('dark');
+      localStorage.setItem('dark', isDark);
+    };
+
+    
+    const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    if (htmlClass.contains('dark')) {
+      setDark(true);
+    } else {
+      const darkVal = localStorage.getItem('dark');
+      setDark(darkVal ? darkVal === 'true' : darkScheme.matches);
+    }
+
+    
+    darkScheme.addEventListener('change', (event) => {
+      setDark(event.matches);
+    });
+
+    
+    const btnDark = document.querySelector('.btn-dark');
+    btnDark.addEventListener('click', () => {
+      setDark(localStorage.getItem('dark') !== 'true');
+    });
+  </script>
+
+  <div
+    class="nav-wrapper fixed inset-x-0 top-full z-40 flex h-full select-none flex-col justify-center pb-16 duration-200 dark:bg-black lg:static lg:h-auto lg:flex-row lg:!bg-transparent lg:pb-0 lg:transition-none"
+  >
+    
+    
+    <nav class="lg:ml-12 lg:flex lg:flex-row lg:items-center lg:space-x-6">
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/"
+        >Home</a
+      >
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/page/about/"
+        >关于</a
+      >
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/page/archives/"
+        >归档</a
+      >
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/page/links/"
+        >友链</a
+      >
+      
+    </nav>
+    
+
+    
+    <nav
+      class="mt-12 flex justify-center space-x-10 dark:invert lg:ml-12 lg:mt-0 lg:items-center lg:space-x-6"
+    >
+      
+      <a
+        class="h-8 w-8 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./github.svg)"
+        href="https://github.com/sona201"
+        target="_blank"
+        rel="me"
+      >
+        github
+      </a>
+      
+      <a
+        class="h-8 w-8 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./rss.svg)"
+        href="/index.xml"
+        target="_blank"
+        rel="alternate"
+      >
+        rss
+      </a>
+      
+    </nav>
+    
+  </div>
+</header>
+
+
+    <main
+      class="prose prose-neutral relative mx-auto min-h-[calc(100%-9rem)] max-w-3xl px-8 pb-16 pt-12 dark:prose-invert"
+    >
+      
+
+<article>
+  <header class="mb-16">
+    <h1 class="!my-0 pb-2.5">blog-theme</h1>
+
+    
+    <div class="text-sm antialiased opacity-60">
+      
+      <time>Jul 19, 2023</time>
+      
+      
+      
+      
+    </div>
+    
+  </header>
+
+  <section><h2 id="博客折腾">博客折腾</h2>
+<p>这两天折腾博客，总是遇到困难就想放弃。想法无非就是博客的主题哪哪不好看，不满意。人生呐，很难满足(就是想安慰自己不努力)。
+不过早就明白了，博客的本质还是要内容好，而不是花里胡哨的样子。但都想有点虚荣心。</p>
+<p>这两天还是看见了一个基本满意的主题，但作者是外国人，估计对中文支持有点问题。其次是主题本地测试跑不起来，感觉是自愿获取被墙拦截了。
+好像代码也有bug，本着偷懒原则，暂停折腾。这两天折腾的结果只有心累，还是跟原来一样，想速成，一点耐心都没有，硬生生找了两个主题跟着敲了一遍代码。
+有点样子了，但又嫌弃太慢，不能立马写出我想要的主题，又开始改动原来的主题。于是想了想，开个主题，给自己挖个坑，慢慢填吧。</p>
+<h2 id="折腾记录">折腾记录</h2>
+<h3 id="跟着简书上的文章写">跟着简书上的文章写</h3>
+<p>最初的想法是，类似于学习demo一样，找个中文版本，跟着手敲一遍，想想大概就能搞定了。抱着这个想法，我打开了第一个收藏链接</p>
+<p><a href="https://www.jianshu.com/p/0b9aecff290c">如何创建自己的hugo主题</a>，天真的我，看内容写的非常详细，还贴了很多代码。
+我想，只要我跟着后面做，铁定就会了。事实是，跟着后面做，根本跑不起来，只记录了大概得过程，最后的截图更像是hugo的 bootstrip 主题替换的结果。
+不知道是我跟着写的步骤不对，还是被欺骗了。代码也没有贴上，大概理清楚了 hugo 的架构</p>
+<h3 id="疯狂搜索一目十行">疯狂搜索，一目十行</h3>
+<p>疯狂谷歌 &ldquo;hugo 主题开发&rdquo; , 找到两个比较靠谱的方案，都是有经验的，而且把博客主题代码放在 github 上。<br>
+<a href="https://io-oi.me/tech/developing-a-hugo-theme/">https://io-oi.me/tech/developing-a-hugo-theme/</a> <br>
+<a href="https://blog.gimo.me/posts/creating-a-hugo-theme/">https://blog.gimo.me/posts/creating-a-hugo-theme/</a> <br>
+我想，这总能行了吧，大家对 hugo 主题开发的基本功要求不一样，或者我的基础太差。实在是跟不上，半天想搞起来确实费劲。但经验确实值得参考。</p>
+<p>后面也看了 <a href="https://qwqaq.com/2022/04/migrate-to-hugo/#%E5%88%B6%E4%BD%9C%E4%B8%BB%E9%A2%98">转向 Hugo：主题制作指北</a>
+确实很详细，但不是我想要的一步一步带着我写好，其实他已经提醒了很多，给了官网的链接，已经想跟着官网写，最后还是放弃了。官网写的感觉并不友好。
+最后发现问题是我对 golang 不熟悉，其实这 hugo 可以当成一个 python 的 jinja2 模板来理解。可能本质就是一样。</p>
+<h3 id="找一个已经写出来的博客跟着做">找一个已经写出来的博客跟着做</h3>
+<p>跟着一个靠谱的写一个主题，最后的效果还是有点问题，熟悉了架构
+主要是自己不想从零开始写主题，更多的是想修改一个现有主题</p>
+<p><a href="https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/">https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/</a></p>
+<p>这个博客的代码其实也有一点点的问题，比如链接失效，最新版本不一致，但幸好都找到替代方案。最后代码成功的运行起来了。
+结果这才发现是我想要的功能，大概怎么实现，距离实现的目标还差多少。</p>
+<p>给自己挖了个坑，虽然跟着这个做出了一个完全不能用的主题，但还是勇敢的把这行代码加在现在的主题上。我一直想做成上下布局的结构。
+想修改当前主题，一直不知道怎么下手，慌忙之间把一些基础知识都搞忘记了，最后发现居然就是加了一行 html ,本质上还是有很多坑。</p>
+<p><img src="/image/hugo_theme_header.png" alt="hugo_theme_header"></p>
+<h2 id="总结">总结</h2>
+<blockquote>
+<p>回归最初的目的</p>
+</blockquote>
+<p>我在友链的文章里写了好几个主题是我喜欢的风格，但作者都没有开源，想到我最初的目标就是把博客搭建起来，然后修改成自己喜欢的样子。
+增加一些想要的功能，仅此而已，对现有主题的不满没有那么夸张，只是在看到别人折腾主题的过程，发现更多的细节，自己也先要，或者也要踩坑。
+由此慢慢偏离最初的目的，现在功能基本都满足自己，只剩一些样式的问题，干脆开个坑，慢慢积累，反正我也不是那种一鼓作气搞定一切的人。
+或许，慢慢来，比较快。</p>
+</section>
+
+  
+  
+  <footer class="mt-12 flex flex-wrap">
+     
+    <a
+      class="mb-1.5 mr-1.5 rounded-lg bg-black/[3%] px-5 py-1.5 no-underline dark:bg-white/[8%]"
+      href="/tags/%E5%8D%9A%E5%AE%A2"
+      >博客</a
+    >
+     
+    <a
+      class="mb-1.5 mr-1.5 rounded-lg bg-black/[3%] px-5 py-1.5 no-underline dark:bg-white/[8%]"
+      href="/tags/%E4%B8%BB%E9%A2%98"
+      >主题</a
+    >
+    
+  </footer>
+  
+
+  
+  
+
+  
+  
+
+  
+  
+  <div class="mt-24" id="graphcomment"></div>
+  <script type="text/javascript">
+    var __semio__params = {
+      graphcommentId: 'YOUR_GRAPH_COMMENT_ID',
+      behaviour: {
+        
+      },
+      
+    };
+
+    function __semio__onload() {
+      __semio__gc_graphlogin(__semio__params);
+    }
+
+    (function () {
+      var gc = document.createElement('script');
+      gc.type = 'text/javascript';
+      gc.async = true;
+      gc.onload = __semio__onload;
+      gc.defer = true;
+      gc.src =
+        'https://integration.graphcomment.com/gc_graphlogin.js?' + Date.now();
+      (
+        document.getElementsByTagName('head')[0] ||
+        document.getElementsByTagName('body')[0]
+      ).appendChild(gc);
+    })();
+  </script>
+  
+
+  
+
+  
+</article>
+
+
+    </main>
+
+    <footer
+  class="opaco mx-auto flex h-[4.5rem] max-w-3xl items-center px-8 text-[0.9em] opacity-60"
+>
+  <div class="mr-auto">
+    &copy; 2024
+    <a class="link" href="/">卡塞尔的博客</a>
+  </div>
+  <a class="link mx-6" href="https://gohugo.io/" rel="noopener" target="_blank"
+    >Powered by Hugo️️</a
+  >️
+  <a
+    class="link"
+    href="https://github.com/nanxiaobei/hugo-paper"
+    rel="noopener"
+    target="_blank"
+    >✎ Paper</a
+  >
+</footer>
+
+  </body>
+</html>

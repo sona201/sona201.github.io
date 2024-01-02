@@ -1,0 +1,745 @@
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html
+  class="not-ready lg:text-base"
+  style="--bg: #faf8f1"
+  lang="zh-cn"
+>
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+
+  
+  <title>django runserver - 卡塞尔的博客</title>
+
+  
+  <meta name="theme-color" />
+
+  
+  
+  
+  
+  <meta name="description" content="启动命令 python3 manage.py runserver 0.0.0.0:8000 平时用的命令就是这个, 入口是 manage.py 文件 manage.py 管理入口文件 def main(): &#34;&#34;&#34;Run administrative tasks.&#34;&#34;&#34; os.environ.setdefault(&#39;DJANGO_SETTINGS_MODULE&#39;, &#39;firstDjango.settings&#39;) try: from django.core.management import execute_from_command_line except ImportError as exc: raise ImportError( &#34;Couldn&#39;t import Django. Are you sure it&#39;s installed and &#34; &#34;available on your PYTHONPATH environment variable? Did you &#34; &#34;forget" />
+  <meta name="author" content="Ricardo" />
+  
+
+  
+  
+  
+  
+  
+  
+  <link rel="preload stylesheet" as="style" href="/main.min.css" />
+
+  
+  
+  
+  
+  
+  <link rel="preload" as="image" href="/theme.svg" />
+
+  
+  
+  
+  
+  
+
+  
+  
+  <link rel="preload" as="image" href="/github.svg" />
+  
+  <link rel="preload" as="image" href="/rss.svg" />
+  
+  
+
+  
+  
+
+  
+  
+  
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css"
+  integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI"
+  crossorigin="anonymous"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js"
+  integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t"
+  crossorigin="anonymous"
+></script>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js"
+  integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05"
+  crossorigin="anonymous"
+></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () =>
+        renderMathInElement(document.body, {
+          
+          
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+          ],
+          
+          throwOnError : false
+        })
+    );
+</script>
+
+  
+  
+  
+
+  
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  
+  <meta name="generator" content="Hugo 0.101.0" />
+
+  
+  
+  
+  
+  
+  <meta itemprop="name" content="django runserver">
+<meta itemprop="description" content="This is an category for runserver"><meta itemprop="datePublished" content="2023-05-05T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-07-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1507">
+<meta itemprop="keywords" content="django,ptyhon,runserver," />
+  
+  <meta property="og:title" content="django runserver" />
+<meta property="og:description" content="This is an category for runserver" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/django/core-runserver-2-run/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-07-03T00:00:00+00:00" />
+
+
+  
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="django runserver"/>
+<meta name="twitter:description" content="This is an category for runserver"/>
+
+  
+  
+  
+  <link rel="canonical" href="/post/django/core-runserver-2-run/" />
+  
+  
+</head>
+
+  <body class="text-black duration-200 ease-out dark:text-white">
+    <header class="mx-auto flex h-[4.5rem] max-w-3xl px-8 lg:justify-center">
+  <div class="relative z-50 mr-auto flex items-center">
+    <a
+      class="-translate-x-[1px] -translate-y-[1px] text-2xl font-semibold"
+      href="/"
+      >卡塞尔的博客</a
+    >
+    <div
+      class="btn-dark text-[0] ml-4 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.svg)_left_center/cover_no-repeat] dark:invert dark:[background-position:right]"
+      role="button"
+      aria-label="Dark"
+    ></div>
+  </div>
+
+  <div
+    class="btn-menu relative z-50 -mr-8 flex h-[4.5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"
+    role="button"
+    aria-label="Menu"
+  ></div>
+
+  
+
+  <script>
+    
+    const htmlClass = document.documentElement.classList;
+    setTimeout(() => {
+      htmlClass.remove('not-ready');
+    }, 10);
+
+    
+    const btnMenu = document.querySelector('.btn-menu');
+    btnMenu.addEventListener('click', () => {
+      htmlClass.toggle('open');
+    });
+
+    
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    const lightBg = '#faf8f1'.replace(/"/g, '');
+    const setDark = (isDark) => {
+      metaTheme.setAttribute('content', isDark ? '#000' : lightBg);
+      htmlClass[isDark ? 'add' : 'remove']('dark');
+      localStorage.setItem('dark', isDark);
+    };
+
+    
+    const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    if (htmlClass.contains('dark')) {
+      setDark(true);
+    } else {
+      const darkVal = localStorage.getItem('dark');
+      setDark(darkVal ? darkVal === 'true' : darkScheme.matches);
+    }
+
+    
+    darkScheme.addEventListener('change', (event) => {
+      setDark(event.matches);
+    });
+
+    
+    const btnDark = document.querySelector('.btn-dark');
+    btnDark.addEventListener('click', () => {
+      setDark(localStorage.getItem('dark') !== 'true');
+    });
+  </script>
+
+  <div
+    class="nav-wrapper fixed inset-x-0 top-full z-40 flex h-full select-none flex-col justify-center pb-16 duration-200 dark:bg-black lg:static lg:h-auto lg:flex-row lg:!bg-transparent lg:pb-0 lg:transition-none"
+  >
+    
+    
+    <nav class="lg:ml-12 lg:flex lg:flex-row lg:items-center lg:space-x-6">
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/"
+        >Home</a
+      >
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/page/about/"
+        >关于</a
+      >
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/page/archives/"
+        >归档</a
+      >
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/page/links/"
+        >友链</a
+      >
+      
+    </nav>
+    
+
+    
+    <nav
+      class="mt-12 flex justify-center space-x-10 dark:invert lg:ml-12 lg:mt-0 lg:items-center lg:space-x-6"
+    >
+      
+      <a
+        class="h-8 w-8 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./github.svg)"
+        href="https://github.com/sona201"
+        target="_blank"
+        rel="me"
+      >
+        github
+      </a>
+      
+      <a
+        class="h-8 w-8 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./rss.svg)"
+        href="/index.xml"
+        target="_blank"
+        rel="alternate"
+      >
+        rss
+      </a>
+      
+    </nav>
+    
+  </div>
+</header>
+
+
+    <main
+      class="prose prose-neutral relative mx-auto min-h-[calc(100%-9rem)] max-w-3xl px-8 pb-16 pt-12 dark:prose-invert"
+    >
+      
+
+<article>
+  <header class="mb-16">
+    <h1 class="!my-0 pb-2.5">django runserver</h1>
+
+    
+    <div class="text-sm antialiased opacity-60">
+      
+      <time>May 5, 2023</time>
+      
+      
+      
+      
+    </div>
+    
+  </header>
+
+  <section><p>启动命令</p>
+<pre tabindex="0"><code>python3 manage.py runserver 0.0.0.0:8000
+</code></pre><p>平时用的命令就是这个, 入口是 <code>manage.py</code> 文件</p>
+<h4 id="managepy-管理入口文件">manage.py 管理入口文件</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Run administrative tasks.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    os<span style="color:#f92672">.</span>environ<span style="color:#f92672">.</span>setdefault(<span style="color:#e6db74">&#39;DJANGO_SETTINGS_MODULE&#39;</span>, <span style="color:#e6db74">&#39;firstDjango.settings&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">from</span> django.core.management <span style="color:#f92672">import</span> execute_from_command_line
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ImportError</span> <span style="color:#66d9ef">as</span> exc:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ImportError</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;Couldn&#39;t import Django. Are you sure it&#39;s installed and &#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;available on your PYTHONPATH environment variable? Did you &#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;forget to activate a virtual environment?&#34;</span>
+</span></span><span style="display:flex;"><span>        ) <span style="color:#f92672">from</span> exc
+</span></span><span style="display:flex;"><span>    execute_from_command_line(sys<span style="color:#f92672">.</span>argv)
+</span></span></code></pre></div><p>manage.py 先配置环境变量, 执行命令后会把参数 <code>runserver 0.0.0.0:8000</code> 作为系统参数传给函数 <code>execute_from_command_line</code></p>
+<h4 id="site-packagesdjangocoremanagement__init__py">site-packages/django/core/management/<strong>init</strong>.py</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">execute_from_command_line</span>(argv<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Run a ManagementUtility.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    utility <span style="color:#f92672">=</span> ManagementUtility(argv)
+</span></span><span style="display:flex;"><span>    utility<span style="color:#f92672">.</span>execute()
+</span></span></code></pre></div><p>该函数仅仅是处理命令的方法, 实际做的就是实例化 <code>ManagementUtility()</code> , 调用实例的 <code>execute()</code> 方法
+<code>ManagementUtility</code> 和 <code>execute_from_command_line</code> 都在 management 的 <strong>init</strong> 下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">execute</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Given the command-line arguments, figure out which subcommand is being
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        run, create a parser appropriate to that command, and run it.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            subcommand <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">IndexError</span>:
+</span></span><span style="display:flex;"><span>            subcommand <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;help&#34;</span>  <span style="color:#75715e"># Display help if no arguments were given.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Preprocess options to extract --settings and --pythonpath.</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># These options could affect the commands that are available, so they</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># must be processed early.</span>
+</span></span><span style="display:flex;"><span>        parser <span style="color:#f92672">=</span> CommandParser(
+</span></span><span style="display:flex;"><span>            prog<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>prog_name,
+</span></span><span style="display:flex;"><span>            usage<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%(prog)s</span><span style="color:#e6db74"> subcommand [options] [args]&#34;</span>,
+</span></span><span style="display:flex;"><span>            add_help<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
+</span></span><span style="display:flex;"><span>            allow_abbrev<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74">&#34;--settings&#34;</span>)
+</span></span><span style="display:flex;"><span>        parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74">&#34;--pythonpath&#34;</span>)
+</span></span><span style="display:flex;"><span>        parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74">&#34;args&#34;</span>, nargs<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;*&#34;</span>)  <span style="color:#75715e"># catch-all</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            options, args <span style="color:#f92672">=</span> parser<span style="color:#f92672">.</span>parse_known_args(self<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">2</span>:])
+</span></span><span style="display:flex;"><span>            handle_default_options(options)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> CommandError:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">pass</span>  <span style="color:#75715e"># Ignore any option errors at this point.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            settings<span style="color:#f92672">.</span>INSTALLED_APPS
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> ImproperlyConfigured <span style="color:#66d9ef">as</span> exc:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>settings_exception <span style="color:#f92672">=</span> exc
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ImportError</span> <span style="color:#66d9ef">as</span> exc:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>settings_exception <span style="color:#f92672">=</span> exc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> settings<span style="color:#f92672">.</span>configured:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># Start the auto-reloading dev server even if the code is broken.</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># The hardcoded condition is a code smell but we can&#39;t rely on a</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># flag on the command class because we haven&#39;t located it yet.</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> subcommand <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;runserver&#34;</span> <span style="color:#f92672">and</span> <span style="color:#e6db74">&#34;--noreload&#34;</span> <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>argv:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                    autoreload<span style="color:#f92672">.</span>check_errors(django<span style="color:#f92672">.</span>setup)()
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># The exception will be raised later in the child process</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># started by the autoreloader. Pretend it didn&#39;t happen by</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># loading an empty list of applications.</span>
+</span></span><span style="display:flex;"><span>                    apps<span style="color:#f92672">.</span>all_models <span style="color:#f92672">=</span> defaultdict(dict)
+</span></span><span style="display:flex;"><span>                    apps<span style="color:#f92672">.</span>app_configs <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>                    apps<span style="color:#f92672">.</span>apps_ready <span style="color:#f92672">=</span> apps<span style="color:#f92672">.</span>models_ready <span style="color:#f92672">=</span> apps<span style="color:#f92672">.</span>ready <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># Remove options not compatible with the built-in runserver</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># (e.g. options for the contrib.staticfiles&#39; runserver).</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># Changes here require manually testing as described in</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># #27522.</span>
+</span></span><span style="display:flex;"><span>                    _parser <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>fetch_command(<span style="color:#e6db74">&#34;runserver&#34;</span>)<span style="color:#f92672">.</span>create_parser(
+</span></span><span style="display:flex;"><span>                        <span style="color:#e6db74">&#34;django&#34;</span>, <span style="color:#e6db74">&#34;runserver&#34;</span>
+</span></span><span style="display:flex;"><span>                    )
+</span></span><span style="display:flex;"><span>                    _options, _args <span style="color:#f92672">=</span> _parser<span style="color:#f92672">.</span>parse_known_args(self<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">2</span>:])
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">for</span> _arg <span style="color:#f92672">in</span> _args:
+</span></span><span style="display:flex;"><span>                        self<span style="color:#f92672">.</span>argv<span style="color:#f92672">.</span>remove(_arg)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># In all other cases, django.setup() is required to succeed.</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                django<span style="color:#f92672">.</span>setup()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>autocomplete()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> subcommand <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;help&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;--commands&#34;</span> <span style="color:#f92672">in</span> args:
+</span></span><span style="display:flex;"><span>                sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(self<span style="color:#f92672">.</span>main_help_text(commands_only<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">elif</span> <span style="color:#f92672">not</span> options<span style="color:#f92672">.</span>args:
+</span></span><span style="display:flex;"><span>                sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(self<span style="color:#f92672">.</span>main_help_text() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>fetch_command(options<span style="color:#f92672">.</span>args[<span style="color:#ae81ff">0</span>])<span style="color:#f92672">.</span>print_help(
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>prog_name, options<span style="color:#f92672">.</span>args[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Special-cases: We want &#39;django-admin --version&#39; and</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># &#39;django-admin --help&#39; to work, for backwards compatibility.</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> subcommand <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;version&#34;</span> <span style="color:#f92672">or</span> self<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">1</span>:] <span style="color:#f92672">==</span> [<span style="color:#e6db74">&#34;--version&#34;</span>]:
+</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(django<span style="color:#f92672">.</span>get_version() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> self<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">1</span>:] <span style="color:#f92672">in</span> ([<span style="color:#e6db74">&#34;--help&#34;</span>], [<span style="color:#e6db74">&#34;-h&#34;</span>]):
+</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(self<span style="color:#f92672">.</span>main_help_text() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>fetch_command(subcommand)<span style="color:#f92672">.</span>run_from_argv(self<span style="color:#f92672">.</span>argv)
+</span></span></code></pre></div><p>截取了 ManagementUtility 的 execute 方法代码
+这个就是 <code>CommandParser</code> 对命令的解析, 优先加载django的配置
+最重要的是最后一句 <code>self.fetch_command(subcommand).Command(self.argv)</code>
+执行 <code>fetch_command(subcommand)</code> 得到了 &lsquo;django.contrib.staticfiles.management.commands.runserver&rsquo; 结果
+对应的文件路径: <code>site-packages/django/contrib/staticfiles/management/commands/runserver.py</code></p>
+<h4 id="site-packagesdjangocoremanagementcommandsrunserverpy">site-packages/django/core/management/commands/runserver.py</h4>
+<p>执行函数导入</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">load_command_class</span>(app_name, name):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Given a command name and an application name, return the Command
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    class instance. Allow all errors raised by the import process
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    (ImportError, AttributeError) to propagate.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    module <span style="color:#f92672">=</span> import_module(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">.management.commands.</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (app_name, name))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> module<span style="color:#f92672">.</span>Command()
+</span></span></code></pre></div><p>即将 <code>command</code> 模块导入
+然后实例化 django.contrib.staticfiles.management.commands.runserver.Command()
+所有的命令方法都是有 command 类</p>
+<p>这个函数就是获取对应文件名, 然后导入Command类, 执行 <code>run_from_argv</code> 方法</p>
+<p>django.contrib.staticfiles.management.commands.runserver 中没有 run_from_argv 方法
+django.core.management.commands.runserver 中也没有 run_from_argv 方法
+django.core.management.base.BaseCommand 中有 run_from_argv 方法 主要是执行 self.execute 方法</p>
+<p>django.core.management.commands.runserver 的execute方法</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">execute</span>(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>options):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> options[<span style="color:#e6db74">&#34;no_color&#34;</span>]:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># We rely on the environment because it&#39;s currently the only</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># way to reach WSGIRequestHandler. This seems an acceptable</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># compromise considering `runserver` runs indefinitely.</span>
+</span></span><span style="display:flex;"><span>            os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;DJANGO_COLORS&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;nocolor&#34;</span>
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span>execute(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>options)
+</span></span></code></pre></div><p>django.core.management.base.BaseCommand  的execute 方法</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">execute</span>(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>options):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Try to execute this command, performing system checks if needed (as
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        controlled by the ``requires_system_checks`` attribute, except if
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        force-skipped).
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> options[<span style="color:#e6db74">&#34;force_color&#34;</span>] <span style="color:#f92672">and</span> options[<span style="color:#e6db74">&#34;no_color&#34;</span>]:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> CommandError(
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;The --no-color and --force-color options can&#39;t be used together.&#34;</span>
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> options[<span style="color:#e6db74">&#34;force_color&#34;</span>]:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>style <span style="color:#f92672">=</span> color_style(force_color<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> options[<span style="color:#e6db74">&#34;no_color&#34;</span>]:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>style <span style="color:#f92672">=</span> no_style()
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>stderr<span style="color:#f92672">.</span>style_func <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> options<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;stdout&#34;</span>):
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>stdout <span style="color:#f92672">=</span> OutputWrapper(options[<span style="color:#e6db74">&#34;stdout&#34;</span>])
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> options<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;stderr&#34;</span>):
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>stderr <span style="color:#f92672">=</span> OutputWrapper(options[<span style="color:#e6db74">&#34;stderr&#34;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>requires_system_checks <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> options[<span style="color:#e6db74">&#34;skip_checks&#34;</span>]:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>requires_system_checks <span style="color:#f92672">==</span> ALL_CHECKS:
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>check()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>check(tags<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>requires_system_checks)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>requires_migrations_checks:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>check_migrations()
+</span></span><span style="display:flex;"><span>        output <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>handle(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>options)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> output:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>output_transaction:
+</span></span><span style="display:flex;"><span>                connection <span style="color:#f92672">=</span> connections[options<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;database&#34;</span>, DEFAULT_DB_ALIAS)]
+</span></span><span style="display:flex;"><span>                output <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>style<span style="color:#f92672">.</span>SQL_KEYWORD(connection<span style="color:#f92672">.</span>ops<span style="color:#f92672">.</span>start_transaction_sql()),
+</span></span><span style="display:flex;"><span>                    output,
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>style<span style="color:#f92672">.</span>SQL_KEYWORD(connection<span style="color:#f92672">.</span>ops<span style="color:#f92672">.</span>end_transaction_sql()),
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(output)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> output
+</span></span></code></pre></div><p>执行 self.handle 方法
+django.core.management.commands.runserver 的 handle 方法</p>
+<p>django.core.management.commands.runserver 的 run 方法
+django.core.management.commands.runserver 的 inner_run 方法</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>            handler <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get_handler(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>options)
+</span></span><span style="display:flex;"><span>            run(
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>addr,
+</span></span><span style="display:flex;"><span>                int(self<span style="color:#f92672">.</span>port),
+</span></span><span style="display:flex;"><span>                handler,
+</span></span><span style="display:flex;"><span>                ipv6<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>use_ipv6,
+</span></span><span style="display:flex;"><span>                threading<span style="color:#f92672">=</span>threading,
+</span></span><span style="display:flex;"><span>                server_cls<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>server_cls,
+</span></span><span style="display:flex;"><span>            )
+</span></span></code></pre></div><h2 id="runserver-最终执行逻辑">runserver 最终执行逻辑</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(addr, port, wsgi_handler, ipv6<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, threading<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, server_cls<span style="color:#f92672">=</span>WSGIServer):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># django WSGIServer</span>
+</span></span><span style="display:flex;"><span>    server_address <span style="color:#f92672">=</span> (addr, port)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># httpd_cls = WSGIServer</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> threading:
+</span></span><span style="display:flex;"><span>        httpd_cls <span style="color:#f92672">=</span> type(<span style="color:#e6db74">&#34;WSGIServer&#34;</span>, (socketserver<span style="color:#f92672">.</span>ThreadingMixIn, server_cls), {})
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        httpd_cls <span style="color:#f92672">=</span> server_cls
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># httpd = WSGIServer((&#39;0.0.0.0&#39;, 8000), WSGIRequestHandler, ipv6=False)</span>
+</span></span><span style="display:flex;"><span>    httpd <span style="color:#f92672">=</span> httpd_cls(server_address, WSGIRequestHandler, ipv6<span style="color:#f92672">=</span>ipv6)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> threading:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># ThreadingMixIn.daemon_threads indicates how threads will behave on an</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># abrupt shutdown; like quitting the server by the user or restarting</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># by the auto-reloader. True means the server will not wait for thread</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># termination before it quits. This will make auto-reloader faster</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># and will prevent the need to kill the server manually if a thread</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># isn&#39;t terminating correctly.</span>
+</span></span><span style="display:flex;"><span>        httpd<span style="color:#f92672">.</span>daemon_threads <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># wsgi_handler 是一个 WSGIHandler 对象, wsgi_handler()</span>
+</span></span><span style="display:flex;"><span>    httpd<span style="color:#f92672">.</span>set_app(wsgi_handler)  <span style="color:#75715e"># wsgi_handler 就是请求处理器, 即 func 函数</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/socketserver.py</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># serve_forever 方法是继承 socketserver.BaseServer.serve_forever()</span>
+</span></span><span style="display:flex;"><span>    httpd<span style="color:#f92672">.</span>serve_forever()
+</span></span></code></pre></div><blockquote>
+<p>run 方法 与 wsgiref封装的模型中的 make_server 很相似
+表面上都是实例化一个叫 WSGIServer 的类, 然后执行实例的 serve_forever 方法(这个方法是通过多层继承 BaseServer 类的方法, 乃 python 原生方法)
+但django run 中 WSGIServer 与 make_server 中 WSGIServer 不是同一个类</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">make_server</span>(
+</span></span><span style="display:flex;"><span>    host, port, app, server_class<span style="color:#f92672">=</span>WSGIServer, handler_class<span style="color:#f92672">=</span>WSGIRequestHandler
+</span></span><span style="display:flex;"><span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Create a new WSGI server listening on `host` and `port` for `app`&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    server <span style="color:#f92672">=</span> server_class((host, port), handler_class)
+</span></span><span style="display:flex;"><span>    server<span style="color:#f92672">.</span>set_app(app)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> server
+</span></span></code></pre></div><blockquote>
+<p>在 wsgiref封装的模型中, WSGIServer 是使用 <code>simple_server.WSGIServer</code> 这个类</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WSGIServer</span>(HTTPServer):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;BaseHTTPServer that implements the Python WSGI protocol&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    application <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">server_bind</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;Override server_bind to store the server name.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        HTTPServer<span style="color:#f92672">.</span>server_bind(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setup_environ()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">setup_environ</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Set up base environment</span>
+</span></span><span style="display:flex;"><span>        env <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>base_environ <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>        env[<span style="color:#e6db74">&#39;SERVER_NAME&#39;</span>] <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>server_name
+</span></span><span style="display:flex;"><span>        env[<span style="color:#e6db74">&#39;GATEWAY_INTERFACE&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;CGI/1.1&#39;</span>
+</span></span><span style="display:flex;"><span>        env[<span style="color:#e6db74">&#39;SERVER_PORT&#39;</span>] <span style="color:#f92672">=</span> str(self<span style="color:#f92672">.</span>server_port)
+</span></span><span style="display:flex;"><span>        env[<span style="color:#e6db74">&#39;REMOTE_HOST&#39;</span>]<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        env[<span style="color:#e6db74">&#39;CONTENT_LENGTH&#39;</span>]<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        env[<span style="color:#e6db74">&#39;SCRIPT_NAME&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_app</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>application
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">set_app</span>(self,application):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>application <span style="color:#f92672">=</span> application
+</span></span></code></pre></div><p>Django 中 run 方法中的 WSGIServer 继承了 simple_server.WSGIServer
+增加了一些错误处理, 本质上其实一样</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WSGIServer</span>(simple_server<span style="color:#f92672">.</span>WSGIServer):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;BaseHTTPServer that implements the Python WSGI protocol&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    request_queue_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, <span style="color:#f92672">*</span>args, ipv6<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, allow_reuse_address<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, <span style="color:#f92672">**</span>kwargs):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ipv6:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>address_family <span style="color:#f92672">=</span> socket<span style="color:#f92672">.</span>AF_INET6
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>allow_reuse_address <span style="color:#f92672">=</span> allow_reuse_address
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span>__init__(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handle_error</span>(self, request, client_address):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> is_broken_pipe_error():
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;- Broken pipe from </span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, client_address)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            super()<span style="color:#f92672">.</span>handle_error(request, client_address)
+</span></span></code></pre></div><h2 id="runserver-最终执行逻辑-1">runserver 最终执行逻辑</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(addr, port, wsgi_handler, ipv6<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, threading<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, server_cls<span style="color:#f92672">=</span>WSGIServer):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># django WSGIServer</span>
+</span></span><span style="display:flex;"><span>    server_address <span style="color:#f92672">=</span> (addr, port)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># httpd_cls = WSGIServer</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> threading:
+</span></span><span style="display:flex;"><span>        httpd_cls <span style="color:#f92672">=</span> type(<span style="color:#e6db74">&#34;WSGIServer&#34;</span>, (socketserver<span style="color:#f92672">.</span>ThreadingMixIn, server_cls), {})
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        httpd_cls <span style="color:#f92672">=</span> server_cls
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># httpd = WSGIServer((&#39;0.0.0.0&#39;, 8000), WSGIRequestHandler, ipv6=False)</span>
+</span></span><span style="display:flex;"><span>    httpd <span style="color:#f92672">=</span> httpd_cls(server_address, WSGIRequestHandler, ipv6<span style="color:#f92672">=</span>ipv6)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> threading:
+</span></span><span style="display:flex;"><span>        httpd<span style="color:#f92672">.</span>daemon_threads <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># wsgi_handler 是一个 WSGIHandler 对象, wsgi_handler()</span>
+</span></span><span style="display:flex;"><span>    httpd<span style="color:#f92672">.</span>set_app(wsgi_handler)  <span style="color:#75715e"># wsgi_handler 就是请求处理器, 返回对应的 func 函数</span>
+</span></span><span style="display:flex;"><span>    httpd<span style="color:#f92672">.</span>serve_forever()
+</span></span></code></pre></div><p>handler = self.get_handler(*args, **options)  -&gt;
+get_internal_wsgi_application()  -&gt;
+get_wsgi_application()  -&gt;
+WSGIHandler()
+handler = WSGIHandler()  -&gt;  handler(environ, start_response)  -&gt;  WSGIHandler.<strong>call</strong>(environ, start_response)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WSGIHandler</span>(base<span style="color:#f92672">.</span>BaseHandler):
+</span></span><span style="display:flex;"><span>    request_class <span style="color:#f92672">=</span> WSGIRequest
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span>__init__(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>load_middleware()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __call__(self, environ, start_response):
+</span></span><span style="display:flex;"><span>        set_script_prefix(get_script_name(environ))
+</span></span><span style="display:flex;"><span>        signals<span style="color:#f92672">.</span>request_started<span style="color:#f92672">.</span>send(sender<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>__class__, environ<span style="color:#f92672">=</span>environ)
+</span></span><span style="display:flex;"><span>        request <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>request_class(environ)
+</span></span><span style="display:flex;"><span>        response <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get_response(request)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        response<span style="color:#f92672">.</span>_handler_class <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>__class__
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (response<span style="color:#f92672">.</span>status_code, response<span style="color:#f92672">.</span>reason_phrase)
+</span></span><span style="display:flex;"><span>        response_headers <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">*</span>response<span style="color:#f92672">.</span>items(),
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">*</span>((<span style="color:#e6db74">&#34;Set-Cookie&#34;</span>, c<span style="color:#f92672">.</span>output(header<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>)) <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> response<span style="color:#f92672">.</span>cookies<span style="color:#f92672">.</span>values()),
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>        start_response(status, response_headers)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> getattr(response, <span style="color:#e6db74">&#34;file_to_stream&#34;</span>, <span style="color:#66d9ef">None</span>) <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> environ<span style="color:#f92672">.</span>get(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;wsgi.file_wrapper&#34;</span>
+</span></span><span style="display:flex;"><span>        ):
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># If `wsgi.file_wrapper` is used the WSGI server does not call</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># .close on the response, but on the file wrapper. Patch it to use</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># response.close instead which takes care of closing all files.</span>
+</span></span><span style="display:flex;"><span>            response<span style="color:#f92672">.</span>file_to_stream<span style="color:#f92672">.</span>close <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span>close
+</span></span><span style="display:flex;"><span>            response <span style="color:#f92672">=</span> environ[<span style="color:#e6db74">&#34;wsgi.file_wrapper&#34;</span>](
+</span></span><span style="display:flex;"><span>                response<span style="color:#f92672">.</span>file_to_stream, response<span style="color:#f92672">.</span>block_size
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> response
+</span></span></code></pre></div></section>
+
+  
+  
+  <footer class="mt-12 flex flex-wrap">
+     
+    <a
+      class="mb-1.5 mr-1.5 rounded-lg bg-black/[3%] px-5 py-1.5 no-underline dark:bg-white/[8%]"
+      href="/tags/django"
+      >django</a
+    >
+     
+    <a
+      class="mb-1.5 mr-1.5 rounded-lg bg-black/[3%] px-5 py-1.5 no-underline dark:bg-white/[8%]"
+      href="/tags/ptyhon"
+      >ptyhon</a
+    >
+     
+    <a
+      class="mb-1.5 mr-1.5 rounded-lg bg-black/[3%] px-5 py-1.5 no-underline dark:bg-white/[8%]"
+      href="/tags/runserver"
+      >runserver</a
+    >
+    
+  </footer>
+  
+
+  
+  
+
+  
+  
+
+  
+  
+  <div class="mt-24" id="graphcomment"></div>
+  <script type="text/javascript">
+    var __semio__params = {
+      graphcommentId: 'YOUR_GRAPH_COMMENT_ID',
+      behaviour: {
+        
+      },
+      
+    };
+
+    function __semio__onload() {
+      __semio__gc_graphlogin(__semio__params);
+    }
+
+    (function () {
+      var gc = document.createElement('script');
+      gc.type = 'text/javascript';
+      gc.async = true;
+      gc.onload = __semio__onload;
+      gc.defer = true;
+      gc.src =
+        'https://integration.graphcomment.com/gc_graphlogin.js?' + Date.now();
+      (
+        document.getElementsByTagName('head')[0] ||
+        document.getElementsByTagName('body')[0]
+      ).appendChild(gc);
+    })();
+  </script>
+  
+
+  
+
+  
+</article>
+
+
+    </main>
+
+    <footer
+  class="opaco mx-auto flex h-[4.5rem] max-w-3xl items-center px-8 text-[0.9em] opacity-60"
+>
+  <div class="mr-auto">
+    &copy; 2024
+    <a class="link" href="/">卡塞尔的博客</a>
+  </div>
+  <a class="link mx-6" href="https://gohugo.io/" rel="noopener" target="_blank"
+    >Powered by Hugo️️</a
+  >️
+  <a
+    class="link"
+    href="https://github.com/nanxiaobei/hugo-paper"
+    rel="noopener"
+    target="_blank"
+    >✎ Paper</a
+  >
+</footer>
+
+  </body>
+</html>

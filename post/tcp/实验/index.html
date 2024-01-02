@@ -1,0 +1,485 @@
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html
+  class="not-ready lg:text-base"
+  style="--bg: #faf8f1"
+  lang="zh-cn"
+>
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+
+  
+  <title>tcp实验 - 卡塞尔的博客</title>
+
+  
+  <meta name="theme-color" />
+
+  
+  
+  
+  
+  <meta name="description" content="抓包: 两台服务器，一台启动python http服务，上面有一个2G的文件。另一台下载。 怎么抓包，在那台机器上抓包，是不是指定来源ip就可以了" />
+  <meta name="author" content="Ricardo" />
+  
+
+  
+  
+  
+  
+  
+  
+  <link rel="preload stylesheet" as="style" href="/main.min.css" />
+
+  
+  
+  
+  
+  
+  <link rel="preload" as="image" href="/theme.svg" />
+
+  
+  
+  
+  
+  
+
+  
+  
+  <link rel="preload" as="image" href="/github.svg" />
+  
+  <link rel="preload" as="image" href="/rss.svg" />
+  
+  
+
+  
+  
+
+  
+  
+  
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css"
+  integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI"
+  crossorigin="anonymous"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js"
+  integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t"
+  crossorigin="anonymous"
+></script>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js"
+  integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05"
+  crossorigin="anonymous"
+></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () =>
+        renderMathInElement(document.body, {
+          
+          
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+          ],
+          
+          throwOnError : false
+        })
+    );
+</script>
+
+  
+  
+  
+
+  
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  
+  <meta name="generator" content="Hugo 0.101.0" />
+
+  
+  
+  
+  
+  
+  <meta itemprop="name" content="tcp实验">
+<meta itemprop="description" content="tcp实验记录"><meta itemprop="datePublished" content="2023-05-05T01:05:14+08:00" />
+<meta itemprop="dateModified" content="2023-07-03T13:05:14+08:00" />
+<meta itemprop="wordCount" content="718">
+<meta itemprop="keywords" content="tcp,wireshark,实验," />
+  
+  <meta property="og:title" content="tcp实验" />
+<meta property="og:description" content="tcp实验记录" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/tcp/%E5%AE%9E%E9%AA%8C/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-05T01:05:14+08:00" />
+<meta property="article:modified_time" content="2023-07-03T13:05:14+08:00" />
+
+
+  
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="tcp实验"/>
+<meta name="twitter:description" content="tcp实验记录"/>
+
+  
+  
+  
+  <link rel="canonical" href="/post/tcp/%E5%AE%9E%E9%AA%8C/" />
+  
+  
+</head>
+
+  <body class="text-black duration-200 ease-out dark:text-white">
+    <header class="mx-auto flex h-[4.5rem] max-w-3xl px-8 lg:justify-center">
+  <div class="relative z-50 mr-auto flex items-center">
+    <a
+      class="-translate-x-[1px] -translate-y-[1px] text-2xl font-semibold"
+      href="/"
+      >卡塞尔的博客</a
+    >
+    <div
+      class="btn-dark text-[0] ml-4 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.svg)_left_center/cover_no-repeat] dark:invert dark:[background-position:right]"
+      role="button"
+      aria-label="Dark"
+    ></div>
+  </div>
+
+  <div
+    class="btn-menu relative z-50 -mr-8 flex h-[4.5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"
+    role="button"
+    aria-label="Menu"
+  ></div>
+
+  
+
+  <script>
+    
+    const htmlClass = document.documentElement.classList;
+    setTimeout(() => {
+      htmlClass.remove('not-ready');
+    }, 10);
+
+    
+    const btnMenu = document.querySelector('.btn-menu');
+    btnMenu.addEventListener('click', () => {
+      htmlClass.toggle('open');
+    });
+
+    
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    const lightBg = '#faf8f1'.replace(/"/g, '');
+    const setDark = (isDark) => {
+      metaTheme.setAttribute('content', isDark ? '#000' : lightBg);
+      htmlClass[isDark ? 'add' : 'remove']('dark');
+      localStorage.setItem('dark', isDark);
+    };
+
+    
+    const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    if (htmlClass.contains('dark')) {
+      setDark(true);
+    } else {
+      const darkVal = localStorage.getItem('dark');
+      setDark(darkVal ? darkVal === 'true' : darkScheme.matches);
+    }
+
+    
+    darkScheme.addEventListener('change', (event) => {
+      setDark(event.matches);
+    });
+
+    
+    const btnDark = document.querySelector('.btn-dark');
+    btnDark.addEventListener('click', () => {
+      setDark(localStorage.getItem('dark') !== 'true');
+    });
+  </script>
+
+  <div
+    class="nav-wrapper fixed inset-x-0 top-full z-40 flex h-full select-none flex-col justify-center pb-16 duration-200 dark:bg-black lg:static lg:h-auto lg:flex-row lg:!bg-transparent lg:pb-0 lg:transition-none"
+  >
+    
+    
+    <nav class="lg:ml-12 lg:flex lg:flex-row lg:items-center lg:space-x-6">
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/"
+        >Home</a
+      >
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/page/about/"
+        >关于</a
+      >
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/page/archives/"
+        >归档</a
+      >
+      
+      <a
+        class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal"
+        href="/page/links/"
+        >友链</a
+      >
+      
+    </nav>
+    
+
+    
+    <nav
+      class="mt-12 flex justify-center space-x-10 dark:invert lg:ml-12 lg:mt-0 lg:items-center lg:space-x-6"
+    >
+      
+      <a
+        class="h-8 w-8 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./github.svg)"
+        href="https://github.com/sona201"
+        target="_blank"
+        rel="me"
+      >
+        github
+      </a>
+      
+      <a
+        class="h-8 w-8 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./rss.svg)"
+        href="/index.xml"
+        target="_blank"
+        rel="alternate"
+      >
+        rss
+      </a>
+      
+    </nav>
+    
+  </div>
+</header>
+
+
+    <main
+      class="prose prose-neutral relative mx-auto min-h-[calc(100%-9rem)] max-w-3xl px-8 pb-16 pt-12 dark:prose-invert"
+    >
+      
+
+<article>
+  <header class="mb-16">
+    <h1 class="!my-0 pb-2.5">tcp实验</h1>
+
+    
+    <div class="text-sm antialiased opacity-60">
+      
+      <time>May 5, 2023</time>
+      
+      
+      
+      
+    </div>
+    
+  </header>
+
+  <section><p>抓包:
+两台服务器，一台启动python http服务，上面有一个2G的文件。另一台下载。
+怎么抓包，在那台机器上抓包，是不是指定来源ip就可以了？
+是指定抓n个包，还是说指定ip，从开始下载到结束？
+抓完包后怎么分析，需要分析哪些内容？arp协议？地址询问？http三次握手？三次挥手？
+怎么调整内核，又要重新抓包？内核调整时，服务器有什么变化，用top命令能看出来么？
+rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助么？
+执行curl就出问题了</p>
+<p>服务端</p>
+<pre tabindex="0"><code>server:172.19.5.43
+python -m SimpleHTTPServer 8089
+
+ll -h
+-rw-r--r--. 1 root root 1.9G Mar 25 11:37 zookeeper.out
+</code></pre><p>客户端</p>
+<pre tabindex="0"><code>client:172.19.9.147
+tcpdump -i eth0 tcp port 8089 and host 172.19.5.43 -w tcpdump-$(date +%Y-%m-%d-%H-%M-%S).cap
+[root@172.19.9.147 ~]# wget http://172.19.5.43:8089/zookeeper.out
+--2023-03-26 00:49:47--  http://172.19.5.43:8089/zookeeper.out
+Connecting to 172.19.5.43:8089... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1972256747 (1.8G) [application/octet-stream]
+Saving to: ‘zookeeper.out’
+
+100%[==========================================================================================================================================&gt;] 1,972,256,747 53.2MB/s   in 25s    
+
+2023-03-26 00:50:11 (76.3 MB/s) - ‘zookeeper.out’ saved [1972256747/1972256747]
+
+[root@172.19.9.147 ~]# curl http://172.19.5.43:8089/zookeeper.out --output zookeeper.out.file
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 1880M  100 1880M    0     0  77.0M      0  0:00:24  0:00:24 --:--:-- 54.3M
+</code></pre><p>curl 控制速度</p>
+<pre tabindex="0"><code>[root@172.19.9.147 ~]# curl http://172.19.5.43:8089/zookeeper.out --output zookeeper.out.file --limit-rate 1M
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+ 33 1880M   33  625M    0     0  1023k      0  0:31:21  0:10:25  0:20:56  996k
+</code></pre><p><a href="https://tonydeng.github.io/sdn-handbook/linux/tc.html">tc命令介绍</a></p>
+<p>BDP和buffer、RT的关系
+搜这个问题发现别人早就看过任总的文章了，还写了笔记。https://blog.csdn.net/fdsafwagdagadg6576/article/details/121011575</p>
+<p>相关概念</p>
+<ol>
+<li>BDP: (Bandwidth-Delay Product) 带宽时延积</li>
+<li>Buffer: 指的是sysctl中的 rmem或者wmem</li>
+<li>rt: tcp的timestamps-&gt;time since previous frame in this tcp stream(我猜就是响应时间的一种)</li>
+</ol>
+<pre tabindex="0"><code>[root@172.19.5.43 ~]# sysctl -a | grep &#39;net.ipv4.tcp_wmem&#39;
+sysctl: reading key &#34;net.ipv6.conf.all.stable_secret&#34;
+net.ipv4.tcp_wmem = 4096        16384   4194304
+sysctl: reading key &#34;net.ipv6.conf.default.stable_secret&#34;
+sysctl: reading key &#34;net.ipv6.conf.docker0.stable_secret&#34;
+sysctl: reading key &#34;net.ipv6.conf.eth0.stable_secret&#34;
+sysctl: reading key &#34;net.ipv6.conf.lo.stable_secret&#34;
+sysctl: reading key &#34;net.ipv6.conf.veth59705c1.stable_secret&#34;
+sysctl: reading key &#34;net.ipv6.conf.veth6cbfe80.stable_secret&#34;
+[root@172.19.5.43 ~]# sysctl -a | grep &#39;net.ipv4.tcp_wmem&#39;
+sysctl: reading key &#34;net.ipv6.conf.all.stable_secret&#34;
+net.ipv4.tcp_wmem = 4096        4096    4096
+sysctl: reading key &#34;net.ipv6.conf.default.stable_secret&#34;
+sysctl: reading key &#34;net.ipv6.conf.docker0.stable_secret&#34;
+sysctl: reading key &#34;net.ipv6.conf.eth0.stable_secret&#34;
+sysctl: reading key &#34;net.ipv6.conf.lo.stable_secret&#34;
+sysctl: reading key &#34;net.ipv6.conf.veth59705c1.stable_secret&#34;
+sysctl: reading key &#34;net.ipv6.conf.veth6cbfe80.stable_secret&#34;
+</code></pre><p><a href="https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/">参数相关</a></p>
+<p>更新了配置后，直接服务也启动失败，wget也异常了。</p>
+</section>
+
+  
+  
+  <footer class="mt-12 flex flex-wrap">
+     
+    <a
+      class="mb-1.5 mr-1.5 rounded-lg bg-black/[3%] px-5 py-1.5 no-underline dark:bg-white/[8%]"
+      href="/tags/tcp"
+      >tcp</a
+    >
+     
+    <a
+      class="mb-1.5 mr-1.5 rounded-lg bg-black/[3%] px-5 py-1.5 no-underline dark:bg-white/[8%]"
+      href="/tags/wireshark"
+      >wireshark</a
+    >
+     
+    <a
+      class="mb-1.5 mr-1.5 rounded-lg bg-black/[3%] px-5 py-1.5 no-underline dark:bg-white/[8%]"
+      href="/tags/%E5%AE%9E%E9%AA%8C"
+      >实验</a
+    >
+    
+  </footer>
+  
+
+  
+  
+
+  
+  
+
+  
+  
+  <div class="mt-24" id="graphcomment"></div>
+  <script type="text/javascript">
+    var __semio__params = {
+      graphcommentId: 'YOUR_GRAPH_COMMENT_ID',
+      behaviour: {
+        
+      },
+      
+    };
+
+    function __semio__onload() {
+      __semio__gc_graphlogin(__semio__params);
+    }
+
+    (function () {
+      var gc = document.createElement('script');
+      gc.type = 'text/javascript';
+      gc.async = true;
+      gc.onload = __semio__onload;
+      gc.defer = true;
+      gc.src =
+        'https://integration.graphcomment.com/gc_graphlogin.js?' + Date.now();
+      (
+        document.getElementsByTagName('head')[0] ||
+        document.getElementsByTagName('body')[0]
+      ).appendChild(gc);
+    })();
+  </script>
+  
+
+  
+
+  
+</article>
+
+
+    </main>
+
+    <footer
+  class="opaco mx-auto flex h-[4.5rem] max-w-3xl items-center px-8 text-[0.9em] opacity-60"
+>
+  <div class="mr-auto">
+    &copy; 2024
+    <a class="link" href="/">卡塞尔的博客</a>
+  </div>
+  <a class="link mx-6" href="https://gohugo.io/" rel="noopener" target="_blank"
+    >Powered by Hugo️️</a
+  >️
+  <a
+    class="link"
+    href="https://github.com/nanxiaobei/hugo-paper"
+    rel="noopener"
+    target="_blank"
+    >✎ Paper</a
+  >
+</footer>
+
+  </body>
+</html>

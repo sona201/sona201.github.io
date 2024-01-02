@@ -1,67 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>Categories on Ricardo</title>
-        <link>https://sona201.github.io/categories/</link>
-        <description>Recent content in Categories on Ricardo</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-CN</language>
-        <lastBuildDate>Mon, 01 Jan 2024 21:36:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>2023</title>
-        <link>https://sona201.github.io/categories/2023/</link>
-        <pubDate>Mon, 01 Jan 2024 21:36:00 +0800</pubDate>
-        
-        <guid>https://sona201.github.io/categories/2023/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>year</title>
-        <link>https://sona201.github.io/categories/year/</link>
-        <pubDate>Mon, 01 Jan 2024 21:36:00 +0800</pubDate>
-        
-        <guid>https://sona201.github.io/categories/year/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>week</title>
-        <link>https://sona201.github.io/categories/week/</link>
-        <pubDate>Wed, 09 Aug 2023 22:20:00 +0800</pubDate>
-        
-        <guid>https://sona201.github.io/categories/week/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>travel</title>
-        <link>https://sona201.github.io/categories/travel/</link>
-        <pubDate>Sun, 06 Aug 2023 22:20:00 +0800</pubDate>
-        
-        <guid>https://sona201.github.io/categories/travel/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>think</title>
-        <link>https://sona201.github.io/categories/think/</link>
-        <pubDate>Wed, 19 Jul 2023 23:19:42 +0800</pubDate>
-        
-        <guid>https://sona201.github.io/categories/think/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>tcp</title>
-        <link>https://sona201.github.io/categories/tcp/</link>
-        <pubDate>Fri, 19 May 2023 01:05:14 +0800</pubDate>
-        
-        <guid>https://sona201.github.io/categories/tcp/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>django</title>
-        <link>https://sona201.github.io/categories/django/</link>
-        <pubDate>Fri, 05 May 2023 00:00:00 +0000</pubDate>
-        
-        <guid>https://sona201.github.io/categories/django/</guid>
-        <description></description>
-        </item>
-        
-    </channel>
+  <channel>
+    <title>Categories on 卡塞尔的博客</title>
+    <link>/categories/</link>
+    <description>Recent content in Categories on 卡塞尔的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 01 Jan 2024 21:36:00 +0800</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+  </channel>
 </rss>
