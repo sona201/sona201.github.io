@@ -1,38 +1,193 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>think on 卡塞尔的博客</title>
-    <link>/categories/think/</link>
-    <description>Recent content in think on 卡塞尔的博客</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Wed, 19 Jul 2023 23:19:42 +0800</lastBuildDate><atom:link href="/categories/think/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>blog-theme</title>
-      <link>/post/think/blog-theme/</link>
-      <pubDate>Wed, 19 Jul 2023 23:19:42 +0800</pubDate>
-      
-      <guid>/post/think/blog-theme/</guid>
-      <description>博客折腾 这两天折腾博客，总是遇到困难就想放弃。想法无非就是博客的主题哪哪不好看，不满意。人生呐，很难满足(就是想安慰自己不努力)。 不过早就明</description>
-    </item>
-    
-    <item>
-      <title>Study_think</title>
-      <link>/post/think/study_think/</link>
-      <pubDate>Sun, 16 Jul 2023 11:15:33 +0800</pubDate>
-      
-      <guid>/post/think/study_think/</guid>
-      <description>方法论：通过拆解马拉松，深刻领会阶梯原理 原文链接 原文摘要 你一定知道那个日本的马拉松冠军选手——山田本一。山田本一获得多个国际马拉松赛事冠军后</description>
-    </item>
-    
-    <item>
-      <title>Haoel</title>
-      <link>/post/think/haoel/</link>
-      <pubDate>Mon, 15 May 2023 22:33:26 +0800</pubDate>
-      
-      <guid>/post/think/haoel/</guid>
-      <description>我是2014年毕业，去过工地，干过销售。16年，我妈查出胃癌早期，一年后，她身体差不多康复，于是我决定出去闯闯。 其实也算不上闯，只是听起来好</description>
-    </item>
-    
-  </channel>
+    <channel>
+        <title>think on Ricardo</title>
+        <link>https://sona201.github.io/categories/think/</link>
+        <description>Recent content in think on Ricardo</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Wed, 19 Jul 2023 23:19:42 +0800</lastBuildDate><atom:link href="https://sona201.github.io/categories/think/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>blog-theme</title>
+        <link>https://sona201.github.io/posts/blog-theme/</link>
+        <pubDate>Wed, 19 Jul 2023 23:19:42 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/blog-theme/</guid>
+        <description>&lt;h2 id=&#34;博客折腾&#34;&gt;博客折腾&lt;/h2&gt;
+&lt;p&gt;这两天折腾博客，总是遇到困难就想放弃。想法无非就是博客的主题哪哪不好看，不满意。人生呐，很难满足(就是想安慰自己不努力)。
+不过早就明白了，博客的本质还是要内容好，而不是花里胡哨的样子。但都想有点虚荣心。&lt;/p&gt;
+&lt;p&gt;这两天还是看见了一个基本满意的主题，但作者是外国人，估计对中文支持有点问题。其次是主题本地测试跑不起来，感觉是自愿获取被墙拦截了。
+好像代码也有bug，本着偷懒原则，暂停折腾。这两天折腾的结果只有心累，还是跟原来一样，想速成，一点耐心都没有，硬生生找了两个主题跟着敲了一遍代码。
+有点样子了，但又嫌弃太慢，不能立马写出我想要的主题，又开始改动原来的主题。于是想了想，开个主题，给自己挖个坑，慢慢填吧。&lt;/p&gt;
+&lt;h2 id=&#34;折腾记录&#34;&gt;折腾记录&lt;/h2&gt;
+&lt;h3 id=&#34;跟着简书上的文章写&#34;&gt;跟着简书上的文章写&lt;/h3&gt;
+&lt;p&gt;最初的想法是，类似于学习demo一样，找个中文版本，跟着手敲一遍，想想大概就能搞定了。抱着这个想法，我打开了第一个收藏链接&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.jianshu.com/p/0b9aecff290c&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;如何创建自己的hugo主题&lt;/a&gt;，天真的我，看内容写的非常详细，还贴了很多代码。
+我想，只要我跟着后面做，铁定就会了。事实是，跟着后面做，根本跑不起来，只记录了大概得过程，最后的截图更像是hugo的 bootstrip 主题替换的结果。
+不知道是我跟着写的步骤不对，还是被欺骗了。代码也没有贴上，大概理清楚了 hugo 的架构&lt;/p&gt;
+&lt;h3 id=&#34;疯狂搜索一目十行&#34;&gt;疯狂搜索，一目十行&lt;/h3&gt;
+&lt;p&gt;疯狂谷歌 &amp;ldquo;hugo 主题开发&amp;rdquo; , 找到两个比较靠谱的方案，都是有经验的，而且把博客主题代码放在 github 上。&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://io-oi.me/tech/developing-a-hugo-theme/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://io-oi.me/tech/developing-a-hugo-theme/&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://blog.gimo.me/posts/creating-a-hugo-theme/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://blog.gimo.me/posts/creating-a-hugo-theme/&lt;/a&gt; &lt;br&gt;
+我想，这总能行了吧，大家对 hugo 主题开发的基本功要求不一样，或者我的基础太差。实在是跟不上，半天想搞起来确实费劲。但经验确实值得参考。&lt;/p&gt;
+&lt;p&gt;后面也看了 &lt;a class=&#34;link&#34; href=&#34;https://qwqaq.com/2022/04/migrate-to-hugo/#%E5%88%B6%E4%BD%9C%E4%B8%BB%E9%A2%98&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;转向 Hugo：主题制作指北&lt;/a&gt;
+确实很详细，但不是我想要的一步一步带着我写好，其实他已经提醒了很多，给了官网的链接，已经想跟着官网写，最后还是放弃了。官网写的感觉并不友好。
+最后发现问题是我对 golang 不熟悉，其实这 hugo 可以当成一个 python 的 jinja2 模板来理解。可能本质就是一样。&lt;/p&gt;
+&lt;h3 id=&#34;找一个已经写出来的博客跟着做&#34;&gt;找一个已经写出来的博客跟着做&lt;/h3&gt;
+&lt;p&gt;跟着一个靠谱的写一个主题，最后的效果还是有点问题，熟悉了架构
+主要是自己不想从零开始写主题，更多的是想修改一个现有主题&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这个博客的代码其实也有一点点的问题，比如链接失效，最新版本不一致，但幸好都找到替代方案。最后代码成功的运行起来了。
+结果这才发现是我想要的功能，大概怎么实现，距离实现的目标还差多少。&lt;/p&gt;
+&lt;p&gt;给自己挖了个坑，虽然跟着这个做出了一个完全不能用的主题，但还是勇敢的把这行代码加在现在的主题上。我一直想做成上下布局的结构。
+想修改当前主题，一直不知道怎么下手，慌忙之间把一些基础知识都搞忘记了，最后发现居然就是加了一行 html ,本质上还是有很多坑。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/hugo_theme_header.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;hugo_theme_header&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;回归最初的目的&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;我在友链的文章里写了好几个主题是我喜欢的风格，但作者都没有开源，想到我最初的目标就是把博客搭建起来，然后修改成自己喜欢的样子。
+增加一些想要的功能，仅此而已，对现有主题的不满没有那么夸张，只是在看到别人折腾主题的过程，发现更多的细节，自己也先要，或者也要踩坑。
+由此慢慢偏离最初的目的，现在功能基本都满足自己，只剩一些样式的问题，干脆开个坑，慢慢积累，反正我也不是那种一鼓作气搞定一切的人。
+或许，慢慢来，比较快。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Study_think</title>
+        <link>https://sona201.github.io/posts/study_think/</link>
+        <pubDate>Sun, 16 Jul 2023 11:15:33 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/study_think/</guid>
+        <description>&lt;h1 id=&#34;方法论通过拆解马拉松深刻领会阶梯原理&#34;&gt;方法论：通过拆解马拉松，深刻领会阶梯原理&lt;/h1&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.jianshu.com/p/f61df42ba6cb&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;原文链接&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;原文摘要&#34;&gt;原文摘要&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你一定知道那个日本的马拉松冠军选手——山田本一。山田本一获得多个国际马拉松赛事冠军后，退役，并揭秘了自己的夺冠技巧。&lt;/p&gt;
+&lt;p&gt;那就是，在每次马拉松比赛前，他都要驱车把比赛路程提前走一遍。然后，他把整个比赛路段，分成若干段，分别以各种标志建筑物、地貌特征为标记。&lt;/p&gt;
+&lt;p&gt;正式比赛时，山田本一就会只考虑当前这一段路怎么跑，然后全力以赴完成这一段赛程。当一段赛程完成后，他就又会全力以赴地完成下一个赛段。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;看到这里，我以为，跑马拉松，只要把整个赛段分解成多个赛段，问题就解决了。就好像做学习或工作计划，只要把学习或工作任务，按照时间，分配好进度就能做好。&lt;/p&gt;
+&lt;p&gt;可事实却打了我的脸。&lt;/p&gt;
+&lt;p&gt;我的学习计划，工作计划，都不能按期完成，看来拆解目标，可不只是分段、分时、分任务，应该设立进阶条件。&lt;/p&gt;
+&lt;p&gt;使用阶梯原理的关键，就是如何合理地拆解目标，山田本一的拆解，只是调整了我们实现目标时的心态，那就是心无旁骛，全力以赴做好当前的任务。
+而真正合理有效的目标拆解，一定要多设立几个中间标准，并且，你需要先完成前一个，再去进阶下一个目标。&lt;/p&gt;
+&lt;h2 id=&#34;我的思考&#34;&gt;我的思考&lt;/h2&gt;
+&lt;p&gt;学习是一件需要终生持续的事情，因此我总是认为只要我学习了就没有&amp;quot;浪费生命&amp;quot;，为此我陷入每天都要学习的&amp;quot;自我感动&amp;quot;中，不去考虑学习的效率。
+毕竟再笨也会偶尔全身心投入到学习中，并且能从中感受到快乐，也许那就是&amp;quot;内啡肽&amp;quot;。&lt;/p&gt;
+&lt;p&gt;我对学习效率要求很低，或者很少考虑这项指标，更多的是凭感觉做事。
+毕竟这个指标的考量难度和维度都比较复杂，不像从学习时间这个维度参考。甚至学习时间还有水分，愣神，玩手机偶尔也会被归算到学习时间内。
+对自己学习的计算没有办法能真正精确，还有就是人性，总是美化自己，眼睛会自动给自己的外貌进行美化，也会美化自己的学习能力，记忆力等等。&lt;/p&gt;
+&lt;p&gt;参考山田本一的马拉松阶梯原理: 小步子原理，也叫阶梯原理，心理学上也叫里程碑效应。&lt;/p&gt;
+&lt;p&gt;他的诀窍: 那就是，在每次马拉松比赛前，他都要驱车把比赛路程提前走一遍。然后，他把整个比赛路段，分成若干段，分别以各种标志建筑物、地貌特征为标记。&lt;/p&gt;
+&lt;h3 id=&#34;一熟悉整个流程&#34;&gt;一、熟悉整个流程&lt;/h3&gt;
+&lt;p&gt;跟了解马拉松比赛路程一样，学习一个知识需要知道学会哪些东西才能叫入门，知道整个比赛路程，就会对学习的知识任务量有概念。&lt;/p&gt;
+&lt;p&gt;我总是一股脑找一堆学习方法论，学习资料，文章、书籍、视频。然后想当然的对自己说，坚持看完就会了。&lt;/p&gt;
+&lt;p&gt;比如学习java，想当然的认为跟着廖雪峰的java资料后面敲一遍代码就会了。事实是，看了两篇文章后就一直停止在那一章节。
+我对学会java没有一个概念，不知道怎样才叫入门，把别人的目标直接拿过来，没仔细想过这个是不是自己的目标，当前的教程内容合不合适我，
+是偷懒认为跟着别人的教程就会了。&lt;/p&gt;
+&lt;p&gt;这种情况生活中太多了，买了书(资料)认为就是学会了，收藏锻炼视频就是锻炼了。&lt;/p&gt;
+&lt;h3 id=&#34;二设立目标&#34;&gt;二、设立目标&lt;/h3&gt;
+&lt;p&gt;都知道需要设立目标，我平时也没少给自己设目标，甚至会对身边的人说出来，让身边的来一起督促自己，最后结果是周围的人也知道我喜欢乱立Flag了。&lt;/p&gt;
+&lt;p&gt;上面说的是一个典型的问题，设目标，但是目标其实不清晰，跟第一点有关联，但不全一样。&lt;/p&gt;
+&lt;p&gt;偶尔会出现我确实立了一个明确的目标，例如看java学习视频，一共大概128个视频，计划一个月学完，然后一个除法，128/30=4.2。拍脑袋决定一天看5个视频。前期看的时候发现还行，每个视频的时间在13分钟左右，每天看完大概要一个小时。但后来就坚持不下去了。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;并不能保证每天能抽空出1个多小时，碰到加班或者家庭活动，几乎完全抽不出时间来学习。&lt;/li&gt;
+&lt;li&gt;前期的介绍类的视频，一个视频只有10分钟，但后期详情视频一个大约30分钟，要按计划的话，2.5小时。远超计划。&lt;/li&gt;
+&lt;li&gt;因为对学习内容的不熟悉，看视频会停下来思考，或者跟着敲代码，即使是1个小时的视频，加上理解可能会时间翻倍。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;要做出合理的计划，总之不能拍脑袋定了目标后，完成不了就放弃，需要动态更新计划，而不是拖延跟放弃。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;目标内容合理，慢就慢点，每天一共2个小时的学习时间应该算是一种极限。&lt;/li&gt;
+&lt;li&gt;目标清晰，看视频或文章，如果没有自己的思考等于白看，甚至记录笔记但转头就忘也是需要改进的。
+比如想自己写个博客主题，这个目标就不清晰，怎么做，做成什么样子都是空的。
+做这个主题要多久，没有一个考量，一个任务(task)的时间大概控制在1小时左右&lt;/li&gt;
+&lt;li&gt;认识到自己的精力是有限的，不能总是在理想情况下做计划，满负荷学习(工作)，总会遇到问题，需要劳逸结合&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;三冷启动坚持&#34;&gt;三、冷启动，坚持&lt;/h3&gt;
+&lt;p&gt;学习一个新的知识一般都会很容易产生新奇感，但要是遇到难点，总是解决不了，大概率就是放弃。&lt;/p&gt;
+&lt;p&gt;因为这个问题经常困扰我，可能我以前解决过这个情况，但没有形成一套方法论，这里先推出一个想法: 继续学习，挑有成就感的知识点学习。
+总之需要先继续学习，遇到难题记录下来，然后继续学习。本身学习也是需要通过笔记来复习巩固，记忆力再好还是不如笔记来的实在。
+而且能通过复习笔记发现之前的问题。&lt;/p&gt;
+&lt;p&gt;笔记有一个问题，不像早期知识内容比较贫乏的时候，现在网上能搜到一堆写的比你好的笔记，但这个时候用这个笔记当成自己的笔记等于没有思考，变相等于没有做笔记。这也是一个很要注意的点。&lt;/p&gt;
+&lt;p&gt;坚持学下去，但不要每次都是从0开始，就想高中被英语单词，最熟悉的第一页，项目是要有推进的。&lt;/p&gt;
+&lt;h3 id=&#34;四设立奖励&#34;&gt;四、设立奖励&lt;/h3&gt;
+&lt;p&gt;与上面讲的劳逸结合一个意思，人不是机器，不可能总是高强度满负荷学习，需要给自己主动休息的时间。&lt;/p&gt;
+&lt;p&gt;主动休息也是一种给自己一个信号，我休息了，而不是自己陷入不想开始学习的状态，不停的刷小视频，玩2-3小时，最后人更累。
+主动玩游戏，看看动漫视频，做点与学习无关自己喜欢的事情，让大脑接受到&amp;quot;我正在休息&amp;quot;的信号，也是给自己奖励，建立一个正向反馈机制。&lt;/p&gt;
+&lt;h3 id=&#34;五优先级&#34;&gt;五、优先级&lt;/h3&gt;
+&lt;p&gt;四象限法，一个老生常谈的方式，但实际情况是我们不能分清哪些事情优先级高，需要多思考。&lt;/p&gt;
+&lt;p&gt;当然前面也提到，设立了阶段目标后，只需要心无旁骛，全力以赴&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Haoel</title>
+        <link>https://sona201.github.io/posts/haoel/</link>
+        <pubDate>Mon, 15 May 2023 22:33:26 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/haoel/</guid>
+        <description>&lt;p&gt;我是2014年毕业，去过工地，干过销售。16年，我妈查出胃癌早期，一年后，她身体差不多康复，于是我决定出去闯闯。&lt;/p&gt;
+&lt;p&gt;其实也算不上闯，只是听起来好听而已。在大学的时候，我学的是电气工程及其自动化，一个跟计算机几乎没有关系的专业。对口工作就是水电工，或者去供电局。但我其实小时候就对计算机感兴趣，高考填志愿的时候，我想选计算机，结果家里没同意，怕找不到工作。我也没有跟家里犟，毕竟我也不知道未来啥样。大学也会看看相关的消息，拿的出手的事就是用自己电脑安装了双系统，win7/ubuntu。2017年，我拿出4000块报名了一个运维线上培训班，其实15年就想报名了，但没有下定决心，担心自己做不好等等。16年照顾我妈身体的时候，买了本《鸟哥的私房菜》。然后就慢慢开始了我的IT路。&lt;/p&gt;
+&lt;p&gt;17好不容易找了一家公司要我，毕竟培训班出来的，水平菜的不像话。那段时间疯狂学习，接触到了coolshell.cn，发现这个人好厉害，怎么会这么多东西，关键是这些东西都学的很深。夸张点讲，每个名词都我要去百度查询下。在推上看到好多人都说被陈皓帮助过，感叹我怎么还没能成长起来。年龄也不小了。&lt;/p&gt;
+&lt;p&gt;当时特别沉迷他的博客，虽然没有看完所有，但真的好多对我帮助很大。找到当时一篇文章&lt;a class=&#34;link&#34; href=&#34;https://www.ituring.com.cn/article/9174&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;陈皓的经历&lt;/a&gt;，下午与同事聊天说到他这段故事，还是感叹他厉害。不过这会儿又翻了好多他的博客，心里有点欣慰，还是有很多宝藏在的，只是我之前不珍惜。总感觉没有人给我指路。也是他的数字遗产，珍惜。&lt;/p&gt;
+&lt;p&gt;想想他 5/1 发的推文，将他爸爸每天发送平安。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/haoel_2023_05_01.PNG&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;haoel_2023_05_01&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;第一次意识到死亡&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;小时候，大概是10岁左右，上上上辈儿的老人相继离世，那个时候还不太明白生命的意义，直到某次参加葬礼，在火葬场差点丢了，没找到回去灵车，感觉是不是那天没人找我，是不是要死在那里了，没人认识我。后来我经常熬夜，上床后听到自己心跳声很大，担心突然猝死。小时候也梦到过自己死亡。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;同龄人离世&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;上高一时，一个同年级的孩子突然睡梦中离世，听说学校的处理方式就是把几个同宿舍的孩子换个寝室。那阵子，税前也总是担心看不到明天的太阳。直到现在，我也是习惯把自己搞的很累，几乎倒床就睡的那种，不然就会疯狂玩手机。睡前胡思乱想已经是常态。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;同龄人离死亡最近的时候。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;朋友2019年去医院看病，当时是肚子不舒服，在上海瑞金医院看病，大概是做了常规检查:心电图，然后就被医生叫住，直接送进重症病房，甚至他手里还拎着肚子疼开的药。电话联系家属，告知以后不能喝酒等，注意饮食。不能过量运动。后来他出院，我打电话听到消息，那个周末去找他，跟我说着说着就哭了，担心白发人送黑发人。那段时间，我真的有在想自己的健康好不好。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;陈皓的突然离世&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这个是真的意外，总感觉这是命运的玩笑，看到消息第一反应是不是谣言，希望辟谣，但看了推文，甚至还@haoel，太唏嘘了。很多推友在考虑养生，但这个大概率又是3分钟热度吧。最近也是焦虑成性，经常熬夜，到家总是看短视频。陈皓说，短视频最浪费时间，最没营养。今天把微信的短视频入口关了。&lt;/p&gt;
+&lt;p&gt;陈皓留的数字文化遗产还挺多的，够学好久了。&lt;/p&gt;
+&lt;p&gt;R.I.P(Requiescat in pace)&lt;/p&gt;
+&lt;p&gt;关于数字遗产这件事，今天看到laike9m的文章&lt;a class=&#34;link&#34; href=&#34;https://laike9m.com/blog/people-die-but-long-live-github,122/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;people-die-but-long-live-github&lt;/a&gt;，感叹人的第二次消失有时候也挺容易的。&lt;/p&gt;
+&lt;p&gt;也同时感慨，人要做什么才会有意义。这个问题需要好好问问自己。想到和菜头的一篇文章，讲一个美国的地勤偷飞机，然后完成了自己的梦想，最后与飞机一起坠毁&lt;a class=&#34;link&#34; href=&#34;https://mp.weixin.qq.com/s/2fQTwQAZU3qYyb0WU60jmQ&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;文章链接，故事在结尾&lt;/a&gt;，有时候对别的朋友圈生活嗤之以鼻，但也会羡慕。媳妇儿却很简单，想去尝试下那种生活。今年的计划，去趟香港，开开眼。&lt;/p&gt;
+&lt;h5 id=&#34;文章链接&#34;&gt;文章链接&lt;/h5&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://mp.weixin.qq.com/s/q1QDxN_6PfgWi-oqtZ-32w&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;infoQ-纪念陈皓（左耳朵耗子）&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://mp.weixin.qq.com/s/jYu3cBCZnKtrbaCHsUjx3g&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;和菜头-仅有他汀是不够的&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://laike9m.com/blog/rip-chen-hao,147/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;laike9m-R.I.P. 陈皓&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://www.kawabangga.com/posts/5068&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;laixintao-缅怀陈皓&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
 </rss>
