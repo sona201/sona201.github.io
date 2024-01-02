@@ -1,1 +1,20 @@
-Historical content withdrawn during privacy cleanup.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>技巧 on 卡塞尔的博客</title>
+    <link>/tags/%E6%8A%80%E5%B7%A7/</link>
+    <description>Recent content in 技巧 on 卡塞尔的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 19 May 2023 01:05:14 +0800</lastBuildDate><atom:link href="/tags/%E6%8A%80%E5%B7%A7/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Wireshark技巧</title>
+      <link>/post/tcp/wireshark%E6%8A%80%E5%B7%A7/</link>
+      <pubDate>Fri, 19 May 2023 01:05:14 +0800</pubDate>
+      
+      <guid>/post/tcp/wireshark%E6%8A%80%E5%B7%A7/</guid>
+      <description>相关文章 wireshark你一定会喜欢的技巧摘要 修改seq的为绝对值 relative 配置rt 分析 分析图 wireshark https 抓包 tls contains &amp;ldquo;baidu.com&amp;rdquo; wireshark 没有权限 或者下图 命令行赋权 直接简单粗</description>
+    </item>
+    
+  </channel>
+</rss>

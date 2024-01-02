@@ -1,1 +1,182 @@
-Historical content withdrawn during privacy cleanup.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on 卡塞尔的博客</title>
+    <link>/post/</link>
+    <description>Recent content in Posts on 卡塞尔的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 01 Jan 2024 21:36:00 +0800</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2023年终总结</title>
+      <link>/post/week/2023-year-end-summary/</link>
+      <pubDate>Mon, 01 Jan 2024 21:36:00 +0800</pubDate>
+      
+      <guid>/post/week/2023-year-end-summary/</guid>
+      <description>2023年做了那些事: 坚持写周报，虽然很水，质量有待提高 java 学习计划报废 学习k8s，勉强及格 django 学习计划报废 搞定博客，但还想继续优化主题 双拼音输</description>
+    </item>
+    
+    <item>
+      <title>真实的自己</title>
+      <link>/post/think/%E7%AE%80%E5%8D%95%E5%BF%83%E7%90%86%E5%AD%A6/</link>
+      <pubDate>Tue, 07 Nov 2023 00:50:31 +0800</pubDate>
+      
+      <guid>/post/think/%E7%AE%80%E5%8D%95%E5%BF%83%E7%90%86%E5%AD%A6/</guid>
+      <description>今天跟媳妇儿吐槽一个同事。他又想要加工资，又想要学习，最后又想好好玩。感觉他什么都想要，在我的刻板印象里，这是一个不可能三角，我感觉这不是一</description>
+    </item>
+    
+    <item>
+      <title>week33</title>
+      <link>/post/week/week33/</link>
+      <pubDate>Wed, 09 Aug 2023 22:20:00 +0800</pubDate>
+      
+      <guid>/post/week/week33/</guid>
+      <description>2023年第33周，0807-0813 胡算乱想 心态平衡后, 对学习知识的效率要求大大降低, 反而让自己更耐心. 对于知识星球的网络只是学习, 放松了</description>
+    </item>
+    
+    <item>
+      <title>shaoxing</title>
+      <link>/post/travel/travel-shaoxing/</link>
+      <pubDate>Sun, 06 Aug 2023 22:20:00 +0800</pubDate>
+      
+      <guid>/post/travel/travel-shaoxing/</guid>
+      <description>说走就走的旅行 周四晚上临时决定去绍兴玩, 但却没有合适的回城票, 周五发现居然有票了. 早上 7.30 出发去虹桥火车站, 特意选了小红书介绍的(虹桥2号航站</description>
+    </item>
+    
+    <item>
+      <title>blog-theme</title>
+      <link>/post/think/blog-theme/</link>
+      <pubDate>Wed, 19 Jul 2023 23:19:42 +0800</pubDate>
+      
+      <guid>/post/think/blog-theme/</guid>
+      <description>博客折腾 这两天折腾博客，总是遇到困难就想放弃。想法无非就是博客的主题哪哪不好看，不满意。人生呐，很难满足(就是想安慰自己不努力)。 不过早就明</description>
+    </item>
+    
+    <item>
+      <title>Study_think</title>
+      <link>/post/think/study_think/</link>
+      <pubDate>Sun, 16 Jul 2023 11:15:33 +0800</pubDate>
+      
+      <guid>/post/think/study_think/</guid>
+      <description>方法论：通过拆解马拉松，深刻领会阶梯原理 原文链接 原文摘要 你一定知道那个日本的马拉松冠军选手——山田本一。山田本一获得多个国际马拉松赛事冠军后</description>
+    </item>
+    
+    <item>
+      <title>Tc_实验</title>
+      <link>/post/tcp/tc_%E5%AE%9E%E9%AA%8C/</link>
+      <pubDate>Fri, 19 May 2023 01:05:14 +0800</pubDate>
+      
+      <guid>/post/tcp/tc_%E5%AE%9E%E9%AA%8C/</guid>
+      <description>排查python server当时的系统信息 发现并没有异常，仅记录device eth0 entered promiscuous mode表示当时网卡 eth0 进入混杂模式,应该与当时启用tcpd</description>
+    </item>
+    
+    <item>
+      <title>Wireshark技巧</title>
+      <link>/post/tcp/wireshark%E6%8A%80%E5%B7%A7/</link>
+      <pubDate>Fri, 19 May 2023 01:05:14 +0800</pubDate>
+      
+      <guid>/post/tcp/wireshark%E6%8A%80%E5%B7%A7/</guid>
+      <description>相关文章 wireshark你一定会喜欢的技巧摘要 修改seq的为绝对值 relative 配置rt 分析 分析图 wireshark https 抓包 tls contains &amp;ldquo;baidu.com&amp;rdquo; wireshark 没有权限 或者下图 命令行赋权 直接简单粗</description>
+    </item>
+    
+    <item>
+      <title>Wireshark本地劫持https</title>
+      <link>/post/tcp/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/</link>
+      <pubDate>Fri, 19 May 2023 01:05:14 +0800</pubDate>
+      
+      <guid>/post/tcp/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/</guid>
+      <description>相关文章 方案: 手动启动浏览器，让浏览器把证书放到指定目录，wireshark去读取，然后解析，就可以得到解密后的包了，等同于http请求抓包</description>
+    </item>
+    
+    <item>
+      <title>Haoel</title>
+      <link>/post/think/haoel/</link>
+      <pubDate>Mon, 15 May 2023 22:33:26 +0800</pubDate>
+      
+      <guid>/post/think/haoel/</guid>
+      <description>我是2014年毕业，去过工地，干过销售。16年，我妈查出胃癌早期，一年后，她身体差不多康复，于是我决定出去闯闯。 其实也算不上闯，只是听起来好</description>
+    </item>
+    
+    <item>
+      <title>django middleware</title>
+      <link>/post/django/2-core_http_middleware/</link>
+      <pubDate>Fri, 05 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/post/django/2-core_http_middleware/</guid>
+      <description>MIDDLEWARE/get_response 5.2 django处理http请求源码 def __call__(self, environ, start_response): set_script_prefix(get_script_name(environ)) signals.request_started.send(sender=self.__class__, environ=environ) # WSGIRequest对象 -&amp;gt; HttpRequest类 request = self.request_class(environ) # response是什么 response = self.get_response(request)</description>
+    </item>
+    
+    <item>
+      <title>django runserver</title>
+      <link>/post/django/core-runserver-2-run/</link>
+      <pubDate>Fri, 05 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/post/django/core-runserver-2-run/</guid>
+      <description>启动命令 python3 manage.py runserver 0.0.0.0:8000 平时用的命令就是这个, 入口是 manage.py 文件 manage.py 管理入口文件 def main(): &amp;#34;&amp;#34;&amp;#34;Run administrative tasks.&amp;#34;&amp;#34;&amp;#34; os.environ.setdefault(&amp;#39;DJANGO_SETTINGS_MODULE&amp;#39;, &amp;#39;firstDjango.settings&amp;#39;) try: from django.core.management import execute_from_command_line except ImportError as exc: raise ImportError( &amp;#34;Couldn&amp;#39;t import Django. Are you sure it&amp;#39;s installed and &amp;#34; &amp;#34;available on your PYTHONPATH environment variable? Did you &amp;#34; &amp;#34;forget</description>
+    </item>
+    
+    <item>
+      <title>django WSGIHandler</title>
+      <link>/post/django/core-handlers-base/</link>
+      <pubDate>Fri, 05 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/post/django/core-handlers-base/</guid>
+      <description>WSGIHandler class WSGIHandler(base.BaseHandler): request_class = WSGIRequest def __init__(self, *args, **kwargs): super().__init__(*args, **kwargs) self.load_middleware() def __call__(self, environ, start_response): set_script_prefix(get_script_name(environ)) signals.request_started.send(sender=self.__class__, environ=environ) # WSGIRequest对象 -&amp;gt; HttpRequest类 # def echo(request, *args, **kwargs): # data = request.GET # ret_value = data.get(&amp;#39;name&amp;#39;, &amp;#39;world&amp;#39;) # return HttpResponse(ret_value, content_type=&amp;#39;text/plain&amp;#39;) # 在 app/view/echo 中,</description>
+    </item>
+    
+    <item>
+      <title>django wsgiref</title>
+      <link>/post/django/core-runserver-1-wsgiref/</link>
+      <pubDate>Fri, 05 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/post/django/core-runserver-1-wsgiref/</guid>
+      <description>django 封装模型采用 wsgiref 模块 from wsgiref.simple_server import make_server def routers(): # URLConf 配置 urlpatterns = ( (&amp;#39;/book&amp;#39;, foo), (&amp;#39;/web&amp;#39;, bar), ) return urlpatterns def foo(x): return [b&amp;#39;&amp;lt;h1&amp;gt;Hello, book&amp;lt;/h1&amp;gt;&amp;#39;] def bar(x): return [b&amp;#39;&amp;lt;h1&amp;gt;Hello, web&amp;lt;/h1&amp;gt;&amp;#39;] def application(environ, start_response): start_response(&amp;#39;200 OK&amp;#39;, [(&amp;#39;Content-Type&amp;#39;, &amp;#39;text/html&amp;#39;)]) urlpatterns = routers() path = environ[&amp;#39;PATH_INFO&amp;#39;] # http://127.0.0.1:8000/book func = None for item in urlpatterns: if item[0] == path: func = item[1] break</description>
+    </item>
+    
+    <item>
+      <title>Wsgiref</title>
+      <link>/post/django/wsgiref/</link>
+      <pubDate>Fri, 05 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/post/django/wsgiref/</guid>
+      <description>django 封装模型采用 wsgiref 模块 from wsgiref.simple_server import make_server def routers(): # URLConf 配置 urlpatterns = ( (&amp;#39;/book&amp;#39;, foo), (&amp;#39;/web&amp;#39;, bar), ) return urlpatterns def foo(x): return [b&amp;#39;&amp;lt;h1&amp;gt;Hello, book&amp;lt;/h1&amp;gt;&amp;#39;] def bar(x): return [b&amp;#39;&amp;lt;h1&amp;gt;Hello, web&amp;lt;/h1&amp;gt;&amp;#39;] def application(environ, start_response): start_response(&amp;#39;200 OK&amp;#39;, [(&amp;#39;Content-Type&amp;#39;, &amp;#39;text/html&amp;#39;)]) urlpatterns = routers() path = environ[&amp;#39;PATH_INFO&amp;#39;] # http://127.0.0.1:8000/book func = None for item in urlpatterns: if item[0] == path: func = item[1] break</description>
+    </item>
+    
+    <item>
+      <title>tcp实验</title>
+      <link>/post/tcp/%E5%AE%9E%E9%AA%8C/</link>
+      <pubDate>Fri, 05 May 2023 01:05:14 +0800</pubDate>
+      
+      <guid>/post/tcp/%E5%AE%9E%E9%AA%8C/</guid>
+      <description>抓包: 两台服务器，一台启动python http服务，上面有一个2G的文件。另一台下载。 怎么抓包，在那台机器上抓包，是不是指定来源ip就可以了</description>
+    </item>
+    
+    <item>
+      <title>博客搭建</title>
+      <link>/post/think/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</link>
+      <pubDate>Sun, 09 Apr 2023 13:51:52 +0800</pubDate>
+      
+      <guid>/post/think/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</guid>
+      <description>博客搭建 最早博客搭建是用的wordpress，挑了好久(就是拖延)，最后选了hugo，说是快。因为看到很多人从hexo转hugo，想一步到位</description>
+    </item>
+    
+    <item>
+      <title>django-study</title>
+      <link>/post/django/django-study/</link>
+      <pubDate>Thu, 06 Apr 2023 23:19:42 +0800</pubDate>
+      
+      <guid>/post/django/django-study/</guid>
+      <description>根据视频学习django 记录学习历程 一直学习都是 狗熊掰玉米,掰一个仍一个。 想系统的学习, 没有头绪, 找了n 个xmind ,手抄一遍, 都是不顶用,</description>
+    </item>
+    
+    <item>
+      <title>Hugo Framework</title>
+      <link>/post/hugo-framework/</link>
+      <pubDate>Mon, 14 Nov 2022 00:34:58 +0800</pubDate>
+      
+      <guid>/post/hugo-framework/</guid>
+      <description>hugo 使用文档: https://gohugo.io/documentation/ 主题配置：https://stack.jimmycai.com/ 从入门到放弃： https://olowolo.com/post/hugo-quick-start/ 研究分类布局 https://github.com/olOwOlo/hugo-theme-even/blob/master/exampleSite/config.toml https://olowolo.com/post/hugo-quick-start/ https://jinli.cyou/p/%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%9A%84%E5%BB%BA%E7%AB%8B%E8%BF%87%E7%A8%8B%E4%B8%89hugo%E4%B8%BB%E9%A2%98stack%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8E%E4%BC%98%E5%8C%96/</description>
+    </item>
+    
+  </channel>
+</rss>

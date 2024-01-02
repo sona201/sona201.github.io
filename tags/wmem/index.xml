@@ -1,1 +1,20 @@
-Historical content withdrawn during privacy cleanup.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>wmem on 卡塞尔的博客</title>
+    <link>/tags/wmem/</link>
+    <description>Recent content in wmem on 卡塞尔的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 19 May 2023 01:05:14 +0800</lastBuildDate><atom:link href="/tags/wmem/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tc_实验</title>
+      <link>/post/tcp/tc_%E5%AE%9E%E9%AA%8C/</link>
+      <pubDate>Fri, 19 May 2023 01:05:14 +0800</pubDate>
+      
+      <guid>/post/tcp/tc_%E5%AE%9E%E9%AA%8C/</guid>
+      <description>排查python server当时的系统信息 发现并没有异常，仅记录device eth0 entered promiscuous mode表示当时网卡 eth0 进入混杂模式,应该与当时启用tcpd</description>
+    </item>
+    
+  </channel>
+</rss>
