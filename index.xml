@@ -6,7 +6,75 @@
         <description>Recent content on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Mon, 01 Jan 2024 21:36:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sun, 07 Jan 2024 00:34:58 +0800</lastBuildDate><atom:link href="https://sona201.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Hugo Framework</title>
+        <link>https://sona201.github.io/posts/hugo-framework/</link>
+        <pubDate>Sun, 07 Jan 2024 00:34:58 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/hugo-framework/</guid>
+        <description>&lt;h3 id=&#34;algorithm&#34;&gt;Algorithm&lt;/h3&gt;
+&lt;h3 id=&#34;review&#34;&gt;Review&lt;/h3&gt;
+&lt;h3 id=&#34;tip&#34;&gt;Tip&lt;/h3&gt;
+&lt;h3 id=&#34;share&#34;&gt;Share&lt;/h3&gt;
+</description>
+        </item>
+        <item>
+        <title>Hugo Framework</title>
+        <link>https://sona201.github.io/posts/hugo-framework/</link>
+        <pubDate>Sun, 07 Jan 2024 00:34:58 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/hugo-framework/</guid>
+        <description>&lt;h2 id=&#34;一概念-什么是arts&#34;&gt;一、概念: 什么是ARTS&lt;/h2&gt;
+&lt;p&gt;ARST 是陈浩发起的一个活动, &lt;a class=&#34;link&#34; href=&#34;https://www.zhihu.com/question/301150832/answer/529809529&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;原文链接 https://www.zhihu.com/question/301150832/answer/529809529&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ARST 分别代表了四个单词，四个动作&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Algorithm
+每周至少做一个 Leetcode 的算法题。主要是为了编程训练和学习。如果不训练你看再多的算法书，你依然不会做算法题。关于做 Leetcode 的优势，你可以看一下我在 coolshell 上的文章。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Review
+阅读并点评至少一篇英文技术文章。主要是为了学习英文，如果你的英文不行，你基本上无缘技术高手；我个人最喜欢去的地方是 Medium（需要梯子）以及各个公司的技术 blog，如 Netflix 的。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tip
+学习至少一个技术技巧。主要是为了总结和归纳你在日常工作中所遇到的知识点。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Share
+分享一篇有观点和思考的技术文章。主要是为了建立你的影响力，能够输出价值观。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;二发起arts的原因为什么要做这个事情&#34;&gt;二、发起ARTS的原因(为什么要做这个事情)&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我们整个世界进入了前所未有的信息爆炸时代，人们担忧的不再是无知识可学，而是有学不完的知识。而且时代的节奏变得越来越快，你可能再也不像 20 年前，可以沉着优雅平和地泡上一杯茶，坐在一个远离喧嚣的环境下，认认真真地看本书。这个时代，你再也不会有大块大块的时间，你的时间都被打成碎片了，不知不觉你也成为了快餐文化的拥趸……&lt;/p&gt;
+&lt;p&gt;在这样一个时代下，快速、简单、轻松的方式给人带来的快感更强烈，而高层次的思考、思辨和逻辑则被这些频度高的快餐信息感所弱化。商家们看到在这样的时代里怎么治愈这些人在学习上的焦虑的商机，他们在想方设法地用一些手段推出各种代读、领读和听读类产品，让人们可以在短时间内体会到轻松获取知识的快感，并产生勤奋好学和成长的幻觉（老实说，像我这种付费专栏或是得到等知识付费产品基本上就是类似的产物）。&lt;/p&gt;
+&lt;p&gt;这些所谓的“快餐文化”可以让你有短暂的满足感，但是无法让你有更深层次的思考和把知识转换成自己的技能的有效路径，因为那些都是需要大量时间和精力的付出，不符合现代人的生活节奏。人们开始在朋友圈、公众号、得到等这样的地方进行学习，导致他们越学越焦虑，越学越浮燥，越学越不会思考。于是，他们成了“什么都懂，但依然过不好这一生”的状态。&lt;/p&gt;
+&lt;p&gt;你有没有发现，在知识的领域也有阶层之分，那些长期在底层知识阶层的人，需要等着高层的人来喂养，他们长期陷于各种谣言和不准确的信息环境中，于是就导致错误或幼稚的认知，并习惯于那些不费劲儿的轻度学习方式，从而一点点地丧失了深度学习的独立思考能力，从而再也没有能力打破知识阶层的限制，被困在认知底层翻不了身。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;三高效学习&#34;&gt;三、高效学习&lt;/h2&gt;
+&lt;p&gt;学习金字塔图&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/../images/learning_level.jpeg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;learning_level&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;我们可以看到，你听别人讲，或是自己看书，或是让别人演示给你，这些都不能让你真正获得学习能力，因为你是在被别人灌输，在听别人说。&lt;/p&gt;
+&lt;p&gt;只有你开始自己思考，开始自己总结和归纳，开始找人交流讨论，开始践行，并开始对外输出，你才会掌握到真正的学习能力。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;所以，学习不是努力读更多的书，盲目追求阅读的速度和数量，这会让人产生低层次的勤奋和成长的感觉，这只是在使蛮力。要思辨，要践行，要总结和归纳，否则，你只是在机械地重复某件事（记忆知识），而不会有质的成长的。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;四arts的初衷&#34;&gt;四、ARTS的初衷&lt;/h2&gt;
+&lt;p&gt;ARTS的初衷Algorithm。主要是为了编程训练和学习。每周至少做一个 leetcode 的算法题（先从Easy开始，然后再Medium，最后才Hard）。进行编程训练，如果不训练你看再多的算法书，你依然不会做算法题，看完书后，你需要训练。关于做Leetcode的的优势，你可以看一下我在coolshell上的文章 Leetcode 编程训练 - 酷 壳 - CoolShell。Review：主要是为了学习英文，如果你的英文不行，你基本上无缘技术高手。所以，需要你阅读并点评至少一篇英文技术文章，我个人最喜欢去的地方是http://Medium.com（需要梯子）以及各个公司的技术blog，如Netflix的。Tip：主要是为了总结和归纳你在是常工作中所遇到的知识点。学习至少一个技术技巧。你在工作中遇到的问题，踩过的坑，学习的点滴知识。Share：主要是为了建立你的影响力，能够输出价值观。分享一篇有观点和思考的技术文章。这就是ARTS的全部动机。&lt;/p&gt;
+&lt;h2 id=&#34;五为什么要写下来&#34;&gt;五、为什么要写下来&lt;/h2&gt;
+&lt;p&gt;因为写作是一种非常重要的技能，写作不仅仅可以帮你组织你的思路和语言，帮你梳理你的知识，更重要的是写作其实是一种自己对自己的思考，同时还可以很容易地扩散并引入其它人的讨论、指正、批评，这对个人来说是非常重要的。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>2023年终总结</title>
         <link>https://sona201.github.io/posts/2023-year-end-summary/</link>
         <pubDate>Mon, 01 Jan 2024 21:36:00 +0800</pubDate>
