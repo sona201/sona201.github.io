@@ -38,7 +38,7 @@ ARST 分别代表了四个单词，四个动作
 
 学习金字塔图
 
-![learning_level](/images/learning_pyramid.jpeg)
+![learning_pyramid 学习金字塔](/images/learning_pyramid.jpeg)
 
 我们可以看到，你听别人讲，或是自己看书，或是让别人演示给你，这些都不能让你真正获得学习能力，因为你是在被别人灌输，在听别人说。
 
