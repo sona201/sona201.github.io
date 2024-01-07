@@ -1,5 +1,5 @@
 ---
-title: "Hugo Framework"
+title: "What is ARTS"
 description: "介绍什么是ARTS, 摘自陈浩在知乎上的回答"
 date: "2024-01-07T00:34:58+08:00"
 lastmod: "2024-01-07T00:34:58+08:00"
