@@ -45,7 +45,7 @@
 结果这才发现是我想要的功能，大概怎么实现，距离实现的目标还差多少。&lt;/p&gt;
 &lt;p&gt;给自己挖了个坑，虽然跟着这个做出了一个完全不能用的主题，但还是勇敢的把这行代码加在现在的主题上。我一直想做成上下布局的结构。
 想修改当前主题，一直不知道怎么下手，慌忙之间把一些基础知识都搞忘记了，最后发现居然就是加了一行 html ,本质上还是有很多坑。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/image/hugo_theme_header.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/hugo_theme_header.png&#34;
 	
 	
 	

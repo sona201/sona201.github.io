@@ -388,7 +388,7 @@ if (!doNotTrack) {
 <p>wireshark你一定会喜欢的技巧摘要</p>
 <ol>
 <li>修改seq的为绝对值 relative
-<img src="/image/seq_relative_num.png"
+<img src="/images/seq_relative_num.png"
 	
 	
 	
@@ -399,7 +399,7 @@ if (!doNotTrack) {
 	
 ></li>
 <li>配置rt
-<img src="/image/rt_time.png"
+<img src="/images/rt_time.png"
 	
 	
 	
@@ -416,7 +416,7 @@ if (!doNotTrack) {
 <p>wireshark https 抓包 tls contains &ldquo;baidu.com&rdquo;</p>
 <blockquote>
 <p>wireshark 没有权限
-<img src="/image/permission_denied.png"
+<img src="/images/permission_denied.png"
 	
 	
 	
@@ -428,7 +428,7 @@ if (!doNotTrack) {
 ></p>
 </blockquote>
 <p>或者下图</p>
-<p><img src="/image/permission_denied_wireshark.png"
+<p><img src="/images/permission_denied_wireshark.png"
 	
 	
 	
@@ -470,7 +470,7 @@ if (!doNotTrack) {
 <blockquote>
 <p>3.0之前版本wireshark更改方式</p>
 </blockquote>
-<p><img src="/image/package_limit_old.jpeg"
+<p><img src="/images/package_limit_old.jpeg"
 	
 	
 	
@@ -484,7 +484,7 @@ if (!doNotTrack) {
 <blockquote>
 <p>3.0之后的版本</p>
 </blockquote>
-<p><img src="/image/package_limit.png"
+<p><img src="/images/package_limit.png"
 	
 	
 	
@@ -509,7 +509,7 @@ if (!doNotTrack) {
 <blockquote>
 <p>老版本</p>
 </blockquote>
-<p><img src="/image/package_filter_old.jpeg"
+<p><img src="/images/package_filter_old.jpeg"
 	
 	
 	
@@ -523,7 +523,7 @@ if (!doNotTrack) {
 <blockquote>
 <p>Version 4.0.5版本</p>
 </blockquote>
-<p><img src="/image/package_filter.png"
+<p><img src="/images/package_filter.png"
 	
 	
 	
@@ -654,7 +654,7 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">操作步骤3
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/image/package_ping_old.jpeg"
+</div><p><img src="/images/package_ping_old.jpeg"
 	
 	
 	
@@ -667,7 +667,7 @@ if (!doNotTrack) {
 <blockquote>
 <p>这个抓包在mac上命令方式不一样，导致我一直没有执行成功</p>
 </blockquote>
-<p><img src="/image/package_ping_mac.png"
+<p><img src="/images/package_ping_mac.png"
 	
 	
 	
@@ -682,7 +682,7 @@ if (!doNotTrack) {
 <h3 id="二个性化设置">二、个性化设置</h3>
 <p>Wireshark的默认设置堪称友好，但不同用户的从事领域和使用习惯各有不同，所以有时需要根据自己的情况对配置略作修改。</p>
 <p>1．我经常需要参照服务器上的日志时间，找到发生问题时的网络包。所以就把Wireshark的时间调成跟服务器一样的格式。单击Wireshark的View&ndash;&gt;Time Display Format&ndash;&gt;Date and Time of Day，就可以实现此设置（见图4）。</p>
-<p><img src="/image/wireshark_time_set.jpeg"
+<p><img src="/images/wireshark_time_set.jpeg"
 	
 	
 	
@@ -694,7 +694,7 @@ if (!doNotTrack) {
 ></p>
 <p>图四</p>
 <p>Version 4.0.5版本设置</p>
-<p><img src="/image/wireshark_time_display_format.png"
+<p><img src="/images/wireshark_time_display_format.png"
 	
 	
 	
@@ -705,7 +705,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>2．不同类型的网络包可以自定义颜色，比如网络管理员可能会把OSPF等协议或者与Spanning Tree Protocol（生成树协议）相关的网络包设成最显眼的颜色。而文件服务器的管理员则更关心FTP、SMB和NFS协议的颜色。我们可以通过View &ndash;&gt;Coloring Rules来设置颜色。如果同事已经有一套非常适合你工作内容的配色方案，可以请他从Coloring Rules窗口导出，然后导入到你的Wireshark里（见图5）。记得下次和他吃饭时主动买单，要知道配一套养眼的颜色可要花不少时间。</p>
-<p><img src="/image/wireshark_color_rule_old.jpeg"
+<p><img src="/images/wireshark_color_rule_old.jpeg"
 	
 	
 	
@@ -717,7 +717,7 @@ if (!doNotTrack) {
 ></p>
 <p>图五</p>
 <p>Version 4.0.5版本的样式</p>
-<p><img src="/image/wireshark_color_rule.png"
+<p><img src="/images/wireshark_color_rule.png"
 	
 	
 	
@@ -728,7 +728,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>3．更多的设置可以在Edit&ndash;&gt;Preferences窗口中完成。这个窗口的设置精度可以达到一些协议的细节。比如在此窗口单击Protocols&ndash;&gt;TCP就可以看到多个TCP相关选项，将鼠标停在每一项上都会有详细介绍。假如经常要对Sequence Number做加减运算，不妨选中Relative sequence numbers（见图6），这样会使Sequence number看上去比实际小很多。</p>
-<p><img src="/image/wireshark_tcp_config_old.jpeg"
+<p><img src="/images/wireshark_tcp_config_old.jpeg"
 	
 	
 	
@@ -739,7 +739,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>Version 4.0.5版本的样式</p>
-<p><img src="/image/wireshark_tcp_config.png"
+<p><img src="/images/wireshark_tcp_config.png"
 	
 	
 	
@@ -752,7 +752,7 @@ if (!doNotTrack) {
 <p>4．如果你在其他时区的服务器上抓包，然后下载到自己的电脑上分析，最好把自己电脑的时区设成跟抓包的服务器一样。这样，Wireshark显示的时间才能匹配服务器上日志的时间。比如说，服务器的日志显示2/13/2014 13:01:32有一个错误信息。那我们要在自己电脑上调整时区之后，才能到Wireshark上检查2/13/2014 13:01:32左右的包，否则就得先换算时间。</p>
 <p>三、过滤
 很多时候，解决问题的过程就是层层过滤，直至找到关键包。前面已经介绍过抓包时的Capture Filter功能了。其实在包抓下来之后，还可以进一步过滤，而且这一层的过滤功能更加强大。下图表示一个&quot;IP为10.32.106.50，且TCP端口为445&quot;的过滤表达式。</p>
-<p><img src="/image/wireshark_filter_ip_port_old.jpeg"
+<p><img src="/images/wireshark_filter_ip_port_old.jpeg"
 	
 	
 	
@@ -763,7 +763,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>Version 4.0.5版本的样式</p>
-<p><img src="/image/wireshark_filter_ip_port.png"
+<p><img src="/images/wireshark_filter_ip_port.png"
 	
 	
 	
@@ -775,7 +775,7 @@ if (!doNotTrack) {
 ></p>
 <p>要说过滤的作用与技巧，就算专门写一本小册子都不为过。篇幅所限，本文只能&quot;过滤&quot;出最适合初学者的部分。</p>
 <p>1．如果已知某个协议发生问题，可以用协议名称过滤一下。以Windows Domain的身份验证问题为例，如果已知该域的验证协议是Kerberos，那么就在Filter框输入Kerberos作为关键字过滤。除了纯粹的Kerberos包，你还将得到Session Setup之类包含Kerberos的包。</p>
-<p><img src="/image/wireshark_filter_Kerberos.jpeg"
+<p><img src="/images/wireshark_filter_Kerberos.jpeg"
 	
 	
 	
@@ -786,7 +786,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>用协议过滤时务必考虑到协议间的依赖性。比如NFS共享挂载失败，问题可能发生在挂载时所用的mount协议，也可能发生在mount之前的portmap协议。这种情况下就需要用&quot;portmap || mount&quot;来过滤了。如果不懂协议间的依赖关系怎么办？我也没有好办法，只能暂时放弃这个技巧，等熟悉了该协议后再用。</p>
-<p><img src="/image/wireshark_filter_portmap_mount.jpeg"
+<p><img src="/images/wireshark_filter_portmap_mount.jpeg"
 	
 	
 	
@@ -797,7 +797,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>2．IP地址加port号是最常用的过滤方式。除了手工输入ip.addreq &amp;&amp;tcp.porteq&lt;端口号&gt;之类的过滤表达式，Wireshark还提供了更快捷的方式：右键单击感兴趣的包，选择Follow TCP/UDP Stream（选择TCP还是UDP要视传输层协议而定）就可以自动过滤。而且该Stream的对话内容会在新弹出的窗口中显示出来。</p>
-<p><img src="/image/wireshark_filter_stream_old.jpeg"
+<p><img src="/images/wireshark_filter_stream_old.jpeg"
 	
 	
 	
@@ -808,7 +808,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>Version 4.0.5版本的样式</p>
-<p><img src="/image/wireshark_filter_stream.png"
+<p><img src="/images/wireshark_filter_stream.png"
 	
 	
 	
@@ -819,7 +819,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>经常有人在论坛上问，Wireshark是按照什么过滤出一个TCP/UDP Stream的？答案就是：两端的IP加port。单击Wireshark的Statistics&ndash;&gt;Conversations，再单击TCP或者UDP标签就可以看到所有的Stream。</p>
-<p><img src="/image/wireshark_ip_port_stream_old.jpeg"
+<p><img src="/images/wireshark_ip_port_stream_old.jpeg"
 	
 	
 	
@@ -830,7 +830,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>Version 4.0.5版本的样式</p>
-<p><img src="/image/wireshark_ip_port_stream.png"
+<p><img src="/images/wireshark_ip_port_stream.png"
 	
 	
 	
@@ -843,7 +843,7 @@ if (!doNotTrack) {
 <p>3．用鼠标帮助过滤。我们有时因为Wireshark而苦恼，并不是因为它功能不够，而是强大到难以驾驭。比如在过滤时，有成千上万的条件可供选择，但怎么写才是合乎语法的？虽然 <a class="link" href="http://www.wireshark.org/docs/dfref/"  target="_blank" rel="noopener"
     >http://www.wireshark.org/docs/dfref/</a> 提供了参考，但经常查找毕竟太费时费力了。Wireshark考虑到了这个需求，右键单击Wireshark上感兴趣的内容，然后选择Prepare a Filter&ndash;&gt;Selected，就会在Filter框中自动生成过滤表达式。在有复杂需求的时候，还可以选择And、Or等选项来生成一个组合的过滤表达式。</p>
 <p>假如右键单击之后选择的不是Prepare a Filter，而是Apply as Filter&ndash;&gt;Selected，则该过滤表达式生成之后还会自动执行。图12显示了在一个SMB包的SMB Command: Read AndX上右键单击，并选择Selected之后，所有的Read包都会被过滤出来。</p>
-<p><img src="/image/wireshark_filter_selected_old.jpeg"
+<p><img src="/images/wireshark_filter_selected_old.jpeg"
 	
 	
 	
@@ -854,7 +854,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>Version 4.0.5版本的样式</p>
-<p><img src="/image/wireshark_filter_selected.png"
+<p><img src="/images/wireshark_filter_selected.png"
 	
 	
 	
@@ -865,7 +865,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>4．我们可以把过滤后得到的网络包存在一个新的文件里，因为小文件更方便操作。单击Wireshark的File&ndash;&gt;Save As，选中Displayed单选按钮再保存，得到的新文件就是过滤后的部分。</p>
-<p><img src="/image/wireshark_save_as_old.jpeg"
+<p><img src="/images/wireshark_save_as_old.jpeg"
 	
 	
 	
@@ -877,7 +877,7 @@ if (!doNotTrack) {
 ></p>
 <p>有时候你会发现，保存后的文件再打开时会显示很多错误。这是因为过滤后得到的不再是一个完整的TCP Stream，就像抓包时漏抓了很多一样。所以选择Displayed选项时要慎重考虑。</p>
 <p>注意：有些Wireshark版本把这个功能移到了菜单File&ndash;&gt;Export Specified Packets…选项中，如下图所示。</p>
-<p><img src="/image/wireshark_save_as_export.jpeg"
+<p><img src="/images/wireshark_save_as_export.jpeg"
 	
 	
 	
@@ -888,7 +888,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>Version 4.0.5版本的样式</p>
-<p><img src="/image/wireshark_save_as1.png"
+<p><img src="/images/wireshark_save_as1.png"
 	
 	
 	
@@ -898,7 +898,7 @@ if (!doNotTrack) {
 	
 	
 ></p>
-<p><img src="/image/wireshark_save_as2.png"
+<p><img src="/images/wireshark_save_as2.png"
 	
 	
 	
@@ -912,7 +912,7 @@ if (!doNotTrack) {
 <p>四、让Wireshark自动分析
 有些类型的问题，我们根本不需要研究包里的细节，直接交给Wireshark分析就行了。</p>
 <p>1．单击Wireshark的Analyze&ndash;&gt;Expert Info Composite，就可以在不同标签下看到不同级别的提示信息。比如重传的统计、连接的建立和重置统计，等等。在分析网络性能和连接问题时，我们经常需要借助这个功能。下图是TCP包的重传统计。</p>
-<p><img src="/image/wireshark_analyze_expert_info_composite_old.jpeg"
+<p><img src="/images/wireshark_analyze_expert_info_composite_old.jpeg"
 	
 	
 	
@@ -923,7 +923,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>Version 4.0.5版本的样式</p>
-<p><img src="/image/wireshark_analyze_expert_infomation.png"
+<p><img src="/images/wireshark_analyze_expert_infomation.png"
 	
 	
 	
@@ -934,7 +934,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>2．单击Statistics&ndash;&gt;Service Response Time，再选定协议名称，可以得到响应时间的统计表。我们在衡量服务器性能时经常需要此统计结果。图16展示的是SMB2读写操作的响应时间。</p>
-<p><img src="/image/wireshark_statstics_response_time_old.jpeg"
+<p><img src="/images/wireshark_statstics_response_time_old.jpeg"
 	
 	
 	
@@ -947,7 +947,7 @@ if (!doNotTrack) {
 <blockquote>
 <p>4.0.5版本的协议很少，甚至没有看到tcp协议，把所有协议看了，只有NCP、SMB两种协议有内容，内容不像分析数据。</p>
 </blockquote>
-<p><img src="/image/wireshark_statstics_response_time_ncp.png"
+<p><img src="/images/wireshark_statstics_response_time_ncp.png"
 	
 	
 	
@@ -957,7 +957,7 @@ if (!doNotTrack) {
 	
 	
 >
-<img src="/image/wireshark_statstics_response_time_smb.png"
+<img src="/images/wireshark_statstics_response_time_smb.png"
 	
 	
 	
@@ -968,7 +968,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>3．单击Statistics&ndash;&gt;TCP Stream Graph，可以生成几类统计图。比如我曾经用Time-Sequence Graph (Stevens)生成了下图。</p>
-<p><img src="/image/wireshark_statistics_stevens_old.jpeg"
+<p><img src="/images/wireshark_statistics_stevens_old.jpeg"
 	
 	
 	
@@ -979,7 +979,7 @@ if (!doNotTrack) {
 	
 ></p>
 <p>Version 4.0.5版本的样式</p>
-<p><img src="/image/wireshark_statistics_stevens.png"
+<p><img src="/images/wireshark_statistics_stevens.png"
 	
 	
 	
@@ -992,7 +992,7 @@ if (!doNotTrack) {
 <p>从老图中可以看出25～40秒，以及65～75秒之间没有传输数据。进一步研究，发现发送方内存不足，所以偶尔出现暂停现象，添加内存后问题就解决了。</p>
 <p>为什么Wireshark要把这个图称为“Stevens”呢？我猜是为了向《TCP/IP Illustrated》的作者Richard Stevens致敬。这也是我非常喜欢的一套书，在此推荐给所有读者。</p>
 <p>4．单击Statistics&ndash;&gt;Summary，可以看到一些统计信息，比如平均流量等，这有助于我们推测负载状况。比如下图中的网络包才1.594Mbit/s，说明流量低得很。</p>
-<p><img src="/image/wireshark_statistics_summary_old.jpeg"
+<p><img src="/images/wireshark_statistics_summary_old.jpeg"
 	
 	
 	
@@ -1006,7 +1006,7 @@ if (!doNotTrack) {
 <p>Version 4.0.5版本没有找到 Statistics&ndash;&gt;Summary 选项，但找到 Statistics&ndash;&gt;Capture File Properties，菜单改了</p>
 <p>参考最新菜单解释<a class="link" href="https://www.wireshark.org/docs/wsug_html_chunked/ChUseStatisticsMenuSection.html"  target="_blank" rel="noopener"
     >https://www.wireshark.org/docs/wsug_html_chunked/ChUseStatisticsMenuSection.html</a></p>
-<p><img src="/image/wireshark_statistics_summary.png"
+<p><img src="/images/wireshark_statistics_summary.png"
 	
 	
 	
@@ -1018,7 +1018,7 @@ if (!doNotTrack) {
 ></p>
 <p>五、最容易上手的搜索功能
 与很多软件一样，Wireshark也可以通过“Ctrl+F”搜索关键字。假如我们怀疑包里含有“error”一词，就可以按下“Ctrl+F”之后选中“String”单选按钮，然后在Filter中输入“error”进行搜索。很多应用层的错误都可以靠这个方法锁定问题包。</p>
-<p><img src="/image/wireshark_filter_search_error.jpeg"
+<p><img src="/images/wireshark_filter_search_error.jpeg"
 	
 	
 	
