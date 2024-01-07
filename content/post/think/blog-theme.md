@@ -55,7 +55,7 @@ https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/
 给自己挖了个坑，虽然跟着这个做出了一个完全不能用的主题，但还是勇敢的把这行代码加在现在的主题上。我一直想做成上下布局的结构。
 想修改当前主题，一直不知道怎么下手，慌忙之间把一些基础知识都搞忘记了，最后发现居然就是加了一行 html ,本质上还是有很多坑。
 
-![hugo_theme_header](/image/hugo_theme_header.png)
+![hugo_theme_header](/images/hugo_theme_header.png)
 
 ## 总结
 

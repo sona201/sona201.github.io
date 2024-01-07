@@ -25,11 +25,11 @@ style:
 ```
 打开 Wireshark ，Wireshark - Perferences - Protocols - TLS ，在 (Pre)-Master-Secret log filename 输入 /tmp/.ssl-key.log
 ```
-![wireshrk_config](/image/wireshrk_config.png)
+![wireshrk_config](/images/wireshrk_config.png)
 
 ### 三、抓包
 > 打开浏览器，发出请求，开始抓包
-![start_chrome](/image/start_chrome.png)
+![start_chrome](/images/start_chrome.png)
 
 ### 四、异常情况
 > 异常情况暂未遇到过，这个先记录一下
