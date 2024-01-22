@@ -6,7 +6,15 @@
         <description>Recent content in Categories on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Mon, 01 Jan 2024 21:36:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 23 Jan 2024 01:10:19 +0800</lastBuildDate><atom:link href="https://sona201.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>reading</title>
+        <link>https://sona201.github.io/categories/reading/</link>
+        <pubDate>Tue, 23 Jan 2024 01:10:19 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/categories/reading/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>2023</title>
         <link>https://sona201.github.io/categories/2023/</link>
         <pubDate>Mon, 01 Jan 2024 21:36:00 +0800</pubDate>
