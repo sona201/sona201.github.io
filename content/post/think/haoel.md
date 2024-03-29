@@ -3,6 +3,7 @@ title: "Haoel"
 description: "纪念陈皓离世"
 date: "2023-05-15T22:33:26+08:00"
 lastmod: "2023-07-03T13:05:14+08:00"
+slug: "haoel"
 categories: ["think"]
 tags: ["成长", "学习", "陈皓"]
 ---
