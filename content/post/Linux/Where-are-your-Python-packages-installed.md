@@ -65,6 +65,14 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 但需注意，避免把不同`Python`版本包的路径加到`PYTHONPATH`里，比如`PYTHONPATH=/home/admin/.local/lib/python2.7/site-packages`，因为`PYTHONPATH`中的路径是优先于默认搜索路径，如果用`Python3`的话会有兼容性问题。事实上`PYTHONPATH`里最好不要出现任何带`site-packages`的路径。
 
+简单附一个`PYTHONPATH`实际案例，django项目经常有人自定义一个`apps`目录用来放所有项目，一般都是将路径放到`sys.path`里。这里可以设置环境变量`PYTHONPATH`来解决这个问题，代码如下
+```python
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+os.environ['PYTHONPATH'] = os.path.join(BASE_DIR, 'apps')
+# sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+ABS_BASE_DIR = os.path.abspath(BASE_DIR)
+```
+
 顺便说下`PATH`是用来找**可执行程序**的搜索路径，假如你在终端运行命令`my_cmd`，系统会依次扫描`PATH`中的路径，看`my_cmd`是否在于该路径下，所以如果是提示找不到程序或命令无法识别，那你就要看路径是否加到`PATH`里了。
 
 ## Python 是如何安装包的
