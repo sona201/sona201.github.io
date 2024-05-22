@@ -448,7 +448,7 @@ if (!doNotTrack) {
 </div><h2 id="使用环境变量添加搜索路径">使用环境变量添加搜索路径</h2>
 <p>如果你的包的路径不存在上面列出的搜索路径列表里，可以把路径加到<code>PYTHONPATH</code>环境变量里，多个路径用<code>:</code>隔开(Windows用<code>;</code>)。</p>
 <p>但需注意，避免把不同<code>Python</code>版本包的路径加到<code>PYTHONPATH</code>里，比如<code>PYTHONPATH=/home/admin/.local/lib/python2.7/site-packages</code>，因为<code>PYTHONPATH</code>中的路径是优先于默认搜索路径，如果用<code>Python3</code>的话会有兼容性问题。事实上<code>PYTHONPATH</code>里最好不要出现任何带<code>site-packages</code>的路径。</p>
-<p>顺便说下<code>PATH</code>是用来找==可执行程序==的搜索路径，假如你在终端运行命令<code>my_cmd</code>，系统会依次扫描<code>PATH</code>中的路径，看<code>my_cmd</code>是否在于该路径下，所以如果是提示找不到程序或命令无法识别，那你就要看路径是否加到<code>PATH</code>里了。</p>
+<p>顺便说下<code>PATH</code>是用来找<strong>可执行程序</strong>的搜索路径，假如你在终端运行命令<code>my_cmd</code>，系统会依次扫描<code>PATH</code>中的路径，看<code>my_cmd</code>是否在于该路径下，所以如果是提示找不到程序或命令无法识别，那你就要看路径是否加到<code>PATH</code>里了。</p>
 <h2 id="python-是如何安装包的">Python 是如何安装包的</h2>
 <p>现在用安装<code>Python</code>包基本是用的<code>pip</code>，就算你是用<code>pipenv</code>，<code>poetry</code>，底层依然是<code>pip</code>，一律适用。如果你没有安装<code>pip</code>，请参考<a class="link" href="https://pip.pypa.io/en/stable/installation/"  target="_blank" rel="noopener"
     >pip 安装</a>，如果安装了还无法使用<code>pip</code>命令请看上一节。</p>
