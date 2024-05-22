@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='python的包找不到等问题的处理，理解'>
+<title>python包都安装到哪里去了</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/where-are-your-python-packages-installed/'>
+
+<link rel="stylesheet" href="/scss/style.min.99acfb450ba450b7f20b1185371251398b016b0e637daa958f9aebc855c2061a.css"><meta property='og:title' content='python包都安装到哪里去了'>
+<meta property='og:description' content='python的包找不到等问题的处理，理解'>
+<meta property='og:url' content='https://sona201.github.io/posts/where-are-your-python-packages-installed/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='博客' /><meta property='article:tag' content='技术' /><meta property='article:tag' content='path' /><meta property='article:tag' content='site-packages' /><meta property='article:published_time' content='2024-05-22T14:20:01&#43;08:00'/><meta property='article:modified_time' content='2024-05-22T14:20:01&#43;08:00'/>
+<meta name="twitter:title" content="python包都安装到哪里去了">
+<meta name="twitter:description" content="python的包找不到等问题的处理，理解">
+    <link rel="shortcut icon" href="/image/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="
+    article-page
+    "><div id="nav-border" class="container">
+  <nav id="nav" class="nav justify-content-center">
+      
+      <a class="nav-link" href="/">
+      
+      
+      主页
+      </a>
+      
+      <a class="nav-link" href="/%E5%85%B3%E4%BA%8E/">
+      
+      
+      关于
+      </a>
+      
+      <a class="nav-link" href="/archives/">
+      
+      
+      归档
+      </a>
+      
+      <a class="nav-link" href="/%E5%8F%8B%E9%93%BE/">
+      
+      
+      友链
+      </a>
+      
+      <a class="nav-link" href="/tags">
+      
+      
+      Tags
+      </a>
+      
+  </nav>
+</div>
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_300x0_resize_box_3.png" width="300"
+                            height="297" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Ricardo</a></h1>
+            <h2 class="site-description">高速路上的那辆迈巴赫</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sona201/'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E9%93%BE/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>友链</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags' target="_blank">
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+                
+                <span>Tags</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#python是如何寻找包的">Python是如何寻找包的</a></li>
+    <li><a href="#几个有用的函数">几个有用的函数</a></li>
+    <li><a href="#使用环境变量添加搜索路径">使用环境变量添加搜索路径</a></li>
+    <li><a href="#python-是如何安装包的">Python 是如何安装包的</a></li>
+    <li><a href="#pip-中更改安装位置的选项">pip 中更改安装位置的选项</a></li>
+    <li><a href="#虚拟环境">虚拟环境</a></li>
+    <li><a href="#脚本运行方式对搜索路径的影响">脚本运行方式对搜索路径的影响</a>
+      <ol>
+        <li><a href="#情况一">情况一</a></li>
+        <li><a href="#情况二">情况二</a></li>
+        <li><a href="#情况三">情况三</a></li>
+        <li><a href="#情况四">情况四</a></li>
+      </ol>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/python/" >
+                python
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/posts/where-are-your-python-packages-installed/">python包都安装到哪里去了</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            python的包找不到等问题的处理，理解
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2024-05-22</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 8 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="python包都安装到哪里去了">python包都安装到哪里去了？</h1>
+<p><a class="link" href="https://frostming.com/2019/03-13/where-do-your-packages-go/"  target="_blank" rel="noopener"
+    >原文链接: 你的 Python 包都装到哪了？</a></p>
+<blockquote>
+<p>终结一切找不到包、可执行文件的问题</p>
+</blockquote>
+<h2 id="背景">背景</h2>
+<p>经常在python社区看到的高频问题：</p>
+<ul>
+<li>我安装了pip为什么找不到可执行文件</li>
+<li><code>import module</code> 为什么报 <code>ModuleNotFound</code>?</li>
+<li>为什么我用 Pycharm 能运行在cmd里运行不了？</li>
+</ul>
+<h2 id="python是如何寻找包的">Python是如何寻找包的</h2>
+<p>现在大家的电脑上很可能不只有一个<code>Python</code>，还有更多的虚拟环境，导致安装包的时候，一不小心你就忘记注意安装包的路径了。
+首先我们来解决找包的问题，这个问题回答起来很简单，但很多人不知道这个原理。
+假如你的<code>Python</code>解释器的路径是<code>$path_prefix/bin/python</code>，那么你启动<code>Python</code>交互环境或者用这个解释器运行脚本时，会默认寻找以下位置：</p>
+<ol>
+<li><code>$path_prefix/lib</code>(标准库路径)</li>
+<li><code>$path_prefix/lib/pythonX.Y/site-packages</code>(三方库路径， X.Y是对应<code>Python</code>的主次版本号，如<code>3.8</code>,<code>2.7</code>)</li>
+<li>当前工作目录(<code>pwd</code>命令返回的结果)</li>
+</ol>
+<p>这里如果你用的是<code>Linux</code>上默认的<code>Python</code>,<code>$path_prefix</code>就是<code>/usr</code>，如果你是自己使用默认选项编译的，<code>$path_prefix</code>就是<code>/usr/local</code>。从上面第二条可以看到不同的<code>Python</code>版本的第三方库路径不同，如果你把<code>Python</code>从<code>3.6</code>升级到<code>3.8</code>那么之前装的三方库都没法用了。当然你可以整个文件夹都拷贝过去，大部分情况不会出问题。</p>
+<h2 id="几个有用的函数">几个有用的函数</h2>
+<ul>
+<li><code>sys.executable</code>: 当前使用的<code>Python</code>解释器路径</li>
+<li><code>sys.path</code>: 当前包的搜索路径列表</li>
+<li><code>sys.prefix</code>: 当前使用的 <code>$path_prefix</code></li>
+<li>除此之外，还可以在命令行中运行<code>python -m site</code>，会打印出当前的 <code>Python</code> 的一些信息，包括搜索路径列表。</li>
+</ul>
+<p>例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">Python 3.8.15 <span class="o">(</span>default, Mar <span class="m">27</span> 2024, 17:03:04<span class="o">)</span> 
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Clang 14.0.3 <span class="o">(</span>clang-1403.0.22.14.1<span class="o">)]</span> on darwin
+</span></span><span class="line"><span class="cl">Type <span class="s2">&#34;help&#34;</span>, <span class="s2">&#34;copyright&#34;</span>, <span class="s2">&#34;credits&#34;</span> or <span class="s2">&#34;license&#34;</span> <span class="k">for</span> more information.
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; import sys
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; sys.executable
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;/Users/admin/PycharmProjects/opstools/.venv/bin/python&#39;</span>
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; sys.path
+</span></span><span class="line"><span class="cl"><span class="o">[</span><span class="s1">&#39;&#39;</span>, <span class="s1">&#39;/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip&#39;</span>, <span class="s1">&#39;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8&#39;</span>, <span class="s1">&#39;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload&#39;</span>, <span class="s1">&#39;/Users/admin/PycharmProjects/opstools/.venv/lib/python3.8/site-packages&#39;</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; sys.prefix
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;/Users/admin/PycharmProjects/opstools/.venv&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="使用环境变量添加搜索路径">使用环境变量添加搜索路径</h2>
+<p>如果你的包的路径不存在上面列出的搜索路径列表里，可以把路径加到<code>PYTHONPATH</code>环境变量里，多个路径用<code>:</code>隔开(Windows用<code>;</code>)。</p>
+<p>但需注意，避免把不同<code>Python</code>版本包的路径加到<code>PYTHONPATH</code>里，比如<code>PYTHONPATH=/home/admin/.local/lib/python2.7/site-packages</code>，因为<code>PYTHONPATH</code>中的路径是优先于默认搜索路径，如果用<code>Python3</code>的话会有兼容性问题。事实上<code>PYTHONPATH</code>里最好不要出现任何带<code>site-packages</code>的路径。</p>
+<p>顺便说下<code>PATH</code>是用来找==可执行程序==的搜索路径，假如你在终端运行命令<code>my_cmd</code>，系统会依次扫描<code>PATH</code>中的路径，看<code>my_cmd</code>是否在于该路径下，所以如果是提示找不到程序或命令无法识别，那你就要看路径是否加到<code>PATH</code>里了。</p>
+<h2 id="python-是如何安装包的">Python 是如何安装包的</h2>
+<p>现在用安装<code>Python</code>包基本是用的<code>pip</code>，就算你是用<code>pipenv</code>，<code>poetry</code>，底层依然是<code>pip</code>，一律适用。如果你没有安装<code>pip</code>，请参考<a class="link" href="https://pip.pypa.io/en/stable/installation/"  target="_blank" rel="noopener"
+    >pip 安装</a>，如果安装了还无法使用<code>pip</code>命令请看上一节。</p>
+<p>运行<code>pip</code>有两种方式：</p>
+<ul>
+<li><code>pip ...</code></li>
+<li><code>python -m pip ...</code></li>
+</ul>
+<p>第一种方式和第二种方式大同小异，区别是第一种方式使用的 Python 解释器是写在 pip 文件的 shebang 里的，一般情况下，如果你的 pip 路径是<code>$path_prefix/bin/pip</code>，那么 <code>Python</code> 路径对应的就是 <code>$path_prefix/bin/python</code>。如果你用的是 <code>Unix</code> 系统则 <code>cat $(which pip)</code> 第一行就包含了 <code>Python</code> 解释器的路径。第二种方式则显式地指定了 <code>Python</code> 的位置。这条规则，对于所有 <code>Python</code> 的可执行程序都是适用的。流程如下图所示。</p>
+<p><img src="/images/20240517-python%e8%b7%af%e5%be%84.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="20240517-python路径"
+	
+	
+></p>
+<p>那么，不加任何自定义配置时，使用 pip 安装包就会自动安装到 <code>$path_prefix/lib/pythonX.Y/site-packages</code> 下（<code>$path_prefix</code> 是从上一段里得到的），可执行程序安装到 <code>$path_prefix/bin</code> 下，如果需要在命令行直接使用 <code>my_cmd</code> 运行，记得加到 <code>PATH</code>。</p>
+<h2 id="pip-中更改安装位置的选项">pip 中更改安装位置的选项</h2>
+<ul>
+<li><code>--prefix PATH</code>，替换<code>path_pretix</code>为给定的值</li>
+<li><code>--root ROOT_PATH</code>，在<code>$path_prefix</code>，前面加上<code>ROOT_PATH</code>，比如<code>--root /home/admin</code>，<code>$path_prefix</code>就会从<code>/usr</code>变成<code>/home/admin/usr</code></li>
+<li><code>--target TARGET</code>，直接指定安装到<code>TARGET</code></li>
+</ul>
+<h2 id="虚拟环境">虚拟环境</h2>
+<p>虚拟环境就是为了隔离不同项目的依赖包，使他们安装到不同的路径下，以防止依赖冲突的问题。理解了 Python 是如何安装包的机制之后就不难理解虚拟环境(<code>virturalenv</code>, <code>venv</code>模块)的原理。其实，运行 <code>virtualenv myenv</code> 会复制一个新的Python解释器到<code>myenv/bin</code>，并创建好<code>myenv_lib</code>，<code>myenv/lib/pythonX.Y/site-packages</code>等目录（<code>venv</code>模块不是用的复制，但结果基本一样）。执行<code>source myenv/bin/activate</code>以后会把<code>myenv/bin</code>塞到<code>PATH</code>前面，让这个复制出来的 <code>Python</code> 解释器最优先被搜索到。这样，后续安装包时，<code>$path_prefix</code>就会是<code>myenv</code>了，从而实现了安装路径的隔离。</p>
+<h2 id="脚本运行方式对搜索路径的影响">脚本运行方式对搜索路径的影响</h2>
+<p>从上面的介绍大家可以知道，Python 找不找得到一个包，最直接的原因是<code>sys.path</code>，而更进一步的原因是<code>sys.executable</code>的路径。程序写完了，我们总得需要运行它，不同的运行方法却有可能影响到<code>sys.path</code>而造成不同的行为，下面我们就来讨论这个问题。</p>
+<h3 id="情况一">情况一</h3>
+<p>假设你的包结构如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">.py_test
+</span></span><span class="line"><span class="cl">├── main.py
+</span></span><span class="line"><span class="cl">└── my_package
+</span></span><span class="line"><span class="cl">    └── b.py
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>main.py</code>的内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">my_package.b</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>b.py</code> 的文件内容很简单：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;I&#39;m b&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在在 <code>main.py</code> 同级的目录下执行，可以看到正常输出<code>path</code>，且<code>path</code>路径第一个就是我们项目的当前目录<code>py_test</code>，也是我们的执行目录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ py_test python main.py 
+</span></span><span class="line"><span class="cl">I<span class="s1">&#39;m b
+</span></span></span><span class="line"><span class="cl"><span class="s1">[&#39;</span>/Users/admin/Files/Projects/py_test<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages<span class="err">&#39;</span><span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>python xxx.py</code> 的运行方式叫做直接运行，这时该文件中的 <code>__name__</code> 值会指定为 <code>__main__</code>，IDE 中的「 Run File」「 运行脚本」用的就是这种方式。可以看到这时 <code>sys.path</code>的第一个值是该脚本文件所在的目录，随脚本路径而变化，记住我们执行测试始终是在 <code>/home/admin/test_path</code> 这个目录下。</p>
+<h3 id="情况二">情况二</h3>
+<p>还是那个结构，我们将项目复制一份，在<code>my_package</code>目录里增加一个<code>a.py</code>文件，仅做一个简单的打印`print(&ldquo;I&rsquo;m a&rdquo;)</p>
+<p>项目结构如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">.py_test1
+</span></span><span class="line"><span class="cl">├── main.py
+</span></span><span class="line"><span class="cl">└── my_package
+</span></span><span class="line"><span class="cl">	├── a.py
+</span></span><span class="line"><span class="cl">    └── b.py
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>a.py</code> 的文件内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;I&#39;m a&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>好，那么如果我们需要在 <code>b.py</code> 中导入 <code>a.py</code>，那么 <code>b.py</code> 脚本中应该怎么写呢？</p>
+<p><code>b.py</code> 的文件内容，这里的<code>import</code>并没有写在最上面是为了能看到<code>sys.path</code>的输出：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;I&#39;m b&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">a</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>此时，再执行一遍上面的测试</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ py_test1 python main.py     
+</span></span><span class="line"><span class="cl">I<span class="s1">&#39;m b
+</span></span></span><span class="line"><span class="cl"><span class="s1">[&#39;</span>/Users/admin/Files/Projects/py_test1<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages<span class="s1">&#39;]
+</span></span></span><span class="line"><span class="cl"><span class="s1">Traceback (most recent call last):
+</span></span></span><span class="line"><span class="cl"><span class="s1">  File &#34;main.py&#34;, line 1, in &lt;module&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s1">    import my_package.b
+</span></span></span><span class="line"><span class="cl"><span class="s1">  File &#34;/Users/admin/Files/Projects/py_test1/my_package/b.py&#34;, line 6, in &lt;module&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s1">    import a
+</span></span></span><span class="line"><span class="cl"><span class="s1">ModuleNotFoundError: No module named &#39;</span>a<span class="err">&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>执行报错了，根据前面讲的内容，这个报错就是意料之中了——<code>a.py</code>所在的目录 <code>/Users/admin/Files/Projects/py_test1/my_package</code> 压根没有包含  <code>sys.path</code>中 ，自然就找不到 <code>a</code> 文件了。</p>
+<p>那换个思路，直接在当前main目录执行<code>b.py</code>是否会报错？</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ py_test1 python my_package/b.py 
+</span></span><span class="line"><span class="cl">I<span class="s1">&#39;m b
+</span></span></span><span class="line"><span class="cl"><span class="s1">[&#39;</span>/Users/admin/Files/Projects/py_test1/my_package<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages<span class="s1">&#39;]
+</span></span></span><span class="line"><span class="cl"><span class="s1">I&#39;</span>m a
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>结果没有报错，相应的目录位置也变了，不是<code>main.py</code>所在的<code>/Users/admin/Files/Projects/py_test1</code>目录，而是<code>my_package</code>目录</p>
+<h3 id="情况三">情况三</h3>
+<p>还是刚刚的代码，只是把<code>b.py</code>的内容更新了下，将 <code>import a</code> 改成 <code>from my_package import a</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;I&#39;m b&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">my_package</span> <span class="kn">import</span> <span class="n">a</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>同样的先执行<code>python main.py</code>测试（我重新拷贝了项目命名为<code>py_test2</code>）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ py_test2 python3 main.py 
+</span></span><span class="line"><span class="cl">I<span class="s1">&#39;m b
+</span></span></span><span class="line"><span class="cl"><span class="s1">[&#39;</span>/Users/admin/Files/Projects/py_test2<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages<span class="s1">&#39;]
+</span></span></span><span class="line"><span class="cl"><span class="s1">I&#39;</span>m a
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>改成 <code>from my_package import a</code>，执行不报错了，注意由于 <code>b</code> 是在 <code>my_package</code> 包中的，这时可以使用相对导入，写 <code>from . import a</code> 和 <code>from my_package import a</code> 的效果是一样的。</p>
+<p>因为基于同样的分析，我们可以推断直接执行 <code>python my_package/b.py</code>会报错提示<code>找不到 my_package</code>，运行结果如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">py_test2 python my_package/b.py
+</span></span><span class="line"><span class="cl">I<span class="s1">&#39;m b
+</span></span></span><span class="line"><span class="cl"><span class="s1">[&#39;</span>/Users/admin/Files/Projects/py_test2/my_package<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages<span class="s1">&#39;]
+</span></span></span><span class="line"><span class="cl"><span class="s1">Traceback (most recent call last):
+</span></span></span><span class="line"><span class="cl"><span class="s1">  File &#34;my_package/b.py&#34;, line 7, in &lt;module&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s1">    from my_package import a
+</span></span></span><span class="line"><span class="cl"><span class="s1">ModuleNotFoundError: No module named &#39;</span>my_package<span class="err">&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>果然跟我们推理的一样，就是路径不对报错。</p>
+<h3 id="情况四">情况四</h3>
+<p>那么我有没有让这两次运行都不报错的方法呢？有。我们要知道，一个项目中的入口是有限的，实际上不会出现可以执行的代码既在顶层有，又在子目录里也有。我们应该把主要的运行逻辑，都放在 <code>main.py</code> 中（不一定是这个名字，比如 <code>Django</code> 项目是 <code>manage.py</code>），如果这时确实需要运行一个子目录中某脚本的代码，应该用 <code>python -m &lt;module_name&gt;</code>，而 <code>b.py</code> 中导入 <code>a</code> 的语句应为 <code>from my_package import a</code>，我们来看一下运行效果：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ py_test2 python main.py        
+</span></span><span class="line"><span class="cl">I<span class="s1">&#39;m b
+</span></span></span><span class="line"><span class="cl"><span class="s1">[&#39;</span>/Users/admin/Files/Projects/py_test2<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages<span class="s1">&#39;]
+</span></span></span><span class="line"><span class="cl"><span class="s1">I&#39;</span>m a
+</span></span><span class="line"><span class="cl">$ py_test2 python -m my_package.b
+</span></span><span class="line"><span class="cl">I<span class="s1">&#39;m b
+</span></span></span><span class="line"><span class="cl"><span class="s1">[&#39;</span>/Users/admin/Files/Projects/py_test2<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages<span class="s1">&#39;]
+</span></span></span><span class="line"><span class="cl"><span class="s1">I&#39;</span>m a
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到这两次运行的 <code>sys.path</code> 内容一致了，它的第一个值是当前运行所在的目录。这种运行方式叫做以模块方式运行，<code>python -m</code> 后面的参数是（以 <code>.</code> 分隔的）模块名，而不是路径名。由于这种统一性，你在项目中的所有导入都可以用相同的定义方式，而不用管是在哪个脚本中。这也是为什么 <code>Django</code> 官方文档中推荐导入名称全部用 <code>myapp.models.users</code> 这种形式。</p>
+<p>除此之外，以模块方式运行的时候，传入模块名的每一级父模块（或包）都会以模块形式运行，这意味着你可以在模块中使用相对导入（以直接运行方式运行不可以），并且传入的模块中<code>__name__</code> 的值会置为 <code>__main__</code>，你依然可以应用 <code>if __name__ == &quot;__main__&quot;:</code> 的判断。如果 <code>python -m &lt;module_name&gt;</code> 中传入的模块是个包，那么会执行包目录中的 <code>__main__.py</code> 脚本（如果存在），此时该脚本的 <code>__name__</code> 值为 <code>__main__</code>。</p>
+<h2 id="总结">总结</h2>
+<p>看到这里大家可以发现，关于包路径搜索最重要的就是这个<code>$path_prefix</code>路径前缀，而这个值又是从使用的 <code>Python</code> 解释器路径推导出来的。所以要找到包的路径，只需要知道解释器的路径就可以了，如果遇到改变包的路径，只需要通过正确的PATH设置，指定你想要的 <code>Python</code> 解释器即可。</p>
+<p>现在回到开头的三个问题，已经解决了。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E5%8D%9A%E5%AE%A2/">博客</a>
+        
+            <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+        
+            <a href="/tags/path/">path</a>
+        
+            <a href="/tags/site-packages/">site-packages</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@300&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+
+    </body>
+</html>
