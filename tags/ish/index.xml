@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>ish on Ricardo</title>
+        <link>https://sona201.github.io/tags/ish/</link>
+        <description>Recent content in ish on Ricardo</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sun, 07 Jul 2024 23:31:32 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/ish/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Obsidian-tool</title>
+        <link>https://sona201.github.io/posts/obsidian-tool/</link>
+        <pubDate>Sun, 07 Jul 2024 23:31:32 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/obsidian-tool/</guid>
+        <description>&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://hankmo.com/posts/artifact/ios-sync-obsidian/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;原文链接&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;用了不少笔记软件，好多都是半途而废，总感觉有各种各样的问题。笔记格式支持问题，云端网络问题(不支持本地)，样式同步问题。
+用过有道云笔记，markdown支持一般，后来转成印象笔记，甚至充了会员，但没有特别的改善。印象笔记在体验上并没有提升。使用过语雀，格式样式都挺好，支持的样式也很多，但每次打开都是要从云端拉取，导致打开特别慢，加上语雀的重大事故，无法打开，后来就放弃了。最近用的就是vscode本地文档，直接github同步，确实方便，但vscode没有客户端，没有特意为笔记软件做搜索优化，每次想搜索一个mysql文档，结果跳出n条笔记，完全放弃搜索功能。
+最后才是决定使用obsidian，本地客户端，大公司支持，个人免费，还有双链(目前我用的不多，大家都说好)，可以利用github同步，markdown样式格式支持，还有一些高级插件，搜索比较好，还能使用标签特定为笔记做优化，于是就选择了它。它可以直接复制一些网页，粘贴后基本不需要调整格式。&lt;/p&gt;
+&lt;p&gt;这篇文章也是参考网上的教程，作者写的很详细，但本着自己写一遍才放心的精神，决定摘录一遍，并根据一些自己的需求，加一些自己的操作。&lt;/p&gt;
+&lt;h2 id=&#34;正文&#34;&gt;正文&lt;/h2&gt;
+&lt;p&gt;对于技术人而言，经常需要记录、整理大量的笔记内容，形成自己的知识库。一款好的笔记软件我认为需要具备以下几个条件：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;必须：跨平台，同时支持桌面电脑（Windows，Mac，Linux）和手机（Android，iOS）&lt;/li&gt;
+&lt;li&gt;必须：支持同步，在多台设备中打开任何一台都能接接着编写笔记&lt;/li&gt;
+&lt;li&gt;必须：实时存储，就算突然断电、死机也不会丢失已写笔记内容&lt;/li&gt;
+&lt;li&gt;必须：支持代码高亮，更便于友好地阅读代码&lt;/li&gt;
+&lt;li&gt;必须：支持 Markdown 格式，快速编写文档必备格式，谁用谁知道&lt;/li&gt;
+&lt;li&gt;必须：支持多重备份，最好是本地一份、远端一份，首选支持&lt;code&gt;git&lt;/code&gt;同步的&lt;/li&gt;
+&lt;li&gt;可选：支持双向链接，这样笔记与笔记之间就可以形成关联关系，慢慢积累后就形成了自己的知识库&lt;/li&gt;
+&lt;li&gt;可选：支持笔记导出，比如导出 pdf 等格式，便于分享，如果能一键发布到常见博客如 &lt;a class=&#34;link&#34; href=&#34;https://hexo.io/zh-cn/index.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;hexo&lt;/a&gt;、&lt;a class=&#34;link&#34; href=&#34;https://cn.wordpress.org/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;wordpress&lt;/a&gt;、&lt;a class=&#34;link&#34; href=&#34;https://www.jekyll.com.cn/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;jekyll&lt;/a&gt; 更好&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;我用过诸多笔记软件，但都存在或多或少的问题，无法满足上述要求，后来一直使用网易的有道笔记，它支持一键保存笔记，不过编辑器实在难用，markdown的图片要自己搭建图床。&lt;/p&gt;
+&lt;p&gt;阮一峰推荐的笔记软件是 &lt;a class=&#34;link&#34; href=&#34;https://docs.github.com/en/codespaces/the-githubdev-web-based-editor&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;github.dev&lt;/a&gt;，可以看看他的&lt;a class=&#34;link&#34; href=&#34;http://www.ruanyifeng.com/blog/2021/08/best-note-taking-software-for-programmers.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;这篇文章&lt;/a&gt;。不过我更喜欢原生的app软件，我选择 &lt;a class=&#34;link&#34; href=&#34;https://obsidian.md/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;obsidian&lt;/a&gt;，因为它免费而且支持上述的大部分需求，尤其是第6点，对于不想将笔记存储保存给笔记软件厂商而言非常好，直接使用&lt;code&gt;git&lt;/code&gt;同步。&lt;/p&gt;
+&lt;p&gt;现在，我基本上都是用 obsidian 来记笔记和写文章，它支持双向链接，很容易形成知识体系，而且具备丰富的插件支持，具体特性可以自己咨询网络。如果对于格式非常多的文章，我也会使用 &lt;a class=&#34;link&#34; href=&#34;https://asciidoctor.org/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;AsciiDoc&lt;/a&gt; 格式来编写，相比于 &lt;a class=&#34;link&#34; href=&#34;https://markdown.com.cn/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Markdown&lt;/a&gt; 它更加强大，但是语法也更复杂。Obsidian 目前并不支持，非常遗憾。&lt;/p&gt;
+&lt;p&gt;在使用 Obsidian 时，最大的问题就是手机端的同步。我是用 Github 存储笔记，手机端没有很好的同步方案，官方的同步方式无法满足需求，而且需要付费。我的需求是，macOS、windows、iPhone、iPad 四种设备上需要从 github 同步我的笔记，没有安卓端同步的需要，所以我使用 &lt;a class=&#34;link&#34; href=&#34;https://ish.app/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;iSH&lt;/a&gt; 这个 app，它开源免费，支持 ios，完美的解决了我的问题。&lt;/p&gt;
+&lt;h1 id=&#34;什么是-ishobsidian-ish-tutorialmd&#34;&gt;什么是 &lt;a class=&#34;link&#34; href=&#34;obsidian-ish-tutorial.md&#34; &gt;iSH&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;它是一个在 ios 上模拟 Linux 环境的 app，使用的是 &lt;a class=&#34;link&#34; href=&#34;https://www.alpinelinux.org/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;alpine linux&lt;/a&gt;，在你的 iPhone、iPad上都可以运行并创建 Linux Shell 环境。正好我可以使用它来同步 git 仓库到我的 ios 设备上。&lt;/p&gt;
+&lt;h1 id=&#34;安装-ish-app&#34;&gt;安装 ish app&lt;/h1&gt;
+&lt;p&gt;从 ios 应用商店下载 iSH Shell，注意看名称和logo：&lt;/p&gt;
+&lt;p&gt;下载好后打开，你就得到了一个 Linux Shell 环境。整体界面与 Shell 一样，这里重点说一下工具栏：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tab：点击后可以自动补全命令&lt;/li&gt;
+&lt;li&gt;Ctrl：pc 的 ctrl 健，当你需要执行 &lt;code&gt;Ctrl + C&lt;/code&gt; 时需要用到&lt;/li&gt;
+&lt;li&gt;Esc：pc 的 Esc健&lt;/li&gt;
+&lt;li&gt;Arrows：点击后上下左右拖动可以实现 pc 的方向键的功能，常用的是向上拖动调出最新一条历史记录命令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;提示！ 下边的操作，需要输出一些命令，手机上输入不太方便，记得点击工具栏这个 Tab，可以自动补全。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;iSH 中，操作基本上都以 &lt;code&gt;apk&lt;/code&gt; 命令开头。&lt;/p&gt;
+&lt;p&gt;首先，输出 &lt;code&gt;apk update&lt;/code&gt; 然后换行即可更新 package。 然后，输入 &lt;code&gt;uname -a&lt;/code&gt; 来查看操作系统信息：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;localhost:~# uname -a
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Linux localhost 4.20.69-ish SUPER AWESOME May &lt;span class=&#34;m&#34;&gt;20&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2023&lt;/span&gt; 23:41:32 i686 Linux
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;接下来，继续安装 obsidian app。&lt;/p&gt;
+&lt;h1 id=&#34;创建-obsidian-仓库&#34;&gt;创建 obsidian 仓库&lt;/h1&gt;
+&lt;p&gt;同样地，ios 应用商店下载后打开 obsidian，此时没有任何 vault，首先手动创建一个，比如名称为 notebook（下文中的所有 notebook 都可以改为你自己的仓库名称）。此时，你只是创建了一个空的仓库，我们需要让其与 github 同步。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;PS: 我第一次是单独创建了一个vault，然后在vault下面在拉取了git仓库，目录层级有点多，比较麻烦，这个方案会将git仓库的内容直接放在对应目录下。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;创建-ssh-key-并授权给-github&#34;&gt;创建 ssh key 并授权给 github&lt;/h1&gt;
+&lt;p&gt;我的笔记仓库托管在 github，处于安全考虑，github 禁止使用 http 连接，需要改为 ssh。&lt;/p&gt;
+&lt;p&gt;打开 iSH app，创建 ssh key，需要安装几个软件：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;apk add git
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;apk add openssh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;依次执行上边的命令安装 git、openssh，耐心等待安装完成。&lt;/p&gt;
+&lt;p&gt;然后，执行以下命令生成 ssh key：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh-keygen -t ed25519 -C &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;你的邮箱&amp;gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;接着，拷贝生成的公钥：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat ~/.ssh/id_ed25519.pub
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;登录 github，点击用户头像，在 &lt;code&gt;setting&lt;/code&gt; -&amp;gt; &lt;code&gt;SSH and GPG keys&lt;/code&gt; -&amp;gt; &lt;code&gt;New SSH key&lt;/code&gt; 新建一个授权的key并粘贴刚才拷贝的公钥，保存即可。&lt;/p&gt;
+&lt;p&gt;测试一下在 iSH 中能否正常连接 github：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;localhost:~# ssh -T git@github.com
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Hi username! You&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;ve successfully authenticated, but GitHub does not provide shell access.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;输出上述信息说明 ssh 连接成功。&lt;/p&gt;
+&lt;h1 id=&#34;配置-git-环境&#34;&gt;配置 git 环境&lt;/h1&gt;
+&lt;p&gt;上一步安装了 git，现在来配置 git 环境。&lt;/p&gt;
+&lt;p&gt;打开 iSH，依次执行如下命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git config --global user.name &lt;span class=&#34;s2&#34;&gt;&amp;#34;你的github用户名&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git config --global user.email &lt;span class=&#34;s2&#34;&gt;&amp;#34;你的github邮箱&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;此外，还需要添加安全目录，否则git可能出错：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git config --global --add safe.directory /root/obsidian/notebook
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;PS: 这里不操作的话问题不大，在第一次执行&lt;code&gt;git pull&lt;/code&gt;的时候，会提醒你，直接复制粘贴更方便&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;同步-github-仓库到-ish&#34;&gt;同步 github 仓库到 iSH&lt;/h1&gt;
+&lt;p&gt;现在，你可以在 iSH pull github 仓库代码了。&lt;/p&gt;
+&lt;p&gt;首先，打开 iSH，创建一个 &lt;code&gt;obsidian&lt;/code&gt; 目录：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; mkdir obsidian
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;然后，挂载 obsidian app 的文件存储目录到刚才创建的 &lt;code&gt;obsidian&lt;/code&gt; 目录:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mount -t ios . obsidian
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这里的命令解释：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;mount&lt;/code&gt;是挂载命令&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-t&lt;/code&gt; 指定文件格式&lt;code&gt;ios&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.&lt;/code&gt; 当前目录&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;obsidian&lt;/code&gt;刚刚创建的目录&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;挂载的命令是在网上找的，至于为啥是&lt;code&gt;ios&lt;/code&gt;格式，可以通过命令&lt;code&gt;df -T&lt;/code&gt;来查看&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;localhost:~/obsidian/notebook# df -T
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Filesystem           Type       1K-blocks      Used Available Use% Mounted on
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/private/var/mobile/Containers/Data/Application/826FB5AE-9DE7-4C73-9045-5049E3xxxxx/Documents
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                     ios        &lt;span class=&#34;m&#34;&gt;249880148&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;227563964&lt;/span&gt;  &lt;span class=&#34;m&#34;&gt;22316184&lt;/span&gt;  91% /root/obsidian
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/private/var/mobile/Containers/Shared/AppGroup/E90D8F8C-AE29-4A9F-9388-F9EF351xxxxx/roots/default/data
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                     fake       &lt;span class=&#34;m&#34;&gt;249880148&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;227563964&lt;/span&gt;  &lt;span class=&#34;m&#34;&gt;22316184&lt;/span&gt;  91% /
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;localhost:~/obsidian/notebook# 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;iSH 会弹出一个窗口，在里边选择 &lt;code&gt;Obsidian&lt;/code&gt; 文件夹即可，不需要选择 &lt;code&gt;notebook&lt;/code&gt; 仓库，这样就可以访问多个仓库。&lt;/p&gt;
+&lt;p&gt;到此，git配置完成，现在可以在 iSH 中拉取git仓库了。&lt;/p&gt;
+&lt;p&gt;首先，复制 github 仓库的 ssh 地址。&lt;/p&gt;
+&lt;p&gt;然后，进入 &lt;code&gt;obsidian/notebook&lt;/code&gt; 文件夹：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; obsidian/notebook/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;删除下边的 &lt;code&gt;.obsidian&lt;/code&gt; 文件夹，这是 obsidian 为其仓库创建的，这里先删除，保证这个目录是空的。&lt;/p&gt;
+&lt;p&gt;接着，进入上层目录：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ..
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;克隆仓库：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git clone 你的仓库ssh地址 notebook
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;表示将 github 仓库下的文件克隆到 notebook 目录。&lt;/p&gt;
+&lt;p&gt;耐心等待克隆完成，如果失败了重试即可。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;PS: 上面说的，如果不在仓库地址后面加 notebook ，就会在notebook下面新建仓库目录，目录层级会多一层&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;现在，打开 obsidian app，可以看到数据成功同步了过来。&lt;/p&gt;
+&lt;h1 id=&#34;常用操作&#34;&gt;常用操作&lt;/h1&gt;
+&lt;p&gt;现在，你可以在 obsidian app 中记录笔记了，一些日常操作包括：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这些操作都需要打开 iSH app，进入 &lt;code&gt;~/obsidian/notebook&lt;/code&gt; 操作。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;1、同步仓库 pc端修改了笔记，ios可以同步仓库：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git pull origin main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;2、提交更改 ios上修改了笔记，需要提交到 git 仓库：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git add .
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git commit -m &lt;span class=&#34;s1&#34;&gt;&amp;#39;描述&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git push origin main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h1 id=&#34;快捷操作&#34;&gt;快捷操作&lt;/h1&gt;
+&lt;p&gt;同步数据需要打开iSH app，执行拉代码，可以配置快捷命令。
+根据 &lt;code&gt;linux&lt;/code&gt; 的特性，可以在打开iSH app后，自动执行相关操作，比如直接进入我们的相应的目录，打开软件自动拉取最新数据
+linux 下，系统会自动执行家目录下面(直接执行命令&lt;code&gt;cd&lt;/code&gt;即可到家目录下)的 &lt;code&gt;.profile&lt;/code&gt; 文件，再配置 &lt;code&gt;.ashrc&lt;/code&gt; 文件，即可完成需求
+直接复制粘贴下面的命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat &amp;gt; ~/.profile &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s&#34;&gt;if [ -f ~/.ashrc ]; then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s&#34;&gt;    source ~/.ashrc
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s&#34;&gt;fi
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat &amp;gt; ~/.ashrc &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s&#34;&gt;cd /root/obsidian/notebook
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s&#34;&gt;git pull
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s&#34;&gt;alias gl=&amp;#39;git pull&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;PS: 简单解释下命令的作用，先cd到家目录下，然后创建&lt;code&gt;.profile&lt;/code&gt;，内容的作用就是开启时执行&lt;code&gt;.ashrc&lt;/code&gt;里的命令，&lt;code&gt;.ashrc&lt;/code&gt;里的命令意思是到&lt;code&gt;/root/obsidian/notebook&lt;/code&gt;目录下，然后执行&lt;code&gt;git pull&lt;/code&gt;命令，最后做了一个别名，即在命令行输入&lt;code&gt;gl&lt;/code&gt;，等同于执行&lt;code&gt;git pull&lt;/code&gt;命令，因为在手机上操作还是能简化点比较好&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;git-配置&#34;&gt;git 配置&lt;/h1&gt;
+&lt;p&gt;当文件名含有中文的时候，git 显示会异常，需要执行下面命令&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git config --global core.quotepath &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;PS 不过还是建议尽量使用英文做标题，也可以锻炼英语水平，也能避免很多奇奇怪怪的问题&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;总结&#34;&gt;总结&lt;/h1&gt;
+&lt;p&gt;使用 iSH app 可以在 ios 上模拟一个 Linux 环境，并同步 git 仓库，这非常利于 obsidna 仓库的同步。配置 github 的操作稍有些麻烦，不过配置好后就很方便了。如果需要在 iPhone、iPad 上使用 obisidan 阅读、编写笔记，值得一试。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
