@@ -4,7 +4,7 @@ description: "笔记工具obsidian"
 date: '2024-07-07T23:31:32+08:00'
 lastmod: '2024-07-07T23:31:32+08:00'
 categories: ["tools"]
-slug: 'Obsidian'
+slug: 'obsidian-tool'
 draft: false
 tags: ["obsidian", "ish", "ios", "sync", "手机"]
 ---
