@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>生产力工具 on Ricardo</title>
+        <link>https://sona201.github.io/tags/%E7%94%9F%E4%BA%A7%E5%8A%9B%E5%B7%A5%E5%85%B7/</link>
+        <description>Recent content in 生产力工具 on Ricardo</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sat, 13 Jul 2024 16:26:10 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/%E7%94%9F%E4%BA%A7%E5%8A%9B%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Todolist by Txt</title>
+        <link>https://sona201.github.io/posts/todolist-by-txt/</link>
+        <pubDate>Sat, 13 Jul 2024 16:26:10 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/todolist-by-txt/</guid>
+        <description>&lt;p&gt;文章不是我写的，我只是做了一个转发。&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://sspai.com/post/71705&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;译文原文，译文 | 过去 14 年里，我的生产力工具只是一个 .txt 文件&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://jeffhuang.com/productivity_text_file/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;英文原文 My productivity app is a never-ending .txt file&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;#阅读 #reading&lt;/p&gt;
+&lt;p&gt;译文 | 过去 12(14) 年里，我的生产力工具只是一个 .txt 文件&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://sspai.com/u/weiblog/updates&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;爱吃草的熊&lt;/a&gt;          2022 年 02 月 26 日&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;原文作者在翻译的时候是2022年，我也有印象这个新闻，但当我再次看的时候，已经过去了2年了。再次去查看原文，发现更新时间是 By &lt;a class=&#34;link&#34; href=&#34;https://jeffhuang.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Jeff Huang&lt;/a&gt;, updated on 2022-03-21
+可能原文是作者在2020年写的，2022年火的，作者发现火了以后，将原文里的时间从12年改成了14年。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;译者说&lt;/strong&gt;：本文 &lt;a class=&#34;link&#34; href=&#34;https://jeffhuang.com/productivity_text_file/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;原文&lt;/a&gt; 由是布朗大学计算机科学副教授 Jeff Huang 所撰并发表在其个人网站上，今年一月发出后，在 Hacker News 等社区引发了 &lt;a class=&#34;link&#34; href=&#34;https://news.ycombinator.com/item?id=29661167&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;热烈讨论&lt;/a&gt;。译文已交由其审阅并授权发表。文中的笔记内容在格式和拼写上力图保持原貌。&lt;/p&gt;
+&lt;p&gt;我最初是在即刻上看到阑夕发布的一条动态里有这个链接，再结合我派前一阵突然遭遇的外部舆论，觉得其实这一篇挺能说明我们在追求效率上的一些迷思。翻译本文的目的并不是说推崇用 .txt 文件管理自己的生活，而是想表达一个这样的意思：无论是折腾好玩还是追求高效，工具只占一部分，更重要的是我们自己的方法论。不管是重器轻用还是轻器重用，一切都取决于你自己想要什么。&lt;/p&gt;
+&lt;p&gt;我的英语水平很一般，翻译得并不太「信达雅」，如果对译文有疑义，请点开原文链接阅读。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;当我开始上大学时，对我来说最大的转变是学会组织（信息）。有一段时间，我的脑子无法记住任何事情。而且那段时间里，持续不断地追踪任务进度这件事让我屡屡从手头的工作中分心。&lt;/p&gt;
+&lt;p&gt;所以我尝试了各种各样的 todo 清单，任务追踪工具和生产力 apps。但是这些尝试都让我感到沮丧，因为待完成的工作越来越多，而且有太多互相关联的事情比如说会议记录、日程上的约会、想法清单以及实验笔记，这些（互相关联的）事情却在不同的系统上。&lt;/p&gt;
+&lt;p&gt;于是我放弃了，开始只在一个文本文件中进行跟踪，并将其用作我的主要生产力系统已有 12（14） 年了。它现在对我的工作非常重要，并且随着我工作职责的增加而以令人惊讶的速度扩展，所以我想分享这个系统。这是我的秘密武器。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置工具&lt;/strong&gt;：日历。我使用的一个外部工具是一个在线日历，我把所有任务都放在这个日历上，即使是那些实际上不是固定时间的工作，比如「在车间制作一张咖啡桌」或「弄清楚如何招募新的博士生」 「——我会把他们安排在我想考虑的日期。这样我未来的所有计划和日程安排都在一起，而不是一堆我必须跟踪的清单。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;制作每日清单&lt;/strong&gt;：每晚我上床之前，我会把第二天日历上的所有项目都记下来，并将其作为每日待办事项列表附加到文本文件的末尾，这样当我醒来时我就能确切地知道我将做什么。这个清单包含计划好的任务（下午 2 点与麦当娜会面，下午 4 点办公时间）、差事（签署表格、归还书籍）和工作项目（审阅论文、准备演示文稿）。这份清单也让我思考我一天的工作量是否合适。&lt;/p&gt;
+&lt;p&gt;明天我不想做的任何事情，我都会重新把它放进我日历里靠后的日期。在这样做了很多年后，我已经非常擅长估计我一天能完成的事情。下面一个替换了名称的示例，因此当我从日历中改动一天的日程安排时，您可以看到它的样子。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;2021-11-31
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;11am meet with Head TAs
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- where are things at with inviting portfolio reviewers?
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;11:30am meet with student Enya (interested in research)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;review and release A/B Testing assignment grading
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;12pm HCI group meeting
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- vote for lab snacks
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;send reminders for CHI external reviewers
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;read Sketchy draft
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Zelda pick up eye tracker
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- have her sign for it
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;update biosketch for Co-PI
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;3:15pm join call with Umbrella Corp and industry partnership staff
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;3:45pm advising meet with Oprah
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;4pm Rihanna talk (368 CIT)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;5pm 1:1 with Beyonce #phdadvisee
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;6pm faculty interview dinner with Madonna
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;2017-11-31
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;11:00 和首席助教开会
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 邀请投资联合审阅者的情况怎么样了？
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;11:30 和学生 Enya 开会（对研究感兴趣）
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;检查并发布 A/B 测试作业评分
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;12:00 HCI 组会
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 为实验室事务投票
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;给 CHI 外部评审发送提醒
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;阅读初稿
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;zelda 选择了眼动仪
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 她已经签字了
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CO-PI 更新生物素描
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;15:15 和行业合作伙伴参加 Umbrella 公司的电话会议
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;15:45 和 Oprah 的咨询会议
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;16:00 和 Rihanna 谈话 (368 CIT)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;17:00 和 Beyonce 1 对 1 谈话 #phd 咨询
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;18:00 和 Madonna 的教师访谈晚餐
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;作为记录：每天的待办事项清单同样也是我的笔记本，这样它就从一个待办清单变成了一个已完成清单。我觉得这样做最棒的是我将所有的事情全部保存在一个文本文件中（.txt)，靠日期来区分内容，这样我就可以记录我做过的所有事情以及我什么时候做过。&lt;/p&gt;
+&lt;p&gt;我现在使用的文件大约是 7（9） 年前创建的，那时我刚刚开始我现在的工作。这个文件可以用来作为研究笔记本，也可以用来做会议记录。我已经在这个文件中写了 37773（51,690） 行，记录了我作为一个教授做过的所有事情，遇到的几乎每一个人，以及我讨论过的内容或者我产生的想法。一天工作结束后我的清单会变成下面这样，表示工作已经完成：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;2021-11-31
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;11am meet with Head TAs
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- where are things at with inviting portfolio reviewers? A: got 7/29 replies
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- need 3 TAs for Thursday lab
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- Redesign assignment handout will be done by Monday, ship Thursday
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;11:30am meet with student Enya (interested in research)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- they&amp;#39;re a little inexperienced, suggested applying next year
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;review and release A/B Testing assignment grading
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;12pm HCI group meeting
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- automatically generate thumbnails from zoom behavior on web pages
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- #idea subliminal audio that leads you to dream about websites
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- Eminem presenting Nov 24
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- vote for lab snacks. A: popcorn and seaweed thing
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;got unofficial notification ARO YIP funding award #annual #cv
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;read Sketchy paper draft
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- needs 1 more revision
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- send to Gandalf to look at?
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Zelda pick up eye tracker
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- have her sign for it
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;update biosketch for Co-PI
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;unexpected drop in from Coolio! #alumni
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- now a PM working on TravelAdvisor, thinking about applying to grad school
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;3:15pm join call with Umbrella Corp and industry partnership staff
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- they want to hire 20 data science + SWE interns (year 3), 4 alums there as SWE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;3:45pm advising meet with Oprah
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- enjoyed CS 33
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- interning at Facebook
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;4pm Rihanna talk (368 CIT)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;5pm 1:1 with Beyonce #phdadvisee
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- stuck on random graph generating crash
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	- monitor memory/swap/disk?
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	- ask Mario to help?
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- got internship at MSR with Cher
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	- start May 15 or 22
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- will send me study design outline before next meeting
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- interviewing Spartacus as potential RA for next semester
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;6pm faculty interview dinner with Madonna (Gracie&amp;#39;s)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- ask about connection with computer vision
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- cool visual+audio unsupervised comparison, thoughtful about missing data, would work with ugrads (?), likes biking, teach compvis + graphics
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- vote #HIRE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;#note maybe visit Monsters University next spring, Bono does related work
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;2017-11-31
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;11:00 和首席助教开会
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 邀请投资联合审阅者的情况怎么样了？ A: 回复进度 7/29。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 需要 3 名助教
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 星期一完成作业讲义的重写，星期四发送
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;11:30 和学生 Enya 开会（对研究感兴趣）
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- Enya 缺乏研究经验，建议她明年再申请。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;检查并发布 A/B 测试作业评分
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;12:00 HCI 组会
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 根据网页版 zoom 的 自动化功能生成（会议）的概要图
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- #idea 潜意识里的音频会让你梦到某些网站
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- Eminem 将在 11 月 24 日出席
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;-为实验室零食投票 A：非官方通告：爆米花和海苔赢得了 ARO YIP 基金奖
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;#annual #cv
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CHI 外部评审发送提醒
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;阅读初稿
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 需要再修改几次
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 给 Gandal 看看？
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Zelda 选择了眼动仪
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;-她已经签字了
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CO-PI 更新生物素描
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;与 Coolio 不期而遇 #alumni
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- Coolio 现在是 TravelAdvisor 的产品经理，正在考虑申请研究生院。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;15:15 和行业合作伙伴参加 Umbrella 公司的电话会议
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 他们想招聘 20 位 SWE 数据科学实习生（3 年级以上），有 4 个校友在 SWE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;15:45 和 Oprah 的咨询会议
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- CS 33 这个系列课程是一种享受
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- Oprah 在 Facebook 实习
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;16:00 和 Rihanna 谈话（368 CIT）
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;17:00 和 Beyonce 1 对 1 谈话 #phd 咨询
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 在生成随机图上遇到了困难
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    - 检查 内存/交换机/磁盘了吗？
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    - 请 Mario 帮忙了吗？
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 和 Cher 一起去 MSR 实习
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    - 5 月 15 或者 22 日开始
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 在下次组会前给我研究设计大纲
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 下学期以 RA 备选的方式参加斯巴达克斯的面试
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;18:00 和 Madonna（Gracie&amp;#39;s) 的教师访谈晚餐
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 询问了与计算视觉的关系
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 很酷的视觉与无监督音频比较，对数据丢失很有想法，会和研究生一起工作（？），
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;比如说骑自行车，教计算视觉和图形学
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;- 投票 #HIRE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;#note 或许明年春天会去参观 Monsters 大学，Bono 在那做相关的工作
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;快捷键和特点：我使用一致的写作风格，所以使用一些短语就可以很容易进行搜索。当我搜索「meet with」时，它显示我已经安排了 3,000 多次会议。我有一些标签，比如 #annual 用于在我的下一份年度报告中添加内容， #nextui 用于在我下次运行我的下一个 UI 课程时添加的内容。&lt;/p&gt;
+&lt;p&gt;文本文件非常灵活，在任何时候，我都可以快速浏览一下那天我做了什么，还剩下什么。当一项任务完成时，这是最常见的情况，我就把这个文件抛之脑后。我可以使用搜索框计算聚合统计信息，或者列出包含标签的所有行，以及使用我的文本编辑器进行其他操作。我使用 &lt;a class=&#34;link&#34; href=&#34;https://www.ultraedit.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Ultraedit&lt;/a&gt; 是因为我熟悉它，但我想任何文本编辑器都会有类似的功能。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;电子邮件&lt;/strong&gt; ：电子邮件显然是我工作流程的一部分。怎么处理电子邮件，但我发现一个简单的标记系统就足够了——如果我需要处理它，标记红色，如果我最终需要处理它但需要一些思考或其他人来标记橙色处理它，并为我发送的等待回复的电子邮件标记黄色，以便我知道稍后跟进。只要方便，我会在电子邮件进来时对其进行标记。&lt;/p&gt;
+&lt;p&gt;在一天结束时，我会快速回顾一下橙色和黄色邮件，看看是否需要跟进或应该变成红色。有些人的工作流程围绕着痴迷地清理他们的收件箱。我真的不在乎让我的收件箱保持空白，因为每当收到电子邮件时，我都会觉得我有新的工作要做。&lt;/p&gt;
+&lt;p&gt;所以我的日常生活就是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;看看我昨晚写的待办清单，看看我今天要做什么&lt;/li&gt;
+&lt;li&gt;按清单上计划好的日程工作&lt;/li&gt;
+&lt;li&gt;当我有空闲（计划外）时间时，执行我列表中的浮动任务并在一天结束时处理红色标记的电子邮件&lt;/li&gt;
+&lt;li&gt;快速查看橙色/黄色电子邮件，看看它们是否需要任何处理&lt;/li&gt;
+&lt;li&gt;将第二天的日历项复制到文本文件的底部&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这个过程有一些&lt;strong&gt;很好的特性&lt;/strong&gt; ：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;我醒来后可以很容易地知道要做什么&lt;/li&gt;
+&lt;li&gt;我不需要在脑海中记住以后要做的事情（跟进电子邮件，未来的任务）&lt;/li&gt;
+&lt;li&gt;很容易回忆过去发生的事情，看看我一天能完成多少&lt;/li&gt;
+&lt;li&gt;没有进行中的「待办事项」列表，这样项目不会日复一日地推迟&lt;/li&gt;
+&lt;li&gt;我使用远程桌面，因此可以从每台设备访问所有内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;前一天晚上我的日常工作量完全在我的控制之下；每当我对自己的长期承诺感到不知所措时，我就会通过积极地取消标记电子邮件、从日历中删除我不再感到兴奋的事情以及减少我未来分配给自己的工作量来减弱这种感觉。&lt;/p&gt;
+&lt;p&gt;这样做确实意味着有时我会错过一些问题或不深入研究有趣的问题，但可以帮助我保持可管理的工作量。&lt;/p&gt;
+&lt;p&gt;如果您愿意尝试我的系统，或者对此有一些想法，我很乐意收到您的来信！&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
