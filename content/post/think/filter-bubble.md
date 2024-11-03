@@ -4,7 +4,7 @@ description: "澜夕的讨论"
 date: "2024-11-03T23:52:35+08:00"
 lastmod: "2024-11-03T23:52:35+08:00"
 categories: ["think"]
-slug: "information-cocoon"
+slug: "filter-bubble"
 tags: ["信息", "限制", "思考"]
 ---
 ## 信息茧房
