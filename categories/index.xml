@@ -6,7 +6,15 @@
         <description>Recent content in Categories on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Sun, 03 Nov 2024 23:52:35 +0800</lastBuildDate><atom:link href="https://sona201.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 20 Nov 2024 00:19:55 +0800</lastBuildDate><atom:link href="https://sona201.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>nginx</title>
+        <link>https://sona201.github.io/categories/nginx/</link>
+        <pubDate>Wed, 20 Nov 2024 00:19:55 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/categories/nginx/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>think</title>
         <link>https://sona201.github.io/categories/think/</link>
         <pubDate>Sun, 03 Nov 2024 23:52:35 +0800</pubDate>
