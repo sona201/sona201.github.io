@@ -18,7 +18,7 @@ menu:
 
 博客是我一直想好好搞的东西，最早从17年开始接触，搭建了wordpress，后来又尝试使用博客园，CSDN，掘金。 
 
-[博客园](https://www.cnblogs.com/irockcode) 
+[博客园](https://www.cnblogs.com/irockcode) \
 [掘金](https://juejin.cn/user/3280598428575528/posts)
 
 笔记软件也折腾了很多，印象笔记，有道云笔记，语雀，notion，obsdian
