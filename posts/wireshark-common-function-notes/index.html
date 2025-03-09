@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='wireshark笔记记录'>
+<title>Wireshark常用功能笔记</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/wireshark-common-function-notes/'>
+
+<link rel="stylesheet" href="/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='Wireshark常用功能笔记'>
+<meta property='og:description' content='wireshark笔记记录'>
+<meta property='og:url' content='https://sona201.github.io/posts/wireshark-common-function-notes/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='tcp' /><meta property='article:tag' content='wireshark' /><meta property='article:tag' content='常用功能' /><meta property='article:tag' content='笔记' /><meta property='article:published_time' content='2025-03-09T00:01:40&#43;08:00'/><meta property='article:modified_time' content='2025-03-09T00:01:40&#43;08:00'/>
+<meta name="twitter:title" content="Wireshark常用功能笔记">
+<meta name="twitter:description" content="wireshark笔记记录">
+    <link rel="shortcut icon" href="/image/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="
+    article-page
+    "><div id="nav-border" class="container">
+  <nav id="nav" class="nav justify-content-center">
+      
+      <a class="nav-link" href="/">
+      
+      
+      主页
+      </a>
+      
+      <a class="nav-link" href="/%E5%85%B3%E4%BA%8E/">
+      
+      
+      关于
+      </a>
+      
+      <a class="nav-link" href="/archives/">
+      
+      
+      归档
+      </a>
+      
+      <a class="nav-link" href="/%E5%8F%8B%E9%93%BE/">
+      
+      
+      友链
+      </a>
+      
+      <a class="nav-link" href="/tags">
+      
+      
+      Tags
+      </a>
+      
+  </nav>
+</div>
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_300x0_resize_box_3.png" width="300"
+                            height="297" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Ricardo</a></h1>
+            <h2 class="site-description">人到中年，专业捧哏</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sona201/'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E9%93%BE/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>友链</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags' target="_blank">
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+                
+                <span>Tags</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#pcap">pcap</a></li>
+    <li><a href="#cap">cap</a></li>
+    <li><a href="#pcapng">pcapng</a></li>
+  </ol>
+
+  <ol>
+    <li><a href="#常用参数">常用参数</a></li>
+  </ol>
+
+  <ol>
+    <li><a href="#打标记">打标记</a></li>
+    <li><a href="#过滤技巧">过滤技巧</a></li>
+    <li><a href="#抓包时过滤">抓包时过滤</a></li>
+    <li><a href="#读取抓包文件">读取抓包文件</a></li>
+    <li><a href="#过滤后转存">过滤后转存</a></li>
+  </ol>
+
+  <ol>
+    <li><a href="#解析已知协议与ip域名映射">解析已知协议与IP域名映射</a></li>
+    <li><a href="#查询当前已经解析了哪些域名">查询当前已经解析了哪些域名</a></li>
+    <li><a href="#设置私有ip名称">设置私有IP名称</a></li>
+    <li><a href="#保存文件含host对应名称">保存文件（含host对应名称）</a></li>
+    <li><a href="#设置时间列">设置时间列</a></li>
+  </ol>
+
+  <ol>
+    <li><a href="#设置窗口的layout">设置窗口的Layout</a></li>
+  </ol>
+
+  <ol>
+    <li><a href="#ddos之syn-flood">DDoS之SYN flood</a></li>
+  </ol>
+
+  <ol>
+    <li><a href="#tcp-window-full">TCP window full</a></li>
+    <li><a href="#tcp-zerowindow">TCP Zerowindow</a></li>
+    <li><a href="#package-size-limited-during-capture">Package size limited during capture</a></li>
+    <li><a href="#tcp-previous-segment-not-captured">TCP Previous segment not captured</a></li>
+    <li><a href="#tcp-acked-unseen-segment">TCP Acked unseen segment</a></li>
+    <li><a href="#tcp-out-of-order">TCP Out-of-order</a></li>
+    <li><a href="#tcp-dup-ack">TCP Dup ACK</a></li>
+    <li><a href="#tcp-fast-retransmission">TCP Fast Retransmission</a></li>
+    <li><a href="#tcp-retransmission">TCP Retransmission</a></li>
+    <li><a href="#tcp-segment-of-a-reassembled-pdu">TCP Segment of a reassembled PDU</a></li>
+    <li><a href="#continuations-to">Continuations to</a></li>
+    <li><a href="#time-to-live-exceededfragment-reassembly-time-exceeded">Time-to-live exceeded（Fragment reassembly time exceeded)</a></li>
+  </ol>
+
+  <ol>
+    <li><a href="#为什么macbook上提示you-dont-have-permission-to-capture-on-local-interfaces">为什么MacBook上提示：You don’t have permission to capture on local interfaces.</a></li>
+    <li><a href="#四次挥手的疑惑">四次挥手的疑惑</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/tcp/" >
+                tcp
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/posts/wireshark-common-function-notes/">Wireshark常用功能笔记</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            wireshark笔记记录
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-03-09</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 16 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p><a class="link" href="https://www.ilikejobs.com/posts/wireshark/"  target="_blank" rel="noopener"
+    >原文链接</a></p>
+<h1 id="wireshark常用功能笔记">Wireshark常用功能笔记</h1>
+<h1 id="wireshark">wireshark</h1>
+<h1 id="包类型">包类型</h1>
+<h2 id="pcap">pcap</h2>
+<p><strong>这个是 libpcap 的格式，也是 tcpdump 和 Wireshark 等工具默认支持的文件格式</strong>。pcap 格 式的文件中除了报文数据以外，也包含了抓包文件的元信息，比如版本号、抓包时间、每个报 文被抓取的最大长度，等等。</p>
+<h2 id="cap">cap</h2>
+<p><strong>cap 文件可能含有一些 libpcap 标准之外的数据格式，它是由一些 tcpdump 以外的抓包程序生成的。</strong> 比如 Citrix 公司的 netscaler 负载均衡器，它的 nstrace 命令生成的抓包文件，就是 以.cap 为扩展名的。这种文件除了包含 pcap 标准定义的信息以外，还包含了 LB 的前端连接 和后端连接之间的 mapping 信息。Wireshark 是可以读取这些.cap 文件的，只要在正确的 版本上</p>
+<h2 id="pcapng">pcapng</h2>
+<p>pcap 格式虽然满足了大部分需求，但是它也有一些不足。比如，现在多网口的情况已经越来 越常见了，我们也经常需要从多个网络接口去抓取报文，所以单个pcapng的包里面会包含多个网络接口的包。</p>
+<p><img src="/images/wireshark_pcapng1.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng1"
+	
+	
+></p>
+<p><code>pcapng 还有很多别的特性，比如更细粒度的报文时间戳、允许对报文添加注释、更灵活的元数据，如果你是用版本比较新的 Wireshark 和 tshark 做抓包，默认生成的抓包文件就已经是 pcapng 格式了</code></p>
+<h1 id="tcpdump">tcpdump</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># tcpdump -i eth0 -s 80 -w /tmp/tcpdump.cap</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">- i 指定网卡eth0
+</span></span><span class="line"><span class="cl">- s 指定抓包大小80字节
+</span></span><span class="line"><span class="cl">- w 保持成文件存储位置
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># tcpdump -i eth0 host 10.31.200.131 -w /tmp/tcpdump.cap</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">- host 表示只抓与10.31.200.131通信的包
+</span></span><span class="line"><span class="cl">- port 表示只抓指定端口的包
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">PS：加更多的限制可能会抓不到包，比如NAT把对方的包给改掉了。
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="常用参数">常用参数</h2>
+<ul>
+<li>-h：帮助</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">// On Linux
+</span></span><span class="line"><span class="cl"><span class="c1"># tcpdump -h</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>root@dev-env ~<span class="o">]</span><span class="c1"># tcpdump -h</span>
+</span></span><span class="line"><span class="cl">tcpdump version 4.9.2
+</span></span><span class="line"><span class="cl">libpcap version 1.5.3
+</span></span><span class="line"><span class="cl">OpenSSL 1.0.2k-fips  <span class="m">26</span> Jan <span class="m">2017</span>
+</span></span><span class="line"><span class="cl">Usage: tcpdump <span class="o">[</span>-aAbdDefhHIJKlLnNOpqStuUvxX#<span class="o">]</span> <span class="o">[</span> -B size <span class="o">]</span> <span class="o">[</span> -c count <span class="o">]</span>
+</span></span><span class="line"><span class="cl">                <span class="o">[</span> -C file_size <span class="o">]</span> <span class="o">[</span> -E algo:secret <span class="o">]</span> <span class="o">[</span> -F file <span class="o">]</span> <span class="o">[</span> -G seconds <span class="o">]</span>
+</span></span><span class="line"><span class="cl">                <span class="o">[</span> -i interface <span class="o">]</span> <span class="o">[</span> -j tstamptype <span class="o">]</span> <span class="o">[</span> -M secret <span class="o">]</span> <span class="o">[</span> --number <span class="o">]</span>
+</span></span><span class="line"><span class="cl">                <span class="o">[</span> -Q<span class="p">|</span>-P in<span class="p">|</span>out<span class="p">|</span>inout <span class="o">]</span>
+</span></span><span class="line"><span class="cl">                <span class="o">[</span> -r file <span class="o">]</span> <span class="o">[</span> -s snaplen <span class="o">]</span> <span class="o">[</span> --time-stamp-precision precision <span class="o">]</span>
+</span></span><span class="line"><span class="cl">                <span class="o">[</span> --immediate-mode <span class="o">]</span> <span class="o">[</span> -T <span class="nb">type</span> <span class="o">]</span> <span class="o">[</span> --version <span class="o">]</span> <span class="o">[</span> -V file <span class="o">]</span>
+</span></span><span class="line"><span class="cl">                <span class="o">[</span> -w file <span class="o">]</span> <span class="o">[</span> -W filecount <span class="o">]</span> <span class="o">[</span> -y datalinktype <span class="o">]</span> <span class="o">[</span> -z postrotate-command <span class="o">]</span>
+</span></span><span class="line"><span class="cl">                <span class="o">[</span> -Z user <span class="o">]</span> <span class="o">[</span> expression <span class="o">]</span>
+</span></span><span class="line"><span class="cl">// On Mac
+</span></span><span class="line"><span class="cl">zhengxianle@zhengxinledembp  ~  dumpcap -h
+</span></span><span class="line"><span class="cl">Dumpcap <span class="o">(</span>Wireshark<span class="o">)</span> 4.0.5 <span class="o">(</span>v4.0.5-0-ge556162d8da3<span class="o">)</span>
+</span></span><span class="line"><span class="cl">Capture network packets and dump them into a pcapng or pcap file.
+</span></span><span class="line"><span class="cl">See https://www.wireshark.org <span class="k">for</span> more information.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Usage: dumpcap <span class="o">[</span>options<span class="o">]</span> ...
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Capture interface:
+</span></span><span class="line"><span class="cl">  -i &lt;interface&gt;, --interface &lt;interface&gt;
+</span></span><span class="line"><span class="cl">                           name or idx of interface <span class="o">(</span>def: first non-loopback<span class="o">)</span>,
+</span></span><span class="line"><span class="cl">                           or <span class="k">for</span> remote capturing, use one of these formats:
+</span></span><span class="line"><span class="cl">                               rpcap://&lt;host&gt;/&lt;interface&gt;
+</span></span><span class="line"><span class="cl">                               TCP@&lt;host&gt;:&lt;port&gt;
+</span></span><span class="line"><span class="cl">  --ifname &lt;name&gt;          name to use in the capture file <span class="k">for</span> a pipe from which
+</span></span><span class="line"><span class="cl">                           we<span class="s1">&#39;re capturing
+</span></span></span><span class="line"><span class="cl"><span class="s1">  --ifdescr &lt;description&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s1">                           description to use in the capture file for a pipe
+</span></span></span><span class="line"><span class="cl"><span class="s1">                           from which we&#39;</span>re capturing
+</span></span><span class="line"><span class="cl">  -f &lt;capture filter&gt;      packet filter in libpcap filter syntax
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>-D：查看有哪些网卡</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">// Linux
+</span></span><span class="line"><span class="cl"><span class="o">[</span>root@dev-env ~<span class="o">]</span><span class="c1"># tcpdump -D</span>
+</span></span><span class="line"><span class="cl">1.eth0
+</span></span><span class="line"><span class="cl">2.tun0
+</span></span><span class="line"><span class="cl">3.nflog <span class="o">(</span>Linux netfilter log <span class="o">(</span>NFLOG<span class="o">)</span> interface<span class="o">)</span>
+</span></span><span class="line"><span class="cl">4.nfqueue <span class="o">(</span>Linux netfilter queue <span class="o">(</span>NFQUEUE<span class="o">)</span> interface<span class="o">)</span>
+</span></span><span class="line"><span class="cl">5.usbmon1 <span class="o">(</span>USB bus number 1<span class="o">)</span>
+</span></span><span class="line"><span class="cl">6.any <span class="o">(</span>Pseudo-device that captures on all interfaces<span class="o">)</span>
+</span></span><span class="line"><span class="cl">7.lo <span class="o">[</span>Loopback<span class="o">]</span>
+</span></span><span class="line"><span class="cl">// MacOS
+</span></span><span class="line"><span class="cl">zhengxianle@zhengxinledembp  ~#  dumpcap -D
+</span></span><span class="line"><span class="cl">1. en0 <span class="o">(</span>Wi-Fi<span class="o">)</span>
+</span></span><span class="line"><span class="cl">2. awdl0
+</span></span><span class="line"><span class="cl">3. llw0
+</span></span><span class="line"><span class="cl">4. utun0
+</span></span><span class="line"><span class="cl">5. utun1
+</span></span><span class="line"><span class="cl">6. utun2
+</span></span><span class="line"><span class="cl">7. utun3
+</span></span><span class="line"><span class="cl">8. utun4
+</span></span><span class="line"><span class="cl">9. utun5
+</span></span><span class="line"><span class="cl">10. utun6
+</span></span><span class="line"><span class="cl">11. utun7
+</span></span><span class="line"><span class="cl">12. utun8
+</span></span><span class="line"><span class="cl">13. utun9
+</span></span><span class="line"><span class="cl">14. lo0 <span class="o">(</span>Loopback<span class="o">)</span>
+</span></span><span class="line"><span class="cl">15. en4 <span class="o">(</span>Thunderbolt 4<span class="o">)</span>
+</span></span><span class="line"><span class="cl">16. en1 <span class="o">(</span>Thunderbolt 1<span class="o">)</span>
+</span></span><span class="line"><span class="cl">17. en2 <span class="o">(</span>Thunderbolt 2<span class="o">)</span>
+</span></span><span class="line"><span class="cl">18. en3 <span class="o">(</span>Thunderbolt 3<span class="o">)</span>
+</span></span><span class="line"><span class="cl">19. bridge0 <span class="o">(</span>Thunderbolt Bridge<span class="o">)</span>
+</span></span><span class="line"><span class="cl">20. pktap0
+</span></span><span class="line"><span class="cl">21. gif0
+</span></span><span class="line"><span class="cl">22. stf0
+</span></span><span class="line"><span class="cl">23. ap1
+</span></span><span class="line"><span class="cl">zhengxianle@zhengxinledembp~# tcpdump -D
+</span></span><span class="line"><span class="cl">1.en0 <span class="o">[</span>Up, Running, Wireless, Associated<span class="o">]</span>
+</span></span><span class="line"><span class="cl">2.awdl0 <span class="o">[</span>Up, Running, Wireless, Associated<span class="o">]</span>
+</span></span><span class="line"><span class="cl">3.llw0 <span class="o">[</span>Up, Running, Wireless, Associated<span class="o">]</span>
+</span></span><span class="line"><span class="cl">4.utun0 <span class="o">[</span>Up, Running<span class="o">]</span>
+</span></span><span class="line"><span class="cl">5.utun1 <span class="o">[</span>Up, Running<span class="o">]</span>
+</span></span><span class="line"><span class="cl">6.utun2 <span class="o">[</span>Up, Running<span class="o">]</span>
+</span></span><span class="line"><span class="cl">7.utun3 <span class="o">[</span>Up, Running<span class="o">]</span>
+</span></span><span class="line"><span class="cl">8.utun4 <span class="o">[</span>Up, Running<span class="o">]</span>
+</span></span><span class="line"><span class="cl">9.utun5 <span class="o">[</span>Up, Running<span class="o">]</span>
+</span></span><span class="line"><span class="cl">10.utun6 <span class="o">[</span>Up, Running<span class="o">]</span>
+</span></span><span class="line"><span class="cl">11.utun7 <span class="o">[</span>Up, Running<span class="o">]</span>
+</span></span><span class="line"><span class="cl">12.utun8 <span class="o">[</span>Up, Running<span class="o">]</span>
+</span></span><span class="line"><span class="cl">13.utun9 <span class="o">[</span>Up, Running<span class="o">]</span>
+</span></span><span class="line"><span class="cl">14.lo0 <span class="o">[</span>Up, Running, Loopback<span class="o">]</span>
+</span></span><span class="line"><span class="cl">15.en4 <span class="o">[</span>Up, Running, Disconnected<span class="o">]</span>
+</span></span><span class="line"><span class="cl">16.en1 <span class="o">[</span>Up, Running, Disconnected<span class="o">]</span>
+</span></span><span class="line"><span class="cl">17.en2 <span class="o">[</span>Up, Running, Disconnected<span class="o">]</span>
+</span></span><span class="line"><span class="cl">18.en3 <span class="o">[</span>Up, Running, Disconnected<span class="o">]</span>
+</span></span><span class="line"><span class="cl">19.bridge0 <span class="o">[</span>Up, Running, Disconnected<span class="o">]</span>
+</span></span><span class="line"><span class="cl">20.pktap0 <span class="o">[</span>Up<span class="o">]</span>
+</span></span><span class="line"><span class="cl">21.gif0 <span class="o">[</span>none<span class="o">]</span>
+</span></span><span class="line"><span class="cl">22.stf0 <span class="o">[</span>none<span class="o">]</span>
+</span></span><span class="line"><span class="cl">23.ap1 <span class="o">[</span>Wireless, Association status unknown<span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>-i : 指定网卡，这里1指定的是-D中的网卡序号</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">zhengxianle@zhengxinledembp~ <span class="c1"># dumpcap -i 1</span>
+</span></span><span class="line"><span class="cl">Capturing on <span class="s1">&#39;Wi-Fi: en0&#39;</span>
+</span></span><span class="line"><span class="cl">File: /var/folders/23/7d2bd6ss2db4vjz8twqwf4940000gn/T/wireshark_Wi-FiSI0731.pcapng
+</span></span><span class="line"><span class="cl">Packets captured: <span class="m">923</span>
+</span></span><span class="line"><span class="cl">Packets received/dropped on interface <span class="s1">&#39;Wi-Fi: en0&#39;</span>: 923/0 <span class="o">(</span>pcap:0/dumpcap:0/flushed:0/ps_ifdrop:0<span class="o">)</span> <span class="o">(</span>100.0%<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>-w：指定存储在的位置</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">zhengxianle@zhengxinledembp~# dumpcap -i <span class="m">1</span> -w /Users/zhengxianle/Desktop/capture/sample.pcapng
+</span></span><span class="line"><span class="cl">Capturing on <span class="s1">&#39;Wi-Fi: en0&#39;</span>
+</span></span><span class="line"><span class="cl">File: /Users/zhengxianle/Desktop/capture/sample.pcapng
+</span></span><span class="line"><span class="cl">Packets captured: <span class="m">573</span>
+</span></span><span class="line"><span class="cl">Packets received/dropped on interface <span class="s1">&#39;Wi-Fi: en0&#39;</span>: 573/0 <span class="o">(</span>pcap:0/dumpcap:0/flushed:0/ps_ifdrop:0<span class="o">)</span> <span class="o">(</span>100.0%<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>-b
+<ul>
+<li>filesize:500000 // 代表500M</li>
+<li>files:10 // 代表一共存10个文件，当第11个文件产生时，会覆盖第一个文件。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">更详细的配置：
+</span></span><span class="line"><span class="cl">-b &lt;ringbuffer opt.&gt; ..., --ring-buffer &lt;ringbuffer opt.&gt;
+</span></span><span class="line"><span class="cl">                           duration:NUM - switch to next file after NUM secs
+</span></span><span class="line"><span class="cl">                           filesize:NUM - switch to next file after NUM kB
+</span></span><span class="line"><span class="cl">                              files:NUM - ringbuffer: replace after NUM files
+</span></span><span class="line"><span class="cl">                            packets:NUM - ringbuffer: replace after NUM packets
+</span></span><span class="line"><span class="cl">                           interval:NUM - switch to next file when the <span class="nb">time</span> is
+</span></span><span class="line"><span class="cl">                                          an exact multiple of NUM secs
+</span></span><span class="line"><span class="cl">                          printname:FILE - print filename to FILE when written
+</span></span><span class="line"><span class="cl">                                           <span class="o">(</span>can use <span class="s1">&#39;stdout&#39;</span> or <span class="s1">&#39;stderr&#39;</span><span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">zhengxianle@zhengxinledembp~ <span class="c1"># dumpcap -i 1 -w /Users/zhengxianle/Desktop/capture/sample.pcapng -b filesize:500000</span>
+</span></span><span class="line"><span class="cl"> -b files:10
+</span></span><span class="line"><span class="cl">Capturing on <span class="s1">&#39;Wi-Fi: en0&#39;</span>
+</span></span><span class="line"><span class="cl">File: /Users/zhengxianle/Desktop/capture/sample_00001_20230426220541.pcapng
+</span></span><span class="line"><span class="cl">Packets captured: <span class="m">1238</span>
+</span></span><span class="line"><span class="cl">Packets received/dropped on interface <span class="s1">&#39;Wi-Fi: en0&#39;</span>: 1238/0 <span class="o">(</span>pcap:0/dumpcap:0/flushed:0/ps_ifdrop:0<span class="o">)</span> <span class="o">(</span>100.0%<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>-c ： 数量，可以抓取固定数量的保文，在流量较高时，可以避免一不小心抓取过多报文</p>
+</li>
+<li>
+<p>-n：不做地址转换（比如IP地址转换为主机，port 80转换为http）</p>
+</li>
+<li>
+<p>-v/-vv/-vvv:可以打印更加详细的报文信息</p>
+</li>
+<li>
+<p>-e ： 可以打印二层信息，特别是MAC地址</p>
+</li>
+<li>
+<p>-p：关闭混杂模式。</p>
+<p><code>所谓混杂模式，也就是嗅探（Sniffing），就是把目的地址不是本机地址的网络报文也抓取下来。</code></p>
+</li>
+<li>
+<p>-X ：在解析和打印时，除了打印每个数据包的头之外，还可以用十六进制和ASCII打印每个数据包的数据（减去其链接级头）。 这对于分析新协议非常方便。 在目前的实现中，如果数据包被截断，这个标志可能与-XX的效果相同。</p>
+</li>
+</ul>
+<p><code>这个参数很有用啊，可以看到具体的请求内容了，快速排查问题的时候是可以这么做的。</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">[</span>root@dev-env ~<span class="o">]</span><span class="c1"># netstat -ntpl</span>
+</span></span><span class="line"><span class="cl">Active Internet connections <span class="o">(</span>only servers<span class="o">)</span>
+</span></span><span class="line"><span class="cl">Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:41046           0.0.0.0:*               LISTEN      3953/java           
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:22              0.0.0.0:*               LISTEN      1957/sshd           
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:8089            0.0.0.0:*               LISTEN      2818/nginx: master  
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:8090            0.0.0.0:*               LISTEN      2818/nginx: master  
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:443             0.0.0.0:*               LISTEN      2818/nginx: master  
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:8091            0.0.0.0:*               LISTEN      2818/nginx: master  
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:18080           0.0.0.0:*               LISTEN      3953/java           
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:10051           0.0.0.0:*               LISTEN      2171/zabbix_proxy   
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:11940           0.0.0.0:*               LISTEN      1492/openvpn        
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:2181            0.0.0.0:*               LISTEN      3953/java           
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:3306            0.0.0.0:*               LISTEN      1837/mysqld         
+</span></span><span class="line"><span class="cl">tcp        <span class="m">0</span>      <span class="m">0</span> 0.0.0.0:111             0.0.0.0:*               LISTEN      1138/rpcbind        
+</span></span><span class="line"><span class="cl">tcp6       <span class="m">0</span>      <span class="m">0</span> :::10050                :::*                    LISTEN      1489/zabbix_agent2  
+</span></span><span class="line"><span class="cl">tcp6       <span class="m">0</span>      <span class="m">0</span> :::10051                :::*                    LISTEN      2171/zabbix_proxy   
+</span></span><span class="line"><span class="cl">tcp6       <span class="m">0</span>      <span class="m">0</span> :::111                  :::*                    LISTEN      1138/rpcbind        
+</span></span><span class="line"><span class="cl"><span class="o">[</span>root@dev-env ~<span class="o">]</span><span class="c1"># tcpdump -i any -X port 18080</span>
+</span></span><span class="line"><span class="cl">tcpdump: verbose output suppressed, use -v or -vv <span class="k">for</span> full protocol decode
+</span></span><span class="line"><span class="cl">listening on any, link-type LINUX_SLL <span class="o">(</span>Linux cooked<span class="o">)</span>, capture size <span class="m">262144</span> bytes
+</span></span><span class="line"><span class="cl">22:02:52.188802 IP 10.222.1.77.51848 &gt; 172.22.183.239.18080: Flags <span class="o">[</span>.<span class="o">]</span>, ack 3220596691, win 790, options <span class="o">[</span>nop,nop,TS val <span class="m">2719039184</span> ecr 2964196926<span class="o">]</span>, length <span class="m">0</span>
+</span></span><span class="line"><span class="cl">        0x0000:  <span class="m">4500</span> <span class="m">0034</span> 2a37 <span class="m">4000</span> <span class="m">8006</span> 605c 0ade 014d  E..4*7@...<span class="sb">`</span><span class="se">\.</span>..M
+</span></span><span class="line"><span class="cl">        0x0010:  ac16 b7ef ca88 46a0 <span class="m">8504</span> 150d bff6 67d3  ......F.......g.
+</span></span><span class="line"><span class="cl">        0x0020:  <span class="m">8010</span> <span class="m">0316</span> 90a3 <span class="m">0000</span> <span class="m">0101</span> 080a a211 3ed0  ..............&gt;.
+</span></span><span class="line"><span class="cl">        0x0030:  b0ae 0e3e <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span>  ...&gt;............
+</span></span><span class="line"><span class="cl">        0x0040:  <span class="m">0000</span> <span class="m">0000</span>                                ....
+</span></span><span class="line"><span class="cl">22:02:52.188822 IP 10.222.1.77.51848 &gt; 172.22.183.239.18080: Flags <span class="o">[</span>.<span class="o">]</span>, ack 1, win 790, options <span class="o">[</span>nop,nop,TS val <span class="m">2719039184</span> ecr 2964196926<span class="o">]</span>, length <span class="m">0</span>
+</span></span><span class="line"><span class="cl">        0x0000:  <span class="m">4500</span> <span class="m">0034</span> 2a37 <span class="m">4000</span> 7f06 615c 0ade 014d  E..4*7@...a<span class="se">\.</span>..M
+</span></span><span class="line"><span class="cl">        0x0010:  ac16 b7ef ca88 46a0 <span class="m">8504</span> 150d bff6 67d3  ......F.......g.
+</span></span><span class="line"><span class="cl">        0x0020:  <span class="m">8010</span> <span class="m">0316</span> 90a3 <span class="m">0000</span> <span class="m">0101</span> 080a a211 3ed0  ..............&gt;.
+</span></span><span class="line"><span class="cl">        0x0030:  b0ae 0e3e <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span>  ...&gt;............
+</span></span><span class="line"><span class="cl">        0x0040:  <span class="m">0000</span> <span class="m">0000</span>                                ....
+</span></span><span class="line"><span class="cl">22:02:52.188961 IP 172.22.183.239.18080 &gt; 10.222.1.77.51848: Flags <span class="o">[</span>.<span class="o">]</span>, ack 1, win 805, options <span class="o">[</span>nop,nop,TS val <span class="m">2964201950</span> ecr 2719019098<span class="o">]</span>, length <span class="m">0</span>
+</span></span><span class="line"><span class="cl">        0x0000:  <span class="m">4500</span> <span class="m">0034</span> 9a5b <span class="m">4000</span> <span class="m">8006</span> f037 ac16 b7ef  E..4.<span class="o">[</span>@....7....
+</span></span><span class="line"><span class="cl">        0x0010:  0ade 014d 46a0 ca88 bff6 67d3 <span class="m">8504</span> 150e  ...MF.....g.....
+</span></span><span class="line"><span class="cl">        0x0020:  <span class="m">8010</span> <span class="m">0325</span> cb69 <span class="m">0000</span> <span class="m">0101</span> 080a b0ae 21de  ...%.i........!.
+</span></span><span class="line"><span class="cl">        0x0030:  a210 f05a <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span>  ...Z............
+</span></span><span class="line"><span class="cl">        0x0040:  <span class="m">0000</span> <span class="m">0000</span>                                ....
+</span></span><span class="line"><span class="cl">22:02:52.188968 IP 172.22.183.239.18080 &gt; 10.222.1.77.51848: Flags <span class="o">[</span>.<span class="o">]</span>, ack 1, win 805, options <span class="o">[</span>nop,nop,TS val <span class="m">2964201950</span> ecr 2719019098<span class="o">]</span>, length <span class="m">0</span>
+</span></span><span class="line"><span class="cl">        0x0000:  <span class="m">4500</span> <span class="m">0034</span> 9a5b <span class="m">4000</span> 7f06 f137 ac16 b7ef  E..4.<span class="o">[</span>@....7....
+</span></span><span class="line"><span class="cl">        0x0010:  0ade 014d 46a0 ca88 bff6 67d3 <span class="m">8504</span> 150e  ...MF.....g.....
+</span></span><span class="line"><span class="cl">        0x0020:  <span class="m">8010</span> <span class="m">0325</span> cb69 <span class="m">0000</span> <span class="m">0101</span> 080a b0ae 21de  ...%.i........!.
+</span></span><span class="line"><span class="cl">        0x0030:  a210 f05a <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span>  ...Z............
+</span></span><span class="line"><span class="cl">        0x0040:  <span class="m">0000</span> <span class="m">0000</span>                                ....
+</span></span><span class="line"><span class="cl">22:02:57.212632 IP 10.222.1.77.51848 &gt; 172.22.183.239.18080: Flags <span class="o">[</span>.<span class="o">]</span>, ack 1, win 790, options <span class="o">[</span>nop,nop,TS val <span class="m">2719044208</span> ecr 2964201950<span class="o">]</span>, length <span class="m">0</span>
+</span></span><span class="line"><span class="cl">        0x0000:  <span class="m">4500</span> <span class="m">0034</span> 2a38 <span class="m">4000</span> <span class="m">8006</span> 605b 0ade 014d  E..4*8@...<span class="sb">`</span><span class="o">[</span>...M
+</span></span><span class="line"><span class="cl">        0x0010:  ac16 b7ef ca88 46a0 <span class="m">8504</span> 150d bff6 67d3  ......F.......g.
+</span></span><span class="line"><span class="cl">        0x0020:  <span class="m">8010</span> <span class="m">0316</span> <span class="m">6963</span> <span class="m">0000</span> <span class="m">0101</span> 080a a211 <span class="m">5270</span>  ....ic........Rp
+</span></span><span class="line"><span class="cl">        0x0030:  b0ae 21de <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span>  ..!.............
+</span></span><span class="line"><span class="cl">        0x0040:  <span class="m">0000</span> <span class="m">0000</span>                                ....
+</span></span><span class="line"><span class="cl">22:02:57.212652 IP 10.222.1.77.51848 &gt; 172.22.183.239.18080: Flags <span class="o">[</span>.<span class="o">]</span>, ack 1, win 790, options <span class="o">[</span>nop,nop,TS val <span class="m">2719044208</span> ecr 2964201950<span class="o">]</span>, length <span class="m">0</span>
+</span></span><span class="line"><span class="cl">        0x0000:  <span class="m">4500</span> <span class="m">0034</span> 2a38 <span class="m">4000</span> 7f06 615b 0ade 014d  E..4*8@...a<span class="o">[</span>...M
+</span></span><span class="line"><span class="cl">        0x0010:  ac16 b7ef ca88 46a0 <span class="m">8504</span> 150d bff6 67d3  ......F.......g.
+</span></span><span class="line"><span class="cl">        0x0020:  <span class="m">8010</span> <span class="m">0316</span> <span class="m">6963</span> <span class="m">0000</span> <span class="m">0101</span> 080a a211 <span class="m">5270</span>  ....ic........Rp
+</span></span><span class="line"><span class="cl">        0x0030:  b0ae 21de <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span>  ..!.............
+</span></span><span class="line"><span class="cl">        0x0040:  <span class="m">0000</span> <span class="m">0000</span>                                ....
+</span></span><span class="line"><span class="cl">22:02:57.212782 IP 172.22.183.239.18080 &gt; 10.222.1.77.51848: Flags <span class="o">[</span>.<span class="o">]</span>, ack 1, win 805, options <span class="o">[</span>nop,nop,TS val <span class="m">2964206974</span> ecr 2719019098<span class="o">]</span>, length <span class="m">0</span>
+</span></span><span class="line"><span class="cl">        0x0000:  <span class="m">4500</span> <span class="m">0034</span> 9a5c <span class="m">4000</span> <span class="m">8006</span> f036 ac16 b7ef  E..4.<span class="se">\@</span>....6....
+</span></span><span class="line"><span class="cl">        0x0010:  0ade 014d 46a0 ca88 bff6 67d3 <span class="m">8504</span> 150e  ...MF.....g.....
+</span></span><span class="line"><span class="cl">        0x0020:  <span class="m">8010</span> <span class="m">0325</span> b7c9 <span class="m">0000</span> <span class="m">0101</span> 080a b0ae 357e  ...%..........5~
+</span></span><span class="line"><span class="cl">        0x0030:  a210 f05a <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span>  ...Z............
+</span></span><span class="line"><span class="cl">        0x0040:  <span class="m">0000</span> <span class="m">0000</span>                                ....
+</span></span><span class="line"><span class="cl">22:02:57.212790 IP 172.22.183.239.18080 &gt; 10.222.1.77.51848: Flags <span class="o">[</span>.<span class="o">]</span>, ack 1, win 805, options <span class="o">[</span>nop,nop,TS val <span class="m">2964206974</span> ecr 2719019098<span class="o">]</span>, length <span class="m">0</span>
+</span></span><span class="line"><span class="cl">        0x0000:  <span class="m">4500</span> <span class="m">0034</span> 9a5c <span class="m">4000</span> 7f06 f136 ac16 b7ef  E..4.<span class="se">\@</span>....6....
+</span></span><span class="line"><span class="cl">        0x0010:  0ade 014d 46a0 ca88 bff6 67d3 <span class="m">8504</span> 150e  ...MF.....g.....
+</span></span><span class="line"><span class="cl">        0x0020:  <span class="m">8010</span> <span class="m">0325</span> b7c9 <span class="m">0000</span> <span class="m">0101</span> 080a b0ae 357e  ...%..........5~
+</span></span><span class="line"><span class="cl">        0x0030:  a210 f05a <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span>  ...Z............
+</span></span><span class="line"><span class="cl">        0x0040:  <span class="m">0000</span> <span class="m">0000</span>                                ....
+</span></span><span class="line"><span class="cl">22:02:59.585608 IP 10.222.1.12.57689 &gt; 172.22.183.239.18080: Flags <span class="o">[</span>P.<span class="o">]</span>, seq 1350914016:1350914568, ack 1773723314, win 2048, options <span class="o">[</span>nop,nop,TS val <span class="m">3234104033</span> ecr 2964179285<span class="o">]</span>, length <span class="m">552</span>
+</span></span><span class="line"><span class="cl">        0x0000:  <span class="m">4502</span> 025c <span class="m">0000</span> <span class="m">4000</span> <span class="m">4006</span> c8aa 0ade 010c  E..<span class="se">\.</span>.@.@.......
+</span></span><span class="line"><span class="cl">        0x0010:  ac16 b7ef e159 46a0 <span class="m">5085</span> 4fe0 69b8 deb2  .....YF.P.O.i...
+</span></span><span class="line"><span class="cl">        0x0020:  <span class="m">8018</span> <span class="m">0800</span> f5cf <span class="m">0000</span> <span class="m">0101</span> 080a c0c4 82e1  ................
+</span></span><span class="line"><span class="cl">        0x0030:  b0ad c955 504f <span class="m">5354</span> 202f <span class="m">7878</span> 6c2d 6a6f  ...UPOST./xxl-jo
+</span></span><span class="line"><span class="cl">        0x0040:  622d <span class="m">6164</span> 6d69 6e2f <span class="m">6170</span> <span class="m">6920</span> <span class="m">4854</span> <span class="m">5450</span>  b-admin/api.HTTP
+</span></span><span class="line"><span class="cl">        0x0050:  2f31 2e31 0d0a 686f <span class="m">7374</span> 3a20 <span class="m">3137</span> 322e  /1.1..host:.172.
+</span></span><span class="line"><span class="cl">        0x0060:  <span class="m">3232</span> 2e31 <span class="m">3833</span> 2e32 <span class="m">3339</span> 0d0a 636f 6e6e  22.183.239..conn
+</span></span><span class="line"><span class="cl">        0x0070:  <span class="m">6563</span> <span class="m">7469</span> 6f6e 3a20 6b65 <span class="m">6570</span> 2d61 6c69  ection:.keep-ali
+</span></span><span class="line"><span class="cl">        0x0080:  <span class="m">7665</span> 0d0a 636f 6e74 656e 742d 6c65 6e67  ve..content-leng
+</span></span><span class="line"><span class="cl">        0x0090:  <span class="m">7468</span> 3a20 <span class="m">3434</span> 390d 0a0d 0a43 302d 636f  th:.449....C0-co
+</span></span><span class="line"><span class="cl">        0x00a0:  6d2e <span class="m">7878</span> 6c2e <span class="m">7270</span> 632e <span class="m">7265</span> 6d6f <span class="m">7469</span>  m.xxl.rpc.remoti
+</span></span><span class="line"><span class="cl">        0x00b0:  6e67 2e6e <span class="m">6574</span> 2e70 <span class="m">6172</span> 616d 732e <span class="m">5878</span>  ng.net.params.Xx
+</span></span><span class="line"><span class="cl">        0x00c0:  6c52 <span class="m">7063</span> <span class="m">5265</span> <span class="m">7175</span> <span class="m">6573</span> <span class="m">7498</span> <span class="m">0972</span> <span class="m">6571</span>  lRpcRequest..req
+</span></span><span class="line"><span class="cl">        0x00d0:  <span class="m">7565</span> <span class="m">7374</span> <span class="m">4964</span> <span class="m">1063</span> <span class="m">7265</span> <span class="m">6174</span> 654d 696c  uestId.createMil
+</span></span><span class="line"><span class="cl">        0x00e0:  6c69 <span class="m">7354</span> 696d 650b <span class="m">6163</span> <span class="m">6365</span> <span class="m">7373</span> 546f  lisTime.accessTo
+</span></span><span class="line"><span class="cl">        0x00f0:  6b65 6e09 636c <span class="m">6173</span> 734e 616d 650a 6d65  ken.className.me
+</span></span><span class="line"><span class="cl">        0x0100:  <span class="m">7468</span> 6f64 4e61 6d65 <span class="m">0776</span> <span class="m">6572</span> <span class="m">7369</span> 6f6e  thodName.version
+</span></span><span class="line"><span class="cl">        0x0110:  0e70 <span class="m">6172</span> 616d <span class="m">6574</span> <span class="m">6572</span> <span class="m">5479</span> <span class="m">7065</span> 730a  .parameterTypes.
+</span></span><span class="line"><span class="cl">        0x0120:  <span class="m">7061</span> <span class="m">7261</span> 6d65 <span class="m">7465</span> <span class="m">7273</span> <span class="m">6030</span> <span class="m">2432</span> <span class="m">6332</span>  parameters<span class="sb">`</span>0<span class="nv">$2</span>c2
+</span></span><span class="line"><span class="cl">        0x0130:  <span class="m">3332</span> <span class="m">3739</span> 382d <span class="m">3536</span> <span class="m">6164</span> 2d34 <span class="m">3562</span> 362d  32798-56ad-45b6-
+</span></span><span class="line"><span class="cl">        0x0140:  <span class="m">6162</span> <span class="m">3333</span> 2d61 <span class="m">6665</span> <span class="m">6636</span> <span class="m">6261</span> <span class="m">3630</span> <span class="m">3565</span>  ab33-afef6ba605e
+</span></span><span class="line"><span class="cl">        0x0150:  334c <span class="m">0000</span> <span class="m">0188</span> 4e11 f43a 4e1d 636f 6d2e  3L....N..:N.com.
+</span></span><span class="line"><span class="cl">        0x0160:  <span class="m">7878</span> 6c2e 6a6f 622e 636f <span class="m">7265</span> 2e62 697a  xxl.job.core.biz
+</span></span><span class="line"><span class="cl">        0x0170:  2e41 646d 696e <span class="m">4269</span> 7a08 <span class="m">7265</span> <span class="m">6769</span> <span class="m">7374</span>  .AdminBiz.regist
+</span></span><span class="line"><span class="cl">        0x0180:  <span class="m">7279</span> 4e71 105b 6a61 <span class="m">7661</span> 2e6c 616e 672e  ryNq.<span class="o">[</span>java.lang.
+</span></span><span class="line"><span class="cl">        0x0190:  436c <span class="m">6173</span> <span class="m">7343</span> 0f6a <span class="m">6176</span> 612e 6c61 6e67  ClassC.java.lang
+</span></span><span class="line"><span class="cl">        0x01a0:  2e43 6c61 <span class="m">7373</span> <span class="m">9104</span> 6e61 6d65 <span class="m">6130</span> <span class="m">2863</span>  .Class..namea0<span class="o">(</span>c
+</span></span><span class="line"><span class="cl">        0x01b0:  6f6d 2e78 786c 2e6a 6f62 2e63 6f72 652e  om.xxl.job.core.
+</span></span><span class="line"><span class="cl">        0x01c0:  <span class="m">6269</span> 7a2e 6d6f <span class="m">6465</span> 6c2e <span class="m">5265</span> <span class="m">6769</span> <span class="m">7374</span>  biz.model.Regist
+</span></span><span class="line"><span class="cl">        0x01d0:  <span class="m">7279</span> <span class="m">5061</span> <span class="m">7261</span> 6d71 075b 6f62 6a65 <span class="m">6374</span>  ryParamq.<span class="o">[</span>object
+</span></span><span class="line"><span class="cl">        0x01e0:  <span class="m">4330</span> <span class="m">2863</span> 6f6d 2e78 786c 2e6a 6f62 2e63  C0<span class="o">(</span>com.xxl.job.c
+</span></span><span class="line"><span class="cl">        0x01f0:  6f72 652e <span class="m">6269</span> 7a2e 6d6f <span class="m">6465</span> 6c2e <span class="m">5265</span>  ore.biz.model.Re
+</span></span><span class="line"><span class="cl">        0x0200:  <span class="m">6769</span> <span class="m">7374</span> <span class="m">7279</span> <span class="m">5061</span> <span class="m">7261</span> 6d93 0b72 <span class="m">6567</span>  gistryParam..reg
+</span></span><span class="line"><span class="cl">        0x0210:  <span class="m">6973</span> <span class="m">7447</span> 726f <span class="m">7570</span> 0b72 <span class="m">6567</span> <span class="m">6973</span> <span class="m">7472</span>  istGroup.registr
+</span></span><span class="line"><span class="cl">        0x0220:  794b <span class="m">6579</span> 0d72 <span class="m">6567</span> <span class="m">6973</span> <span class="m">7472</span> <span class="m">7956</span> 616c  yKey.registryVal
+</span></span><span class="line"><span class="cl">        0x0230:  <span class="m">7565</span> <span class="m">6208</span> <span class="m">4558</span> <span class="m">4543</span> <span class="m">5554</span> 4f52 0e6f <span class="m">7370</span>  ueb.EXECUTOR.osp
+</span></span><span class="line"><span class="cl">        0x0240:  <span class="m">4461</span> <span class="m">7461</span> 4d61 702d 6a6f <span class="m">6210</span> <span class="m">3130</span> 2e32  DataMap-job.10.2
+</span></span><span class="line"><span class="cl">        0x0250:  <span class="m">3136</span> 2e31 2e31 313a <span class="m">3939</span> <span class="m">3939</span> <span class="m">0000</span> <span class="m">0000</span>  16.1.11:9999....
+</span></span><span class="line"><span class="cl">        0x0260:  <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span>            ............
+</span></span><span class="line"><span class="cl">22:02:59.585641 IP 10.222.1.12.57689 &gt; 172.22.183.239.18080: Flags <span class="o">[</span>P.<span class="o">]</span>, seq 0:552, ack 1, win 2048, options <span class="o">[</span>nop,nop,TS val <span class="m">3234104033</span> ecr 2964179285<span class="o">]</span>, length <span class="m">552</span>
+</span></span><span class="line"><span class="cl">        0x0000:  <span class="m">4502</span> 025c <span class="m">0000</span> <span class="m">4000</span> 3f06 c9aa 0ade 010c  E..<span class="se">\.</span>.@.?.......
+</span></span><span class="line"><span class="cl">        0x0010:  ac16 b7ef e159 46a0 <span class="m">5085</span> 4fe0 69b8 deb2  .....YF.P.O.i...
+</span></span><span class="line"><span class="cl">        0x0020:  <span class="m">8018</span> <span class="m">0800</span> f5cf <span class="m">0000</span> <span class="m">0101</span> 080a c0c4 82e1  ................
+</span></span><span class="line"><span class="cl">        0x0030:  b0ad c955 504f <span class="m">5354</span> 202f <span class="m">7878</span> 6c2d 6a6f  ...UPOST./xxl-jo
+</span></span><span class="line"><span class="cl">        0x0040:  622d <span class="m">6164</span> 6d69 6e2f <span class="m">6170</span> <span class="m">6920</span> <span class="m">4854</span> <span class="m">5450</span>  b-admin/api.HTTP
+</span></span><span class="line"><span class="cl">        0x0050:  2f31 2e31 0d0a 686f <span class="m">7374</span> 3a20 <span class="m">3137</span> 322e  /1.1..host:.172.
+</span></span><span class="line"><span class="cl">        0x0060:  <span class="m">3232</span> 2e31 <span class="m">3833</span> 2e32 <span class="m">3339</span> 0d0a 636f 6e6e  22.183.239..conn
+</span></span><span class="line"><span class="cl">        0x0070:  <span class="m">6563</span> <span class="m">7469</span> 6f6e 3a20 6b65 <span class="m">6570</span> 2d61 6c69  ection:.keep-ali
+</span></span><span class="line"><span class="cl">        0x0080:  <span class="m">7665</span> 0d0a 636f 6e74 656e 742d 6c65 6e67  ve..content-leng
+</span></span><span class="line"><span class="cl">        0x0090:  <span class="m">7468</span> 3a20 <span class="m">3434</span> 390d 0a0d 0a43 302d 636f  th:.449....C0-co
+</span></span><span class="line"><span class="cl">        0x00a0:  6d2e <span class="m">7878</span> 6c2e <span class="m">7270</span> 632e <span class="m">7265</span> 6d6f <span class="m">7469</span>  m.xxl.rpc.remoti
+</span></span><span class="line"><span class="cl">        0x00b0:  6e67 2e6e <span class="m">6574</span> 2e70 <span class="m">6172</span> 616d 732e <span class="m">5878</span>  ng.net.params.Xx
+</span></span><span class="line"><span class="cl">        0x00c0:  6c52 <span class="m">7063</span> <span class="m">5265</span> <span class="m">7175</span> <span class="m">6573</span> <span class="m">7498</span> <span class="m">0972</span> <span class="m">6571</span>  lRpcRequest..req
+</span></span><span class="line"><span class="cl">        0x00d0:  <span class="m">7565</span> <span class="m">7374</span> <span class="m">4964</span> <span class="m">1063</span> <span class="m">7265</span> <span class="m">6174</span> 654d 696c  uestId.createMil
+</span></span><span class="line"><span class="cl">        0x00e0:  6c69 <span class="m">7354</span> 696d 650b <span class="m">6163</span> <span class="m">6365</span> <span class="m">7373</span> 546f  lisTime.accessTo
+</span></span><span class="line"><span class="cl">        0x00f0:  6b65 6e09 636c <span class="m">6173</span> 734e 616d 650a 6d65  ken.className.me
+</span></span><span class="line"><span class="cl">        0x0100:  <span class="m">7468</span> 6f64 4e61 6d65 <span class="m">0776</span> <span class="m">6572</span> <span class="m">7369</span> 6f6e  thodName.version
+</span></span><span class="line"><span class="cl">        0x0110:  0e70 <span class="m">6172</span> 616d <span class="m">6574</span> <span class="m">6572</span> <span class="m">5479</span> <span class="m">7065</span> 730a  .parameterTypes.
+</span></span><span class="line"><span class="cl">        0x0120:  <span class="m">7061</span> <span class="m">7261</span> 6d65 <span class="m">7465</span> <span class="m">7273</span> <span class="m">6030</span> <span class="m">2432</span> <span class="m">6332</span>  parameters<span class="sb">`</span>0<span class="nv">$2</span>c2
+</span></span><span class="line"><span class="cl">        0x0130:  <span class="m">3332</span> <span class="m">3739</span> 382d <span class="m">3536</span> <span class="m">6164</span> 2d34 <span class="m">3562</span> 362d  32798-56ad-45b6-
+</span></span><span class="line"><span class="cl">        0x0140:  <span class="m">6162</span> <span class="m">3333</span> 2d61 <span class="m">6665</span> <span class="m">6636</span> <span class="m">6261</span> <span class="m">3630</span> <span class="m">3565</span>  ab33-afef6ba605e
+</span></span><span class="line"><span class="cl">        0x0150:  334c <span class="m">0000</span> <span class="m">0188</span> 4e11 f43a 4e1d 636f 6d2e  3L....N..:N.com.
+</span></span><span class="line"><span class="cl">        0x0160:  <span class="m">7878</span> 6c2e 6a6f 622e 636f <span class="m">7265</span> 2e62 697a  xxl.job.core.biz
+</span></span><span class="line"><span class="cl">        0x0170:  2e41 646d 696e <span class="m">4269</span> 7a08 <span class="m">7265</span> <span class="m">6769</span> <span class="m">7374</span>  .AdminBiz.regist
+</span></span><span class="line"><span class="cl">        0x0180:  <span class="m">7279</span> 4e71 105b 6a61 <span class="m">7661</span> 2e6c 616e 672e  ryNq.<span class="o">[</span>java.lang.
+</span></span><span class="line"><span class="cl">        0x0190:  436c <span class="m">6173</span> <span class="m">7343</span> 0f6a <span class="m">6176</span> 612e 6c61 6e67  ClassC.java.lang
+</span></span><span class="line"><span class="cl">        0x01a0:  2e43 6c61 <span class="m">7373</span> <span class="m">9104</span> 6e61 6d65 <span class="m">6130</span> <span class="m">2863</span>  .Class..namea0<span class="o">(</span>c
+</span></span><span class="line"><span class="cl">        0x01b0:  6f6d 2e78 786c 2e6a 6f62 2e63 6f72 652e  om.xxl.job.core.
+</span></span><span class="line"><span class="cl">        0x01c0:  <span class="m">6269</span> 7a2e 6d6f <span class="m">6465</span> 6c2e <span class="m">5265</span> <span class="m">6769</span> <span class="m">7374</span>  biz.model.Regist
+</span></span><span class="line"><span class="cl">        0x01d0:  <span class="m">7279</span> <span class="m">5061</span> <span class="m">7261</span> 6d71 075b 6f62 6a65 <span class="m">6374</span>  ryParamq.<span class="o">[</span>object
+</span></span><span class="line"><span class="cl">        0x01e0:  <span class="m">4330</span> <span class="m">2863</span> 6f6d 2e78 786c 2e6a 6f62 2e63  C0<span class="o">(</span>com.xxl.job.c
+</span></span><span class="line"><span class="cl">        0x01f0:  6f72 652e <span class="m">6269</span> 7a2e 6d6f <span class="m">6465</span> 6c2e <span class="m">5265</span>  ore.biz.model.Re
+</span></span><span class="line"><span class="cl">        0x0200:  <span class="m">6769</span> <span class="m">7374</span> <span class="m">7279</span> <span class="m">5061</span> <span class="m">7261</span> 6d93 0b72 <span class="m">6567</span>  gistryParam..reg
+</span></span><span class="line"><span class="cl">        0x0210:  <span class="m">6973</span> <span class="m">7447</span> 726f <span class="m">7570</span> 0b72 <span class="m">6567</span> <span class="m">6973</span> <span class="m">7472</span>  istGroup.registr
+</span></span><span class="line"><span class="cl">        0x0220:  794b <span class="m">6579</span> 0d72 <span class="m">6567</span> <span class="m">6973</span> <span class="m">7472</span> <span class="m">7956</span> 616c  yKey.registryVal
+</span></span><span class="line"><span class="cl">        0x0230:  <span class="m">7565</span> <span class="m">6208</span> <span class="m">4558</span> <span class="m">4543</span> <span class="m">5554</span> 4f52 0e6f <span class="m">7370</span>  ueb.EXECUTOR.osp
+</span></span><span class="line"><span class="cl">        0x0240:  <span class="m">4461</span> <span class="m">7461</span> 4d61 702d 6a6f <span class="m">6210</span> <span class="m">3130</span> 2e32  DataMap-job.10.2
+</span></span><span class="line"><span class="cl">        0x0250:  <span class="m">3136</span> 2e31 2e31 313a <span class="m">3939</span> <span class="m">3939</span> <span class="m">0000</span> <span class="m">0000</span>  16.1.11:9999....
+</span></span><span class="line"><span class="cl">        0x0260:  <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span>            ............
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="抓包技巧">抓包技巧</h1>
+<h2 id="打标记">打标记</h2>
+<p>包除了小以外，还需要为每步操作打标记，这样的包一目了然，赏心悦目。比如：</p>
+<ol>
+<li>sudo ping <a class="link" href="http://www.baidu.com/"  target="_blank" rel="noopener"
+    >www.baidu.com</a> -c 1 -s 1</li>
+<li>操作步骤1</li>
+<li>sudo ping <a class="link" href="http://www.baidu.com/"  target="_blank" rel="noopener"
+    >www.baidu.com</a> -c 1 -s 2</li>
+<li>操作步骤2</li>
+<li>sudo ping <a class="link" href="http://www.baidu.com/"  target="_blank" rel="noopener"
+    >www.baidu.com</a> -c 1 -s 3</li>
+<li>操作步骤3</li>
+</ol>
+<blockquote>
+<p>解释（MacOS下）：-c 指定ping次数，-s指定包大小</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">usage: ping <span class="o">[</span>-AaDdfnoQqRrv<span class="o">]</span> <span class="o">[</span>**-c count**<span class="o">]</span> <span class="o">[</span>-G sweepmaxsize<span class="o">]</span>
+</span></span><span class="line"><span class="cl">            <span class="o">[</span>-g sweepminsize<span class="o">]</span> <span class="o">[</span>-h sweepincrsize<span class="o">]</span> <span class="o">[</span>-i wait<span class="o">]</span>
+</span></span><span class="line"><span class="cl">            <span class="o">[</span>-l preload<span class="o">]</span> <span class="o">[</span>-M mask <span class="p">|</span> time<span class="o">]</span> <span class="o">[</span>-m ttl<span class="o">]</span> <span class="o">[</span>-p pattern<span class="o">]</span>
+</span></span><span class="line"><span class="cl">            <span class="o">[</span>-S src_addr<span class="o">]</span> <span class="o">[</span>**-s packetsize**<span class="o">]</span> <span class="o">[</span>-t timeout<span class="o">][</span>-W waittime<span class="o">]</span>
+</span></span><span class="line"><span class="cl">            <span class="o">[</span>-z tos<span class="o">]</span> host
+</span></span><span class="line"><span class="cl">       ping <span class="o">[</span>-AaDdfLnoQqRrv<span class="o">]</span> <span class="o">[</span>-c count<span class="o">]</span> <span class="o">[</span>-I iface<span class="o">]</span> <span class="o">[</span>-i wait<span class="o">]</span>
+</span></span><span class="line"><span class="cl">            <span class="o">[</span>-l preload<span class="o">]</span> <span class="o">[</span>-M mask <span class="p">|</span> time<span class="o">]</span> <span class="o">[</span>-m ttl<span class="o">]</span> <span class="o">[</span>-p pattern<span class="o">]</span> <span class="o">[</span>-S src_addr<span class="o">]</span>
+</span></span><span class="line"><span class="cl">            <span class="o">[</span>-s packetsize<span class="o">]</span> <span class="o">[</span>-T ttl<span class="o">]</span> <span class="o">[</span>-t timeout<span class="o">]</span> <span class="o">[</span>-W waittime<span class="o">]</span>
+</span></span><span class="line"><span class="cl">            <span class="o">[</span>-z tos<span class="o">]</span> mcast-group
+</span></span><span class="line"><span class="cl">Apple specific options <span class="o">(</span>to be specified before mcast-group or host like all options<span class="o">)</span>
+</span></span><span class="line"><span class="cl">            -b boundif           <span class="c1"># bind the socket to the interface</span>
+</span></span><span class="line"><span class="cl">            -k traffic_class     <span class="c1"># set traffic class socket option</span>
+</span></span><span class="line"><span class="cl">            -K net_service_type  <span class="c1"># set traffic class socket options</span>
+</span></span><span class="line"><span class="cl">            --apple-connect       <span class="c1"># call connect(2) in the socket</span>
+</span></span><span class="line"><span class="cl">            --apple-time          <span class="c1"># display current time</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在抓包时可以看到包下面Data（-s部分大小），byte的大小表示当前是第几步，就不容易出错。</p>
+<p><img src="/images/wireshark_pcapng2.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng2"
+	
+	
+></p>
+<h2 id="过滤技巧">过滤技巧</h2>
+<ul>
+<li>已知协议，直接输入协议即可，例如：http/tcp/smtp等，多个协议可以用||来分开，例如：tcp||http</li>
+<li>ip+端口号是比较常用的过滤方式，例如：ip.addr eq 172.22.183.226 &amp;&amp; tcp.port eq 8080，还可以右键单击感兴趣的包，选择follow TCP/UDP Stream，就可以自动过滤当前的包了。</li>
+<li>过滤跟某个IP地址相关的包</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ip.addr <span class="o">==</span> 192.168.0.1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>排除某些端口</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">not <span class="o">(</span>tcp or arp or smtp<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>根据端口范围查找</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcp.port in <span class="o">{</span>80,443,8080<span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>按照关键词查询：区分大小写</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">frame contains <span class="s2">&#34;baidu.com&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/images/wireshark_pcapng3.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng3"
+	
+	
+></p>
+<ul>
+<li>按照关键词查询：不区分大小写（matches采用的是regex）</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">frame matches <span class="s2">&#34;baidu.com&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/images/wireshark_pcapng4.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng4"
+	
+	
+></p>
+<p><strong>如何过滤一个TCP/UDP Stream呢？</strong></p>
+<p>两端的IP加port，单击wireshark的Statistics→conversations，再单击TCP或者UDP标签就可以看到所有的Stream了。如下图：</p>
+<p><img src="/images/wireshark_pcapng5.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng5"
+	
+	
+></p>
+<ul>
+<li>
+<p>用鼠标过滤：可以选择感兴趣的包，右键加入筛选即可。有两种方式：</p>
+<ul>
+<li>Prepare a Filter→Selected（可以选择多个一起执行）</li>
+<li>Apply as Filter→Selected（立即自动执行）</li>
+</ul>
+<p>也有很多组合方式可以按条件来：</p>
+<ul>
+<li>Selected</li>
+<li>not selected</li>
+<li>and selected</li>
+<li>or selected</li>
+<li>and not selected</li>
+<li>or not selected</li>
+</ul>
+</li>
+<li>
+<p>过滤后的导出到新文件，因为文件更小。导出时要选择File→Export Specified Packets，这样就不会漏掉关联的包，不然会报错。</p>
+</li>
+<li>
+<p>过滤失败的握手</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcp.flags.reset <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;&amp;</span> tcp.seq<span class="o">==</span><span class="m">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>过滤重传的握手请求</li>
+</ul>
+<p>过滤完查看完整的包流程，可以看到服务端的端口被使用了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcp.flags.syn <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;&amp;</span> tcp.analysis.retransmission
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/images/wireshark_pcapng6.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng6"
+	
+	
+></p>
+<h2 id="抓包时过滤">抓包时过滤</h2>
+<p>需求：统计某个HTTPS VIP的访问流量里，TLS版本（主要是TLS1.0、1.1、1.2、1.3）的分布。为了控制抓包文件的大小，不抓TLS的所有报文，只想抓TLS版本信息。</p>
+<p>针对这个需求，tcpdump本身没有现成的过滤器。BPF本身是基于偏移量来做解析的，所以可以在tcpdump中使用这种偏移量技术，所以类似如下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcpdump -w /tmp/<span class="o">[</span>fileter_TLS_Client_Hello.pcap<span class="o">](</span>https://drive.google.com/file/d/112X8cKH78DQ0GQL8kMlT2RvI3gxUwbHv/view?usp<span class="o">=</span>drive_link<span class="o">)</span> <span class="s1">&#39;dst port 443 &amp;&amp; tcp[20]==22 &amp;&amp; tcp[25]==1&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>dst port 443：这个最简单，就是抓取从客户端发过来的访问 HTTPS 的报文。</li>
+<li>tcp[20]==22：这是提取了 TCP 的第 21 个字节（因为初始序号是从 0 开始的），由于 TCP 头部占 20 字节，TLS 又是 TCP 的载荷，那么 TLS 的第 1 个字节就是 TCP 的第 21 个字节，也就是 TCP[20]，这个位置的值如果是 22（十进制），那么就表明这个是 TLS 握手报文。</li>
+<li>tcp[25]==1：同理，这是 TCP 头部的第 26 个字节，如果它等于 1，那么就表明这个是 Client Hello 类型的 TLS 握手报文。</li>
+</ul>
+<p><img src="/images/wireshark_pcapng7.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng7"
+	
+	
+></p>
+<p>对应到偏移量的介绍如下：</p>
+<p><img src="/images/wireshark_pcapng8.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng8"
+	
+	
+></p>
+<p>tcpdump 也预定义了一些相对方便的过滤器。比如我们想要过滤出 TCP RST 报文，那么可以用下面这种写法，相对来说比用数字做偏移量的写法，要更加容易理解和记忆：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcpdump -w file.pcap <span class="s1">&#39;tcp[tcpflags]&amp;(tcp-rst) != 0&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>对应到偏移量的写法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcpdump -w file.pcap <span class="s1">&#39;tcp[13]&amp;4 != 0&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="读取抓包文件">读取抓包文件</h2>
+<p>tcpdump后面加上-r参数和文件名称，就可以读取这个文件了，也可以加上过滤条件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcpdump -r file.pcap <span class="s1">&#39;tcp[tcpflags] &amp; (tcp-rst) != 0&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="过滤后转存">过滤后转存</h2>
+<p>抓包以后过滤想要的报文，并保存到另一个文件中，如下所示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcpdump -r file.pcap <span class="s1">&#39;tcp[tcpflags]&amp;(tcp-rst)!=0&#39;</span> -w rst.pcap
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="配置">配置</h1>
+<h2 id="解析已知协议与ip域名映射">解析已知协议与IP域名映射</h2>
+<p><img src="/images/wireshark_pcapng9.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng9"
+	
+	
+></p>
+<h2 id="查询当前已经解析了哪些域名">查询当前已经解析了哪些域名</h2>
+<p><img src="/images/wireshark_pcapng10.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng10"
+	
+	
+></p>
+<h2 id="设置私有ip名称">设置私有IP名称</h2>
+<p><img src="/images/wireshark_pcapng11.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng11"
+	
+	
+></p>
+<p>查看刚设置自定义的名称：</p>
+<p><img src="/images/wireshark_pcapng12.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng12"
+	
+	
+></p>
+<h2 id="保存文件含host对应名称">保存文件（含host对应名称）</h2>
+<p><img src="/images/wireshark_pcapng13.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng13"
+	
+	
+></p>
+<h2 id="设置时间列">设置时间列</h2>
+<p>设置计时器，按照发送包的时间间隔来设置当前包发出去后返回需要的时间。</p>
+<p><img src="/images/wireshark_pcapng14.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng14"
+	
+	
+></p>
+<p>设置时间重新开始计时的时间引用，时间会从当前引用开始重新计时</p>
+<p><img src="/images/wireshark_pcapng15.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng15"
+	
+	
+></p>
+<p>设置TCP Stream Time，tcp的响应时间（可以根据此时间做排序以后排查慢的包）</p>
+<p><img src="/images/wireshark_pcapng16.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng16"
+	
+	
+></p>
+<h1 id="自动分析">自动分析</h1>
+<ol>
+<li>单击Analyze→Expert Information，可以显示出来不同级别的提示信息。比如：重传的统计、连接的建立和重置统计等。分析网络性能和连接问题时这个功能比较有用，如下图：</li>
+</ol>
+<p><img src="/images/wireshark_pcapng17.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng17"
+	
+	
+></p>
+<ol>
+<li>单击Statistics→Service Response Time，再选定协议名称，可以得到响应时间统计表。在衡量服务器性能时经常需要统计此结果。如下图：选择的是SMB协议的操作响应时间，<strong>不知道为啥没有值。</strong></li>
+</ol>
+<p><img src="/images/wireshark_pcapng18.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng18"
+	
+	
+></p>
+<ol start="2">
+<li>单击Statistics→TCP Stream Graph，可以生成几类统计图。例如：</li>
+</ol>
+<ul>
+<li>Time-Sequence Graph（Stevens）</li>
+<li>Time-Sequence Graph（tcptrace）</li>
+<li>Throughput</li>
+<li>Round Trip Time</li>
+<li>Window Scaling</li>
+</ul>
+<p><img src="/images/wireshark_pcapng19.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng19"
+	
+	
+></p>
+<p>可以根据传输数据信息来分析系统发送数据状态。</p>
+<ol>
+<li>单击Statistics→ Capture File Properties看到一些统计信息，比如平均流量等，可以推测负载状况。如下图：流量大小6.8M。</li>
+</ol>
+<p><img src="/images/wireshark_pcapng20.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng20"
+	
+	
+></p>
+<ol>
+<li>概览（statistics→Conversations）,根据此可以分析出当前抓包的概览信息，包括</li>
+</ol>
+<ul>
+<li>包的数量，大小IPv4流量信息，传输时间长</li>
+<li>TCP中开始时间，数据传输时间</li>
+<li>TCP中IP地址，端口号，包的大小，包开始时间，持续时间</li>
+<li>UDP的客户端、服务端信息，传输包的大小，开始时间，持续时间等信息</li>
+</ul>
+<p><img src="/images/wireshark_pcapng21.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng21"
+	
+	
+></p>
+<p>可以根据需求，直接使用右键进行包的过滤，过滤以后可以在主页面中看到过滤后的包。</p>
+<p><code>注意：当开启Nagle算法和延迟确认时，在分析过程中如果看不出差异，可以缩小时间范围。</code></p>
+<h1 id="文件提取未加密的数据">文件提取（未加密的数据）</h1>
+<p>设置允许重组tcp流量包</p>
+<p><img src="/images/wireshark_pcapng22.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng22"
+	
+	
+></p>
+<p>导出http文件（这里是http的请求）</p>
+<p><img src="/images/wireshark_pcapng23.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng23"
+	
+	
+></p>
+<p>选择以后，点击保存即可</p>
+<p><img src="/images/wireshark_pcapng24.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng24"
+	
+	
+></p>
+<h1 id="ip地址映射geoiphttpswwwyoutubecomwatchvilvppluwthw"><a class="link" href="https://www.youtube.com/watch?v=IlVppluWTHw"  target="_blank" rel="noopener"
+    >IP地址映射（GeoIP）</a></h1>
+<p>可以在此处下载IP地址对应的城市：<a class="link" href="https://dev.maxmind.com/geoip/geolite2-free-geolocation-data?lang=en"  target="_blank" rel="noopener"
+    >https://dev.maxmind.com/geoip/geolite2-free-geolocation-data?lang=en</a></p>
+<p><img src="/images/wireshark_pcapng25.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng25"
+	
+	
+></p>
+<p>可以在statistics→endpoints中进行分析，同时可以用map进行映射到地图</p>
+<p><img src="/images/wireshark_pcapng26.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng26"
+	
+	
+></p>
+<p>根据城市做搜索：</p>
+<p><img src="/images/wireshark_pcapng27.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng27"
+	
+	
+></p>
+<h1 id="搜索">搜索</h1>
+<p>command+f搜索关键字，例如查询“common/service”的关键词，如下图：<strong>这个太有用了！！</strong></p>
+<p><img src="/images/wireshark_pcapng28.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng28"
+	
+	
+></p>
+<h1 id="查看走哪个网卡">查看走哪个网卡</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># ip route get 172.16.0.52</span>
+</span></span><span class="line"><span class="cl">172.16.0.52 dev **en0**  src 172.16.0.52
+</span></span><span class="line"><span class="cl"><span class="c1"># ip route get develop.pansft.com</span>
+</span></span><span class="line"><span class="cl">172.22.183.226 via 10.222.1.1 dev **utun8**  src 10.222.1.4
+</span></span><span class="line"><span class="cl"><span class="c1"># ip route get www.ilikejobs.com</span>
+</span></span><span class="line"><span class="cl">104.21.42.70 via 172.16.0.1 dev **en0**  src 172.16.0.52
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="tshark">TShark</h1>
+<p><a class="link" href="https://www.notion.so/tshark-de1f0be16cd0480c990e894b44fe1dec?pvs=21"  target="_blank" rel="noopener"
+    ><strong>tshark</strong></a></p>
+<h1 id="layout">Layout</h1>
+<h2 id="设置窗口的layout">设置窗口的Layout</h2>
+<p>这里设置第三个窗口，以协议栈的方式显示。</p>
+<p><img src="/images/wireshark_pcapng29.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng29"
+	
+	
+></p>
+<p>右键可以显示当前每个协议字段的值：</p>
+<p><img src="/images/wireshark_pcapng30.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng30"
+	
+	
+></p>
+<p>设置完了显示如此：</p>
+<p><img src="/images/wireshark_pcapng31.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng31"
+	
+	
+></p>
+<h1 id="安全">安全</h1>
+<h2 id="ddos之syn-flood">DDoS之SYN flood</h2>
+<p>原理，大量主机发送SYN请求给服务器，假装要链接TCP建立链接。这些SYN请求可能含有假的源地址，所以服务器响应以后永远收不到Ack，就会留下half-open状态的TCP链接。由于每个TCP链接都会消耗一定的系统资源，所以大量的无用连接会影响到真正的用户访问，导致拒绝访问情况产生。</p>
+<h1 id="常见错误">常见错误</h1>
+<h2 id="tcp-window-full">TCP window full</h2>
+<p>表示这个包的发送方已经把对方所声明的接收窗口耗尽了。</p>
+<h2 id="tcp-zerowindow">TCP Zerowindow</h2>
+<p>TCP中的“win=”代表接收窗口的大小，表示这个包的<strong>发送方</strong>当前还有多少缓冲区可以接收数据。</p>
+<p>上面这两个的区别：TCP window full表示这个包的发送方暂时没办法再发送数据了，TCP Zerowindow 表示这个包的发送方暂时没办法再接受数据了。也就是说两者都意味着传输暂停，都必须引起重视。</p>
+<h2 id="package-size-limited-during-capture">Package size limited during capture</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">可以通过-s参数来指定抓包的大小，下面就是指定每个包抓1000字节的包。
+</span></span><span class="line"><span class="cl"><span class="o">[</span>root<span class="o">]</span> tcpdump -i eth0 -s <span class="m">1000</span> -w /tmp/tcpdump.cap
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="tcp-previous-segment-not-captured">TCP Previous segment not captured</h2>
+<p>TCP传输过程中，同一台主机发出的数据段应该是连续的，即后一个包的Seq号等于前一个包的Seq+Len（三次握手和四次挥手是例外）。</p>
+<p>如果wireshark发现一个包的seq号大于前一个包的seq+len，就知道中间缺失了一段数据。假如缺失的那段数据在整个网络包中都找不到（即排除乱序），就会提示[TCP Previous segment not captured]。</p>
+<p>🔔：</p>
+<p>网络包没有抓到分两种情况，一种是真丢了，另一种是实际上没有丢，但是被抓包工具漏掉了。</p>
+<p>在Wireshark上如何区分这两种情况呢，只需要看对方回复的ACK即可，如果确认包含了没抓的那个包，那就是抓包工具漏掉了而已，否则就是真丢了。</p>
+<p><code>注意：网络传输路径中有可能网络设备MTU比较小，会导致丢包，需要保持网络路径的MTU一致。</code></p>
+<h2 id="tcp-acked-unseen-segment">TCP Acked unseen segment</h2>
+<p>当Wireshark发现被ACK的那个包没有抓到，就会提示TCP ACKED unseen segment，这个几乎是可以永远忽略的。</p>
+<h2 id="tcp-out-of-order">TCP Out-of-order</h2>
+<p>TCP 在传输过程中（不包含三次握手，四次挥手），同一台主机发出的数据包应该是连续的，即最后一个包的Seq号等于前一个包的Seq+len。</p>
+<p>小跨度的乱序影响不大，比如原本顺序 为1、2、3、4、5号包被打乱城2、1、3、4、5就没事，但跨度大的乱序可能触发快速重传，比如打乱城2、3、4、5、1时，就会触发足够多的Dup Ack，而导致1号包的重传。</p>
+<h2 id="tcp-dup-ack">TCP Dup ACK</h2>
+<p>当乱序或者丢包发生时，接受方会收到一些Seq号比期望值大的包，它每次收到这种包就会Ack一次期望的Seq值，以此方式来提醒发送方，于是就产生了一些重复的ack，Wireshark会在这些重复的ack上打标记 [TCP Dup Ack]。</p>
+<h2 id="tcp-fast-retransmission">TCP Fast Retransmission</h2>
+<p>当发送方收到3个以上或者TCP Dup ACK，就意味着之前发送的包可能丢了，于是快速重传它。</p>
+<h2 id="tcp-retransmission">TCP Retransmission</h2>
+<p>如果一个包真的丢了，有没有后续的包可以在接受方触发Dup Ack时，就不会快速重传，这种情况只能等到超时了再重传，此类包就会被Wireshark打上TCP Retransmission。</p>
+<p>此处可以重点学习一下。</p>
+<h2 id="tcp-segment-of-a-reassembled-pdu">TCP Segment of a reassembled PDU</h2>
+<p>这个表示可以把属于同一个应用层的PDU的TCP包虚拟地集中起来，在最后形成一个完整的包。</p>
+<p>需要在Wireshark里面启用这个配置。在：Preferences→ Protocols→TCP菜单，如下图：</p>
+<p><img src="/images/wireshark_pcapng32.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng32"
+	
+	
+></p>
+<h2 id="continuations-to">Continuations to</h2>
+<p>跟上面的相反，需要关闭Allow sub dissector to reassemble tcp streams这个开关，就会显示这个信息。</p>
+<h2 id="time-to-live-exceededfragment-reassembly-time-exceeded">Time-to-live exceeded（Fragment reassembly time exceeded)</h2>
+<p>表示这个包的发送方之前就收到了一些分片，但是由于某些原因迟迟无法组装起来。</p>
+<h1 id="问题">问题</h1>
+<h2 id="为什么macbook上提示you-dont-have-permission-to-capture-on-local-interfaces">为什么MacBook上提示：You don’t have permission to capture on local interfaces.</h2>
+<p>解决方法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">zhengxianle@zhengxianledeMacBook-Pro ~&gt; whoami
+</span></span><span class="line"><span class="cl">zhengxianle
+</span></span><span class="line"><span class="cl">zhengxianle@zhengxianledeMacBook-Pro ~&gt; <span class="nb">cd</span> /dev
+</span></span><span class="line"><span class="cl">zhengxianle@zhengxianledeMacBook-Pro /dev&gt; ls -l /dev/bp*
+</span></span><span class="line"><span class="cl">crwx--x--x  <span class="m">1</span> root  wheel  0x17000000  <span class="m">5</span> <span class="m">23</span> 08:53 /dev/bpf0*
+</span></span><span class="line"><span class="cl">crwx--x--x  <span class="m">1</span> root  wheel  0x17000001  <span class="m">5</span> <span class="m">23</span> 08:53 /dev/bpf1*
+</span></span><span class="line"><span class="cl">crwx--x--x  <span class="m">1</span> root  wheel  0x17000002  <span class="m">5</span> <span class="m">17</span> 11:42 /dev/bpf2*
+</span></span><span class="line"><span class="cl">crwx--x--x  <span class="m">1</span> root  wheel  0x17000003  <span class="m">5</span> <span class="m">17</span> 11:42 /dev/bpf3*
+</span></span><span class="line"><span class="cl">zhengxianle@zhengxianledeMacBook-Pro /dev&gt; sudo chown zhengxianle:admin bp*
+</span></span><span class="line"><span class="cl">zhengxianle@zhengxianledeMacBook-Pro /dev&gt; ls -l /dev/bp*
+</span></span><span class="line"><span class="cl">crwx--x--x  <span class="m">1</span> zhengxianle  admin  0x17000000  <span class="m">5</span> <span class="m">23</span> 08:53 /dev/bpf0*
+</span></span><span class="line"><span class="cl">crwx--x--x  <span class="m">1</span> zhengxianle  admin  0x17000001  <span class="m">5</span> <span class="m">23</span> 08:53 /dev/bpf1*
+</span></span><span class="line"><span class="cl">crwx--x--x  <span class="m">1</span> zhengxianle  admin  0x17000002  <span class="m">5</span> <span class="m">17</span> 11:42 /dev/bpf2*
+</span></span><span class="line"><span class="cl">crwx--x--x  <span class="m">1</span> zhengxianle  admin  0x17000003  <span class="m">5</span> <span class="m">17</span> 11:42 /dev/bpf3*
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>参考：<a class="link" href="https://andrewbaker.ninja/2023/01/14/macbook-fixing-the-wireshark-permissions-bug-you-dont-have-permission-to-capture-on-that-device/"  target="_blank" rel="noopener"
+    >https://andrewbaker.ninja/2023/01/14/macbook-fixing-the-wireshark-permissions-bug-you-dont-have-permission-to-capture-on-that-device/</a></p>
+<h2 id="四次挥手的疑惑">四次挥手的疑惑</h2>
+<p>如下图，这个包的ack为什么没有加1呢？</p>
+<p><img src="/images/wireshark_pcapng33.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng33"
+	
+	
+></p>
+<p>其实是因为延迟确认导致的这个问题，因为它省掉了四次挥手中的第二个包，所以流程如下图：</p>
+<p><img src="/images/wireshark_pcapng34.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng34"
+	
+	
+></p>
+<p>因为启用了延迟确认，所以在第二个包和第三个包进行了合并。</p>
+<p>但是图中的第319个包的ACK逻辑如下：</p>
+<p><img src="/images/wireshark_pcapng35.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="wireshark_pcapng35"
+	
+	
+></p>
+<p>此时，319相当于317的ack，但是318已经发出去了，所以319根本不算挥手的过程包。</p>
+<p>这里只有318、320、321是真正的挥手包。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/tcp/">tcp</a>
+        
+            <a href="/tags/wireshark/">wireshark</a>
+        
+            <a href="/tags/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/">常用功能</a>
+        
+            <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Wireshark本地劫持https</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Wireshark技巧</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/tcp%E5%AE%9E%E9%AA%8C/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">tcp实验</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/tc_%E5%AE%9E%E9%AA%8C/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tc_实验</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2025 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@300&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+
+    </body>
+</html>
