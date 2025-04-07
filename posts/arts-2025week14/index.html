@@ -366,7 +366,7 @@ if (!doNotTrack) {
 
 
                 <time class="article-time--reading">
-                    阅读时长: 1 分钟
+                    阅读时长: 2 分钟
                 </time>
             </div>
         
@@ -413,6 +413,36 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span><span class="lnt">11
 </span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">mid</span>
+</span></span><span class="line"><span class="cl">        <span class="k">elif</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">target</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
 </span><span class="lnt">13
 </span><span class="lnt">14
 </span><span class="lnt">15
@@ -430,37 +460,41 @@ if (!doNotTrack) {
 </span><span class="lnt">27
 </span><span class="lnt">28
 </span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">target</span> <span class="o">=</span> <span class="mi">1</span>
-</span></span><span class="line"><span class="cl"><span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl"><span class="n">index_num</span> <span class="o">=</span> <span class="mi">0</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
 </span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">middle</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># 怎么取中间值</span>
-</span></span><span class="line"><span class="cl">    <span class="n">middle_index</span> <span class="o">=</span> <span class="p">(</span><span class="n">length</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">middle_index</span>
-</span></span><span class="line"><span class="cl">        <span class="k">elif</span> <span class="n">array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">middle_index</span>
-</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># 终止条件</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">array</span><span class="p">[</span><span class="n">middle_index</span><span class="p">]</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">middle_index</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">length</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">target</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">search</span><span class="p">(</span><span class="nx">nums</span> <span class="p">[]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">target</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">left</span> <span class="o">:=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">right</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">nums</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">array</span><span class="p">[</span><span class="n">middle_index</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">target</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="n">new_array</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">middle_index</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="n">new_array</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">middle_index</span><span class="p">:]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">left</span> <span class="o">&lt;=</span> <span class="nx">right</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">mid</span> <span class="o">:=</span> <span class="nx">left</span> <span class="o">+</span> <span class="p">(</span><span class="nx">right</span><span class="o">-</span><span class="nx">left</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="c1">// 防止整数溢出
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="nx">nums</span><span class="p">[</span><span class="nx">mid</span><span class="p">]</span> <span class="o">==</span> <span class="nx">target</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nx">mid</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nx">nums</span><span class="p">[</span><span class="nx">mid</span><span class="p">]</span> <span class="p">&lt;</span> <span class="nx">target</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">left</span> <span class="p">=</span> <span class="nx">mid</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">right</span> <span class="p">=</span> <span class="nx">mid</span> <span class="o">-</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">middle</span><span class="p">(</span><span class="n">new_array</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">nums</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">target</span> <span class="o">:=</span> <span class="mi">9</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">result</span> <span class="o">:=</span> <span class="nf">search</span><span class="p">(</span><span class="nx">nums</span><span class="p">,</span> <span class="nx">target</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Target %d found at index: %d\n&#34;</span><span class="p">,</span> <span class="nx">target</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="c1">// 输出 4
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="nx">target</span> <span class="p">=</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">result</span> <span class="p">=</span> <span class="nf">search</span><span class="p">(</span><span class="nx">nums</span><span class="p">,</span> <span class="nx">target</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Target %d found at index: %d\n&#34;</span><span class="p">,</span> <span class="nx">target</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="c1">// 输出 -1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="review-复审英语">Review 复审(英语)</h3>
