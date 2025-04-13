@@ -1,12 +1,12 @@
 ---
-title: 'Obsidian'
-description: "一个生产力工具"
+title: 'obsidian-sync-v1'
+description: "笔记工具obsidian, 一个生产力工具"
 date: '2024-07-13T16:33:55+08:00'
 lastmod: '2024-07-13T16:33:55+08:00'
 categories: ["tools"]
-slug: 'obsidian-tool'
-draft: true
-tags: ["obsidian", "tool", "product", "生产力"]
+slug: 'obsidian-tool-v1'
+draft: false
+tags: ["obsidian", "ish", "ios", "sync", "手机", "tool", "product", "生产力"]
 ---
 
 
