@@ -25,6 +25,9 @@ https://forum.obsidian.md/t/the-easiest-way-to-setup-obsidian-git-to-backup-note
 
 
 ## 正文
+obsidian 插件地址: obsidian://show-plugin?id=obsidian-git
+
+插件github仓库: https://github.com/Vinzent03/obsidian-git
 
 ```
 Create a repository or fork the md repo in github
@@ -55,3 +58,6 @@ Generate new token -> Generate new token(classtic)
 也是因为自己命名目录名，导致obsidian的文档会都一层，不过那样比第一种方式好，因为不需要配置 `.gitignore` 文件了。也不会导致各个客户端的配置不一致无法同步
 
 手机上也式样的操作，不过可能新手会遇到没有git的问题，可以按照第一篇文章里说的ish方式安装下，其余的流程都是一样的。
+
+手机下载后，默认创建一个vault，不然不能进入软件。安装git插件（需要手机上有git功能，可以使用ish方法来解决），然后按照流程新建一个目录文件夹。搜索 clone ,输入地址。
+看到提示初始化消失后，打开左侧目录，文件应该都在了
