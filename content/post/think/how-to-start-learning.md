@@ -4,7 +4,7 @@ description: "一直被如何开始学习困扰，突然想到ai，得到一个�
 date: "2025-05-11T00:21:22+08:00"
 lastmod: "2025-05-11T00:23:12+08:00"
 categories: ["read"]
-slug: "how-to-start-learning"
+slug: 'how-to-start-learning'
 draft: false
 tags: ["thinking", "learning","study"， "畏难"]
 ---
