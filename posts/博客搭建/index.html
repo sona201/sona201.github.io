@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='博客搭建的笔记'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Hugo 博客搭建与主题配置记录，合并自旧笔记仓库'>
 <title>博客搭建</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/'>
 
 <link rel="stylesheet" href="/scss/style.min.2a8a8b5925063991a20d80fb86183b19905b741ac47e8c0a373818c059a9ae7c.css"><meta property='og:title' content='博客搭建'>
-<meta property='og:description' content='博客搭建的笔记'>
+<meta property='og:description' content='Hugo 博客搭建与主题配置记录，合并自旧笔记仓库'>
 <meta property='og:url' content='https://sona201.github.io/posts/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/'>
 <meta property='og:site_name' content='Ricardo'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2023-04-09T13:51:52&#43;08:00'/><meta property='article:modified_time' content='2023-07-03T13:05:14&#43;08:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='hugo' /><meta property='article:tag' content='blog' /><meta property='article:tag' content='github-pages' /><meta property='article:tag' content='stack' /><meta property='article:published_time' content='2023-05-26T13:59:29&#43;08:00'/><meta property='article:modified_time' content='2026-10-03T22:10:00&#43;08:00'/>
 <meta name="twitter:title" content="博客搭建">
-<meta name="twitter:description" content="博客搭建的笔记">
+<meta name="twitter:description" content="Hugo 博客搭建与主题配置记录，合并自旧笔记仓库">
     <link rel="shortcut icon" href="/image/favicon.ico" />
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
@@ -213,7 +213,23 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#博客搭建">博客搭建</a></li>
+    <li><a href="#博客搭建">博客搭建</a>
+      <ol>
+        <li><a href="#前言">前言</a>
+          <ol>
+            <li></li>
+            <li><a href="#hugo-博客搭建教程">Hugo 博客搭建教程</a></li>
+          </ol>
+        </li>
+        <li><a href="#博客安装">博客安装</a></li>
+        <li><a href="#git子模块功能安装使用">git子模块功能安装使用</a>
+          <ol>
+            <li><a href="#喜欢的主题参考">喜欢的主题参考</a></li>
+            <li><a href="#优化">优化</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
   </ol>
 </nav>
         </div>
@@ -230,6 +246,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <div class="article-details">
     
+    <header class="article-category">
+        
+            <a href="/categories/tools/" >
+                tools
+            </a>
+        
+    </header>
+    
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
@@ -238,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
         
         <h3 class="article-subtitle">
-            博客搭建的笔记
+            Hugo 博客搭建与主题配置记录，合并自旧笔记仓库
         </h3>
         
     </div>
@@ -259,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">2023-04-09</time>
+                <time class="article-time--published">2023-05-26</time>
             </div>
         
 
@@ -274,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
                 <time class="article-time--reading">
-                    阅读时长: 2 分钟
+                    阅读时长: 3 分钟
                 </time>
             </div>
         
@@ -290,90 +314,80 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
     <h2 id="博客搭建">博客搭建</h2>
+<h3 id="前言">前言</h3>
 <blockquote>
 <p>最早博客搭建是用的wordpress，挑了好久(就是拖延)，最后选了hugo，说是快。因为看到很多人从hexo转hugo，想一步到位。其实可能并不能写太多文章发布 <br>
 自己也测试了hexo，体验了一把，确实感觉速度慢，不能接受(虽然时间没那么宝贵，但有点耗神)</p>
 </blockquote>
-<p>记录下操作记录吧，方便后期回顾</p>
-<p>最开始也想用自己的域名，但在申请域名的时候难倒了，纠结于名字，最后决定，快速上线，先用 github.io 这个</p>
-<p><a class="link" href="https://www.pseudoyu.com/zh/2022/06/12/why_i_still_write_blog_in_2022/"  target="_blank" rel="noopener"
-    >博客搭建最靠谱的方案</a></p>
-<h1 id="git-action">git action</h1>
-<p><a class="link" href="https://www.pseudoyu.com/zh/2022/05/29/deploy_your_blog_using_hugo_and_github_action/"  target="_blank" rel="noopener"
-    >https://www.pseudoyu.com/zh/2022/05/29/deploy_your_blog_using_hugo_and_github_action/</a></p>
+<p>记录下操作记录吧，方便后期回顾 <br>
+最开始也想用自己的域名，但在申请域名的时候难倒了，纠结于名字，最后决定，快速上线，先用 github.io 这个</p>
 <p>最后就是hugo的使用，跟主题修改了，现在还没做好，慢慢改</p>
 <ul>
 <li>是否需要英文版面</li>
-<li>决定有哪几个大分类
-[-] 评论系统</li>
+<li>决定有哪几个大分类</li>
+<li>评论系统</li>
 <li>最后就是样式优化，参考: <a class="link" href="https://blog.skk.moe/"  target="_blank" rel="noopener"
     >https://blog.skk.moe/</a></li>
 </ul>
+<p>需求</p>
+<ul>
+<li>有顶层一级导航朗
+<ul>
+<li>主页、归档、tags</li>
+</ul>
+</li>
+<li>分两列，文章和侧边栏，不用三列布局</li>
+</ul>
 <p>差不多就是这些，特比担心三分钟热的，甚至不足三分钟。先记录下来</p>
+<h5 id="hugo-与-hexo-的异同">Hugo 与 Hexo 的异同</h5>
 <p><a class="link" href="https://io-oi.me/tech/hugo-vs-hexo/"  target="_blank" rel="noopener"
     >https://io-oi.me/tech/hugo-vs-hexo/</a></p>
-<p><a class="link" href="https://hexo.io/zh-cn/"  target="_blank" rel="noopener"
-    >https://hexo.io/zh-cn/</a></p>
-<p><a class="link" href="https://blog.skk.moe/post/use-nextjs-and-hexo-to-rebuild-my-blog/"  target="_blank" rel="noopener"
-    >https://blog.skk.moe/post/use-nextjs-and-hexo-to-rebuild-my-blog/</a></p>
-<p><a class="link" href="https://zz2summer.github.io/github-pages-hugo-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/#%E5%9B%9B%E9%80%89%E6%8B%A9-hugo-%E4%B8%BB%E9%A2%98"  target="_blank" rel="noopener"
-    >https://zz2summer.github.io/github-pages-hugo-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/#%E5%9B%9B%E9%80%89%E6%8B%A9-hugo-%E4%B8%BB%E9%A2%98</a></p>
-<p><a class="link" href="https://www.sulvblog.cn/posts/blog/shortcodes/"  target="_blank" rel="noopener"
-    >https://www.sulvblog.cn/posts/blog/shortcodes/</a></p>
-<p><a class="link" href="https://zhuanlan.zhihu.com/p/126298572"  target="_blank" rel="noopener"
-    >https://zhuanlan.zhihu.com/p/126298572</a></p>
-<p><a class="link" href="https://xrg.fj.cn/p/hugo-stack%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%96%B0%E5%B0%8F%E8%AE%B0/"  target="_blank" rel="noopener"
-    >https://xrg.fj.cn/p/hugo-stack%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%96%B0%E5%B0%8F%E8%AE%B0/</a></p>
-<p><a class="link" href="https://zzzqiii.github.io/p/%E6%9B%B4%E6%96%B0hugo%E4%B8%BB%E9%A2%98/"  target="_blank" rel="noopener"
-    >https://zzzqiii.github.io/p/%E6%9B%B4%E6%96%B0hugo%E4%B8%BB%E9%A2%98/</a></p>
-<p><a class="link" href="https://blog.gezi.men/p/hugo-theme-stack-configuration/"  target="_blank" rel="noopener"
-    >https://blog.gezi.men/p/hugo-theme-stack-configuration/</a>
-<a class="link" href="https://blog.zhixuan.dev/posts/ac760353/"  target="_blank" rel="noopener"
-    >https://blog.zhixuan.dev/posts/ac760353/</a></p>
-<p><a class="link" href="https://www.google.com/search?q=hugo&#43;%E4%B8%BB%E9%A2%98&#43;stack&#43;%E6%9B%B4%E6%96%B0&amp;oq=hugo&#43;%E4%B8%BB%E9%A2%98&#43;stack&#43;%E6%9B%B4%E6%96%B0&amp;aqs=chrome..69i57j33i10i160.11218j0j1&amp;sourceid=chrome&amp;ie=UTF-8"  target="_blank" rel="noopener"
-    >https://www.google.com/search?q=hugo+%E4%B8%BB%E9%A2%98+stack+%E6%9B%B4%E6%96%B0&oq=hugo+%E4%B8%BB%E9%A2%98+stack+%E6%9B%B4%E6%96%B0&aqs=chrome..69i57j33i10i160.11218j0j1&sourceid=chrome&ie=UTF-8</a></p>
-<p>&mdash;-搭建初始，发布文章操作
-<a class="link" href="https://jinli.cyou/p/%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%9A%84%E5%BB%BA%E7%AB%8B%E8%BF%87%E7%A8%8B%E4%B8%89hugo%E4%B8%BB%E9%A2%98stack%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8E%E4%BC%98%E5%8C%96/"  target="_blank" rel="noopener"
-    >https://jinli.cyou/p/%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%9A%84%E5%BB%BA%E7%AB%8B%E8%BF%87%E7%A8%8B%E4%B8%89hugo%E4%B8%BB%E9%A2%98stack%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8E%E4%BC%98%E5%8C%96/</a></p>
-<p>发布文章配置操作 <br>
-<a class="link" href="https://olowolo.com/post/hugo-quick-start/"  target="_blank" rel="noopener"
-    >https://olowolo.com/post/hugo-quick-start/</a>
-模板配置操作 <br>
-<a class="link" href="https://yuanyi-au.github.io/posts/hugo/"  target="_blank" rel="noopener"
-    >Hugo 详细笔记（建站教程、工作原理）</a></p>
-<p><a class="link" href="https://chupai.github.io/posts/200316_hugo/"  target="_blank" rel="noopener"
-    >https://chupai.github.io/posts/200316_hugo/</a></p>
-<p><a class="link" href="https://www.gohugo.org/doc/overview/quickstart/"  target="_blank" rel="noopener"
-    >https://www.gohugo.org/doc/overview/quickstart/</a></p>
-<p><a class="link" href="https://www.gohugo.org/doc/content/organization/"  target="_blank" rel="noopener"
-    >https://www.gohugo.org/doc/content/organization/</a></p>
-<p><a class="link" href="https://shuzang.github.io/2019/hugo-blog-article-write/"  target="_blank" rel="noopener"
-    >https://shuzang.github.io/2019/hugo-blog-article-write/</a></p>
-<p>hugo 的配置使用
-<a class="link" href="https://www.yunduan.io/posts/hugo-medium-level-lesson/"  target="_blank" rel="noopener"
-    >https://www.yunduan.io/posts/hugo-medium-level-lesson/</a></p>
-<p>cloudflare deployment</p>
-<p><a class="link" href="https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/"  target="_blank" rel="noopener"
-    >https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/</a></p>
-<p><a class="link" href="https://gohugo.io/hosting-and-deployment/hosting-on-github/"  target="_blank" rel="noopener"
-    >https://gohugo.io/hosting-and-deployment/hosting-on-github/</a></p>
-<p>好的链接
-<a class="link" href="https://strrl.dev/links/"  target="_blank" rel="noopener"
-    >https://strrl.dev/links/</a></p>
-<p>博客搭建最靠谱的方案
-<a class="link" href="https://www.pseudoyu.com/zh/2022/06/12/why_i_still_write_blog_in_2022/"  target="_blank" rel="noopener"
-    >https://www.pseudoyu.com/zh/2022/06/12/why_i_still_write_blog_in_2022/</a></p>
-<h1 id="子模块功能">子模块功能</h1>
-<p>git submodule add <a class="link" href="https://github.com/sona201/hugo-theme-stack"  target="_blank" rel="noopener"
-    >https://github.com/sona201/hugo-theme-stack</a> themes/hugo-theme-stack</p>
-<p><a class="link" href="https://github.com/peaceiris/actions-hugo"  target="_blank" rel="noopener"
-    >https://github.com/peaceiris/actions-hugo</a></p>
-<p>Git submodule 子模块的管理和使用
-<a class="link" href="https://www.jianshu.com/p/9000cd49822c"  target="_blank" rel="noopener"
-    >Git submodule简书</a> <br>
-<a class="link" href="https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97"  target="_blank" rel="noopener"
-    >Git submodule git-scm</a></p>
-<h1 id="博客安装">博客安装</h1>
+<h5 id="自己写了一个主题-meme">自己写了一个主题 meme</h5>
+<p><a class="link" href="https://io-oi.me/tech/documentation-of-hugo-theme-meme/"  target="_blank" rel="noopener"
+    >https://io-oi.me/tech/documentation-of-hugo-theme-meme/</a></p>
+<h5 id="sukka-他的博客风格样式很喜欢但不会开发一直想拿来做参考">Sukka 他的博客风格样式很喜欢，但不会开发，一直想拿来做参考</h5>
+<p><a class="link" href="https://blog.skk.moe/post/how-fast-is-my-blog/"  target="_blank" rel="noopener"
+    >我的博客有多快</a></p>
+<h4 id="hugo-博客搭建教程">Hugo 博客搭建教程</h4>
+<ol>
+<li><a class="link" href="https://zz2summer.github.io/github-pages-hugo-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/#%E5%9B%9B%E9%80%89%E6%8B%A9-hugo-%E4%B8%BB%E9%A2%98"  target="_blank" rel="noopener"
+    >Github Pages + Hugo 搭建个人博客</a></li>
+<li><a class="link" href="https://www.pseudoyu.com/zh/2022/06/12/why_i_still_write_blog_in_2022/"  target="_blank" rel="noopener"
+    >2022 年了，聊聊我为什么还在写博客</a></li>
+<li><a class="link" href="https://www.pseudoyu.com/zh/2022/05/29/deploy_your_blog_using_hugo_and_github_action/"  target="_blank" rel="noopener"
+    >deploy_your_blog_using_hugo_and_github_action</a></li>
+<li><a class="link" href="https://www.sulvblog.cn/posts/blog/shortcodes/"  target="_blank" rel="noopener"
+    >Hugo博客自定义shortcodes</a></li>
+<li><a class="link" href="https://xrg.fj.cn/p/hugo-stack%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%96%B0%E5%B0%8F%E8%AE%B0/"  target="_blank" rel="noopener"
+    >Hugo Stack主题更新小记</a></li>
+<li><a class="link" href="https://www.skfwe.cn/p/%E5%8D%9A%E5%AE%A2%E5%88%87%E6%8D%A2%E5%88%B0stack-%E4%B8%BB%E9%A2%98/"  target="_blank" rel="noopener"
+    >博客切换到STACK 主题</a></li>
+<li><a class="link" href="https://jinli.cyou/p/%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%9A%84%E5%BB%BA%E7%AB%8B%E8%BF%87%E7%A8%8B%E4%B8%89hugo%E4%B8%BB%E9%A2%98stack%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8E%E4%BC%98%E5%8C%96/"  target="_blank" rel="noopener"
+    >个人网站的建立过程（三）：Hugo主题stack的使用与优化</a></li>
+<li><a class="link" href="https://blog.gujiakai.top/2023/03/hugo-theme-development-diary.html"  target="_blank" rel="noopener"
+    >Hugo主题开发日记</a></li>
+<li><a class="link" href="https://yuanyi-au.github.io/posts/hugo/"  target="_blank" rel="noopener"
+    >Hugo 详细笔记（建站教程、工作原理）</a></li>
+<li><a class="link" href="https://olowolo.com/post/hugo-quick-start/"  target="_blank" rel="noopener"
+    >Hugo 从入门到会用</a></li>
+<li><a class="link" href="https://shuzang.github.io/2019/hugo-blog-article-write/"  target="_blank" rel="noopener"
+    >hugo搭建个人博客2-文章写作</a></li>
+<li><a class="link" href="https://www.yunduan.io/posts/hugo-medium-level-lesson/"  target="_blank" rel="noopener"
+    >手把手使用Hugo搭建网站-中级篇</a></li>
+</ol>
+<ul>
+<li><a class="link" href="https://www.gohugo.org/doc/overview/quickstart/"  target="_blank" rel="noopener"
+    >gohugo官方文档 quickstart </a></li>
+<li><a class="link" href="https://www.gohugo.org/doc/content/organization/"  target="_blank" rel="noopener"
+    >gohugo官方文档 organization </a></li>
+<li><a class="link" href="https://gohugo.io/hosting-and-deployment/hosting-on-github/"  target="_blank" rel="noopener"
+    >gohugo官方文档 hosting-on-github</a></li>
+<li><a class="link" href="https://github.com/peaceiris/actions-hugo"  target="_blank" rel="noopener"
+    >github官方文档 actions-hugo</a></li>
+<li><a class="link" href="https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/"  target="_blank" rel="noopener"
+    >cloudflare Deploy a Hugo site</a></li>
+</ul>
+<h3 id="博客安装">博客安装</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -394,59 +408,120 @@ document.addEventListener('DOMContentLoaded', function () {
 </span></span><span class="line"><span class="cl"><span class="nv">git</span> <span class="nv">submodule</span> <span class="nv">update</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><a class="link" href="https://hugocn.netlify.app/configuration.html"  target="_blank" rel="noopener"
-    >hugo 配置讲解</a></p>
-<p><strong>路径配置最关键</strong></p>
-<p>最新部署</p>
-<hr>
-<p>主题搭建参考链接<a class="link" href="https://www.jianshu.com/p/0b9aecff290c"  target="_blank" rel="noopener"
-    >https://www.jianshu.com/p/0b9aecff290c</a></p>
-<p>这个链接配置是从零开始，最后搭建出一个样式，但里面教你操作的配置是toml文件，但似乎用的是yaml文件，这个需要了解下。</p>
-<p>在使用toml配置方式启动时，报错</p>
+</div><h3 id="git子模块功能安装使用">git子模块功能安装使用</h3>
+<p><a class="link" href="https://www.jianshu.com/p/9000cd49822c"  target="_blank" rel="noopener"
+    >Git submodule 子模块的管理和使用</a></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">WARN 2023/05/26 13:59:29 found no layout file for &#34;JSON&#34; for layout &#34;search&#34; for kind &#34;page&#34;: You should create a template file which matches Hugo Layouts Lookup Rules for this combination.
-</span></span><span class="line"><span class="cl">Rebuilt in 47 ms
+<pre tabindex="0" class="chroma"><code class="language-v" data-lang="v"><span class="line"><span class="cl"><span class="nv">git</span> <span class="nv">submodule</span> <span class="nv">add</span> <span class="nv">https</span><span class="p">:</span><span class="c1">//github.com/sona201/hugo-theme-stack themes/hugo-theme-stack
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="o">#</span> <span class="nv">删除</span> <span class="nv">submodule</span> <span class="nv">方式</span><span class="err">，</span><span class="nv">自定义主题</span>
+</span></span><span class="line"><span class="cl"><span class="nv">rm</span> <span class="o">-</span><span class="nv">rf</span>  <span class="p">.</span><span class="nv">gitmodules</span> <span class="o">#</span> <span class="nv">删除项目目录下</span><span class="p">.</span><span class="nv">gitmodules文件中子模块相关条目</span>
+</span></span><span class="line"><span class="cl"><span class="nv">vi</span> <span class="p">.</span><span class="nv">git</span><span class="o">/</span><span class="nv">config</span> <span class="o">#</span> <span class="nv">删除配置项中子模块相关条目</span>
+</span></span><span class="line"><span class="cl"><span class="nv">rm</span> <span class="p">.</span><span class="nv">git</span><span class="o">/</span><span class="kn">module</span><span class="o">/*</span> <span class="nv">删除模块下的子模块目录</span><span class="err">，</span><span class="nv">每个子模块对应一个目录</span><span class="err">，</span><span class="nv">注意只删除对应的子模块目录即可</span>
+</span></span><span class="line"><span class="cl"><span class="nv">git</span> <span class="nv">rm</span> <span class="o">--</span><span class="nv">cached</span> <span class="nv">themes</span><span class="o">/</span><span class="nv">hugo</span><span class="o">-</span><span class="nv">theme</span><span class="o">-</span><span class="nv">stack</span> <span class="o">-</span><span class="nv">rf</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>这个后面也要看看是什么问题。</p>
+</div><ul>
+<li><a class="link" href="https://hugocn.netlify.app/configuration.html"  target="_blank" rel="noopener"
+    >Hugo 配置讲解</a></li>
+<li><a class="link" href="https://orianna-zzo.github.io/sci-tech/2018-01/blog%E5%85%BB%E6%88%90%E8%AE%B04-hugo%E4%B8%AD%E5%A2%9E%E5%8A%A0tags%E7%AD%89%E5%88%86%E7%B1%BB/"  target="_blank" rel="noopener"
+    >Hugo 分类讲解</a></li>
+<li><a class="link" href="https://blog.gimo.me/posts/creating-a-hugo-theme/"  target="_blank" rel="noopener"
+    >Hugo 博客主题开发1</a></li>
+<li><a class="link" href="https://www.jianshu.com/p/0b9aecff290c"  target="_blank" rel="noopener"
+    >Hugo 博客主题开发2</a></li>
+<li><a class="link" href="https://sr-c.github.io/2020/07/21/Hugo-custom/"  target="_blank" rel="noopener"
+    >Hugo 自定义Hugo主题样式</a></li>
+<li><a class="link" href="https://hugo.aiaide.com/post/%E8%87%AA%E5%AE%9A%E4%B9%89hugo%E4%B8%BB%E9%A2%98-%E4%BB%8E%E5%86%85%E5%AE%B9%E9%A1%B5%E5%BC%80%E5%A7%8B/"  target="_blank" rel="noopener"
+    >Hugo 自定义hugo主题&ndash;从内容页开始</a></li>
+<li><a class="link" href="https://hcdtc.github.io/zh/docs/80-team-doc/1-doc-quickstart/2-hugo-quickstart/"  target="_blank" rel="noopener"
+    >Hugo 框架指引</a></li>
+<li><a class="link" href="https://www.jianshu.com/p/0b9aecff290c"  target="_blank" rel="noopener"
+    >hugo主题开发流程</a></li>
+<li><a class="link" href="https://blog.gimo.me/posts/creating-a-hugo-theme/"  target="_blank" rel="noopener"
+    >动手写一个 Hugo 博客主题</a></li>
+<li><a class="link" href="https://io-oi.me/tech/documentation-of-hugo-theme-meme/"  target="_blank" rel="noopener"
+    >hugo主题开发</a></li>
+</ul>
+<p>可参考官方文档的 <a class="link" href="https://gohugo.io/templates/introduction/"  target="_blank" rel="noopener"
+    >Introduction to Hugo Templating</a> <br>
+可参考 Régis Philibert 写的<a class="link" href="https://www.regisphilibert.com/tags/hugo/"  target="_blank" rel="noopener"
+    >相关教程</a>。 <br>
+推荐安装相应的<a class="link" href="https://gohugo.io/tools/editors/"  target="_blank" rel="noopener"
+    >语法高亮插件</a>，以更高效开发，博主后来开发时使用的是 VS Code 的 <a class="link" href="https://marketplace.visualstudio.com/items?itemName=budparr.language-hugo-vscode"  target="_blank" rel="noopener"
+    >Hugo Language and Syntax Support</a>。</p>
+<p><a class="link" href="https://www.gohugo.org/doc/overview/configuration/"  target="_blank" rel="noopener"
+    >hugo 配置文件官方说明</a></p>
+<h4 id="喜欢的主题参考">喜欢的主题参考</h4>
+<p><a class="link" href="https://github.com/cntrump/hugo-notepadium"  target="_blank" rel="noopener"
+    >hugo-notepadium</a> <br>
+<a class="link" href="https://github.com/reuixiy/hugo-theme-meme"  target="_blank" rel="noopener"
+    >hugo-theme-meme</a> <br>
+<a class="link" href="https://lvv.me/page/2/"  target="_blank" rel="noopener"
+    >个人博客链接</a></p>
+<h4 id="优化">优化</h4>
+<p>参考链接区分优先级别，哪些价值不大，哪些还需要继续参考研究</p>
+<p><a class="link" href="https://zz2summer.github.io/github-pages-hugo-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/#%E5%9B%9B%E9%80%89%E6%8B%A9-hugo-%E4%B8%BB%E9%A2%98"  target="_blank" rel="noopener"
+    >https://zz2summer.github.io/github-pages-hugo-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/#%E5%9B%9B%E9%80%89%E6%8B%A9-hugo-%E4%B8%BB%E9%A2%98</a></p>
+<p><a class="link" href="https://www.sulvblog.cn/posts/blog/shortcodes/"  target="_blank" rel="noopener"
+    >https://www.sulvblog.cn/posts/blog/shortcodes/</a></p>
+<p><a class="link" href="https://chupai.github.io/posts/200316_hugo/"  target="_blank" rel="noopener"
+    >https://chupai.github.io/posts/200316_hugo/</a></p>
+<p><a class="link" href="https://www.gohugo.org/doc/overview/quickstart/"  target="_blank" rel="noopener"
+    >https://www.gohugo.org/doc/overview/quickstart/</a></p>
+<p><a class="link" href="https://www.gohugo.org/doc/content/organization/"  target="_blank" rel="noopener"
+    >https://www.gohugo.org/doc/content/organization/</a></p>
+<p><a class="link" href="https://shuzang.github.io/2019/hugo-blog-article-write/"  target="_blank" rel="noopener"
+    >https://shuzang.github.io/2019/hugo-blog-article-write/</a></p>
+<p>hugo 的配置使用
+<a class="link" href="https://www.yunduan.io/posts/hugo-medium-level-lesson/"  target="_blank" rel="noopener"
+    >https://www.yunduan.io/posts/hugo-medium-level-lesson/</a></p>
+<p><a class="link" href="https://gohugo.io/hosting-and-deployment/hosting-on-github/"  target="_blank" rel="noopener"
+    >https://gohugo.io/hosting-and-deployment/hosting-on-github/</a></p>
+<p>好的链接
+<a class="link" href="https://strrl.dev/links/"  target="_blank" rel="noopener"
+    >https://strrl.dev/links/</a></p>
+<p><strong>路径配置最关键</strong></p>
 <p><a class="link" href="https://qwqaq.com/2022/04/migrate-to-hugo/#%E5%88%B6%E4%BD%9C%E4%B8%BB%E9%A2%98"  target="_blank" rel="noopener"
     >https://qwqaq.com/2022/04/migrate-to-hugo/#%E5%88%B6%E4%BD%9C%E4%B8%BB%E9%A2%98</a></p>
 <p>这个链接讲内容很详细，但没有讲怎么搞配置文件。所以要结合上面一篇文章</p>
 <p>关于博客搭建(建站之初link)</p>
 <ul>
-<li><a class="link" href="https://blog.kermsite.com/p/hugostack%E4%B8%BB%E9%A2%98"  target="_blank" rel="noopener"
-    >https://blog.kermsite.com/p/hugostack%E4%B8%BB%E9%A2%98</a></li>
 <li><a class="link" href="https://stack-theme-mod.vercel.app/2022/stack-theme-mod/"  target="_blank" rel="noopener"
     >https://stack-theme-mod.vercel.app/2022/stack-theme-mod/</a></li>
-<li><a class="link" href="https://stack.jimmycai.com/guide/modify-theme"  target="_blank" rel="noopener"
-    >https://stack.jimmycai.com/guide/modify-theme</a></li>
 <li><a class="link" href="https://viflythink.com/Migrate_from_Material_to_Stack/"  target="_blank" rel="noopener"
     >https://viflythink.com/Migrate_from_Material_to_Stack/</a></li>
-<li><a class="link" href="https://xrg.fj.cn/p/hugo-stack%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%96%B0%E5%B0%8F%E8%AE%B0/"  target="_blank" rel="noopener"
-    >https://xrg.fj.cn/p/hugo-stack%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%96%B0%E5%B0%8F%E8%AE%B0/</a></li>
-<li><a class="link" href="https://xrg.fj.cn/p/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%971/"  target="_blank" rel="noopener"
-    >https://xrg.fj.cn/p/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%971/</a></li>
-<li><a class="link" href="https://xrg.fj.cn/p/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%972/"  target="_blank" rel="noopener"
-    >https://xrg.fj.cn/p/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%972/</a></li>
 <li><a class="link" href="https://viflythink.com/links/"  target="_blank" rel="noopener"
     >https://viflythink.com/links/</a></li>
 </ul>
-<p>博客喜欢的字体</p>
-<p>从 罗磊 博客里找到的</p>
-<p>Family name: PingFang SC
-PostScript name: PingFangSC-Regular
-Font origin: Local file(112 glyphs)</p>
 
 </section>
 
 
     <footer class="article-footer">
     
+    <section class="article-tags">
+        
+            <a href="/tags/hugo/">hugo</a>
+        
+            <a href="/tags/blog/">blog</a>
+        
+            <a href="/tags/github-pages/">github-pages</a>
+        
+            <a href="/tags/stack/">stack</a>
+        
+    </section>
+
 
     
     <section class="article-copyright">
@@ -470,7 +545,7 @@ Font origin: Local file(112 glyphs)</p>
 
 
         <span>
-            最后更新于 Jul 03, 2023 13:05 &#43;0800
+            最后更新于 Oct 03, 2026 22:10 &#43;0800
         </span>
     </section></footer>
 
@@ -481,6 +556,28 @@ Font origin: Local file(112 glyphs)</p>
     
 
     
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/obsidian-tool-v1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">obsidian-sync-v1</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
 
      
     
