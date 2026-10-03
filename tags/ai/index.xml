@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>AI on Ricardo</title>
+        <link>https://sona201.github.io/tags/ai/</link>
+        <description>Recent content in AI on Ricardo</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sat, 03 Oct 2026 22:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/ai/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>AI Agent 学习笔记：CrewAI 与 ReAct</title>
+        <link>https://sona201.github.io/posts/ai-agent-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0crewai-%E4%B8%8E-react/</link>
+        <pubDate>Sat, 03 Oct 2026 22:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/ai-agent-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0crewai-%E4%B8%8E-react/</guid>
+        <description>&lt;p&gt;#agent #ai #react #plantegg&lt;/p&gt;
+&lt;h1 id=&#34;学习笔记使用-crewai-复刻-claude-code-级的-ai-agent&#34;&gt;学习笔记：使用 CrewAI 复刻 Claude Code 级的 AI Agent&lt;/h1&gt;
+&lt;h2 id=&#34;1-什么是-crewai&#34;&gt;1. 什么是 CrewAI？&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;CrewAI&lt;/strong&gt; 是一个用于编排协同式 AI Agent 的 Python 框架。如果说 LLM（大语言模型）是一个聪明的“大脑”，那么 CrewAI 就是一个**“项目经理”**。&lt;/p&gt;
+&lt;h3 id=&#34;核心四元素&#34;&gt;核心四元素：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Role (角色)&lt;/strong&gt;：定义 Agent 的身份（如：DBA 专家、技术作家）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Task (任务)&lt;/strong&gt;：定义具体要做的事情。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Tools (工具)&lt;/strong&gt;：Agent 可以调用的技能（如：SSH 远程执行、数据库查询）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Process (流程)&lt;/strong&gt;：规定 Agent 之间如何协作（顺序、层级等）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;2-核心原理react-工作模式&#34;&gt;2. 核心原理：ReAct 工作模式&lt;/h2&gt;
+&lt;p&gt;文章中复刻 Claude Code 的核心逻辑是 &lt;strong&gt;ReAct (Reasoning + Acting)&lt;/strong&gt;，这是目前 Agent 最主流的工作方式。&lt;/p&gt;
+&lt;h3 id=&#34;react-循环公式&#34;&gt;ReAct 循环公式：&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Thought (思考) → Action (行动) → Observation (观察) → Thought (再思考)&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Thought&lt;/strong&gt;：模型根据用户问题，思考当前需要什么信息。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Action&lt;/strong&gt;：模型决定调用哪一个工具（Tool）以及参数是什么。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Observation&lt;/strong&gt;：Agent 执行工具并拿到结果（如 Linux 报错信息或 SQL 查询结果）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Next Thought&lt;/strong&gt;：模型根据反馈结果，决定是继续调用工具，还是输出最终答案。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;3-agent-开发三要素&#34;&gt;3. Agent 开发三要素&lt;/h2&gt;
+&lt;p&gt;开发一个功能强大的 Agent，本质上是在配置以下三个部分：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;strong&gt;要素&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;&lt;strong&gt;作用&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;&lt;strong&gt;示例&lt;/strong&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;LLM (大脑)&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;提供推理和决策能力&lt;/td&gt;
+&lt;td&gt;Claude 3.5 Sonnet, GPT-4o&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Tools (手脚)&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;让模型能与现实世界交互&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ssh_tool&lt;/code&gt;, &lt;code&gt;mysql_query_tool&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Prompt (指令)&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;定义角色、规则和约束&lt;/td&gt;
+&lt;td&gt;&amp;ldquo;你是一个资深 DBA，只允许执行读操作&amp;rdquo;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;4-实战从-0-到-1-组建运维-agent&#34;&gt;4. 实战：从 0 到 1 组建运维 Agent&lt;/h2&gt;
+&lt;p&gt;根据参考文章，构建一个 MySQL 运维 Agent 的步骤如下：&lt;/p&gt;
+&lt;h3 id=&#34;step-1-定义自定义工具&#34;&gt;Step 1: 定义自定义工具&lt;/h3&gt;
+&lt;p&gt;工具是 Agent 的“手脚”。每个工具必须包含 &lt;code&gt;description&lt;/code&gt;，因为&lt;strong&gt;模型是靠这段描述来判断何时使用该工具的&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;Python&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;from crewai.tools import BaseTool
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;class MySQLQueryTool(BaseTool):
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    name: str = &amp;#34;mysql_query&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    description: str = &amp;#34;用于执行 MySQL 只读查询语句，获取数据库状态。&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    def _run(self, query: str):
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        # 实际执行 SQL 的 Python 代码
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        return &amp;#34;查询结果文本&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;step-2-配置-agent-与-task&#34;&gt;Step 2: 配置 Agent 与 Task&lt;/h3&gt;
+&lt;p&gt;Python&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;from crewai import Agent, Task, Crew
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 1. 定义 Agent
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;dba_agent = Agent(
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    role=&amp;#34;DBA 运维专家&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    goal=&amp;#34;诊断 MySQL 性能瓶颈&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    backstory=&amp;#34;你拥有 10 年运维经验，擅长通过慢查询日志定位问题。&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    tools=[MySQLQueryTool()], # 载入工具
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    verbose=True # 开启 debug 模式，查看思考过程
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 3. 定义任务
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;task = Task(
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    description=&amp;#34;分析 10.0.0.1 机器上的慢查询并给出优化建议&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    expected_output=&amp;#34;一份包含问题原因和优化建议的 MD 报告&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    agent=dba_agent
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 4. 组建团队启动
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;crew = Crew(agents=[dba_agent], tasks=[task])
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;result = crew.kickoff()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id=&#34;5-关键洞察踩坑总结&#34;&gt;5. 关键洞察（踩坑总结）&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;模型没有记忆&lt;/strong&gt;：每一轮 ReAct 交互，Agent 都会把之前的对话历史、工具返回结果打包成一个巨大的 Prompt 重新发给模型。这意味着 Token 消耗会随轮数剧增。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;模型不会执行工具&lt;/strong&gt;：大模型只输出“指令字符串”，真正去执行 SSH 或 Python 代码的是 &lt;strong&gt;CrewAI 框架&lt;/strong&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;工具描述至关重要&lt;/strong&gt;：如果 Agent 总是用错工具，通常是因为 &lt;code&gt;description&lt;/code&gt; 写得不清晰。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;安全边界&lt;/strong&gt;：在运维场景下，必须在工具的 Python 代码层做好拦截（如禁止 &lt;code&gt;DROP&lt;/code&gt;, &lt;code&gt;DELETE&lt;/code&gt; 等操作），不能仅靠 Prompt 约束。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;6-进阶方向&#34;&gt;6. 进阶方向&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;接入更多数据源&lt;/strong&gt;：将 Prometheus 监控、日志平台 API 封装为 Tool。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;多 Agent 协作&lt;/strong&gt;：一个 Agent 负责搜集数据，另一个 Agent 负责编写最终诊断报告。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Human-in-the-loop&lt;/strong&gt;：在执行高风险 Action 前，让 Agent 停下来等待人类授权。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;笔记来源：基于 &lt;a class=&#34;link&#34; href=&#34;https://plantegg.github.io/2026/03/05/%E4%BB%8E0%E5%88%B01%E5%A4%8D%E5%88%BB%E4%B8%80%E4%B8%AAClaude_Code%E8%BF%99%E6%A0%B7%E7%9A%84Agent/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;plantegg 博客&lt;/a&gt; 与 CrewAI 官方文档整理。&lt;/em&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
