@@ -2,21 +2,32 @@ name: deploy hugo
 
 on:
   push:
+    branches:
+      - main
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-hugo
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: true
           fetch-depth: 0
 
       - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
-        with: # 參數設定
+        uses: peaceiris/actions-hugo@v3
+        with:
           hugo-version: '0.101.0'
           extended: true
 
@@ -24,10 +35,10 @@ jobs:
         run: hugo
 
       - name: Deploy Web
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          PERSONAL_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
-          EXTERNAL_REPOSITORY: sona201/sona201.github.io
-          PUBLISH_BRANCH: master
-          PUBLISH_DIR: ./public
-          commit_message: ${{ github.event.head_commit.message }}
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
+          external_repository: sona201/sona201.github.io
+          publish_branch: master
+          publish_dir: ./public
+          commit_message: ${{ github.event.head_commit.message || 'manual deploy' }}
