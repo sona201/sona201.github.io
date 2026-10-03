@@ -50,6 +50,9 @@
 {{ end }}
 
 {{ define "right-sidebar" }}
+    {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+    {{ $notHidden := where .Site.RegularPages "Params.hidden" "!=" true }}
+    {{ $filtered := ($pages | intersect $notHidden) }}
     <aside class="sidebar right-sidebar homepage-profile-sidebar sticky">
         <section class="homepage-profile-card">
             {{ with .Site.Params.sidebar.avatar }}
