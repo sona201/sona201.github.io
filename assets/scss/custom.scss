@@ -1,0 +1,285 @@
+/*
+ * Reading-focused refinements inspired by the typography and spacing of
+ * technical blogs such as blog.skk.moe. Keep Stack's structure and identity,
+ * while making long Chinese/English technical articles calmer to read.
+ */
+
+:root {
+    --sys-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC",
+        "Helvetica Neue", Arial, sans-serif;
+    --article-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC",
+        "Helvetica Neue", Arial, sans-serif;
+    --code-font-family: "SFMono-Regular", "SF Mono", Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+
+    --article-font-size: 1.68rem;
+    --article-line-height: 1.82;
+    --card-border-radius: 10px;
+    --section-separation: 28px;
+    --card-padding: 28px;
+}
+
+/* Give the actual reading column more room without making lines too long. */
+@media (min-width: 1024px) {
+    .container.extended {
+        max-width: 1440px;
+        --left-sidebar-max-width: 17%;
+        --right-sidebar-max-width: 23%;
+    }
+}
+
+@media (min-width: 1280px) {
+    .container.extended {
+        max-width: 1520px;
+        --left-sidebar-max-width: 16%;
+        --right-sidebar-max-width: 22%;
+    }
+}
+
+/* Home/list: less "large card", more editorial rhythm. */
+.article-list {
+    gap: 22px;
+
+    article {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.035);
+
+        &:hover {
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+        }
+    }
+}
+
+.article-details {
+    padding: 26px 30px;
+    gap: 12px;
+}
+
+.article-title {
+    font-size: 2.15rem;
+    line-height: 1.42;
+    letter-spacing: -0.012em;
+    font-weight: 650;
+}
+
+.article-subtitle {
+    font-size: 1.58rem;
+    line-height: 1.72;
+}
+
+.article-time time,
+.article-time a {
+    font-size: 1.32rem;
+}
+
+/* Article page */
+.article-page .main-article {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.035);
+}
+
+.article-page .main-article .article-header .article-details {
+    padding: 34px 42px 8px;
+}
+
+.article-page .main-article .article-content {
+    margin-top: 24px;
+    margin-bottom: 36px;
+}
+
+.article-content {
+    padding: 0 42px;
+    font-size: var(--article-font-size);
+    line-height: var(--article-line-height);
+    letter-spacing: 0.006em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+
+    & > p {
+        margin: 1.35em 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        border-inline-start: 0;
+        margin-inline-start: 0;
+        padding-inline-start: 0;
+        color: var(--card-text-color-main);
+        line-height: 1.4;
+        letter-spacing: -0.012em;
+    }
+
+    h2 {
+        margin-top: 2.15em;
+        margin-bottom: 0.85em;
+        font-size: 1.58em;
+        font-weight: 700;
+    }
+
+    h3 {
+        margin-top: 1.8em;
+        margin-bottom: 0.7em;
+        font-size: 1.28em;
+        font-weight: 650;
+    }
+
+    h4 {
+        margin-top: 1.6em;
+        margin-bottom: 0.6em;
+        font-size: 1.08em;
+        font-weight: 650;
+    }
+
+    ul,
+    ol {
+        padding-left: 1.55em;
+        margin: 1.1em 0;
+    }
+
+    li {
+        margin: 0.38em 0;
+    }
+
+    a {
+        text-underline-offset: 0.18em;
+        text-decoration-thickness: 1px;
+    }
+
+    blockquote {
+        margin-top: 1.7em;
+        margin-bottom: 1.7em;
+        padding-top: 14px;
+        padding-bottom: 14px;
+        font-size: 0.96em;
+        line-height: 1.75;
+    }
+
+    code {
+        padding: 0.12em 0.34em;
+        border-radius: 4px;
+        font-size: 0.88em;
+    }
+
+    pre,
+    .highlight {
+        line-height: 1.62;
+        font-size: 0.9em;
+    }
+
+    pre {
+        padding-top: 22px;
+        padding-bottom: 22px;
+    }
+
+    img {
+        border-radius: 6px;
+    }
+
+    table {
+        line-height: 1.6;
+    }
+
+    th,
+    td {
+        padding: 8px 12px;
+    }
+
+    hr {
+        width: 64px;
+        margin: 52px auto;
+        height: 1px;
+        opacity: 0.35;
+    }
+}
+
+/* Keep wide elements aligned with the article card, but not overly stretched. */
+.article-content {
+    blockquote,
+    figure,
+    .highlight,
+    pre,
+    .gallery,
+    .video-wrapper,
+    .table-wrapper,
+    .s_video_simple {
+        margin-left: -42px;
+        margin-right: -42px;
+        width: calc(100% + 84px);
+    }
+
+    blockquote {
+        padding-left: 42px;
+        padding-right: 42px;
+    }
+
+    .highlight,
+    pre {
+        padding-left: 42px;
+        padding-right: 42px;
+    }
+}
+
+/* TOC: denser and quieter. */
+.widget--toc {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+
+    #TableOfContents {
+        font-size: 0.94em;
+
+        li {
+            margin-top: 9px;
+            margin-bottom: 9px;
+            line-height: 1.5;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    :root {
+        --article-font-size: 1.6rem;
+        --article-line-height: 1.78;
+        --card-padding: 20px;
+        --section-separation: 20px;
+    }
+
+    .article-details {
+        padding: 22px 20px;
+    }
+
+    .article-title {
+        font-size: 2rem;
+    }
+
+    .article-page .main-article .article-header .article-details {
+        padding: 26px 22px 4px;
+    }
+
+    .article-content {
+        padding-left: 22px;
+        padding-right: 22px;
+
+        blockquote,
+        figure,
+        .highlight,
+        pre,
+        .gallery,
+        .video-wrapper,
+        .table-wrapper,
+        .s_video_simple {
+            margin-left: -22px;
+            margin-right: -22px;
+            width: calc(100% + 44px);
+        }
+
+        blockquote,
+        .highlight,
+        pre {
+            padding-left: 22px;
+            padding-right: 22px;
+        }
+    }
+}
