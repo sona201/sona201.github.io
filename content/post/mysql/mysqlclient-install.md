@@ -35,7 +35,7 @@ xcode-select --install
 
 报错内容
 
-![msyqlclient_xcode_error](assets/images/msyqlclient_xcode_error.png)
+![msyqlclient_xcode_error](/images/mysqlclient-xcode-error.png)
 
 ```
 (venv) clin:devops-api/ (master) $ pip install mysqlclient                                                                                                               [10:54:12]
@@ -109,7 +109,7 @@ ERROR: Could not build wheels for mysqlclient, which is required to install pypr
 pip install -e git+https://github.com/etripier/mysqlclient.git@ee1882e02e3c73910b1d6df86bbdce784edbb881#egg=mysqlclient
 ```
 
-![msyqlclient_8_0_install_error](../image/msyqlclient_8_0_install_error.png)
+![msyqlclient_8_0_install_error](/images/mysqlclient-install-error.png)
 
 [git fix link https://github.com/PyMySQL/mysqlclient/issues/688](https://github.com/PyMySQL/mysqlclient/issues/688)
 ```
