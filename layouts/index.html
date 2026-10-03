@@ -1,0 +1,115 @@
+{{ define "left-sidebar" }}{{ end }}
+
+{{ define "main" }}
+    {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+    {{ $notHidden := where .Site.RegularPages "Params.hidden" "!=" true }}
+    {{ $filtered := ($pages | intersect $notHidden) }}
+    {{ $pag := .Paginate ($filtered) }}
+
+    <section class="editorial-article-list">
+        {{ range $pag.Pages }}
+            {{ $image := partialCached "helper/image" (dict "Context" . "Type" "articleList") .RelPermalink "articleList" }}
+            <article class="editorial-article">
+                <div class="editorial-article__body">
+                    <div class="editorial-article__meta">
+                        {{ with .Params.categories }}
+                            <span>{{ index . 0 }}</span>
+                            <span class="dot">·</span>
+                        {{ end }}
+                        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+                        {{ if .ReadingTime }}
+                            <span class="dot">·</span>
+                            <span>约 {{ .ReadingTime }} 分钟</span>
+                        {{ end }}
+                    </div>
+
+                    <h2 class="editorial-article__title">
+                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                    </h2>
+
+                    {{ with .Description }}
+                        <p class="editorial-article__summary">{{ . }}</p>
+                    {{ else }}
+                        {{ with .Summary }}
+                            <p class="editorial-article__summary">{{ . | plainify | truncate 180 }}</p>
+                        {{ end }}
+                    {{ end }}
+                </div>
+
+                {{ if $image.exists }}
+                    <a class="editorial-article__image" href="{{ .RelPermalink }}" aria-label="{{ .Title }}">
+                        <img src="{{ $image.permalink }}" loading="lazy" alt="">
+                    </a>
+                {{ end }}
+            </article>
+        {{ end }}
+    </section>
+
+    {{- partial "pagination.html" . -}}
+    {{- partial "footer/footer" . -}}
+{{ end }}
+
+{{ define "right-sidebar" }}
+    <aside class="sidebar right-sidebar homepage-profile-sidebar sticky">
+        <section class="homepage-profile-card">
+            {{ with .Site.Params.sidebar.avatar }}
+                {{ if (default true .enabled) }}
+                    {{ if .local }}
+                        {{ $avatar := resources.Get (.src) }}
+                        {{ if $avatar }}
+                            {{ $avatarResized := $avatar.Resize "160x" }}
+                            <img class="homepage-profile-card__avatar"
+                                 src="{{ $avatarResized.RelPermalink }}"
+                                 width="{{ $avatarResized.Width }}"
+                                 height="{{ $avatarResized.Height }}"
+                                 alt="Avatar">
+                        {{ end }}
+                    {{ else }}
+                        <img class="homepage-profile-card__avatar" src="{{ .src }}" width="80" height="80" alt="Avatar">
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+
+            <div>
+                <h2>{{ .Site.Title }}</h2>
+                <p>{{ .Site.Params.sidebar.subtitle }}</p>
+            </div>
+
+            <div class="homepage-profile-card__stats">
+                <div><strong>{{ len $filtered }}</strong><span>文章</span></div>
+                <div><strong>{{ len .Site.Taxonomies.categories }}</strong><span>分类</span></div>
+                <div><strong>{{ len .Site.Taxonomies.tags }}</strong><span>标签</span></div>
+            </div>
+
+            {{ with .Site.Menus.social }}
+                {{ range . }}
+                    <a class="homepage-profile-card__link"
+                       href="{{ .URL }}"
+                       {{ if eq (default true .Params.newTab) true }}target="_blank" rel="noopener"{{ end }}>
+                        {{ .Name }} ↗
+                    </a>
+                {{ end }}
+            {{ end }}
+        </section>
+
+        <section class="homepage-side-list">
+            <h3>最近文章</h3>
+            {{ range first 5 $filtered.ByDate.Reverse }}
+                <a href="{{ .RelPermalink }}">
+                    <span>{{ .Title }}</span>
+                    <time>{{ .Date.Format "2006-01-02" }}</time>
+                </a>
+            {{ end }}
+        </section>
+
+        <section class="homepage-side-list homepage-categories">
+            <h3>分类</h3>
+            {{ range first 8 .Site.Taxonomies.categories.ByCount }}
+                <a href="{{ .Page.RelPermalink }}">
+                    <span>{{ .Page.Title }}</span>
+                    <strong>{{ .Count }}</strong>
+                </a>
+            {{ end }}
+        </section>
+    </aside>
+{{ end }}
