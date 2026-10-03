@@ -1,0 +1,35 @@
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="{{ .Site.BaseURL | relLangURL }}">{{ .Site.Title }}</a>
+
+        <nav class="top-navigation__menu" aria-label="Main navigation">
+            {{ $currentPage := . }}
+            {{ range .Site.Menus.main }}
+                {{ $active := or (eq $currentPage.Title .Name) (or ($currentPage.HasMenuCurrent "main" .) ($currentPage.IsMenuCurrent "main" .)) }}
+                <a href="{{ .URL }}"
+                   {{ if $active }}class="current"{{ end }}
+                   {{ if eq .Params.newTab true }}target="_blank" rel="noopener"{{ end }}>
+                    {{ .Name }}
+                </a>
+            {{ end }}
+        </nav>
+
+        {{ if (default false .Site.Params.colorScheme.toggle) }}
+            <button class="top-navigation__theme" id="top-dark-mode-toggle" type="button" aria-label="{{ T `darkMode` }}">
+                {{ partial "helper/icon" "moon" }}
+            </button>
+        {{ end }}
+    </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var topToggle = document.getElementById('top-dark-mode-toggle');
+    var originalToggle = document.getElementById('dark-mode-toggle');
+    if (topToggle && originalToggle) {
+        topToggle.addEventListener('click', function () {
+            originalToggle.click();
+        });
+    }
+});
+</script>
