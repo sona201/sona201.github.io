@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='从个人笔记仓库整理迁移'>
+<title>Nmap 端口扫描笔记</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/'>
+
+<link rel="stylesheet" href="/scss/style.min.2a8a8b5925063991a20d80fb86183b19905b741ac47e8c0a373818c059a9ae7c.css"><meta property='og:title' content='Nmap 端口扫描笔记'>
+<meta property='og:description' content='从个人笔记仓库整理迁移'>
+<meta property='og:url' content='https://sona201.github.io/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='linux' /><meta property='article:tag' content='nmap' /><meta property='article:tag' content='network' /><meta property='article:published_time' content='2026-10-03T22:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-10-03T22:00:00&#43;08:00'/>
+<meta name="twitter:title" content="Nmap 端口扫描笔记">
+<meta name="twitter:description" content="从个人笔记仓库整理迁移">
+    <link rel="shortcut icon" href="/image/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="
+    article-page
+    "><header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="Main navigation">
+            
+            
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+                
+                <a href="/tags"
+                   
+                   target="_blank" rel="noopener">
+                    Tags
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="top-dark-mode-toggle" type="button" aria-label="暗色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var topToggle = document.getElementById('top-dark-mode-toggle');
+    var originalToggle = document.getElementById('dark-mode-toggle');
+    if (topToggle && originalToggle) {
+        topToggle.addEventListener('click', function () {
+            originalToggle.click();
+        });
+    }
+});
+</script>
+
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                        
+                        <img src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_300x0_resize_box_3.png" width="300"
+                            height="297" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+            </figure>
+            
+        
+
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Ricardo</a></h1>
+            <h2 class="site-description">人到中年，专业捧哏</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a href="https://github.com/sona201/"
+                       target="_blank"
+                       title="GitHub"
+                       rel="me">
+                        
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                    </a>
+                </li>
+            
+        </ol>
+    <ol class="menu sidebar-controls">
+        <div class="menu-bottom-section">
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#客户端命令">客户端命令</a></li>
+            <li><a href="#服务端抓包">服务端抓包</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/linux/" >
+                Linux
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">Nmap 端口扫描笔记</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            从个人笔记仓库整理迁移
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2026-10-03</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 6 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>以往只知道扫描端口用nmap，可以看出 open closed filtered 对应的状态是 开 关 防火墙拦截</p>
+<p>nmap 10.1.1.1 -p 8080 -Pn</p>
+<p>其实这个用法不对，-Pn是不使用ping，主要是在扫描多台机器的时候使用</p>
+<p>对于我查看某一台机器的端口跟协议</p>
+<p>nmap 10.1.1.1 -sU -p 514  # 扫描upd端口，在服务器上可以抓包看到udp
+nmap 10.1.1.1 -sP -p 8080 # 扫描tcp端口，在服务器上可以抓包看到tcp</p>
+<p>同时检查两个类型</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@10.200.13.86 ~]# nmap 10.1.10.251 -sS -sU -p 514
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Starting Nmap 6.40 ( http://nmap.org ) at 2023-04-13 12:53 CST
+</span></span><span class="line"><span class="cl">Nmap scan report for 10.1.10.251
+</span></span><span class="line"><span class="cl">Host is up (0.00071s latency).
+</span></span><span class="line"><span class="cl">PORT    STATE         SERVICE
+</span></span><span class="line"><span class="cl">514/tcp closed        shell
+</span></span><span class="line"><span class="cl">514/udp open|filtered syslog
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Nmap done: 1 IP address (1 host up) scanned in 0.31 seconds
+</span></span><span class="line"><span class="cl">[root@10.200.13.86 ~]# nmap 10.1.10.251 -sT -sU -p 514
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Starting Nmap 6.40 ( http://nmap.org ) at 2023-04-13 12:53 CST
+</span></span><span class="line"><span class="cl">Nmap scan report for 10.1.10.251
+</span></span><span class="line"><span class="cl">Host is up (0.00087s latency).
+</span></span><span class="line"><span class="cl">PORT    STATE         SERVICE
+</span></span><span class="line"><span class="cl">514/tcp closed        shell
+</span></span><span class="line"><span class="cl">514/udp open|filtered syslog
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Nmap done: 1 IP address (1 host up) scanned in 0.28 seconds
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用wireshark抓包显示(yum install -y wireshark)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@10.1.10.251 ~]# tshark -i eth0 host 10.200.13.86
+</span></span><span class="line"><span class="cl">Running as user &#34;root&#34; and group &#34;root&#34;. This could be dangerous.
+</span></span><span class="line"><span class="cl">Capturing on &#39;eth0&#39;
+</span></span><span class="line"><span class="cl">  1 0.000000000 10.200.13.86 -&gt; 10.1.10.251  TCP 58 52956 &gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+</span></span><span class="line"><span class="cl">  2 0.000025685  10.1.10.251 -&gt; 10.200.13.86 TCP 54 https &gt; 52956 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl">  3 0.000684895 10.200.13.86 -&gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0xfd77, seq=0/0, ttl=58
+</span></span><span class="line"><span class="cl">  4 0.000691926  10.1.10.251 -&gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0xfd77, seq=0/0, ttl=64 (request in 3)
+</span></span><span class="line"><span class="cl">  5 0.000700081 10.200.13.86 -&gt; 10.1.10.251  ICMP 54 Timestamp request    id=0x0a0f, seq=0/0, ttl=47
+</span></span><span class="line"><span class="cl">  6 0.000703470  10.1.10.251 -&gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0x0a0f, seq=0/0, ttl=64
+</span></span><span class="line"><span class="cl">  7 0.001042903 10.200.13.86 -&gt; 10.1.10.251  TCP 54 52956 &gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+</span></span><span class="line"><span class="cl">  8 0.001046910  10.1.10.251 -&gt; 10.200.13.86 TCP 54 http &gt; 52956 [RST] Seq=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl">  9 0.027864364 10.200.13.86 -&gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 10 0.127943082 10.200.13.86 -&gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 11 14.128607309 10.200.13.86 -&gt; 10.1.10.251  TCP 54 39871 &gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+</span></span><span class="line"><span class="cl"> 12 14.128627342  10.1.10.251 -&gt; 10.200.13.86 TCP 54 http &gt; 39871 [RST] Seq=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl"> 13 14.128641456 10.200.13.86 -&gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0x0cd3, seq=0/0, ttl=45
+</span></span><span class="line"><span class="cl"> 14 14.128645487  10.1.10.251 -&gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0x0cd3, seq=0/0, ttl=64 (request in 13)
+</span></span><span class="line"><span class="cl"> 15 14.128700635 10.200.13.86 -&gt; 10.1.10.251  ICMP 54 Timestamp request    id=0x548d, seq=0/0, ttl=38
+</span></span><span class="line"><span class="cl"> 16 14.128703903  10.1.10.251 -&gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0x548d, seq=0/0, ttl=64
+</span></span><span class="line"><span class="cl"> 17 14.128931731 10.200.13.86 -&gt; 10.1.10.251  TCP 58 39871 &gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+</span></span><span class="line"><span class="cl"> 18 14.128934644  10.1.10.251 -&gt; 10.200.13.86 TCP 54 https &gt; 39871 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl"> 19 14.144575335 10.200.13.86 -&gt; 10.1.10.251  TCP 74 45644 &gt; shell [SYN] Seq=0 Win=29200 Len=0 MSS=1460 SACK_PERM=1 TSval=1253548131 TSecr=0 WS=128
+</span></span><span class="line"><span class="cl"> 20 14.144579164  10.1.10.251 -&gt; 10.200.13.86 TCP 54 shell &gt; 45644 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl"> 21 110.999002405 10.200.13.86 -&gt; 10.1.10.251  TCP 58 47406 &gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+</span></span><span class="line"><span class="cl"> 22 110.999020511  10.1.10.251 -&gt; 10.200.13.86 TCP 54 https &gt; 47406 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl"> 23 110.999740448 10.200.13.86 -&gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0x52de, seq=0/0, ttl=44
+</span></span><span class="line"><span class="cl"> 24 110.999745364  10.1.10.251 -&gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0x52de, seq=0/0, ttl=64 (request in 23)
+</span></span><span class="line"><span class="cl"> 25 110.999802251 10.200.13.86 -&gt; 10.1.10.251  ICMP 54 Timestamp request    id=0x51bd, seq=0/0, ttl=39
+</span></span><span class="line"><span class="cl"> 26 110.999805574  10.1.10.251 -&gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0x51bd, seq=0/0, ttl=64
+</span></span><span class="line"><span class="cl"> 27 111.000109881 10.200.13.86 -&gt; 10.1.10.251  TCP 54 47406 &gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+</span></span><span class="line"><span class="cl"> 28 111.000113185  10.1.10.251 -&gt; 10.200.13.86 TCP 54 http &gt; 47406 [RST] Seq=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl"> 29 111.014724099 10.200.13.86 -&gt; 10.1.10.251  TCP 74 48930 &gt; 5140 [SYN] Seq=0 Win=29200 Len=0 MSS=1460 SACK_PERM=1 TSval=1253645001 TSecr=0 WS=128
+</span></span><span class="line"><span class="cl"> 30 111.014728072  10.1.10.251 -&gt; 10.200.13.86 TCP 54 5140 &gt; 48930 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"> 31 124.893938777 10.200.13.86 -&gt; 10.1.10.251  TCP 54 40999 &gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+</span></span><span class="line"><span class="cl"> 32 124.893957805  10.1.10.251 -&gt; 10.200.13.86 TCP 54 http &gt; 40999 [RST] Seq=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl"> 33 124.894706497 10.200.13.86 -&gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0xc1d2, seq=0/0, ttl=54
+</span></span><span class="line"><span class="cl"> 34 124.894711077  10.1.10.251 -&gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0xc1d2, seq=0/0, ttl=64 (request in 33)
+</span></span><span class="line"><span class="cl"> 35 124.894756587 10.200.13.86 -&gt; 10.1.10.251  ICMP 54 Timestamp request    id=0xf398, seq=0/0, ttl=52
+</span></span><span class="line"><span class="cl"> 36 124.894759362  10.1.10.251 -&gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0xf398, seq=0/0, ttl=64
+</span></span><span class="line"><span class="cl"> 37 124.895121682 10.200.13.86 -&gt; 10.1.10.251  TCP 58 40999 &gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+</span></span><span class="line"><span class="cl"> 38 124.895124588  10.1.10.251 -&gt; 10.200.13.86 TCP 54 https &gt; 40999 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl"> 39 124.920843490 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 41255  Destination port: 5140
+</span></span><span class="line"><span class="cl"> 40 124.920851871  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"> 41 1105.706644739 10.200.13.86 -&gt; 10.1.10.251  TCP 58 48674 &gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+</span></span><span class="line"><span class="cl"> 42 1105.706670049  10.1.10.251 -&gt; 10.200.13.86 TCP 54 https &gt; 48674 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl"> 43 1105.706680241 10.200.13.86 -&gt; 10.1.10.251  TCP 54 48674 &gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+</span></span><span class="line"><span class="cl"> 44 1105.706682527  10.1.10.251 -&gt; 10.200.13.86 TCP 54 http &gt; 48674 [RST] Seq=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl"> 45 1105.707410604 10.200.13.86 -&gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0xb2e7, seq=0/0, ttl=53
+</span></span><span class="line"><span class="cl"> 46 1105.707415647  10.1.10.251 -&gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0xb2e7, seq=0/0, ttl=64 (request in 45)
+</span></span><span class="line"><span class="cl"> 47 1105.707491509 10.200.13.86 -&gt; 10.1.10.251  ICMP 54 Timestamp request    id=0x2406, seq=0/0, ttl=55
+</span></span><span class="line"><span class="cl"> 48 1105.707494181  10.1.10.251 -&gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0x2406, seq=0/0, ttl=64
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>多个不连续的端口，用逗号隔开。如果是连续的端口则可以写成 1-100。如果不加 p 参数，则默认是常用的 1000 个端口号（80、3306 这种）。示例使用500-520，如下：</p>
+</blockquote>
+<h4 id="客户端命令">客户端命令</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@10.200.13.86 ~]# nmap 10.1.10.251 -sU -p 500-520
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Starting Nmap 6.40 ( http://nmap.org ) at 2023-04-13 12:44 CST
+</span></span><span class="line"><span class="cl">Nmap scan report for 10.1.10.251
+</span></span><span class="line"><span class="cl">Host is up (0.0020s latency).
+</span></span><span class="line"><span class="cl">PORT    STATE         SERVICE
+</span></span><span class="line"><span class="cl">500/udp closed        isakmp
+</span></span><span class="line"><span class="cl">501/udp open|filtered stmf
+</span></span><span class="line"><span class="cl">502/udp closed        asa-appl-proto
+</span></span><span class="line"><span class="cl">503/udp open|filtered intrinsa
+</span></span><span class="line"><span class="cl">504/udp closed        citadel
+</span></span><span class="line"><span class="cl">505/udp closed        mailbox-lm
+</span></span><span class="line"><span class="cl">506/udp closed        ohimsrv
+</span></span><span class="line"><span class="cl">507/udp open|filtered crs
+</span></span><span class="line"><span class="cl">508/udp closed        xvttp
+</span></span><span class="line"><span class="cl">509/udp open|filtered snare
+</span></span><span class="line"><span class="cl">510/udp closed        fcp
+</span></span><span class="line"><span class="cl">511/udp open|filtered passgo
+</span></span><span class="line"><span class="cl">512/udp closed        biff
+</span></span><span class="line"><span class="cl">513/udp open|filtered who
+</span></span><span class="line"><span class="cl">514/udp open|filtered syslog
+</span></span><span class="line"><span class="cl">515/udp open|filtered printer
+</span></span><span class="line"><span class="cl">516/udp closed        videotex
+</span></span><span class="line"><span class="cl">517/udp closed        talk
+</span></span><span class="line"><span class="cl">518/udp closed        ntalk
+</span></span><span class="line"><span class="cl">519/udp closed        utime
+</span></span><span class="line"><span class="cl">520/udp closed        route
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Nmap done: 1 IP address (1 host up) scanned in 7.34 seconds
+</span></span><span class="line"><span class="cl">[root@10.200.13.86 ~]# 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="服务端抓包">服务端抓包</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@10.1.10.251 ~]# tshark -i eth0 host 10.200.13.86
+</span></span><span class="line"><span class="cl">Running as user &#34;root&#34; and group &#34;root&#34;. This could be dangerous.
+</span></span><span class="line"><span class="cl">Capturing on &#39;eth0&#39;
+</span></span><span class="line"><span class="cl">  1 0.000000000 10.200.13.86 -&gt; 10.1.10.251  TCP 54 62247 &gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+</span></span><span class="line"><span class="cl">  2 0.000012221  10.1.10.251 -&gt; 10.200.13.86 TCP 54 http &gt; 62247 [RST] Seq=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl">  3 0.000762781 10.200.13.86 -&gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0xb3b0, seq=0/0, ttl=36
+</span></span><span class="line"><span class="cl">  4 0.000766991  10.1.10.251 -&gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0xb3b0, seq=0/0, ttl=64 (request in 3)
+</span></span><span class="line"><span class="cl">  5 0.000838519 10.200.13.86 -&gt; 10.1.10.251  ICMP 54 Timestamp request    id=0x06f6, seq=0/0, ttl=51
+</span></span><span class="line"><span class="cl">  6 0.000841192  10.1.10.251 -&gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0x06f6, seq=0/0, ttl=64
+</span></span><span class="line"><span class="cl">  7 0.000951930 10.200.13.86 -&gt; 10.1.10.251  TCP 58 62247 &gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+</span></span><span class="line"><span class="cl">  8 0.000954938  10.1.10.251 -&gt; 10.200.13.86 TCP 54 https &gt; 62247 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+</span></span><span class="line"><span class="cl">  9 0.027985374 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: fcp
+</span></span><span class="line"><span class="cl"> 10 0.027994873  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 11 0.028001484 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: mailbox-lm
+</span></span><span class="line"><span class="cl"> 12 0.028003845  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 13 0.028022978 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: comsat
+</span></span><span class="line"><span class="cl"> 14 0.028025210  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 15 0.028027405 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: talk
+</span></span><span class="line"><span class="cl"> 16 0.028029347  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 17 0.028032578 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: utime
+</span></span><span class="line"><span class="cl"> 18 0.028034575  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 19 0.028036755 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: ntalk
+</span></span><span class="line"><span class="cl"> 20 0.028038599  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 21 0.028045655 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: ohimsrv
+</span></span><span class="line"><span class="cl"> 22 0.028948371 10.200.13.86 -&gt; 10.1.10.251  RIPv1 66 Request
+</span></span><span class="line"><span class="cl"> 23 0.028969173 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: xvttp
+</span></span><span class="line"><span class="cl"> 24 0.029197536 10.200.13.86 -&gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 25 0.031863656 10.200.13.86 -&gt; 10.1.10.251  ISAKMP 234 
+</span></span><span class="line"><span class="cl"> 26 0.032008756 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: crs
+</span></span><span class="line"><span class="cl"> 27 0.032016229 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: snare
+</span></span><span class="line"><span class="cl"> 28 0.032033619 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: passgo
+</span></span><span class="line"><span class="cl"> 29 0.032036457 10.200.13.86 -&gt; 10.1.10.251  WHO 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 30 0.032189560 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: stmf
+</span></span><span class="line"><span class="cl"> 31 0.032713768 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: citadel
+</span></span><span class="line"><span class="cl"> 32 0.033107393 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: printer
+</span></span><span class="line"><span class="cl"> 33 0.033109814 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: mbap
+</span></span><span class="line"><span class="cl"> 34 0.033278278 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: intrinsa
+</span></span><span class="line"><span class="cl"> 35 0.033298074 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: videotex
+</span></span><span class="line"><span class="cl"> 36 1.129203755 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: citadel
+</span></span><span class="line"><span class="cl"> 37 1.129223655  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 38 1.129284377 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: ohimsrv
+</span></span><span class="line"><span class="cl"> 39 1.129309553 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: videotex
+</span></span><span class="line"><span class="cl"> 40 1.129312606 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: xvttp
+</span></span><span class="line"><span class="cl"> 41 1.129528131 10.200.13.86 -&gt; 10.1.10.251  RIPv1 66 Request
+</span></span><span class="line"><span class="cl"> 42 1.130112522 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: intrinsa
+</span></span><span class="line"><span class="cl"> 43 1.130166382 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: stmf
+</span></span><span class="line"><span class="cl"> 44 1.130325399 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: printer
+</span></span><span class="line"><span class="cl"> 45 1.130332607 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: mbap
+</span></span><span class="line"><span class="cl"> 46 1.130349056 10.200.13.86 -&gt; 10.1.10.251  WHO 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 47 1.130432807 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: passgo
+</span></span><span class="line"><span class="cl"> 48 1.130480550 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: snare
+</span></span><span class="line"><span class="cl"> 49 1.130491911 10.200.13.86 -&gt; 10.1.10.251  ISAKMP 234 
+</span></span><span class="line"><span class="cl"> 50 1.130498465 10.200.13.86 -&gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 51 1.130722396 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: crs
+</span></span><span class="line"><span class="cl"> 52 2.230257219 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: xvttp
+</span></span><span class="line"><span class="cl"> 53 2.230278546  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 54 2.231344354 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: ohimsrv
+</span></span><span class="line"><span class="cl"> 55 2.231462577 10.200.13.86 -&gt; 10.1.10.251  RIPv1 66 Request
+</span></span><span class="line"><span class="cl"> 56 2.231471661 10.200.13.86 -&gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 57 3.330665951 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: ohimsrv
+</span></span><span class="line"><span class="cl"> 58 3.330688702  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 59 3.331863055 10.200.13.86 -&gt; 10.1.10.251  RIPv1 66 Request
+</span></span><span class="line"><span class="cl"> 60 3.335033853 10.200.13.86 -&gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 61 4.431829038 10.200.13.86 -&gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 62 4.431842894 10.200.13.86 -&gt; 10.1.10.251  RIPv1 66 Request
+</span></span><span class="line"><span class="cl"> 63 4.431861359  10.1.10.251 -&gt; 10.200.13.86 ICMP 94 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 64 4.482917482 10.200.13.86 -&gt; 10.1.10.251  ISAKMP 234 
+</span></span><span class="line"><span class="cl"> 65 5.534215739 10.200.13.86 -&gt; 10.1.10.251  ISAKMP 234 
+</span></span><span class="line"><span class="cl"> 66 5.534233734  10.1.10.251 -&gt; 10.200.13.86 ICMP 262 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 67 5.583253458 10.200.13.86 -&gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 68 5.633197137 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: crs
+</span></span><span class="line"><span class="cl"> 69 5.683380838 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: intrinsa
+</span></span><span class="line"><span class="cl"> 70 5.733662264 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: crs
+</span></span><span class="line"><span class="cl"> 71 5.783480335 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: intrinsa
+</span></span><span class="line"><span class="cl"> 72 5.833938985 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: crs
+</span></span><span class="line"><span class="cl"> 73 5.883631178 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: intrinsa
+</span></span><span class="line"><span class="cl"> 74 5.934858792 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: crs
+</span></span><span class="line"><span class="cl"> 75 5.984879106 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: intrinsa
+</span></span><span class="line"><span class="cl"> 76 6.034732591 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: mbap
+</span></span><span class="line"><span class="cl"> 77 6.034746749  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 78 6.085044904 10.200.13.86 -&gt; 10.1.10.251  WHO 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 79 6.135110230 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: stmf
+</span></span><span class="line"><span class="cl"> 80 6.185641460 10.200.13.86 -&gt; 10.1.10.251  WHO 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 81 6.235075713 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: stmf
+</span></span><span class="line"><span class="cl"> 82 6.284280617 10.200.13.86 -&gt; 10.1.10.251  WHO 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 83 6.334345777 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: stmf
+</span></span><span class="line"><span class="cl"> 84 6.384432615 10.200.13.86 -&gt; 10.1.10.251  WHO 42 [Malformed Packet]
+</span></span><span class="line"><span class="cl"> 85 6.434504759 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: stmf
+</span></span><span class="line"><span class="cl"> 86 6.484691016 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: passgo
+</span></span><span class="line"><span class="cl"> 87 6.534721820 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: printer
+</span></span><span class="line"><span class="cl"> 88 6.586292165 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: passgo
+</span></span><span class="line"><span class="cl"> 89 6.634804117 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: printer
+</span></span><span class="line"><span class="cl"> 90 6.685869463 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: passgo
+</span></span><span class="line"><span class="cl"> 91 6.734998702 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: printer
+</span></span><span class="line"><span class="cl"> 92 6.785940760 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: passgo
+</span></span><span class="line"><span class="cl"> 93 6.836494406 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: printer
+</span></span><span class="line"><span class="cl"> 94 6.885275082 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: snare
+</span></span><span class="line"><span class="cl"> 95 6.935324065 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: videotex
+</span></span><span class="line"><span class="cl"> 96 6.986555913 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: snare
+</span></span><span class="line"><span class="cl"> 97 7.035634422 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: videotex
+</span></span><span class="line"><span class="cl"> 98 7.035648502  10.1.10.251 -&gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+</span></span><span class="line"><span class="cl"> 99 7.085655195 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: snare
+</span></span><span class="line"><span class="cl">100 7.188406089 10.200.13.86 -&gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: snare
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果要扫描多个 ip，可以把 ip 放入到文件中，然后通过 iL 参数指定即可，格式：nmap -iL iplist.txt -sU -p 1-100。
+nmap 通过 sU 参数使用 udp 进行端口发现，原理是根据是否有返回信息，是否包含端口不可达来判断。</p>
+<p>nmap 在二层做主机发现时使用的参数是 sn（ping 扫描，不做端口扫描）。在三层做主机发现时也是使用的 sn 参数，这里二三层都用的 sn 参数，而具体使用的是二层协议 arp 还是三层协议 icmp，判断依据是是否属于同一个网段。在四层发现时主要利用的是 tcp 和 udp，而 nmap 用到的主要参数就是 PU 和 PA。</p>
+<p>nmap 使用 udp 来做端口扫描时，用到的参数是 sU，来看下 man 手册的介绍：
+<img src="/images/nmap-man.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="nmap man"
+	
+	
+></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/linux/">linux</a>
+        
+            <a href="/tags/nmap/">nmap</a>
+        
+            <a href="/tags/network/">network</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux iptables 使用笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@300&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+
+    </body>
+</html>

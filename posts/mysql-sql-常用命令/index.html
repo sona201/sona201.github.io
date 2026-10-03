@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='从个人笔记仓库整理迁移'>
+<title>MySQL SQL 常用命令</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/mysql-sql-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/'>
+
+<link rel="stylesheet" href="/scss/style.min.2a8a8b5925063991a20d80fb86183b19905b741ac47e8c0a373818c059a9ae7c.css"><meta property='og:title' content='MySQL SQL 常用命令'>
+<meta property='og:description' content='从个人笔记仓库整理迁移'>
+<meta property='og:url' content='https://sona201.github.io/posts/mysql-sql-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='mysql' /><meta property='article:tag' content='sql' /><meta property='article:tag' content='command' /><meta property='article:published_time' content='2026-10-03T22:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-10-03T22:00:00&#43;08:00'/>
+<meta name="twitter:title" content="MySQL SQL 常用命令">
+<meta name="twitter:description" content="从个人笔记仓库整理迁移">
+    <link rel="shortcut icon" href="/image/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="
+    article-page
+    "><header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="Main navigation">
+            
+            
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+                
+                <a href="/tags"
+                   
+                   target="_blank" rel="noopener">
+                    Tags
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="top-dark-mode-toggle" type="button" aria-label="暗色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var topToggle = document.getElementById('top-dark-mode-toggle');
+    var originalToggle = document.getElementById('dark-mode-toggle');
+    if (topToggle && originalToggle) {
+        topToggle.addEventListener('click', function () {
+            originalToggle.click();
+        });
+    }
+});
+</script>
+
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                        
+                        <img src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_300x0_resize_box_3.png" width="300"
+                            height="297" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+            </figure>
+            
+        
+
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Ricardo</a></h1>
+            <h2 class="site-description">人到中年，专业捧哏</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a href="https://github.com/sona201/"
+                       target="_blank"
+                       title="GitHub"
+                       rel="me">
+                        
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                    </a>
+                </li>
+            
+        </ol>
+    <ol class="menu sidebar-controls">
+        <div class="menu-bottom-section">
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-库表结构操作">1 库表结构操作</a>
+      <ol>
+        <li><a href="#11-建库">1.1 建库</a>
+          <ol>
+            <li><a href="#111-ddl-创建数据库设置字符串集utf8">1.1.1 DDL 创建数据库设置字符串集utf8</a></li>
+            <li><a href="#112-ddl-删库">1.1.2 DDL 删库</a></li>
+            <li><a href="#查询当前用户权限">查询当前用户权限</a></li>
+            <li><a href="#删除权限">删除权限</a></li>
+          </ol>
+        </li>
+        <li><a href="#mysql-80-创建用户">mysql 8.0 创建用户</a></li>
+        <li><a href="#给用户赋权">给用户赋权</a>
+          <ol>
+            <li><a href="#赋权">赋权</a></li>
+            <li><a href="#授权之后刷新权限">授权之后刷新权限</a></li>
+            <li><a href="#查询用户权限">查询用户权限</a></li>
+            <li><a href="#删除用户">删除用户</a></li>
+            <li><a href="#修改用户密码登录状态">修改用户密码(登录状态)</a></li>
+          </ol>
+        </li>
+        <li><a href="#12-数据库表的增删改查">1.2 数据库表的增删改查</a>
+          <ol>
+            <li><a href="#121-ddl-新增表-建表">1.2.1 DDL 新增表 建表</a></li>
+            <li><a href="#122-ddl-删除表">1.2.2 DDL 删除表</a></li>
+            <li><a href="#123-ddl-表新增字段并指定字段位置">1.2.3 DDL 表新增字段，并指定字段位置</a></li>
+            <li><a href="#124-ddl-修改表字段">1.2.4 DDL 修改表字段</a></li>
+            <li><a href="#修改表字段顺序">修改表字段顺序</a></li>
+            <li><a href="#mysql自增id起始值修改方法">mysql自增ID起始值修改方法</a></li>
+            <li><a href="#查看建表语句">查看建表语句</a></li>
+            <li><a href="#125-ddl-删除表字段">1.2.5 DDL 删除表字段</a></li>
+            <li><a href="#126-ddl-新增表索引">1.2.6 DDL 新增表索引</a></li>
+            <li><a href="#127-ddl-删除表索引">1.2.7 DDL 删除表索引</a></li>
+            <li><a href="#dcl-控制语句设置自动提交">DCL 控制语句，设置自动提交</a></li>
+            <li><a href="#修改index值新表默认从1开始">修改index值，新表默认从1开始</a></li>
+            <li><a href="#dml-表数据插入">DML 表数据插入</a></li>
+            <li><a href="#dml-表删除数据">DML 表删除数据</a></li>
+            <li><a href="#dml-清空表数据">DML 清空表数据</a></li>
+            <li><a href="#dml-表数据更新">DML 表数据更新</a></li>
+            <li><a href="#dml-表数据查询">DML 表数据查询</a></li>
+            <li><a href="#dml-查询指定行数的数据从第10行向后查询5条数据">DML 查询指定行数的数据，从第10行向后查询5条数据</a></li>
+          </ol>
+        </li>
+        <li><a href="#sql-其他操作">sql 其他操作</a></li>
+        <li><a href="#手动灌sql">手动灌sql</a>
+          <ol>
+            <li><a href="#查看慢查询设置时间单位秒">查看慢查询设置时间，单位秒</a></li>
+            <li><a href="#查询存储过程创建命令">查询存储过程创建命令</a></li>
+            <li><a href="#查询从库master信息">查询从库master信息</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/mysql/" >
+                mysql
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/posts/mysql-sql-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">MySQL SQL 常用命令</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            从个人笔记仓库整理迁移
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2026-10-03</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 10 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>#sql #mysql #command</p>
+<h2 id="1-库表结构操作">1 库表结构操作</h2>
+<h3 id="11-建库">1.1 建库</h3>
+<h4 id="111-ddl-创建数据库设置字符串集utf8">1.1.1 DDL 创建数据库设置字符串集utf8</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="o">`</span><span class="n">db_name</span><span class="o">`</span><span class="w"> </span><span class="nb">CHARACTER</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">db_name</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>字符集</th>
+<th>长度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GBK</td>
+<td>2</td>
+<td>支持中文，但是不是国际通用字符集</td>
+</tr>
+<tr>
+<td>UTF-8</td>
+<td>3</td>
+<td>支持中英文混合场景，是国际通用字符集</td>
+</tr>
+<tr>
+<td>latin1</td>
+<td>2</td>
+<td>MySQL默认字符集</td>
+</tr>
+<tr>
+<td>utf8mb4</td>
+<td>4</td>
+<td>完全兼容UTF-8，用四个字节存储更多的字符</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="112-ddl-删库">1.1.2 DDL 删库</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">DROP</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="o">`</span><span class="n">db_name</span><span class="o">`</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>用户赋权</p>
+<h4 id="查询当前用户权限">查询当前用户权限</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">show</span><span class="w"> </span><span class="n">grants</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="p">,</span><span class="w"> </span><span class="k">DROP</span><span class="p">,</span><span class="w"> </span><span class="n">RELOAD</span><span class="p">,</span><span class="w"> </span><span class="n">PROCESS</span><span class="p">,</span><span class="w"> </span><span class="k">REFERENCES</span><span class="p">,</span><span class="w"> </span><span class="k">INDEX</span><span class="p">,</span><span class="w"> </span><span class="k">ALTER</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TEMPORARY</span><span class="w"> </span><span class="n">TABLES</span><span class="p">,</span><span class="w"> </span><span class="k">LOCK</span><span class="w"> </span><span class="n">TABLES</span><span class="p">,</span><span class="w"> </span><span class="k">EXECUTE</span><span class="p">,</span><span class="w"> </span><span class="n">REPLICATION</span><span class="w"> </span><span class="n">SLAVE</span><span class="p">,</span><span class="w"> </span><span class="n">REPLICATION</span><span class="w"> </span><span class="n">CLIENT</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">SHOW</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">ROUTINE</span><span class="p">,</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">ROUTINE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="p">,</span><span class="w"> </span><span class="n">EVENT</span><span class="p">,</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">*</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;username&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">GRANT</span><span class="w"> </span><span class="k">OPTION</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="删除权限">删除权限</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">revoke</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">db_name</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="k">table_name</span><span class="o">`</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="s1">&#39;user_name&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="mysql-80-创建用户">mysql 8.0 创建用户</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">create</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;username&#39;</span><span class="o">@</span><span class="s1">&#39;host&#39;</span><span class="w"> </span><span class="n">identified</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="s1">&#39;password&#39;</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="给用户赋权">给用户赋权</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">GRANT</span><span class="w"> </span><span class="k">all</span><span class="w"> </span><span class="k">privileges</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">zabbix</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">zabbix</span><span class="o">@</span><span class="n">localhost</span><span class="w"> </span><span class="n">identified</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;password&#39;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- mysql 8.0 用户授权
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">grant</span><span class="w"> </span><span class="k">all</span><span class="w"> </span><span class="k">privileges</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="o">*</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="s1">&#39;username&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="k">grant</span><span class="w"> </span><span class="k">option</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">grant</span><span class="w"> </span><span class="k">all</span><span class="w"> </span><span class="k">privileges</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">jumpserver</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="s1">&#39;jumpserver&#39;</span><span class="o">@</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="k">grant</span><span class="w"> </span><span class="k">option</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- 表粒度赋权，不能一次执行多条赋权
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">db_zone_global</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">t_activity</span><span class="o">`</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;activity_rd&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">db_zone_global</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">t_activity_battle</span><span class="o">`</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;activity_rd&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">db_web_gm</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">t_common_op_log</span><span class="o">`</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;activity_rd&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="赋权">赋权</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">GRANT</span><span class="w"> </span><span class="k">USAGE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">*</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;prod_order_center&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="w"> </span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="p">,</span><span class="w"> </span><span class="k">DROP</span><span class="p">,</span><span class="w"> </span><span class="k">INDEX</span><span class="p">,</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">order_center</span><span class="o">`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;prod_order_center&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">select</span><span class="w"> </span><span class="k">user</span><span class="p">,</span><span class="n">host</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">mysql</span><span class="p">.</span><span class="k">user</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">show</span><span class="w"> </span><span class="n">grants</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="s1">&#39;prod_sysmgr&#39;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="p">,</span><span class="w"> </span><span class="k">DROP</span><span class="p">,</span><span class="w"> </span><span class="k">INDEX</span><span class="p">,</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">yimi</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">erp_clients</span><span class="o">`</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;prod_sysmgr&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="授权之后刷新权限">授权之后刷新权限</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">flush</span><span class="w"> </span><span class="k">privileges</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="查询用户权限">查询用户权限</h4>
+<p>查询指定用户权限</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">show</span><span class="w"> </span><span class="n">grants</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="s1">&#39;stage-user&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- 查看怎么进入的
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">select</span><span class="w"> </span><span class="k">user</span><span class="p">();</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="删除用户">删除用户</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">drop</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="n">Jenkins</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>数据库新建用户
+数据库用户修改密码</p>
+<h4 id="修改用户密码登录状态">修改用户密码(登录状态)</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">GRANT SELECT, INSERT, UPDATE, DELETE  ON *.* TO &#39;csz&#39;@&#39;%&#39; identified by  &#34;asdfghjkl&#34;;
+</span></span><span class="line"><span class="cl">set password for &#39;user&#39;@&#39;%&#39; = password(&#39;your_password&#39;);
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">UPDATE mysql.user SET password=PASSWORD(’新密码’) WHERE User=’root’;
+</span></span><span class="line"><span class="cl"># the first time update password
+</span></span><span class="line"><span class="cl">SET PASSWORD = PASSWORD(&#39;password&#39;);
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># mysql8
+</span></span><span class="line"><span class="cl">ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;password&#39;;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>数据库用户赋权</p>
+<h3 id="12-数据库表的增删改查">1.2 数据库表的增删改查</h3>
+<h4 id="121-ddl-新增表-建表">1.2.1 DDL 新增表 建表</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">bo_eu_yw_gzsbsq_guanyuan</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="w"> </span><span class="nb">char</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;唯一标志&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">orgid</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;组织id&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">bindid</span><span class="o">`</span><span class="w"> </span><span class="nb">char</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;关联值&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">createdate</span><span class="o">`</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;创建时间&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="k">createuser</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;创建人&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">updatedate</span><span class="o">`</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;更新时间&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">updateuser</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;更新人&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">processdefid</span><span class="o">`</span><span class="w"> </span><span class="nb">char</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;流程定义id&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">isend</span><span class="o">`</span><span class="w"> </span><span class="nb">smallint</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;是否结束&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">djbh</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;单据编号&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">sqrq</span><span class="o">`</span><span class="w"> </span><span class="n">datetime</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;申请日期&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">sqr</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;上报人&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">sqrzh</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;申请人账户&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">suborderno</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;子工单号&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">subbindid</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;子工单bindid&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">created_at</span><span class="o">`</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;创建时间&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">updated_at</span><span class="o">`</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;更新时间&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">status_flag</span><span class="o">`</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;更新状态&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">handler_name</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;处理人&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">handler_dep</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;处理人部门&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">comment_create_success_time</span><span class="o">`</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;制单成功时间&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">isend_name</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;是否结束name&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">sffp_name</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;是否复盘name&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">sfyjkfx_name</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;是否有监控发现name&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">sfqx_name</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;是否缺陷name&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">circulation_times</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;转办次数&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">bindid</span><span class="o">`</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="w"> </span><span class="n">ROW_FORMAT</span><span class="o">=</span><span class="k">DYNAMIC</span><span class="w"> </span><span class="k">COMMENT</span><span class="o">=</span><span class="s1">&#39;故障上报观远报表关联字段&#39;</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="122-ddl-删除表">1.2.2 DDL 删除表</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- 直接删除表，不检查是否存在
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- 检查是否存在表，然后删除表
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="k">table_name</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="123-ddl-表新增字段并指定字段位置">1.2.3 DDL 表新增字段，并指定字段位置</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">cmdb_appops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">sysops_aliyun_sls</span><span class="o">`</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="o">`</span><span class="n">product_key</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;NA&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;数字产品 key&#39;</span><span class="w"> </span><span class="k">AFTER</span><span class="w"> </span><span class="o">`</span><span class="n">project_id</span><span class="o">`</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="124-ddl-修改表字段">1.2.4 DDL 修改表字段</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">cmdb_appops</span><span class="p">.</span><span class="n">appops_kuber_dump_file</span><span class="w"> </span><span class="n">CHANGE</span><span class="w"> </span><span class="o">`</span><span class="n">oss_download_url</span><span class="o">`</span><span class="w"> </span><span class="o">`</span><span class="n">download_url</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">350</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;NA&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;下载url&#39;</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>修改表字段属性(类型, 长度)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">cmdb_appops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">techops_split_bill_instance</span><span class="o">`</span><span class="w"> </span><span class="k">MODIFY</span><span class="w"> </span><span class="o">`</span><span class="n">project_id_name</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;NA&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;关联项目名&#39;</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="修改表字段顺序">修改表字段顺序</h4>
+<p>也可以用change</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">alter</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">app03_book</span><span class="w"> </span><span class="n">modify</span><span class="w"> </span><span class="o">`</span><span class="n">price</span><span class="o">`</span><span class="w"> </span><span class="kt">decimal</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="no">NULL</span><span class="w">  </span><span class="n">after</span><span class="w"> </span><span class="n">publishDate</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="mysql自增id起始值修改方法">mysql自增ID起始值修改方法</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">alter</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">app03_authordetail</span><span class="w"> </span><span class="kp">AUTO_INCREMENT</span><span class="o">=</span><span class="mi">10000</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1"># 创建语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">orders</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">order_num</span><span class="o">`</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="kp">auto_increment</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">order_date</span><span class="o">`</span><span class="w"> </span><span class="kt">datetime</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">cust_id</span><span class="o">`</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w">  </span><span class="p">(</span><span class="o">`</span><span class="n">order_num</span><span class="o">`</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">KEY</span><span class="w"> </span><span class="o">`</span><span class="n">fk_orders_customers</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">cust_id</span><span class="o">`</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="o">`</span><span class="n">fk_orders_customers</span><span class="o">`</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">cust_id</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="o">`</span><span class="n">customers</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">cust_id</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">CASCADE</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="kp">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="kp">AUTO_INCREMENT</span><span class="o">=</span><span class="mi">10000</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="kp">CHARSET</span><span class="o">=</span><span class="n">utf8</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="查看建表语句">查看建表语句</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">show create table [table_name]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="125-ddl-删除表字段">1.2.5 DDL 删除表字段</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">cmdb_appops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">techops_split_bill_instance</span><span class="o">`</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="o">`</span><span class="n">product_key</span><span class="o">`</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>数据库表的索引操作</p>
+<h4 id="126-ddl-新增表索引">1.2.6 DDL 新增表索引</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">cmdb_appops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">appops_kubernetes_events</span><span class="o">`</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="o">`</span><span class="n">uid_v_unique_index</span><span class="o">`</span><span class="p">(</span><span class="o">`</span><span class="n">metadata_uid</span><span class="o">`</span><span class="p">,</span><span class="w"> </span><span class="o">`</span><span class="n">metadata_resource_version</span><span class="o">`</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">question_use_records</span><span class="o">`</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="o">`</span><span class="n">IDX_question_id</span><span class="o">`</span><span class="p">(</span><span class="o">`</span><span class="n">question_id</span><span class="o">`</span><span class="p">,</span><span class="o">`</span><span class="n">student_id</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">BTREE</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="127-ddl-删除表索引">1.2.7 DDL 删除表索引</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">cmdb_appops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">appops_kubernetes_events</span><span class="o">`</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="o">`</span><span class="n">uid_v_unique_index</span><span class="o">`</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="dcl-控制语句设置自动提交">DCL 控制语句，设置自动提交</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">set</span><span class="w"> </span><span class="n">autocommit</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="修改index值新表默认从1开始">修改index值，新表默认从1开始</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">project_mark_table</span><span class="w"> </span><span class="n">auto_increment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>表数据的增删改查</p>
+<h4 id="dml-表数据插入">DML 表数据插入</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">cmdb_appops</span><span class="p">.</span><span class="n">techops_bill_flow_process_node_definition</span><span class="w"> </span><span class="p">(</span><span class="n">node_id</span><span class="p">,</span><span class="n">node_name</span><span class="p">,</span><span class="n">next_node</span><span class="p">,</span><span class="n">back_node</span><span class="p">,</span><span class="n">repeat_exec</span><span class="p">,</span><span class="n">task_name</span><span class="p">,</span><span class="k">comment</span><span class="p">,</span><span class="n">created_at</span><span class="p">,</span><span class="n">updated_at</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="s1">&#39;起始&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;NA&#39;</span><span class="p">,</span><span class="s1">&#39;不可重复，赛峰解析阿里云数据&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:29&#39;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">,</span><span class="s1">&#39;初始化分账账单&#39;</span><span class="p">,</span><span class="s1">&#39;3&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;apps.billmanagement.task.split_bill_2_instance.handle_split_bill_to_instance&#39;</span><span class="p">,</span><span class="s1">&#39;不可重复，将阿里云数据生成id/split_id唯一&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:33:11&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:36:20&#39;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;3&#39;</span><span class="p">,</span><span class="s1">&#39;一级实例id数据生成&#39;</span><span class="p">,</span><span class="s1">&#39;4&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;apps.billmanagement.task.split_bill_2_instance.handle_split_bill_to_instance_rule_product&#39;</span><span class="p">,</span><span class="s1">&#39;不可重复，将阿里云数据生成id/split_id唯一&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:30&#39;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">,</span><span class="s1">&#39;一级分账规则生成&#39;</span><span class="p">,</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="s1">&#39;3&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;apps.billmanagement.task.split_bill_2_instance.handle_split_bill_to_instance_rule_product_init&#39;</span><span class="p">,</span><span class="s1">&#39;不可重复，1将阿里云数据生成产品唯一，2同时获取上个月分摊逻辑数据写入当月数据&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:30&#39;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="s1">&#39;一级特殊实例id配置&#39;</span><span class="p">,</span><span class="s1">&#39;6&#39;</span><span class="p">,</span><span class="s1">&#39;4&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;apps.billmanagement.task.split_bill_2_instance.handle_split_bill_instance_particular_init&#39;</span><span class="p">,</span><span class="s1">&#39;不可重复，将上个月特殊实例id拷贝写入当月&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:30&#39;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;6&#39;</span><span class="p">,</span><span class="s1">&#39;一级分账规则写入实例&#39;</span><span class="p">,</span><span class="s1">&#39;7&#39;</span><span class="p">,</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;apps/billmanagement/task/split_bill_rule_to_instance.handle_split_bill_rule_to_instance_main&#39;</span><span class="p">,</span><span class="s1">&#39;根据一级分摊规则写入数据&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:30&#39;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;7&#39;</span><span class="p">,</span><span class="s1">&#39;二级分摊配置&#39;</span><span class="p">,</span><span class="s1">&#39;8&#39;</span><span class="p">,</span><span class="s1">&#39;6&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;NA&#39;</span><span class="p">,</span><span class="s1">&#39;拷贝同步上个月录入二级分摊规则配置&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:30&#39;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;8&#39;</span><span class="p">,</span><span class="s1">&#39;二级分摊规则关联&#39;</span><span class="p">,</span><span class="s1">&#39;9&#39;</span><span class="p">,</span><span class="s1">&#39;7&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;NA&#39;</span><span class="p">,</span><span class="s1">&#39;同步上个月录入二级分摊关联&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:30&#39;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;9&#39;</span><span class="p">,</span><span class="s1">&#39;二级分摊结果生成&#39;</span><span class="p">,</span><span class="s1">&#39;10&#39;</span><span class="p">,</span><span class="s1">&#39;8&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;NA&#39;</span><span class="p">,</span><span class="s1">&#39;根据关联逻辑分摊二级账单&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:30&#39;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;10&#39;</span><span class="p">,</span><span class="s1">&#39;三级分摊配置&#39;</span><span class="p">,</span><span class="s1">&#39;11&#39;</span><span class="p">,</span><span class="s1">&#39;9&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;NA&#39;</span><span class="p">,</span><span class="s1">&#39;拷贝同步上个月录入三级分摊规则配置&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:30&#39;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;11&#39;</span><span class="p">,</span><span class="s1">&#39;三级分摊规则关联&#39;</span><span class="p">,</span><span class="s1">&#39;12&#39;</span><span class="p">,</span><span class="s1">&#39;10&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;NA&#39;</span><span class="p">,</span><span class="s1">&#39;同步上个月录入三级分摊关联&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:30&#39;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;12&#39;</span><span class="p">,</span><span class="s1">&#39;三级分摊结果生成&#39;</span><span class="p">,</span><span class="s1">&#39;12&#39;</span><span class="p">,</span><span class="s1">&#39;11&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;NA&#39;</span><span class="p">,</span><span class="s1">&#39;根据关联逻辑分摊三级账单&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:30&#39;</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="dml-表删除数据">DML 表删除数据</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">company_devops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">rbac_permission</span><span class="o">`</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="o">`</span><span class="n">id</span><span class="o">`=</span><span class="mi">169</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="dml-清空表数据">DML 清空表数据</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">TRUNCATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="dml-表数据更新">DML 表数据更新</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- 使用语法 UPDATE table_name SET field1=new-value1, field2=new-value2 [WHERE Clause]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">UPDATE</span><span class="w"> </span><span class="o">`</span><span class="n">company_devops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">rbac_permission</span><span class="o">`</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">permission</span><span class="o">=</span><span class="mi">2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="o">`</span><span class="n">id</span><span class="o">`=</span><span class="mi">168</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="dml-表数据查询">DML 表数据查询</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">select * from server_domain_and_port where type=&#34;1&#34;;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="dml-查询指定行数的数据从第10行向后查询5条数据">DML 查询指定行数的数据，从第10行向后查询5条数据</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="n">userMobile</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">mis_user_info</span><span class="w"> </span><span class="k">limit</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="sql-其他操作">sql 其他操作</h3>
+<p><a class="link" href="https://blog.csdn.net/yageeart/article/details/7973381"  target="_blank" rel="noopener"
+    >https://blog.csdn.net/yageeart/article/details/7973381</a></p>
+<h3 id="手动灌sql">手动灌sql</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysql -h db.adress.mysql.rds.aliyuncs.com -P 3306 -u user_name -p&#39;password&#39; db_name &lt; insert.sql
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以进入mysql，source file</p>
+<h4 id="查看慢查询设置时间单位秒">查看慢查询设置时间，单位秒</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">show VARIABLES like &#39;long_query_time&#39;;   
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="查询存储过程创建命令">查询存储过程创建命令</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">show create procedure sp_add_view_lesson_doc;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="查询从库master信息">查询从库master信息</h4>
+<ol>
+<li>查看主库状态</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SHOW</span><span class="w"> </span><span class="n">MASTER</span><span class="w"> </span><span class="n">STATUS</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>主库状态结果</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysql&gt; show master status\G
+</span></span><span class="line"><span class="cl">*************************** 1. row ***************************
+</span></span><span class="line"><span class="cl">             File: master-bin.000868
+</span></span><span class="line"><span class="cl">         Position: 782491827
+</span></span><span class="line"><span class="cl">     Binlog_Do_DB: 
+</span></span><span class="line"><span class="cl"> Binlog_Ignore_DB: information_schema,mysql,test,performance_schema
+</span></span><span class="line"><span class="cl">Executed_Gtid_Set: 7fb22524-166f-11ef-94d3-3cecefba3d48:1-9691144
+</span></span><span class="line"><span class="cl">1 row in set (0.01 sec)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mysql&gt; Bye
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>查看从库状态</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SHOW</span><span class="w"> </span><span class="n">SLAVE</span><span class="w"> </span><span class="n">STATUS</span><span class="err">\</span><span class="k">G</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看结果</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysql&gt; show slave status\G
+</span></span><span class="line"><span class="cl">*************************** 1. row ***************************
+</span></span><span class="line"><span class="cl">               Slave_IO_State: Reconnecting after a failed master event read
+</span></span><span class="line"><span class="cl">                  Master_Host: 10.64.57.88
+</span></span><span class="line"><span class="cl">                  Master_User: replicate
+</span></span><span class="line"><span class="cl">                  Master_Port: 3306
+</span></span><span class="line"><span class="cl">                Connect_Retry: 60
+</span></span><span class="line"><span class="cl">              Master_Log_File: master-bin.044525
+</span></span><span class="line"><span class="cl">          Read_Master_Log_Pos: 948993872
+</span></span><span class="line"><span class="cl">               Relay_Log_File: relay-bin.133574
+</span></span><span class="line"><span class="cl">                Relay_Log_Pos: 948994087
+</span></span><span class="line"><span class="cl">        Relay_Master_Log_File: master-bin.044525
+</span></span><span class="line"><span class="cl">             Slave_IO_Running: Connecting
+</span></span><span class="line"><span class="cl">            Slave_SQL_Running: Yes
+</span></span><span class="line"><span class="cl">              Replicate_Do_DB: 
+</span></span><span class="line"><span class="cl">          Replicate_Ignore_DB: information_schema,mysql,test,performance_schema
+</span></span><span class="line"><span class="cl">           Replicate_Do_Table: 
+</span></span><span class="line"><span class="cl">       Replicate_Ignore_Table: 
+</span></span><span class="line"><span class="cl">      Replicate_Wild_Do_Table: 
+</span></span><span class="line"><span class="cl">  Replicate_Wild_Ignore_Table: 
+</span></span><span class="line"><span class="cl">                   Last_Errno: 0
+</span></span><span class="line"><span class="cl">                   Last_Error: 
+</span></span><span class="line"><span class="cl">                 Skip_Counter: 0
+</span></span><span class="line"><span class="cl">          Exec_Master_Log_Pos: 948993872
+</span></span><span class="line"><span class="cl">              Relay_Log_Space: 948994345
+</span></span><span class="line"><span class="cl">              Until_Condition: None
+</span></span><span class="line"><span class="cl">               Until_Log_File: 
+</span></span><span class="line"><span class="cl">                Until_Log_Pos: 0
+</span></span><span class="line"><span class="cl">           Master_SSL_Allowed: No
+</span></span><span class="line"><span class="cl">           Master_SSL_CA_File: 
+</span></span><span class="line"><span class="cl">           Master_SSL_CA_Path: 
+</span></span><span class="line"><span class="cl">              Master_SSL_Cert: 
+</span></span><span class="line"><span class="cl">            Master_SSL_Cipher: 
+</span></span><span class="line"><span class="cl">               Master_SSL_Key: 
+</span></span><span class="line"><span class="cl">        Seconds_Behind_Master: NULL
+</span></span><span class="line"><span class="cl">Master_SSL_Verify_Server_Cert: No
+</span></span><span class="line"><span class="cl">                Last_IO_Errno: 2003
+</span></span><span class="line"><span class="cl">                Last_IO_Error: error reconnecting to master &#39;replicate@10.64.57.88:3306&#39; - retry-time: 60  retries: 11
+</span></span><span class="line"><span class="cl">               Last_SQL_Errno: 0
+</span></span><span class="line"><span class="cl">               Last_SQL_Error: 
+</span></span><span class="line"><span class="cl">  Replicate_Ignore_Server_Ids: 
+</span></span><span class="line"><span class="cl">             Master_Server_Id: 11
+</span></span><span class="line"><span class="cl">                  Master_UUID: d2748d8a-3475-11eb-b6ae-ac1f6bf552dc
+</span></span><span class="line"><span class="cl">             Master_Info_File: /data/percona_slave/master.info
+</span></span><span class="line"><span class="cl">                    SQL_Delay: 0
+</span></span><span class="line"><span class="cl">          SQL_Remaining_Delay: NULL
+</span></span><span class="line"><span class="cl">      Slave_SQL_Running_State: Slave has read all relay log; waiting for more updates
+</span></span><span class="line"><span class="cl">           Master_Retry_Count: 86400
+</span></span><span class="line"><span class="cl">                  Master_Bind: 
+</span></span><span class="line"><span class="cl">      Last_IO_Error_Timestamp: 240604 22:33:51
+</span></span><span class="line"><span class="cl">     Last_SQL_Error_Timestamp: 
+</span></span><span class="line"><span class="cl">               Master_SSL_Crl: 
+</span></span><span class="line"><span class="cl">           Master_SSL_Crlpath: 
+</span></span><span class="line"><span class="cl">           Retrieved_Gtid_Set: d2748d8a-3475-11eb-b6ae-ac1f6bf552dc:1-1098648649
+</span></span><span class="line"><span class="cl">            Executed_Gtid_Set: d2748d8a-3475-11eb-b6ae-ac1f6bf552dc:1-1098648649
+</span></span><span class="line"><span class="cl">                Auto_Position: 0
+</span></span><span class="line"><span class="cl">         Replicate_Rewrite_DB: 
+</span></span><span class="line"><span class="cl">                 Channel_Name: 
+</span></span><span class="line"><span class="cl">           Master_TLS_Version: 
+</span></span><span class="line"><span class="cl">1 row in set (0.00 sec)v
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在主库查看从库的信息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">show</span><span class="w"> </span><span class="n">processlist</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysql&gt; show processlist;
+</span></span><span class="line"><span class="cl">+--------+-----------+---------------------+----------------------------+-------------+---------+---------------------------------------------------------------+------------------+-----------+---------------+
+</span></span><span class="line"><span class="cl">| Id     | User      | Host                | db                         | Command     | Time    | State                                                         | Info             | Rows_sent | Rows_examined |
+</span></span><span class="line"><span class="cl">+--------+-----------+---------------------+----------------------------+-------------+---------+---------------------------------------------------------------+------------------+-----------+---------------+
+</span></span><span class="line"><span class="cl">|  42423 | replicate | 10.117.62.200:34662 | NULL                       | Binlog Dump | 1189092 | Master has sent all binlog to slave; waiting for more updates | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">|  70508 | moba      | 10.117.67.101:35914 | db_zone_battlereport_12460 | Sleep       |      13 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">|  70552 | moba      | 10.117.67.101:36140 | db_zone_12460              | Sleep       |      13 |                                                               | NULL             |         0 |             1 |
+</span></span><span class="line"><span class="cl">|  70651 | moba      | 10.117.67.101:36302 | db_zone_12460              | Sleep       |       3 |                                                               | NULL             |         1 |             1 |
+</span></span><span class="line"><span class="cl">|  70680 | moba      | 10.117.67.101:36408 | db_zone_battlereport_12460 | Sleep       |       1 |                                                               | NULL             |         6 |             6 |
+</span></span><span class="line"><span class="cl">|  71506 | moba      | 10.117.67.101:37400 | db_zone_battlereport_8074  | Sleep       |       0 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">|  71544 | moba      | 10.117.67.101:37624 | db_zone_8074               | Sleep       |       9 |                                                               | NULL             |         0 |             1 |
+</span></span><span class="line"><span class="cl">|  71590 | moba      | 10.117.67.101:37786 | db_zone_8074               | Sleep       |       5 |                                                               | NULL             |         1 |             1 |
+</span></span><span class="line"><span class="cl">|  71623 | moba      | 10.117.67.101:37890 | db_zone_battlereport_8074  | Sleep       |       0 |                                                               | NULL             |         5 |             5 |
+</span></span><span class="line"><span class="cl">|  71941 | moba      | 10.117.67.101:38536 | db_zone_battlereport_9414  | Sleep       |       6 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">|  71985 | moba      | 10.117.67.101:38748 | db_zone_9414               | Sleep       |       6 |                                                               | NULL             |         0 |             1 |
+</span></span><span class="line"><span class="cl">|  72070 | moba      | 10.117.67.101:39002 | db_zone_9414               | Sleep       |       2 |                                                               | NULL             |         1 |             1 |
+</span></span><span class="line"><span class="cl">|  72100 | moba      | 10.117.67.101:39136 | db_zone_battlereport_9414  | Sleep       |       8 |                                                               | NULL             |         6 |             6 |
+</span></span><span class="line"><span class="cl">|  72756 | moba      | 10.117.67.101:40528 | db_zone_battlereport_12582 | Sleep       |       3 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">|  72801 | moba      | 10.117.67.101:40762 | db_zone_12582              | Sleep       |       3 |                                                               | NULL             |         0 |             1 |
+</span></span><span class="line"><span class="cl">|  72886 | moba      | 10.117.67.101:41066 | db_zone_12582              | Sleep       |       1 |                                                               | NULL             |         1 |             1 |
+</span></span><span class="line"><span class="cl">|  72919 | moba      | 10.117.67.101:41218 | db_zone_battlereport_12582 | Sleep       |       8 |                                                               | NULL             |         1 |             1 |
+</span></span><span class="line"><span class="cl">|  73191 | moba      | 10.117.67.101:41966 | db_zone_battlereport_12738 | Sleep       |       0 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">|  73226 | moba      | 10.117.67.101:42222 | db_zone_12738              | Sleep       |      13 |                                                               | NULL             |         0 |             1 |
+</span></span><span class="line"><span class="cl">|  73288 | moba      | 10.117.67.101:42510 | db_zone_12738              | Sleep       |       0 |                                                               | NULL             |         1 |             1 |
+</span></span><span class="line"><span class="cl">|  73322 | moba      | 10.117.67.101:42678 | db_zone_battlereport_12738 | Sleep       |      17 |                                                               | NULL             |         6 |             6 |
+</span></span><span class="line"><span class="cl">| 153875 | moba      | 10.117.67.101:50042 | db_zone_battlereport_2295  | Sleep       |       1 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 153913 | moba      | 10.117.67.101:50366 | db_zone_2295               | Sleep       |       1 |                                                               | NULL             |         0 |             1 |
+</span></span><span class="line"><span class="cl">| 153991 | moba      | 10.117.67.101:50754 | db_zone_2295               | Sleep       |       7 |                                                               | NULL             |         1 |             1 |
+</span></span><span class="line"><span class="cl">| 154006 | moba      | 10.117.67.101:50850 | db_zone_battlereport_2295  | Sleep       |      18 |                                                               | NULL             |         6 |             6 |
+</span></span><span class="line"><span class="cl">| 154644 | moba      | 10.117.67.101:54054 | db_zone_9414               | Sleep       |       0 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154645 | moba      | 10.117.67.101:54132 | db_zone_9414               | Sleep       |      22 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154646 | moba      | 10.117.67.101:54220 | db_zone_12460              | Sleep       |       3 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154647 | moba      | 10.117.67.101:54262 | db_zone_12460              | Sleep       |      12 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154648 | moba      | 10.117.67.101:54264 | db_zone_12460              | Sleep       |      13 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154652 | moba      | 10.117.67.101:54358 | db_zone_8074               | Sleep       |       0 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154664 | moba      | 10.117.67.101:54652 | db_zone_8074               | Sleep       |       6 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154665 | moba      | 10.117.67.101:54654 | db_zone_8074               | Sleep       |       7 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154666 | moba      | 10.117.67.101:54738 | db_zone_9414               | Sleep       |      21 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154668 | moba      | 10.117.67.101:54892 | db_zone_2295               | Sleep       |       0 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154682 | moba      | 10.117.67.101:55058 | db_zone_2295               | Sleep       |       9 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154683 | moba      | 10.117.67.101:55060 | db_zone_2295               | Sleep       |       9 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154726 | moba      | 10.117.67.101:55610 | db_zone_12582              | Sleep       |       2 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154727 | moba      | 10.117.67.101:55666 | db_zone_12582              | Sleep       |      36 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154728 | moba      | 10.117.67.101:55667 | db_zone_12582              | Sleep       |      37 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154771 | moba      | 10.117.67.101:56176 | db_zone_12738              | Sleep       |       0 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154786 | moba      | 10.117.67.101:56284 | db_zone_12738              | Sleep       |      18 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 154787 | moba      | 10.117.67.101:56300 | db_zone_12738              | Sleep       |     198 |                                                               | NULL             |         0 |             0 |
+</span></span><span class="line"><span class="cl">| 321956 | moba      | 10.117.67.101:53854 | NULL                       | Query       |       0 | starting                                                      | show processlist |         0 |             0 |
+</span></span><span class="line"><span class="cl">+--------+-----------+---------------------+----------------------------+-------------+---------+---------------------------------------------------------------+------------------+-----------+---------------+
+</span></span><span class="line"><span class="cl">44 rows in set (0.00 sec)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mysql&gt; Bye
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>删除索引</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">duty_schedule_group_rule_relationship</span><span class="o">`</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">duty_schedule_group_rule_group_id_rule_id_a918fd5a_uniq</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>复杂sql</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">select</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">distinct</span><span class="w"> </span><span class="n">server</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">from</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">t_server</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">where</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;MOBA&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">and</span><span class="w"> </span><span class="n">server</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">select</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">distinct</span><span class="w"> </span><span class="n">server</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">from</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="n">t_server</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">where</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">IF</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="n">SUBSTRING_INDEX</span><span class="p">(</span><span class="n">division</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1000</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="n">FLOOR</span><span class="p">(</span><span class="n">SUBSTRING_INDEX</span><span class="p">(</span><span class="n">division</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="n">SUBSTRING_INDEX</span><span class="p">(</span><span class="n">division</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span><span class="mi">55</span><span class="p">,</span><span class="w"> </span><span class="mi">56</span><span class="p">,</span><span class="w"> </span><span class="mi">57</span><span class="p">,</span><span class="w"> </span><span class="mi">58</span><span class="p">,</span><span class="w"> </span><span class="mi">59</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">and</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">IF</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="n">SUBSTRING_INDEX</span><span class="p">(</span><span class="n">division</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1000</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="n">FLOOR</span><span class="p">(</span><span class="n">SUBSTRING_INDEX</span><span class="p">(</span><span class="n">division</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="n">SUBSTRING_INDEX</span><span class="p">(</span><span class="n">division</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>res</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">AccountProtectServer
+</span></span><span class="line"><span class="cl">DataBridgeServer
+</span></span><span class="line"><span class="cl">DataQueryServer
+</span></span><span class="line"><span class="cl">GMServer
+</span></span><span class="line"><span class="cl">NetEaseYidunServer
+</span></span><span class="line"><span class="cl">PassProxyServer
+</span></span><span class="line"><span class="cl">ProtoGateServer
+</span></span><span class="line"><span class="cl">SmsServer
+</span></span><span class="line"><span class="cl">TranslateServer
+</span></span><span class="line"><span class="cl">ZoneManagerServer
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>server 的分区是 100，200，且不是55, 56, 57, 58, 59分区</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/mysql/">mysql</a>
+        
+            <a href="/tags/sql/">sql</a>
+        
+            <a href="/tags/command/">command</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/mysqldump-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">mysqldump 常用操作</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/mysqlclient-%E5%AE%89%E8%A3%85%E8%AE%B0%E5%BD%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">mysqlclient 安装记录</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@300&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+
+    </body>
+</html>

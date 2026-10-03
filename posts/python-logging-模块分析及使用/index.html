@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='从个人笔记仓库整理迁移'>
+<title>Python logging 模块分析及使用</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/python-logging-%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90%E5%8F%8A%E4%BD%BF%E7%94%A8/'>
+
+<link rel="stylesheet" href="/scss/style.min.2a8a8b5925063991a20d80fb86183b19905b741ac47e8c0a373818c059a9ae7c.css"><meta property='og:title' content='Python logging 模块分析及使用'>
+<meta property='og:description' content='从个人笔记仓库整理迁移'>
+<meta property='og:url' content='https://sona201.github.io/posts/python-logging-%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90%E5%8F%8A%E4%BD%BF%E7%94%A8/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='python' /><meta property='article:tag' content='logging' /><meta property='article:published_time' content='2026-10-03T22:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-10-03T22:00:00&#43;08:00'/>
+<meta name="twitter:title" content="Python logging 模块分析及使用">
+<meta name="twitter:description" content="从个人笔记仓库整理迁移">
+    <link rel="shortcut icon" href="/image/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="
+    article-page
+    "><header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="Main navigation">
+            
+            
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+                
+                <a href="/tags"
+                   
+                   target="_blank" rel="noopener">
+                    Tags
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="top-dark-mode-toggle" type="button" aria-label="暗色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var topToggle = document.getElementById('top-dark-mode-toggle');
+    var originalToggle = document.getElementById('dark-mode-toggle');
+    if (topToggle && originalToggle) {
+        topToggle.addEventListener('click', function () {
+            originalToggle.click();
+        });
+    }
+});
+</script>
+
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                        
+                        <img src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_300x0_resize_box_3.png" width="300"
+                            height="297" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+            </figure>
+            
+        
+
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Ricardo</a></h1>
+            <h2 class="site-description">人到中年，专业捧哏</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a href="https://github.com/sona201/"
+                       target="_blank"
+                       title="GitHub"
+                       rel="me">
+                        
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                    </a>
+                </li>
+            
+        </ol>
+    <ol class="menu sidebar-controls">
+        <div class="menu-bottom-section">
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#一日志级别">一、日志级别</a></li>
+    <li><a href="#二logging流程">二、logging流程</a></li>
+    <li><a href="#三几个重要的类">三、几个重要的类</a>
+      <ol>
+        <li><a href="#31-logger类">3.1 Logger类</a>
+          <ol>
+            <li><a href="#311-最常用的配置方法">3.1.1 最常用的配置方法</a></li>
+            <li><a href="#312-创建logger对象logginggetloggername">3.1.2 创建Logger对象logging.getLogger([name])</a></li>
+          </ol>
+        </li>
+        <li><a href="#32-handler类">3.2 Handler类</a></li>
+        <li><a href="#33-filter类">3.3 Filter类</a></li>
+        <li><a href="#34-formatter类">3.4 Formatter类</a></li>
+      </ol>
+    </li>
+    <li><a href="#四使用示例">四、使用示例</a>
+      <ol>
+        <li><a href="#41-直接调用logging接口">4.1 直接调用logging接口</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/python/" >
+                python
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/posts/python-logging-%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90%E5%8F%8A%E4%BD%BF%E7%94%A8/">Python logging 模块分析及使用</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            从个人笔记仓库整理迁移
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2026-10-03</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 22 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="python-日志模块logging分析及使用-1">Python 日志模块logging分析及使用-1</h1>
+<p><a class="link" href="https://juejin.cn/user/4248168662050013/posts"  target="_blank" rel="noopener"
+    >掘金原文</a></p>
+<p>开发部署项目时，不可能将所有的信息都输出到控制台中，因此我们将这些信息记录到日志文件中，不仅方便查看程序运行的情况，也可以在项目出现故障时根据该运行时产生的日志快速定位问题。</p>
+<p><code>Python</code>中提供了日志模块<code>logging</code>，可以方便的记录日志信息。</p>
+<blockquote>
+<p>本文主要分析了<code>logging</code>模块的相关知识及具体使用。<br>
+当前介绍该日志模块的文章有很多，之所以还要进行记录，一方面是因为没有看到系统的介绍，二是通过梳理此部分内容，做到不止会用，还明白内部函数调用。</p>
+</blockquote>
+<h2 id="一日志级别">一、日志级别</h2>
+<p><code>Python</code>标准库<code>logging</code>用做记录日志，默认分为五种日志级别：</p>
+<ul>
+<li><code>DEBUG(10)</code>：详细信息，调试问题时所需</li>
+<li><code>INFO(20)</code>：证明事情可按预期工作</li>
+<li><code>WARNING(30)</code>：有意外，将来可能发生问题，但依然可用</li>
+<li><code>ERROR(40)</code>：严重问题，程序不能执行一些功能</li>
+<li><code>CRITICAL(50)</code>：严重错误</li>
+</ul>
+<p>我们自定义日志级别时注意不要和默认的日志级别数值型相同（这是什么意思呢？），<code>logging</code>执行时输出<strong>大于等于</strong>设置的值日级别的日志信息，如设置级别为INFO，则INFO, WARNING, ERROR, CRITICAL级别的日志都会输出。<br>
+5种等级分别对应5种日志打印方法：<code>debug, info, warning, error, critical</code>。<br>
+默认的是<code>WARNING</code>，即当等级大于等于<code>WARNING</code>才被跟踪。</p>
+<h2 id="二logging流程">二、logging流程</h2>
+<p>官方的<code>logging</code>模块工作流程图如下：</p>
+<p><img src="/images/python-logging-flow.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="logging流程图"
+	
+	
+></p>
+<p>logging流程图</p>
+<p><strong>logging流程图</strong></p>
+<p>从上图中可以看到这几种python类型，<code>Logger, LogRecord, Filter, Handler, Formatter</code>。<br>
+<strong>类型说明</strong></p>
+<ul>
+<li><code>Logger</code>：<strong>日志</strong>，暴露函数给应用程序，基于日志记录器和过滤器级别决定哪些日志有效。</li>
+<li><code>LogRecord</code>：<strong>日志记录器</strong>，将日志传到相应的处理器处理。</li>
+<li><code>Handler</code>：<strong>处理器</strong>，将（日志记录器产生的）日志记录发送至合适的目的地。</li>
+<li><code>Filter</code>：<strong>过滤器</strong>，提供了更好的粒度控制，它可以决定输出哪些日志记录。</li>
+<li><code>Formatter</code>：<strong>格式化器</strong>，指明了最终输出中日志记录的布局。</li>
+</ul>
+<p><strong>基本流程</strong>:</p>
+<ul>
+<li>判断<code>Logger</code>对象对于设置的级别是否可用，如果可用，则往下执行，否则，流程结束。</li>
+<li>创建<code>LogRecord</code>对象，如果注册到<code>Logger</code>对象中的<code>Filter</code>对象过滤后返回False， 则不记录日志，流程结束，否则，向下执行。</li>
+<li><code>LogRecord</code>对象将<code>Handler</code>对象传入当前的<code>Logger</code>对象，（图中子流程）如果<code>Handler</code>对象的日志级别大于设置的日记级别，再判断注册到<code>Handler</code>对象中的<code>Filter</code>对象过滤后是否返回True而放行输出日志信息，否则不放行，流程结束。</li>
+<li>如果传入的<code>Handler</code>大于<code>Logger</code>中设置的级别，也即<code>Handler</code>有效，则往下执行，否则，流程结束。</li>
+<li>判断这个<code>Logger</code>对象是否还有父<code>Logger</code>对象，如果没有（代表当前<code>Logger</code>对象是最顶层的<code>Logger</code>对象<code>root Logger</code>），流程结束。否则将<code>Logger</code>对象设置为它的父<code>Logger</code>对象，重复上面3,4两步，输出父类<code>Logger</code>对象中的日志输出，直到是<code>root Logger</code>对象。</li>
+</ul>
+<h2 id="三几个重要的类">三、几个重要的类</h2>
+<p>前面讲<code>logging</code>流程的时候，提到几个概念：<code>Logger</code>，<code>Handler</code>，<code>Filter</code>，<code>Formatter</code>。</p>
+<h3 id="31-logger类">3.1 Logger类</h3>
+<p><code>Logger</code>对象有3个任务要做：</p>
+<ul>
+<li>向应用程序代码暴露<code>info, debug</code>等方法，使应用程序可以在运行时记录日志消息</li>
+<li>基于日志级别（默认的过滤设施）或<code>Filter</code>对象来决定要对哪些日志进行后续处理</li>
+<li>将日志消息传送给所有感兴趣的日志<code>handlers</code></li>
+</ul>
+<p>一个系统只有一个根<code>Logger</code>对象，并且<strong>该对象不能被直接实例化</strong>。</p>
+<blockquote>
+<p>通过调用<code>logging.getLogger(name)</code>函数创建<code>Logger</code>类对象。</p>
+</blockquote>
+<p><code>Logger</code>对象最常用的方法有两类：（1）配置方法，（2）消息发送方法</p>
+<p><code>Logger</code>对象可以设置多个<code>Handler</code>对象和<code>Filter</code>对象，<code>Handler</code>对象可以设置<code>Formatter</code>对象。<br>
+<code>Formatter</code>对象用来设置消息的具体输出格式。</p>
+<h4 id="311-最常用的配置方法">3.1.1 最常用的配置方法</h4>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Logger.setLevel</code></td>
+<td>设置日志器将会处理的日志消息的最低严重级别</td>
+</tr>
+<tr>
+<td><code>Logger.addHandler()</code></td>
+<td>为该<code>Logger</code>对象添加一个<code>handler</code>对象</td>
+</tr>
+<tr>
+<td><code>Logger.removeHandler</code></td>
+<td>为该<code>Logger</code>对象移除一个<code>handler</code>对象</td>
+</tr>
+<tr>
+<td><code>Logger.addFilter()和Logger.removeFilter()</code></td>
+<td>为该<code>Logger</code>对象添加 和 移除一个<code>filter</code>对象</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>logger</code>对象配置完成后，可使用下面的方法来创建日志记录：</p>
+<ul>
+<li><code>Logger.debug(), Logger.info(), Logger.warning(), Logger.error(), Logger.critical()</code>：创建一个与他们的方法名对应等级的日志记录</li>
+<li><code>Logger.exception()</code>：创建一个类似于<code>Logger.error()</code>的日志消息</li>
+<li><code>Logger.log()</code>：需要获取一个明确的日志level参数来创建一个日志记录</li>
+</ul>
+<p><strong>1. 获取<code>Logger</code>对象</strong><br>
+通常是通过<code>--logging.getLogger()</code>的方法。该方法有一个可选参数<code>name</code>,该参数表示将要返回的日志器的名称标识，如果不提供该参数，则其值为<code>root</code>。<br>
+若以相同的<code>name</code>参数值多次调用<code>getLogger()</code>方法，将会返回指向同一个<code>Logger</code>对象的引用。</p>
+<p><strong>2. logger的层级结构与有效等级</strong></p>
+<ul>
+<li>
+<p><code>logger</code>的名称是一个以 <code>'.'</code> 分割的层级结构，每个<code>'.'</code>后面的<code>logger</code>都是<code>'.'</code>前面的<code>logger</code>的<code>children</code>，例如，有一个名称为 <code>foo</code> 的<code>logger</code>，其它名称分别为<code>foo.bar, foo.bar.baz</code>和 <code>foo.bam</code>都是 <code>foo</code> 的后代。</p>
+</li>
+<li>
+<p><code>logger</code>有一个&quot;<strong>有效等级（<code>effective level</code>）</strong>&ldquo;的概念。<strong>如果一个logger上没有被明确设置一个level，那么该logger就是使用它parent的level</strong>;如果它的<code>parent</code>也没有明确设置<code>level</code>则继续向上查找<code>parent</code>的<code>parent</code>的有效<code>level</code>，依次类推，直到找到个一个明确设置了<code>level</code>的祖先为止。需要说明的是，<strong><code>root logger</code>总是会有一个明确的<code>level</code>设置（默认为 <code>WARNING</code>）</strong>。当决定是否去处理一个已发生的事件时，<code>logger</code>的有效等级将会被用来决定是否将该事件传递给该<code>logger</code>的<code>handlers</code>进行处理。</p>
+</li>
+<li>
+<p><code>child loggers</code>在完成对日志消息的处理后，默认会将日志消息传递给与它们的祖先<code>loggers</code>相关的<code>handlers</code>。因此，我们不必为一个应用程序中所使用的所有loggers定义和配置handlers，<strong>只需要为一个顶层的<code>logger</code>配置<code>handlers</code></strong>，然后按照需要创建<code>child loggers</code>就可足够了。我们也可以通过将一个logger的<code>propagate</code>属性设置为False来关闭这种传递机制。</p>
+</li>
+</ul>
+<h4 id="312-创建logger对象logginggetloggername">3.1.2 创建Logger对象logging.getLogger([name])</h4>
+<p>日志记录的工作主要由<code>Logger</code>对象来完成。前面讲到一个系统只有一个根<code>Logger</code>对象，并且<strong>该对象不能被直接实例化</strong>。</p>
+<p>需要通过<code>logging.getLogger([name])</code>来获取<code>Logger</code>对象。<br>
+在调用<code>getLogger</code>时要提供<code>Logger</code>的名称（<strong>多次使用相同名称来调用getLogger，返回的是同一个对象的引用。</strong>），<code>Logger</code>实例之间有层次关系，这些关系通过<code>Logger</code>名称来体现。</p>
+<p>py</p>
+<p>复制代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">p</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&#34;root&#34;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">c1</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&#34;root.c1&#34;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">c2</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&#34;root.c2&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>例子中，<code>p</code>是<code>父logger</code>, <code>c1,c2</code>分别是p的<code>子logger</code>。<code>c1, c2</code>将继承<code>p</code>的设置。如果省略了<code>name</code>参数, <code>getLogger</code>将返回日志对象层次关系中的<code>根Logger</code>。</p>
+<p>每个<code>Logger</code>对象都可以设置一个名字，如果设置<code>logger = logging.getLogger(__name__)</code>，<code>__name__</code>是<code>Python</code>中的一个特殊内置变量，他代表当前模块的名称（默认为<code>__main__</code>）。</p>
+<p>该函数内部根据是否指定名称返回对应的<strong>Logger对象</strong>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">root</span> <span class="o">=</span> <span class="n">RootLogger</span><span class="p">(</span><span class="n">WARNING</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">Logger</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>  
+</span></span><span class="line"><span class="cl"><span class="n">Logger</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">(</span><span class="n">Logger</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">getLogger</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;  
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Return a logger with the specified name, creating it if necessary.  
+</span></span></span><span class="line"><span class="cl"><span class="s2">    If no name is specified, return the root logger.  
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">name</span><span class="p">:</span>  
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">Logger</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>  
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">root</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>示例：</strong></p>
+<p><code>1import logging   2logger = logging.getLogger('test')   3logger.warning('this is a warning info')   4# 输出   5WARNING:test:this is a warning info</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">logging</span>  
+</span></span><span class="line"><span class="cl"><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;this is a warning info&#39;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出  </span>
+</span></span><span class="line"><span class="cl"><span class="n">WARNING</span><span class="p">:</span><span class="n">test</span><span class="p">:</span><span class="n">this</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">warning</span> <span class="n">info</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="32-handler类">3.2 Handler类</h3>
+<p><code>Handler</code>对象的作用是（基于日志消息的等级）将消息分发到<code>handler</code>指定的位置（文件、网络、邮件等）。<code>Logger</code>对象可以通过<code>addHandler()</code>方法为自己添加<code>handler</code>对象。</p>
+<blockquote>
+<p>应用程序代码不应该直接实例化和使用<code>Handler</code>实例。因为<code>Handler</code>是一个基类，只<strong>定义了所有<code>handlers</code>都应该有的接口</strong>，同时提供了一些子类可以直接使用或覆盖的默认行为。</p>
+<p><strong>常用接口</strong>有：</p>
+<ul>
+<li><code>setLevel()</code></li>
+<li><code>setFormatter()</code></li>
+<li><code>set_name()</code></li>
+</ul>
+</blockquote>
+<p>常用的<code>Handler</code>：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>Handler</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logging.StreamHandler</code></td>
+<td>将日志消息发送到输出到<code>Stream</code>，如<code>std.out, std.err</code>或任何<code>file-like</code>对象。</td>
+</tr>
+<tr>
+<td><code>logging.FileHandler</code></td>
+<td>将日志消息发送到<strong>磁盘文件</strong>，默认情况下<strong>文件大小会无限增长</strong></td>
+</tr>
+<tr>
+<td><code>logging.handlers.RotatingFileHandler</code></td>
+<td>将日志消息发送到<strong>磁盘文件</strong>，并支持日志文件<strong>按大小切割</strong></td>
+</tr>
+<tr>
+<td><code>logging.hanlders.TimedRotatingFileHandler</code></td>
+<td>将日志消息发送到<strong>磁盘文件</strong>，并支持日志文件<strong>按时间切割</strong></td>
+</tr>
+<tr>
+<td><code>logging.handlers.HTTPHandler</code></td>
+<td>将日志消息以<code>GET</code>或<code>POST</code>的方式发送给一个<code>HTTP</code>服务器</td>
+</tr>
+<tr>
+<td><code>logging.handlers.SMTPHandler</code></td>
+<td>将日志消息发送给一个<strong>指定的email地址</strong></td>
+</tr>
+<tr>
+<td><code>logging.NullHandler</code></td>
+<td>该<code>Handler</code>实例会忽略<code>error messages</code>，通常被想使用<code>logging</code>的<code>library</code>开发者使用来避免<code>'No handlers could be found for logger XXX'</code>信息的出现。</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>类之间的继承关系</strong>如下：</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/1/2/16f658205cad6626~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p>在这里插入图片描述</p>
+<p>示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">logging</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>  <span class="c1"># 获取Logger对象  </span>
+</span></span><span class="line"><span class="cl"><span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="s1">&#39;output.log&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;%&#39;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>  <span class="c1"># handler对象设置格式  </span>
+</span></span><span class="line"><span class="cl"><span class="n">handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>  <span class="c1"># handler设置日志级别  </span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>  <span class="c1"># 添加handler对象</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="33-filter类">3.3 Filter类</h3>
+<p><code>Filter</code>实例用于执行日志记录的任意筛选。<br>
+<code>Loggers</code>和<code>Handlers</code>可以根据需要使用筛选器实例筛选记录.<br>
+<code>logging</code>标准库只提供了一个<code>base filter</code>，其构造函数<code>__init__</code>接收<code>name</code>，默认的行为是名为<code>name</code>的<code>logger</code>及其子<code>logger</code>的消息能通过过滤器，其余的被过滤掉。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Filter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;  
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Filter instances are used to perform arbitrary filtering of LogRecords.  
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;  
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Initialize a filter.  
+</span></span></span><span class="line"><span class="cl"><span class="s2">  
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Initialize with the name of the logger which, together with its  
+</span></span></span><span class="line"><span class="cl"><span class="s2">        children, will have its events allowed through the filter. If no  
+</span></span></span><span class="line"><span class="cl"><span class="s2">        name is specified, allow every event.  
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>  
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">nlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="34-formatter类">3.4 Formatter类</h3>
+<p><code>Formatter</code>对象用于配置日志信息的最终顺序、结构和内容。与<code>logging.Handler</code>基类不同的是，应用代码可以直接实例化<code>Formatter</code>类。</p>
+<p><code>Formatter</code>类的构造方法定义如下：<br>
+<code>logging.Formatter.__init__(fmt=None, datefmt=None, style='%')</code></p>
+<p>该方法可接收3个可选参数：</p>
+<ul>
+<li><code>fmt</code>：指定消息格式化字符串，如果不指定该参数则默认使用<code>message</code>的原始值</li>
+<li><code>datefmt</code>：指定日期格式字符串，如果不指定，则默认使用<code>&quot;%Y-%m-%d %H:%M:%S&quot;</code></li>
+<li><code>style</code>：可取值为<code>'%', '{'和'$'</code>，如果不指定，则默认使用<code>'%'</code></li>
+</ul>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>格式</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%(levelno)s</code></td>
+<td>打印日志级别的数值</td>
+</tr>
+<tr>
+<td><code>%(levelname)s</code></td>
+<td>打印日志级别名称</td>
+</tr>
+<tr>
+<td><code>%(pathname)s</code></td>
+<td>打印当前执行程序的路径</td>
+</tr>
+<tr>
+<td><code>%(filename)s</code></td>
+<td>打印当前执行程序名</td>
+</tr>
+<tr>
+<td><code>%(funcName)s</code></td>
+<td>打印日志的当前函数</td>
+</tr>
+<tr>
+<td><code>%(lineno)d</code></td>
+<td>打印日志的当前行号</td>
+</tr>
+<tr>
+<td><code>%(asctime)s</code></td>
+<td>打印日志的时间</td>
+</tr>
+<tr>
+<td><code>%(thread)d</code></td>
+<td>打印线程ID</td>
+</tr>
+<tr>
+<td><code>%(message)s</code></td>
+<td>打印日志信息</td>
+</tr>
+<tr>
+<td><code>%(process)s</code></td>
+<td>当前进程，进程ID</td>
+</tr>
+<tr>
+<td><code>%(module)s</code></td>
+<td>调用日志输出函数的模块名，<code>filename</code>的名称部分，不包含后缀</td>
+</tr>
+<tr>
+<td><code>%(msecs)d</code></td>
+<td>日志事件发生事件的毫秒部分。<code>logging.basicConfig()</code>中用参数<code>datefmt</code>将会去掉<code>asctime</code>中产生的毫秒部分，可以用这个加上。</td>
+</tr>
+</tbody>
+</table></div>
+<p>一般直接使用<code>logging.Formatter(fmt, datefmt)</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">logging</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">fmt</span> <span class="o">=</span> <span class="s2">&#34;</span><span class="si">%(asctime)s</span><span class="s2"> [</span><span class="si">%(filename)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">] </span><span class="si">%(levelname)s</span><span class="s2">: </span><span class="si">%(message)s</span><span class="s2">&#34;</span>  
+</span></span><span class="line"><span class="cl"><span class="n">datefmt</span><span class="o">=</span><span class="s2">&#34;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&#34;</span>  
+</span></span><span class="line"><span class="cl"><span class="n">logFormatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">datefmt</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="四使用示例">四、使用示例</h2>
+<blockquote>
+<p>该部分主要展示如何使用<code>logging</code>模块记录日志信息的使用方法。</p>
+</blockquote>
+<p><strong>默认的输出格式</strong>如下：</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/1/2/16f658205d929fc1~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p>在这里插入图片描述</p>
+<p><strong>示例：</strong></p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/1/2/16f658205e8b09c6~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p>在这里插入图片描述</p>
+<p><code>logging</code>模块如何使用呢？下面介绍几种常用的使用方式：</p>
+<p>一是使用<code>logging</code>的对外函数接口；二是使用<code>basicConfig()</code>方法，该方法能够满足基本的使用需求；三是通过创建<code>Logger</code>对象，可以进行更加复杂的处理。</p>
+<h3 id="41-直接调用logging接口">4.1 直接调用logging接口</h3>
+<p>最简单的使用方法，就是直接调用<code>logging</code>标准库的接口，如<code>logging.debug()</code>，<code>logging.info()</code>等函数。<br>
+默认的日志级别是<code>WARNING</code>，当等级大于等于<code>WARNING</code>才被跟踪。</p>
+<blockquote>
+<p>内部默认调用的是<code>root.log(level, mas)</code>函数</p>
+</blockquote>
+<p>接口函数如下：</p>
+<ul>
+<li><code>debug()</code></li>
+<li><code>info()</code></li>
+<li><code>warning()</code></li>
+<li><code>error()</code></li>
+<li><code>critical()</code></li>
+</ul>
+<p>也可以直接使用同一接口<code>logging.log()</code>，输入级别及具体信息。</p>
+<ul>
+<li><code>log(level, msg)</code>：<code>level</code>表示日志级别，输入日志级别对应的整数或代码，如下：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">CRITICAL</span> <span class="o">=</span> <span class="mi">50</span>  
+</span></span><span class="line"><span class="cl"><span class="n">FATAL</span> <span class="o">=</span> <span class="n">CRITICAL</span>  
+</span></span><span class="line"><span class="cl"><span class="n">ERROR</span> <span class="o">=</span> <span class="mi">40</span>  
+</span></span><span class="line"><span class="cl"><span class="n">WARNING</span> <span class="o">=</span> <span class="mi">30</span>  
+</span></span><span class="line"><span class="cl"><span class="n">WARN</span> <span class="o">=</span> <span class="n">WARNING</span>  
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span> <span class="o">=</span> <span class="mi">20</span>  
+</span></span><span class="line"><span class="cl"><span class="n">DEBUG</span> <span class="o">=</span> <span class="mi">10</span>  
+</span></span><span class="line"><span class="cl"><span class="n">NOTSET</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这些接口函数内部<strong>实际调用的都是<code>Logger</code>类的对应函数</strong>。如果<code>logger</code>没有<code>handler</code>时，可默认调用<code>basicConfig()</code>添加控制台<code>handler</code>。<br>
+如，<code>logging.info()</code>函数内部调用<code>root.info()</code>函数，如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;  
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Log a message with severity &#39;INFO&#39; on the root logger. If the logger has  
+</span></span></span><span class="line"><span class="cl"><span class="s2">    no handlers, call basicConfig() to add a console handler with a pre-defined  
+</span></span></span><span class="line"><span class="cl"><span class="s2">    format.  
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>  
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">handlers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">basicConfig</span><span class="p">()</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">root</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">logging</span>  
+</span></span><span class="line"><span class="cl"><span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;this is a warning info.&#39;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;this is a error info.&#39;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;this is a debuginfo.&#39;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出  </span>
+</span></span><span class="line"><span class="cl"><span class="n">WARNING</span><span class="p">:</span><span class="n">root</span><span class="p">:</span><span class="n">this</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">warning</span> <span class="n">info</span><span class="o">.</span>  
+</span></span><span class="line"><span class="cl"><span class="n">ERROR</span><span class="p">:</span><span class="n">root</span><span class="p">:</span><span class="n">this</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">error</span> <span class="n">info</span><span class="o">.</span>  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">logging</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;this is a info msg.&#39;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">logging</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;this is a warn msg.&#39;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出：  </span>
+</span></span><span class="line"><span class="cl"><span class="n">WARNING</span><span class="p">:</span><span class="n">root</span><span class="p">:</span><span class="n">this</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">warn</span> <span class="n">msg</span><span class="o">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>记录具体异常信息</strong></p>
+<p>当发生异常时，直接使用无参数的<code>debug(), info(), warning(), error(), critical()</code>方法并不能记录异常信息。</p>
+<p><strong>我们看一下各个接口的定义及参数：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># 普通接口  </span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="c1"># 内部调用如下函数：  </span>
+</span></span><span class="line"><span class="cl"><span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 统一接口  </span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="c1"># 内部调用如下函数：</span>
+</span></span><span class="line"><span class="cl"><span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># exception函数，参数中默认exc_info为True  </span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">exception</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">   <span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">exc_info</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="c1"># 内部调用如下函数：</span>
+</span></span><span class="line"><span class="cl"><span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">ERROR</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>由上面代码可见，其内部都是调用函数<code>Logger._log(level, msg, args, **kwargs)</code>。不同的是参数，如<code>level</code>日志级别。<br>
+函数<code>Logger._log()</code>的定义如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stack_info</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">pass</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可见，其除了<code>level</code>， <code>msg</code>以外，还有参数<code>exc_info</code>。该参数用来控制是否打印具体信息。</p>
+<p><strong>函数<code>exception()</code>就等于<code>error(msg, exc_info=True)</code></strong></p>
+<p>因此：<br>
+<strong>记录异常信息的方法</strong>：</p>
+<ul>
+<li>设置<code>exc_info</code>参数为<code>True</code>，指示是否打印执行信息</li>
+<li>或者使用<code>exception()</code>方法，同时记录当前的堆栈追踪（仅从异常处理程度调用此方法）</li>
+<li>还可以使用<code>log()</code>方法，但是要设置日志级别和<code>exce_info</code>参数。</li>
+</ul>
+<p><code>logger.log(level, msg, exc_info=True)</code>是各个接口函数的统一调用方式。</p>
+<p><strong>示例代码：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">logging</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&#34;test.log&#34;</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s2">&#34;w&#34;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">%(asctime)s</span><span class="s2">    </span><span class="si">%(name)s</span><span class="s2">:</span><span class="si">%(levelname)s</span><span class="s2">:</span><span class="si">%(message)s</span><span class="s2">&#34;</span><span class="p">,</span>  
+</span></span><span class="line"><span class="cl">                    <span class="n">datefmt</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">%d</span><span class="s2">-%M-%Y %H:%M:%S&#34;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="mi">5</span>  
+</span></span><span class="line"><span class="cl"><span class="n">b</span> <span class="o">=</span> <span class="mi">0</span>  
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span>  
+</span></span><span class="line"><span class="cl"><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  
+</span></span><span class="line"><span class="cl">    <span class="c1"># 下面三种方式三选一，推荐使用第一种     </span>
+</span></span><span class="line"><span class="cl"><span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&#34;Exception occurred&#34;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&#34;Exception occurred&#34;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">logging</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&#34;Exception occurred&#34;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">py</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">复制代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="o">`</span><span class="mi">1</span><span class="n">import</span><span class="w"> </span><span class="n">logging</span><span class="w">    </span><span class="mi">2</span><span class="w">    </span><span class="mi">3</span><span class="n">logging</span><span class="p">.</span><span class="nf">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&#34;test.log&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">filemode</span><span class="o">=</span><span class="s2">&#34;w&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">format</span><span class="o">=</span><span class="s2">&#34;%(asctime)s %(name)s:%(levelname)s:%(message)s&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">datefmt</span><span class="o">=</span><span class="s2">&#34;%d-%M-%Y %H:%M:%S&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span><span class="w">    </span><span class="mi">4</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="w">    </span><span class="mi">5</span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">    </span><span class="mi">6</span><span class="n">try</span><span class="p">:</span><span class="w">    </span><span class="mi">7</span><span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">b</span><span class="w">    </span><span class="mi">8</span><span class="n">except</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">e</span><span class="p">:</span><span class="w">    </span><span class="mi">9</span><span class="w">    </span><span class="c1"># 下面三种方式三选一，推荐使用第一种   10    logging.exception(&#34;Exception occurred&#34;)   11    logging.error(&#34;Exception occurred&#34;, exc_info=True)   12    logging.log(level=logging.DEBUG, msg=&#34;Exception occurred&#34;, exc_info=True)`
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">输出文件</span><span class="o">`</span><span class="n">test</span><span class="p">.</span><span class="n">log</span><span class="o">`</span><span class="err">的内容</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">!</span><span class="p">[</span><span class="err">在这里插入图片描述</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">p1</span><span class="o">-</span><span class="n">jj</span><span class="p">.</span><span class="n">byteimg</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">tos</span><span class="o">-</span><span class="n">cn</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="n">t2oaga2asx</span><span class="o">/</span><span class="n">gold</span><span class="o">-</span><span class="k">user</span><span class="o">-</span><span class="n">assets</span><span class="o">/</span><span class="mi">2020</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="mi">16</span><span class="n">f658205f087401</span><span class="o">~</span><span class="n">tplv</span><span class="o">-</span><span class="n">t2oaga2asx</span><span class="o">-</span><span class="n">jj</span><span class="o">-</span><span class="n">mark</span><span class="p">:</span><span class="mi">3024</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="n">q75</span><span class="p">.</span><span class="n">png</span><span class="w"> </span><span class="s2">&#34;在这里插入图片描述&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">在这里插入图片描述</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">### 4.2 使用basicConfig()函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">使用</span><span class="o">`</span><span class="nf">basicConfig</span><span class="p">()</span><span class="o">`</span><span class="err">方法就能够满足基本的使用需要，如果方法没有传入参数，会根据默认的配置创建</span><span class="o">`</span><span class="n">Logger</span><span class="o">`</span><span class="err">对象，默认的日志级别被设置为</span><span class="o">**</span><span class="n">WARNING</span><span class="o">**</span><span class="err">。</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">默认的日志输出格式：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|</span><span class="n">WARNING</span><span class="o">|</span><span class="n">root</span><span class="o">|</span><span class="n">message</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|---|---|---|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|</span><span class="err">日志级别</span><span class="o">|`</span><span class="n">Logger</span><span class="o">`</span><span class="err">实例</span><span class="o">|</span><span class="err">日志信息</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">**</span><span class="err">函数定义：</span><span class="o">**</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">`</span><span class="n">def</span><span class="w"> </span><span class="nf">basicConfig</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">该函数</span><span class="o">**</span><span class="err">可选的参数</span><span class="o">**</span><span class="err">如下表所示：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|</span><span class="err">参数名称</span><span class="o">|</span><span class="err">参数描述</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|---|---|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">filename</span><span class="o">`|</span><span class="err">日志输出到文件的文件名</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">filemode</span><span class="o">`|</span><span class="err">文件模式，</span><span class="o">`</span><span class="n">r</span><span class="p">[</span><span class="o">+</span><span class="p">]</span><span class="o">`</span><span class="err">、</span><span class="o">`</span><span class="n">w</span><span class="p">[</span><span class="o">+</span><span class="p">]</span><span class="o">`</span><span class="err">、</span><span class="o">`</span><span class="n">a</span><span class="p">[</span><span class="o">+</span><span class="p">]</span><span class="o">`|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">format</span><span class="o">`|</span><span class="err">日志输出的格式</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">datefmt</span><span class="o">`|</span><span class="err">日志附带日期时间的格式</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">style</span><span class="o">`|</span><span class="err">格式占位符，默认为</span><span class="o">`</span><span class="err">“</span><span class="o">%</span><span class="err">”</span><span class="o">`</span><span class="err">和</span><span class="o">`</span><span class="err">“{}”</span><span class="o">`|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">level</span><span class="o">`|</span><span class="err">设置日志输出级别</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">stream</span><span class="o">`|</span><span class="err">定义输出流，用来初始化</span><span class="w"> </span><span class="o">`</span><span class="n">StreamHandler</span><span class="o">`</span><span class="err">对象，不能和</span><span class="w"> </span><span class="o">`</span><span class="n">filename</span><span class="o">`</span><span class="err">参数一起使用，否则会</span><span class="o">`</span><span class="n">ValueError</span><span class="o">`</span><span class="err">异常</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">handles</span><span class="o">`|</span><span class="err">定义处理器，用来创建</span><span class="o">`</span><span class="n">Handler</span><span class="o">`</span><span class="err">对象，不能和</span><span class="o">`</span><span class="n">filename</span><span class="err">，</span><span class="n">stream</span><span class="o">`</span><span class="err">参数一起使用，否则也会抛出</span><span class="o">`</span><span class="n">ValueError</span><span class="o">`</span><span class="err">异常</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">stream</span><span class="o">`</span><span class="err">输出流不与</span><span class="o">`</span><span class="n">filename</span><span class="o">`</span><span class="err">输出文件一起使用</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">处理器不与</span><span class="o">`</span><span class="n">stream</span><span class="o">`</span><span class="err">输出流或</span><span class="o">`</span><span class="n">filename</span><span class="o">`</span><span class="err">输出文件一起用</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="err">即</span><span class="o">`</span><span class="n">stream</span><span class="o">`</span><span class="err">、</span><span class="o">`</span><span class="n">filename</span><span class="o">`</span><span class="err">和</span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">互相排斥</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="err">若想将日志信息同时输出到文件和控制台，则需要使用</span><span class="o">`</span><span class="n">Logger</span><span class="o">`</span><span class="err">处理器增加对应的处理方法。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">`</span><span class="nf">basicConfig</span><span class="p">()</span><span class="o">`</span><span class="err">方法可以实现将日志信息输出到文件中</span><span class="o">**</span><span class="err">或者</span><span class="o">**</span><span class="err">输出到定义的输出流中。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="err">输出到文件中</span><span class="o">**</span><span class="err">，可以通过</span><span class="o">`</span><span class="n">filename</span><span class="o">`</span><span class="err">参数，或者通过</span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">处理器创建相应文件对象实现</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="err">内部创建</span><span class="o">`</span><span class="nf">FileHandle</span><span class="p">()</span><span class="o">`</span><span class="err">对象</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="err">打印到输出流</span><span class="o">**</span><span class="err">中，使用默认参数即可</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="err">内部创建</span><span class="o">`</span><span class="nf">StreamHandler</span><span class="p">()</span><span class="o">`</span><span class="err">对象</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">其中，</span><span class="o">`</span><span class="n">format</span><span class="o">`</span><span class="err">指定输出的格式和内容，</span><span class="o">`</span><span class="n">format</span><span class="o">`</span><span class="err">可以输出很多有用信息，具体格式见</span><span class="o">`</span><span class="n">Formatter类</span><span class="o">`</span><span class="err">。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">该方法相当于显示调用</span><span class="o">`</span><span class="nf">basicConfig</span><span class="p">()</span><span class="o">`</span><span class="err">进行参数的配置，而直接调用</span><span class="o">`</span><span class="n">logging</span><span class="p">.</span><span class="nf">info</span><span class="p">()</span><span class="o">`</span><span class="err">接口函数，若没有</span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">时，是隐式调用</span><span class="o">`</span><span class="nf">basicConfig</span><span class="p">()</span><span class="o">`</span><span class="err">的默认参数形式。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">**</span><span class="mi">1</span><span class="err">）日志信息打印到输出流</span><span class="o">**</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">py</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">复制代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="o">`</span><span class="mi">1</span><span class="n">import</span><span class="w"> </span><span class="n">logging</span><span class="w">    </span><span class="mi">2</span><span class="c1"># 直接调用basicConfig()函数，使用默认参数    3logging.basicConfig()    4logging.debug(&#39;This is a debug message&#39;)    5logging.info(&#39;This is an info message&#39;)    6logging.warning(&#39;This is a warning message&#39;)    7logging.error(&#39;This is an error message&#39;)    8logging.critical(&#39;This is a critical message&#39;)    9   10# 输出：(默认级别是WARNING)   11WARNING:root:This is a warning message   12ERROR:root:This is an error message   13CRITICAL:root:This is a critical message`
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">**</span><span class="mi">2</span><span class="err">）格式化输出</span><span class="o">**</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">**</span><span class="err">格式化输出时间：</span><span class="o">**</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">通过</span><span class="o">`</span><span class="n">datefmt</span><span class="o">`</span><span class="err">参数可以格式化输出</span><span class="o">`</span><span class="n">log</span><span class="o">`</span><span class="err">的时间。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">**</span><span class="err">常用的输出格式</span><span class="o">**</span><span class="err">如下：</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">`</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;%(asctime)s - %(filename)s[line:%(lineno)d]- %(levelname)s: %(message)s&#39;</span><span class="o">`</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">该格式可以输出日志的打印时间，输出模块及行号，日志级别和输出的日志内容。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">py</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">复制代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">`</span><span class="mi">1</span><span class="n">import</span><span class="w"> </span><span class="n">logging</span><span class="w">   </span><span class="mi">2</span><span class="n">logging</span><span class="p">.</span><span class="nf">basicConfig</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s1">&#39;%(asctime)s %(message)s&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">datefmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;%Y-%m-%d %I:%M:%S %p&#39;</span><span class="p">)</span><span class="w">   </span><span class="mi">3</span><span class="n">logging</span><span class="p">.</span><span class="nf">warning</span><span class="p">(</span><span class="s1">&#39;is when this event was occurred.&#39;</span><span class="p">)</span><span class="w">   </span><span class="mi">4</span><span class="w">   </span><span class="mi">5</span><span class="c1"># 输出结果   62019-10-15 04:03:17 PM is when this event was occurred.`
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">**</span><span class="mi">3</span><span class="err">）</span><span class="w"> </span><span class="err">将日志输出到指定文件</span><span class="o">**</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">指定</span><span class="o">`</span><span class="n">filename</span><span class="o">`</span><span class="err">，</span><span class="w"> </span><span class="o">`</span><span class="n">filemode</span><span class="o">`</span><span class="err">参数，可将日志内容输出到指定文件，示例代码如下：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">py</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">复制代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">`</span><span class="mi">1</span><span class="n">import</span><span class="w"> </span><span class="n">logging</span><span class="w">   </span><span class="mi">2</span><span class="w">   </span><span class="mi">3</span><span class="n">logging</span><span class="p">.</span><span class="nf">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;test.log&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">format</span><span class="o">=</span><span class="s2">&#34;%(asctime)s %(name)s:%(levelname)s:%(message)s&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">datefmt</span><span class="o">=</span><span class="s2">&#34;%d-%M-%Y %H:%M:%S&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span><span class="w">   </span><span class="mi">4</span><span class="n">logging</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="s1">&#39;This is a debug message&#39;</span><span class="p">)</span><span class="w">   </span><span class="mi">5</span><span class="n">logging</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="s1">&#39;This is an info message&#39;</span><span class="p">)</span><span class="w">   </span><span class="mi">6</span><span class="n">logging</span><span class="p">.</span><span class="nf">warning</span><span class="p">(</span><span class="s1">&#39;This is a warning message&#39;</span><span class="p">)</span><span class="w">   </span><span class="mi">7</span><span class="n">logging</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="s1">&#39;This is an error message&#39;</span><span class="p">)</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">生成的日志文件</span><span class="o">`</span><span class="n">test</span><span class="p">.</span><span class="n">log</span><span class="o">`</span><span class="err">，内容如下：</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">!</span><span class="p">[</span><span class="err">在这里插入图片描述</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">p1</span><span class="o">-</span><span class="n">jj</span><span class="p">.</span><span class="n">byteimg</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">tos</span><span class="o">-</span><span class="n">cn</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="n">t2oaga2asx</span><span class="o">/</span><span class="n">gold</span><span class="o">-</span><span class="k">user</span><span class="o">-</span><span class="n">assets</span><span class="o">/</span><span class="mi">2020</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="mi">16</span><span class="n">f658205ef08685</span><span class="o">~</span><span class="n">tplv</span><span class="o">-</span><span class="n">t2oaga2asx</span><span class="o">-</span><span class="n">jj</span><span class="o">-</span><span class="n">mark</span><span class="p">:</span><span class="mi">3024</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="n">q75</span><span class="p">.</span><span class="n">png</span><span class="w"> </span><span class="s2">&#34;在这里插入图片描述&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">在这里插入图片描述</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">### 4.3 一步步配置Logger
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">`</span><span class="n">basicConfig</span><span class="o">`</span><span class="err">函数提供了一种较为简便的使用日志的方式，如果想要获取更加复杂的使用，则需要自己一步步配置来实现。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">**</span><span class="err">配置逻辑：</span><span class="o">**</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="err">一个</span><span class="o">`</span><span class="n">logger</span><span class="o">`</span><span class="err">对象可以添加多个</span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">对象，通过</span><span class="o">`</span><span class="nf">addHandler</span><span class="p">()</span><span class="o">`</span><span class="err">函数</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="err">每个</span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">对象可以有一个</span><span class="o">`</span><span class="n">Formatter</span><span class="o">`</span><span class="err">对象来指定格式，通过</span><span class="o">`</span><span class="nf">setFormatter</span><span class="p">()</span><span class="o">`</span><span class="err">函数</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">和</span><span class="o">`</span><span class="n">logger</span><span class="o">`</span><span class="err">对象都需要设置一个日志等级，通过</span><span class="o">`</span><span class="nf">setLevel</span><span class="p">()</span><span class="o">`</span><span class="err">函数</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="err">根据需要</span><span class="o">`</span><span class="n">logger</span><span class="o">`</span><span class="err">和</span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">对象可以添加多个</span><span class="o">`</span><span class="n">Filter</span><span class="o">`</span><span class="err">对象，通过</span><span class="o">`</span><span class="nf">addFilter</span><span class="p">()</span><span class="o">`</span><span class="err">函数</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">**</span><span class="err">示例：</span><span class="o">**</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">py</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">复制代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="o">`</span><span class="mi">1</span><span class="n">import</span><span class="w"> </span><span class="n">logging</span><span class="w">    </span><span class="mi">2</span><span class="w">    </span><span class="mi">3</span><span class="n">logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span><span class="w">    </span><span class="mi">4</span><span class="n">logger</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">)</span><span class="w">    </span><span class="mi">5</span><span class="w">    </span><span class="mi">6</span><span class="n">handler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logging</span><span class="p">.</span><span class="nf">FileHandler</span><span class="p">(</span><span class="s1">&#39;output.log&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">encoding</span><span class="o">=</span><span class="n">None</span><span class="p">,</span><span class="w"> </span><span class="n">delay</span><span class="o">=</span><span class="no">False</span><span class="p">)</span><span class="w">    </span><span class="mi">7</span><span class="n">formatter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logging</span><span class="p">.</span><span class="nf">Formatter</span><span class="p">(</span><span class="s1">&#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;</span><span class="p">,</span><span class="w">    </span><span class="mi">8</span><span class="w">                                </span><span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;%Y-%m-%d %H:%M:%S&#39;</span><span class="p">,</span><span class="w">    </span><span class="mi">9</span><span class="w">                                </span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;%&#39;</span><span class="p">)</span><span class="w">   </span><span class="mi">10</span><span class="n">handler</span><span class="p">.</span><span class="nf">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span><span class="w">   </span><span class="mi">11</span><span class="n">handler</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span><span class="w">   </span><span class="mi">12</span><span class="n">handler</span><span class="p">.</span><span class="nf">set_name</span><span class="p">(</span><span class="s1">&#39;output-log&#39;</span><span class="p">)</span><span class="w">   </span><span class="mi">13</span><span class="w">   </span><span class="mi">14</span><span class="n">logger</span><span class="p">.</span><span class="nf">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span><span class="w">   </span><span class="mi">15</span><span class="w">   </span><span class="mi">16</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="w">   </span><span class="mi">17</span><span class="n">try</span><span class="p">:</span><span class="w">   </span><span class="mi">18</span><span class="w">    </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">a</span><span class="w">   </span><span class="mi">19</span><span class="n">except</span><span class="p">:</span><span class="w">   </span><span class="mi">20</span><span class="w">    </span><span class="n">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="s1">&#39;Divisor is equal to 0.&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">exc_info</span><span class="o">=</span><span class="no">True</span><span class="p">)</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">**</span><span class="err">将日志同时输出到屏幕和文件</span><span class="o">**</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">py</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">复制代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="o">`</span><span class="mi">1</span><span class="n">import</span><span class="w"> </span><span class="n">logging</span><span class="w">    </span><span class="mi">2</span><span class="n">logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span><span class="w">    </span><span class="mi">3</span><span class="n">logger</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span><span class="w">    </span><span class="mi">4</span><span class="n">handler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logging</span><span class="p">.</span><span class="nf">FileHandler</span><span class="p">(</span><span class="s2">&#34;log.txt&#34;</span><span class="p">)</span><span class="w">    </span><span class="mi">5</span><span class="n">handler</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">)</span><span class="w">    </span><span class="mi">6</span><span class="n">formatter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logging</span><span class="p">.</span><span class="nf">Formatter</span><span class="p">(</span><span class="s1">&#39;%(asctime)s - %(name)s - %(message)s&#39;</span><span class="p">)</span><span class="w">    </span><span class="mi">7</span><span class="n">handler</span><span class="p">.</span><span class="nf">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span><span class="w">    </span><span class="mi">8</span><span class="w">    </span><span class="mi">9</span><span class="n">console</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logging</span><span class="p">.</span><span class="nf">StreamHandler</span><span class="p">()</span><span class="w">   </span><span class="mi">10</span><span class="n">console</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">)</span><span class="w">   </span><span class="mi">11</span><span class="w">   </span><span class="mi">12</span><span class="n">logger</span><span class="p">.</span><span class="nf">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span><span class="w">   </span><span class="mi">13</span><span class="n">logger</span><span class="p">.</span><span class="nf">addHandler</span><span class="p">(</span><span class="n">console</span><span class="p">)</span><span class="w">   </span><span class="mi">14</span><span class="w">   </span><span class="mi">15</span><span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="s2">&#34;Start print log&#34;</span><span class="p">)</span><span class="w">   </span><span class="mi">16</span><span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="s2">&#34;Do something&#34;</span><span class="p">)</span><span class="w">   </span><span class="mi">17</span><span class="n">logger</span><span class="p">.</span><span class="nf">warning</span><span class="p">(</span><span class="s2">&#34;Something maybe fail.&#34;</span><span class="p">)</span><span class="w">   </span><span class="mi">18</span><span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="s2">&#34;Finish&#34;</span><span class="p">)</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">在</span><span class="o">`</span><span class="n">log</span><span class="p">.</span><span class="n">txt</span><span class="o">`</span><span class="err">文件和控制台均可看到输出，控制台的输出，其中文件中内容（有格式）如下：</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">!</span><span class="p">[</span><span class="err">在这里插入图片描述</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">p1</span><span class="o">-</span><span class="n">jj</span><span class="p">.</span><span class="n">byteimg</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">tos</span><span class="o">-</span><span class="n">cn</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="n">t2oaga2asx</span><span class="o">/</span><span class="n">gold</span><span class="o">-</span><span class="k">user</span><span class="o">-</span><span class="n">assets</span><span class="o">/</span><span class="mi">2020</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="mi">16</span><span class="n">f658207e6eee73</span><span class="o">~</span><span class="n">tplv</span><span class="o">-</span><span class="n">t2oaga2asx</span><span class="o">-</span><span class="n">jj</span><span class="o">-</span><span class="n">mark</span><span class="p">:</span><span class="mi">3024</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="n">q75</span><span class="p">.</span><span class="n">png</span><span class="w"> </span><span class="s2">&#34;在这里插入图片描述&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">在这里插入图片描述</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">通过这段代码可以看出，</span><span class="o">`</span><span class="n">logging</span><span class="o">`</span><span class="err">有一个日志处理的主对象</span><span class="p">(</span><span class="o">`</span><span class="n">logger</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">()</span><span class="o">`</span><span class="p">)</span><span class="err">，其他的处理方法均是通过</span><span class="o">`</span><span class="n">addHandler</span><span class="o">`</span><span class="err">添加进去。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">### 4.4 通过dictConfig配置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">通过</span><span class="o">`</span><span class="n">dictConfig</span><span class="o">`</span><span class="err">配置方法是通过</span><span class="n">python代码构建一个</span><span class="o">`</span><span class="n">dict</span><span class="o">`</span><span class="err">对象，也可以通过</span><span class="o">`</span><span class="n">JSON</span><span class="o">`</span><span class="err">或</span><span class="o">`</span><span class="n">yaml</span><span class="o">`</span><span class="err">文件来进行配置。</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">这种方式使用起来更加灵活，强大。我们可以把很多的数据转换成自字典形式，然后将他们填充到一个配置字典中。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">具体如何转换可以参考</span><span class="o">`</span><span class="n">logging</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">py</span><span class="o">`</span><span class="err">文件。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">#### 4.4.1 dictConfig()
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">该函数可以从一个字典对象中获取日志配置信息，</span><span class="o">`</span><span class="n">config</span><span class="o">`</span><span class="err">参数就是这个字典对象。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">定义如下：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">py</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">复制代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">`</span><span class="mi">1</span><span class="n">def</span><span class="w"> </span><span class="nf">dictConfig</span><span class="p">(</span><span class="n">config</span><span class="p">):</span><span class="w">   </span><span class="mi">2</span><span class="w">    </span><span class="s2">&#34;&#34;&#34;Configure logging using a dictionary.&#34;&#34;&#34;</span><span class="w">   </span><span class="mi">3</span><span class="w">    </span><span class="nf">dictConfigClass</span><span class="p">(</span><span class="n">config</span><span class="p">).</span><span class="nf">configure</span><span class="p">()</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">如使用</span><span class="o">`</span><span class="n">YAML</span><span class="o">`</span><span class="err">格式的文件类配置</span><span class="p">(</span><span class="err">配置内容见下方示例</span><span class="p">)</span><span class="err">，则使用示例：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">py</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">复制代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="o">`</span><span class="mi">1</span><span class="n">import</span><span class="w"> </span><span class="n">logging</span><span class="w">    </span><span class="mi">2</span><span class="n">import</span><span class="w"> </span><span class="n">logging</span><span class="p">.</span><span class="n">config</span><span class="w">    </span><span class="mi">3</span><span class="n">import</span><span class="w"> </span><span class="n">yaml</span><span class="w">    </span><span class="mi">4</span><span class="w">    </span><span class="mi">5</span><span class="n">with</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="s1">&#39;logging.yml&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">f_config</span><span class="p">:</span><span class="w">    </span><span class="mi">6</span><span class="w">    </span><span class="n">dict_cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yaml</span><span class="p">.</span><span class="k">load</span><span class="p">(</span><span class="n">f_config</span><span class="p">)</span><span class="w">    </span><span class="mi">7</span><span class="n">logging</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="nf">dictConfig</span><span class="p">(</span><span class="n">dict_cfg</span><span class="p">)</span><span class="w">    </span><span class="mi">8</span><span class="w">    </span><span class="mi">9</span><span class="n">logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="s1">&#39;console&#39;</span><span class="p">)</span><span class="w">   </span><span class="mi">10</span><span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="s1">&#39;debug msg&#39;</span><span class="p">)</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">#### 4.4.2 配置规则
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|</span><span class="n">key名称</span><span class="o">|</span><span class="err">描述</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|---|---|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">version</span><span class="o">`|</span><span class="err">必选项，整数值，表示配置格式版本，当前唯一可用值是</span><span class="o">`</span><span class="mi">1</span><span class="o">`|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">formatters</span><span class="o">`|</span><span class="err">可选项，其值是字典对象，该字典对象每个元素的</span><span class="o">`</span><span class="k">key</span><span class="o">`</span><span class="err">为要定义的格式器名称，</span><span class="o">`</span><span class="n">value</span><span class="o">`</span><span class="err">为格式器的配置信息组成的</span><span class="o">`</span><span class="n">dict</span><span class="o">`</span><span class="err">。一般会配置</span><span class="o">`</span><span class="n">format</span><span class="o">`</span><span class="err">，用于指定输出字符串的格式，</span><span class="o">`</span><span class="n">datefmt</span><span class="o">`</span><span class="err">用于指定输出的时间字符串格式，默认为</span><span class="o">`%</span><span class="n">Y</span><span class="o">-%</span><span class="n">m</span><span class="o">-%</span><span class="n">d</span><span class="w"> </span><span class="o">%</span><span class="n">H</span><span class="p">:</span><span class="o">%</span><span class="n">M</span><span class="p">:</span><span class="o">%</span><span class="n">S</span><span class="o">`</span><span class="err">。</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">filters</span><span class="o">`|</span><span class="err">可选项，其值是字典对象，该字典对象每个元素的</span><span class="o">`</span><span class="k">key</span><span class="o">`</span><span class="err">为要定义的过滤器名称，</span><span class="o">`</span><span class="n">value</span><span class="o">`</span><span class="err">为过滤器的配置信息组成的</span><span class="o">`</span><span class="n">dict</span><span class="o">`</span><span class="err">。</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">handlers</span><span class="o">`|</span><span class="err">可选项，其值是字典对象，该字典对象每个元素的</span><span class="o">`</span><span class="k">key</span><span class="o">`</span><span class="err">为要定义的处理器名称，</span><span class="o">`</span><span class="n">value</span><span class="o">`</span><span class="err">为处理器的配置信息组成的</span><span class="o">`</span><span class="n">dict</span><span class="o">`</span><span class="err">。如</span><span class="o">`</span><span class="n">class</span><span class="o">`</span><span class="err">（必选项）</span><span class="p">,</span><span class="w"> </span><span class="o">`</span><span class="n">formatter</span><span class="o">`</span><span class="p">,</span><span class="w"> </span><span class="o">`</span><span class="n">filters</span><span class="o">`</span><span class="err">。其他配置信息将会传递给</span><span class="o">`</span><span class="n">class</span><span class="o">`</span><span class="err">所指定的处理器类的构造函数。如使用</span><span class="o">`</span><span class="n">logging</span><span class="p">.</span><span class="n">handlers</span><span class="p">.</span><span class="n">RotatingFileHandler</span><span class="o">`</span><span class="err">，使用</span><span class="o">`</span><span class="n">maxBytes</span><span class="o">`</span><span class="p">,</span><span class="w"> </span><span class="o">`</span><span class="n">backupCount</span><span class="o">`</span><span class="err">等参数。</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">loggers</span><span class="o">`|</span><span class="err">可选项，其值是字典对象，该字典对象每个元素的</span><span class="o">`</span><span class="k">key</span><span class="o">`</span><span class="err">为要定义的日志器名称，</span><span class="o">`</span><span class="n">value</span><span class="o">`</span><span class="err">为日志器的配置信息组成的</span><span class="o">`</span><span class="n">dict</span><span class="o">`</span><span class="err">。如</span><span class="o">`</span><span class="n">level</span><span class="p">,</span><span class="w"> </span><span class="n">handler</span><span class="p">,</span><span class="w"> </span><span class="n">filter</span><span class="o">`</span><span class="err">等</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">root</span><span class="o">`|</span><span class="err">可选项，这是</span><span class="o">`</span><span class="n">root</span><span class="w"> </span><span class="n">logger</span><span class="o">`</span><span class="err">的配置项，其值是字典对象。除非在定义其它</span><span class="o">`</span><span class="n">logger</span><span class="o">`</span><span class="err">时明确指定</span><span class="o">`</span><span class="n">propagate</span><span class="o">`</span><span class="err">值为</span><span class="n">no</span><span class="err">，否则</span><span class="o">`</span><span class="n">root</span><span class="w"> </span><span class="n">logger</span><span class="o">`</span><span class="err">定义的</span><span class="o">`</span><span class="n">handlers</span><span class="o">`</span><span class="err">都会被作用到其它</span><span class="o">`</span><span class="n">logger</span><span class="o">`</span><span class="err">上。</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">|`</span><span class="n">incremental</span><span class="o">`|</span><span class="err">可选项，默认值为</span><span class="o">`</span><span class="no">False</span><span class="o">`</span><span class="err">。该选项的意义在于，如果这里定义的对象已经存在，那么这里对这些对象的定义是否应用到已存在的对象上。值为</span><span class="o">`</span><span class="no">False</span><span class="o">`</span><span class="err">表示，已存在的对象将会被重新定义。</span><span class="o">|</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">**</span><span class="err">具体配置结构如下所示：</span><span class="o">**</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">version</span><span class="o">`</span><span class="err">：</span><span class="w"> </span><span class="err">必要参数，必须为</span><span class="o">`</span><span class="mi">1</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">incremental</span><span class="o">`</span><span class="err">：是否将此配置文件解释为现有配置的增量</span><span class="p">,</span><span class="w"> </span><span class="err">默认为</span><span class="o">`</span><span class="no">False</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">disable_existing_loggers</span><span class="o">`</span><span class="err">：是否要禁用现有的非</span><span class="w"> </span><span class="o">`</span><span class="n">root</span><span class="w"> </span><span class="n">logger</span><span class="o">`</span><span class="err">，默认为</span><span class="o">`</span><span class="no">True</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">handlers</span><span class="o">`</span><span class="err">：字典形式</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">class</span><span class="o">`</span><span class="err">：必须有，所使用的</span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">类，如</span><span class="o">`</span><span class="n">logging</span><span class="p">.</span><span class="n">handlers</span><span class="p">.</span><span class="n">RotatingFileHandler</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">level</span><span class="o">`</span><span class="err">：（可选），</span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">的等级</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">formatter</span><span class="o">`</span><span class="err">：（可选），当前</span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">的</span><span class="o">`</span><span class="n">formatter</span><span class="o">`</span><span class="err">的</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">filters</span><span class="o">`</span><span class="err">：（可选），当前</span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">的</span><span class="o">`</span><span class="n">filters</span><span class="o">`</span><span class="err">的</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="err">列表</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">loggers</span><span class="o">`</span><span class="err">：字典形式</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">level</span><span class="o">`</span><span class="err">：（可选），</span><span class="o">`</span><span class="n">logger</span><span class="o">`</span><span class="err">的等级</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">propagate</span><span class="o">`</span><span class="err">：（可选）：默认值为</span><span class="mi">1</span><span class="err">，表示将消息传递给父</span><span class="o">`</span><span class="n">logger</span><span class="o">`</span><span class="err">的</span><span class="o">`</span><span class="n">handler</span><span class="o">`</span><span class="err">进行处理。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">filters</span><span class="o">`</span><span class="err">：（可选）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">handlers</span><span class="o">`</span><span class="err">：（可选）</span><span class="w"> </span><span class="err">，当前</span><span class="o">`</span><span class="n">logger</span><span class="o">`</span><span class="err">的</span><span class="o">`</span><span class="n">handlers</span><span class="o">`</span><span class="err">的</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="err">列表</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">qualname</span><span class="o">`</span><span class="err">：代码中使用</span><span class="o">`</span><span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">()</span><span class="o">`</span><span class="err">时，读取的就是</span><span class="o">`</span><span class="n">qualname</span><span class="o">`</span><span class="err">这个选项。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">root</span><span class="o">`</span><span class="err">：这是</span><span class="o">`</span><span class="n">root</span><span class="w"> </span><span class="n">logger</span><span class="o">`</span><span class="err">的配置项</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">level</span><span class="o">`</span><span class="err">：日志等级</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="o">`</span><span class="n">handlers</span><span class="o">`</span><span class="w"> </span><span class="err">：当前</span><span class="o">`</span><span class="n">root</span><span class="w"> </span><span class="n">logger</span><span class="o">`</span><span class="err">的</span><span class="o">`</span><span class="n">handlers</span><span class="o">`</span><span class="err">的</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="err">列表</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">#### 4.4.3 配置示例
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">复制代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="o">`</span><span class="mi">1</span><span class="n">version</span><span class="p">:</span><span class="mi">1</span><span class="w">    </span><span class="mi">2</span><span class="n">root</span><span class="p">:</span><span class="w">    </span><span class="mi">3</span><span class="w">    </span><span class="n">level</span><span class="p">:</span><span class="n">DEBUG</span><span class="w">    </span><span class="mi">4</span><span class="w">    </span><span class="n">handlers</span><span class="p">:[</span><span class="n">filehandler</span><span class="p">,</span><span class="w"> </span><span class="p">]</span><span class="w">    </span><span class="mi">5</span><span class="n">loggers</span><span class="p">:</span><span class="w">    </span><span class="mi">6</span><span class="w">    </span><span class="n">console</span><span class="p">:</span><span class="w">    </span><span class="mi">7</span><span class="w">        </span><span class="n">level</span><span class="p">:</span><span class="n">WARNING</span><span class="w">    </span><span class="mi">8</span><span class="w">        </span><span class="n">handlers</span><span class="p">:[</span><span class="n">consolehandler</span><span class="p">,]</span><span class="w">    </span><span class="mi">9</span><span class="w">        </span><span class="n">propagate</span><span class="p">:</span><span class="mi">1</span><span class="w">   </span><span class="mi">10</span><span class="n">handlers</span><span class="p">:</span><span class="w">   </span><span class="mi">11</span><span class="w">    </span><span class="n">filehandler</span><span class="p">:</span><span class="w">   </span><span class="mi">12</span><span class="w">        </span><span class="n">class</span><span class="p">:</span><span class="n">logging</span><span class="p">.</span><span class="n">FileHandler</span><span class="w">   </span><span class="mi">13</span><span class="w">        </span><span class="n">filename</span><span class="p">:</span><span class="n">logs</span><span class="o">/</span><span class="n">sys</span><span class="p">.</span><span class="n">log</span><span class="w">   </span><span class="mi">14</span><span class="w">        </span><span class="n">level</span><span class="p">:</span><span class="n">WARNING</span><span class="w">   </span><span class="mi">15</span><span class="w">        </span><span class="n">formatter</span><span class="p">:</span><span class="n">fileformatter</span><span class="w">   </span><span class="mi">16</span><span class="w">    </span><span class="n">consolehandler</span><span class="p">:</span><span class="w">   </span><span class="mi">17</span><span class="w">        </span><span class="n">class</span><span class="p">:</span><span class="n">logging</span><span class="p">.</span><span class="n">StreamHandler</span><span class="w">   </span><span class="mi">18</span><span class="w">        </span><span class="n">stream</span><span class="p">:</span><span class="n">ext</span><span class="p">:</span><span class="o">//</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="w">   </span><span class="mi">19</span><span class="w">        </span><span class="n">level</span><span class="p">:</span><span class="n">DEBUG</span><span class="w">   </span><span class="mi">20</span><span class="w">        </span><span class="n">formatter</span><span class="p">:</span><span class="n">consoleformatter</span><span class="w">   </span><span class="mi">21</span><span class="n">formatters</span><span class="p">:</span><span class="w">   </span><span class="mi">22</span><span class="w">    </span><span class="n">fileformatter</span><span class="p">:</span><span class="w">   </span><span class="mi">23</span><span class="w">        </span><span class="n">format</span><span class="p">:</span><span class="s1">&#39;%(asctime)s [%(name)s][%(levelname)s]：%(message)s&#39;</span><span class="w">   </span><span class="mi">24</span><span class="w">    </span><span class="n">consoleformatter</span><span class="p">:</span><span class="w">   </span><span class="mi">25</span><span class="w">        </span><span class="n">format</span><span class="p">:</span><span class="s1">&#39;%(asctime)s[%(levelname)s]:%(message)s&#39;</span><span class="o">`</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">&gt;</span><span class="w"> </span><span class="err">外部对象访问：外部对象是指不能直接进行访问，需要</span><span class="o">`</span><span class="n">import</span><span class="o">`</span><span class="err">导入的对象，这时候需要加一个</span><span class="o">`</span><span class="n">ext</span><span class="p">:</span><span class="o">//`</span><span class="err">前缀以便识别，然后系统就会</span><span class="o">`</span><span class="n">import</span><span class="o">`</span><span class="err">这个前缀后面的内容。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">**</span><span class="err">参考资料：</span><span class="o">**</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">[</span><span class="n">Python日志库logging总结</span><span class="o">-</span><span class="err">可能是目前为止将</span><span class="n">logging库总结的最好的一篇文章</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cloud</span><span class="p">.</span><span class="n">tencent</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">developer</span><span class="o">/</span><span class="n">article</span><span class="o">/</span><span class="mi">1354396</span><span class="p">)</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">[</span><span class="n">python基础学习十</span><span class="w"> </span><span class="n">logging模块详细使用</span><span class="err">【转载】</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">louis_w</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="err">博客园</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">cnblogs</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">louis</span><span class="o">-</span><span class="n">w</span><span class="o">/</span><span class="n">p</span><span class="o">/</span><span class="mi">8567434</span><span class="p">.</span><span class="n">html</span><span class="p">)</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">[</span><span class="nf">Python之路</span><span class="p">(</span><span class="err">第十七篇</span><span class="p">)</span><span class="n">logging模块</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Nicholas</span><span class="o">-</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="err">博客园</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">cnblogs</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">Nicholas0707</span><span class="o">/</span><span class="n">p</span><span class="o">/</span><span class="mi">9021672</span><span class="p">.</span><span class="n">html</span><span class="p">)</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/python/">python</a>
+        
+            <a href="/tags/logging/">logging</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/where-are-your-python-packages-installed/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">python包都安装到哪里去了</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@300&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+
+    </body>
+</html>

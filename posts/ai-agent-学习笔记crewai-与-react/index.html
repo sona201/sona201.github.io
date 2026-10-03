@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='从个人笔记仓库整理迁移'>
+<title>AI Agent 学习笔记：CrewAI 与 ReAct</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/ai-agent-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0crewai-%E4%B8%8E-react/'>
+
+<link rel="stylesheet" href="/scss/style.min.2a8a8b5925063991a20d80fb86183b19905b741ac47e8c0a373818c059a9ae7c.css"><meta property='og:title' content='AI Agent 学习笔记：CrewAI 与 ReAct'>
+<meta property='og:description' content='从个人笔记仓库整理迁移'>
+<meta property='og:url' content='https://sona201.github.io/posts/ai-agent-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0crewai-%E4%B8%8E-react/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='AI' /><meta property='article:tag' content='Agent' /><meta property='article:tag' content='CrewAI' /><meta property='article:tag' content='ReAct' /><meta property='article:published_time' content='2026-10-03T22:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-10-03T22:00:00&#43;08:00'/>
+<meta name="twitter:title" content="AI Agent 学习笔记：CrewAI 与 ReAct">
+<meta name="twitter:description" content="从个人笔记仓库整理迁移">
+    <link rel="shortcut icon" href="/image/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="
+    article-page
+    "><header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="Main navigation">
+            
+            
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+                
+                <a href="/tags"
+                   
+                   target="_blank" rel="noopener">
+                    Tags
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="top-dark-mode-toggle" type="button" aria-label="暗色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var topToggle = document.getElementById('top-dark-mode-toggle');
+    var originalToggle = document.getElementById('dark-mode-toggle');
+    if (topToggle && originalToggle) {
+        topToggle.addEventListener('click', function () {
+            originalToggle.click();
+        });
+    }
+});
+</script>
+
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                        
+                        <img src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_300x0_resize_box_3.png" width="300"
+                            height="297" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+            </figure>
+            
+        
+
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Ricardo</a></h1>
+            <h2 class="site-description">人到中年，专业捧哏</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a href="https://github.com/sona201/"
+                       target="_blank"
+                       title="GitHub"
+                       rel="me">
+                        
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                    </a>
+                </li>
+            
+        </ol>
+    <ol class="menu sidebar-controls">
+        <div class="menu-bottom-section">
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-什么是-crewai">1. 什么是 CrewAI？</a>
+      <ol>
+        <li><a href="#核心四元素">核心四元素：</a></li>
+      </ol>
+    </li>
+    <li><a href="#2-核心原理react-工作模式">2. 核心原理：ReAct 工作模式</a>
+      <ol>
+        <li><a href="#react-循环公式">ReAct 循环公式：</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-agent-开发三要素">3. Agent 开发三要素</a></li>
+    <li><a href="#4-实战从-0-到-1-组建运维-agent">4. 实战：从 0 到 1 组建运维 Agent</a>
+      <ol>
+        <li><a href="#step-1-定义自定义工具">Step 1: 定义自定义工具</a></li>
+        <li><a href="#step-2-配置-agent-与-task">Step 2: 配置 Agent 与 Task</a></li>
+      </ol>
+    </li>
+    <li><a href="#5-关键洞察踩坑总结">5. 关键洞察（踩坑总结）</a></li>
+    <li><a href="#6-进阶方向">6. 进阶方向</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/ai/" >
+                AI
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/posts/ai-agent-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0crewai-%E4%B8%8E-react/">AI Agent 学习笔记：CrewAI 与 ReAct</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            从个人笔记仓库整理迁移
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2026-10-03</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>#agent #ai #react #plantegg</p>
+<h1 id="学习笔记使用-crewai-复刻-claude-code-级的-ai-agent">学习笔记：使用 CrewAI 复刻 Claude Code 级的 AI Agent</h1>
+<h2 id="1-什么是-crewai">1. 什么是 CrewAI？</h2>
+<p><strong>CrewAI</strong> 是一个用于编排协同式 AI Agent 的 Python 框架。如果说 LLM（大语言模型）是一个聪明的“大脑”，那么 CrewAI 就是一个**“项目经理”**。</p>
+<h3 id="核心四元素">核心四元素：</h3>
+<ul>
+<li>
+<p><strong>Role (角色)</strong>：定义 Agent 的身份（如：DBA 专家、技术作家）。</p>
+</li>
+<li>
+<p><strong>Task (任务)</strong>：定义具体要做的事情。</p>
+</li>
+<li>
+<p><strong>Tools (工具)</strong>：Agent 可以调用的技能（如：SSH 远程执行、数据库查询）。</p>
+</li>
+<li>
+<p><strong>Process (流程)</strong>：规定 Agent 之间如何协作（顺序、层级等）。</p>
+</li>
+</ul>
+<hr>
+<h2 id="2-核心原理react-工作模式">2. 核心原理：ReAct 工作模式</h2>
+<p>文章中复刻 Claude Code 的核心逻辑是 <strong>ReAct (Reasoning + Acting)</strong>，这是目前 Agent 最主流的工作方式。</p>
+<h3 id="react-循环公式">ReAct 循环公式：</h3>
+<blockquote>
+<p><strong>Thought (思考) → Action (行动) → Observation (观察) → Thought (再思考)</strong></p>
+</blockquote>
+<ol>
+<li>
+<p><strong>Thought</strong>：模型根据用户问题，思考当前需要什么信息。</p>
+</li>
+<li>
+<p><strong>Action</strong>：模型决定调用哪一个工具（Tool）以及参数是什么。</p>
+</li>
+<li>
+<p><strong>Observation</strong>：Agent 执行工具并拿到结果（如 Linux 报错信息或 SQL 查询结果）。</p>
+</li>
+<li>
+<p><strong>Next Thought</strong>：模型根据反馈结果，决定是继续调用工具，还是输出最终答案。</p>
+</li>
+</ol>
+<hr>
+<h2 id="3-agent-开发三要素">3. Agent 开发三要素</h2>
+<p>开发一个功能强大的 Agent，本质上是在配置以下三个部分：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th><strong>要素</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>示例</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LLM (大脑)</strong></td>
+<td>提供推理和决策能力</td>
+<td>Claude 3.5 Sonnet, GPT-4o</td>
+</tr>
+<tr>
+<td><strong>Tools (手脚)</strong></td>
+<td>让模型能与现实世界交互</td>
+<td><code>ssh_tool</code>, <code>mysql_query_tool</code></td>
+</tr>
+<tr>
+<td><strong>Prompt (指令)</strong></td>
+<td>定义角色、规则和约束</td>
+<td>&ldquo;你是一个资深 DBA，只允许执行读操作&rdquo;</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="4-实战从-0-到-1-组建运维-agent">4. 实战：从 0 到 1 组建运维 Agent</h2>
+<p>根据参考文章，构建一个 MySQL 运维 Agent 的步骤如下：</p>
+<h3 id="step-1-定义自定义工具">Step 1: 定义自定义工具</h3>
+<p>工具是 Agent 的“手脚”。每个工具必须包含 <code>description</code>，因为<strong>模型是靠这段描述来判断何时使用该工具的</strong>。</p>
+<p>Python</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">from crewai.tools import BaseTool
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">class MySQLQueryTool(BaseTool):
+</span></span><span class="line"><span class="cl">    name: str = &#34;mysql_query&#34;
+</span></span><span class="line"><span class="cl">    description: str = &#34;用于执行 MySQL 只读查询语句，获取数据库状态。&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    def _run(self, query: str):
+</span></span><span class="line"><span class="cl">        # 实际执行 SQL 的 Python 代码
+</span></span><span class="line"><span class="cl">        return &#34;查询结果文本&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="step-2-配置-agent-与-task">Step 2: 配置 Agent 与 Task</h3>
+<p>Python</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">from crewai import Agent, Task, Crew
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 1. 定义 Agent
+</span></span><span class="line"><span class="cl">dba_agent = Agent(
+</span></span><span class="line"><span class="cl">    role=&#34;DBA 运维专家&#34;,
+</span></span><span class="line"><span class="cl">    goal=&#34;诊断 MySQL 性能瓶颈&#34;,
+</span></span><span class="line"><span class="cl">    backstory=&#34;你拥有 10 年运维经验，擅长通过慢查询日志定位问题。&#34;,
+</span></span><span class="line"><span class="cl">    tools=[MySQLQueryTool()], # 载入工具
+</span></span><span class="line"><span class="cl">    verbose=True # 开启 debug 模式，查看思考过程
+</span></span><span class="line"><span class="cl">)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 3. 定义任务
+</span></span><span class="line"><span class="cl">task = Task(
+</span></span><span class="line"><span class="cl">    description=&#34;分析 10.0.0.1 机器上的慢查询并给出优化建议&#34;,
+</span></span><span class="line"><span class="cl">    expected_output=&#34;一份包含问题原因和优化建议的 MD 报告&#34;,
+</span></span><span class="line"><span class="cl">    agent=dba_agent
+</span></span><span class="line"><span class="cl">)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 4. 组建团队启动
+</span></span><span class="line"><span class="cl">crew = Crew(agents=[dba_agent], tasks=[task])
+</span></span><span class="line"><span class="cl">result = crew.kickoff()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="5-关键洞察踩坑总结">5. 关键洞察（踩坑总结）</h2>
+<ul>
+<li>
+<p><strong>模型没有记忆</strong>：每一轮 ReAct 交互，Agent 都会把之前的对话历史、工具返回结果打包成一个巨大的 Prompt 重新发给模型。这意味着 Token 消耗会随轮数剧增。</p>
+</li>
+<li>
+<p><strong>模型不会执行工具</strong>：大模型只输出“指令字符串”，真正去执行 SSH 或 Python 代码的是 <strong>CrewAI 框架</strong>。</p>
+</li>
+<li>
+<p><strong>工具描述至关重要</strong>：如果 Agent 总是用错工具，通常是因为 <code>description</code> 写得不清晰。</p>
+</li>
+<li>
+<p><strong>安全边界</strong>：在运维场景下，必须在工具的 Python 代码层做好拦截（如禁止 <code>DROP</code>, <code>DELETE</code> 等操作），不能仅靠 Prompt 约束。</p>
+</li>
+</ul>
+<hr>
+<h2 id="6-进阶方向">6. 进阶方向</h2>
+<ol>
+<li>
+<p><strong>接入更多数据源</strong>：将 Prometheus 监控、日志平台 API 封装为 Tool。</p>
+</li>
+<li>
+<p><strong>多 Agent 协作</strong>：一个 Agent 负责搜集数据，另一个 Agent 负责编写最终诊断报告。</p>
+</li>
+<li>
+<p><strong>Human-in-the-loop</strong>：在执行高风险 Action 前，让 Agent 停下来等待人类授权。</p>
+</li>
+</ol>
+<hr>
+<p><em>笔记来源：基于 <a class="link" href="https://plantegg.github.io/2026/03/05/%E4%BB%8E0%E5%88%B01%E5%A4%8D%E5%88%BB%E4%B8%80%E4%B8%AAClaude_Code%E8%BF%99%E6%A0%B7%E7%9A%84Agent/"  target="_blank" rel="noopener"
+    >plantegg 博客</a> 与 CrewAI 官方文档整理。</em></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ai/">AI</a>
+        
+            <a href="/tags/agent/">Agent</a>
+        
+            <a href="/tags/crewai/">CrewAI</a>
+        
+            <a href="/tags/react/">ReAct</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@300&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+
+    </body>
+</html>

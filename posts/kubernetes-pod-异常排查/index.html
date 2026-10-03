@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='从个人笔记仓库整理迁移'>
+<title>Kubernetes Pod 异常排查</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/kubernetes-pod-%E5%BC%82%E5%B8%B8%E6%8E%92%E6%9F%A5/'>
+
+<link rel="stylesheet" href="/scss/style.min.2a8a8b5925063991a20d80fb86183b19905b741ac47e8c0a373818c059a9ae7c.css"><meta property='og:title' content='Kubernetes Pod 异常排查'>
+<meta property='og:description' content='从个人笔记仓库整理迁移'>
+<meta property='og:url' content='https://sona201.github.io/posts/kubernetes-pod-%E5%BC%82%E5%B8%B8%E6%8E%92%E6%9F%A5/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='kubernetes' /><meta property='article:tag' content='pod' /><meta property='article:tag' content='troubleshooting' /><meta property='article:published_time' content='2026-10-03T22:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-10-03T22:00:00&#43;08:00'/>
+<meta name="twitter:title" content="Kubernetes Pod 异常排查">
+<meta name="twitter:description" content="从个人笔记仓库整理迁移">
+    <link rel="shortcut icon" href="/image/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="
+    article-page
+    "><header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="Main navigation">
+            
+            
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+                
+                <a href="/tags"
+                   
+                   target="_blank" rel="noopener">
+                    Tags
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="top-dark-mode-toggle" type="button" aria-label="暗色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var topToggle = document.getElementById('top-dark-mode-toggle');
+    var originalToggle = document.getElementById('dark-mode-toggle');
+    if (topToggle && originalToggle) {
+        topToggle.addEventListener('click', function () {
+            originalToggle.click();
+        });
+    }
+});
+</script>
+
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                        
+                        <img src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_300x0_resize_box_3.png" width="300"
+                            height="297" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+            </figure>
+            
+        
+
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Ricardo</a></h1>
+            <h2 class="site-description">人到中年，专业捧哏</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a href="https://github.com/sona201/"
+                       target="_blank"
+                       title="GitHub"
+                       rel="me">
+                        
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                    </a>
+                </li>
+            
+        </ol>
+    <ol class="menu sidebar-controls">
+        <div class="menu-bottom-section">
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#本文目录">本文目录</a></li>
+    <li><a href="#诊断流程">诊断流程</a></li>
+    <li><a href="#常见的pod异常状态及处理方式">常见的Pod异常状态及处理方式</a></li>
+    <li><a href="#常见排查方法">常见排查方法</a>
+      <ol>
+        <li><a href="#检查pod的状态">检查Pod的状态</a></li>
+        <li><a href="#检查pod的详情">检查Pod的详情</a></li>
+        <li><a href="#检查pod的配置">检查Pod的配置</a></li>
+        <li><a href="#检查pod的事件">检查Pod的事件</a></li>
+        <li><a href="#检查pod的日志">检查Pod的日志</a></li>
+        <li><a href="#检查pod的监控">检查Pod的监控</a></li>
+        <li><a href="#使用终端进入容器">使用终端进入容器</a></li>
+        <li><a href="#pod故障诊断">Pod故障诊断</a></li>
+        <li><a href="#pod状态为pending">Pod状态为Pending</a>
+          <ol>
+            <li><a href="#问题原因">问题原因</a></li>
+            <li><a href="#问题现象">问题现象</a></li>
+            <li><a href="#解决方案">解决方案</a></li>
+            <li><a href="#资源依赖">资源依赖</a></li>
+            <li><a href="#资源不足">资源不足</a></li>
+            <li><a href="#该pod使用了hostport">该Pod使用了hostPort</a></li>
+            <li><a href="#污点和容忍">污点和容忍</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为initnminiterror和initcrashloopbackoff">Pod状态为Init:N/M（Init:Error和Init:CrashLoopBackOff）</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-1">问题原因</a></li>
+            <li><a href="#问题现象-1">问题现象</a></li>
+          </ol>
+        </li>
+        <li><a href="#解决方案-1">解决方案</a></li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为imagepullbackoff">Pod状态为ImagePullBackOff</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-2">问题原因</a></li>
+            <li><a href="#问题现象-2">问题现象</a></li>
+            <li><a href="#解决方案-2">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为crashloopbackoff">Pod状态为CrashLoopBackOff</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-3">问题原因</a></li>
+            <li><a href="#问题现象-3">问题现象</a></li>
+            <li><a href="#解决方案-3">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为completed">Pod状态为Completed</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-4">问题原因</a></li>
+            <li><a href="#问题现象-4">问题现象</a></li>
+            <li><a href="#解决方案-4">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为running但没正常工作">Pod状态为Running但没正常工作</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-5">问题原因</a></li>
+            <li><a href="#问题现象-5">问题现象</a></li>
+            <li><a href="#解决方案-5">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为terminating">Pod状态为Terminating</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-6">问题原因</a></li>
+            <li><a href="#问题现象-6">问题现象</a></li>
+            <li><a href="#解决方案-6">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为evicted">Pod状态为Evicted</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-7">问题原因</a></li>
+            <li><a href="#问题现象-7">问题现象</a></li>
+            <li><a href="#解决方案-7">解决方案</a></li>
+            <li><a href="#以下汇总如何避免pod被驱逐的方法">以下汇总如何避免Pod被驱逐的方法：</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod-oom异常问题处理">Pod OOM异常问题处理</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-8">问题原因</a></li>
+            <li><a href="#问题现象-8">问题现象</a></li>
+            <li><a href="#解决方案-8">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/kubernetes/" >
+                Kubernetes
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/posts/kubernetes-pod-%E5%BC%82%E5%B8%B8%E6%8E%92%E6%9F%A5/">Kubernetes Pod 异常排查</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            从个人笔记仓库整理迁移
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2026-10-03</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 13 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="pod异常问题排查">Pod异常问题排查</h1>
+<p><a class="link" href="https://help.aliyun.com/zh/ack/ack-managed-and-ack-dedicated/user-guide/pod-troubleshooting-1"  target="_blank" rel="noopener"
+    >阿里云原文链接</a></p>
+<p>源码
+<a class="link" href="https://github.com/kubernetes/kubernetes/blob/ad9b60e2c9ddb21e8b00cabbe27e639638a0ea88/pkg/apis/core/types.go#L2711"  target="_blank" rel="noopener"
+    >https://github.com/kubernetes/kubernetes/blob/ad9b60e2c9ddb21e8b00cabbe27e639638a0ea88/pkg/apis/core/types.go#L2711</a></p>
+<p><a class="link" href="https://github.com/kubernetes/kubernetes/blob/022d50fe3a1bdf2386395da7c266fede0c110040/pkg/kubelet/images/types.go#L29"  target="_blank" rel="noopener"
+    >https://github.com/kubernetes/kubernetes/blob/022d50fe3a1bdf2386395da7c266fede0c110040/pkg/kubelet/images/types.go#L29</a></p>
+<h2 id="本文目录">本文目录</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>诊断流程</td>
+<td>诊断流程</td>
+</tr>
+<tr>
+<td>常见排查方法</td>
+<td>检查Pod的状态、检查Pod的详情、检查Pod的配置、检查Pod的事件、检查Pod的日志、检查Pod的监控、使用终端进入容器、Pod故障诊断</td>
+</tr>
+<tr>
+<td>常见问题及解决方案</td>
+<td>常见的Pod异常状态及处理方式、Pod OOM异常问题处理</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="诊断流程">诊断流程</h2>
+<p><img src="/images/k8s-pod-troubleshooting-process.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="pod_troubleshooting_process"
+	
+	
+></p>
+<ol>
+<li>查看Pod是否处于异常状态，具体操作，请参见检查Pod的状态。</li>
+</ol>
+<ul>
+<li>a. 如果Pod状态异常，可通过查看Pod的事件、Pod的日志、Pod的配置等信息确定异常原因。具体操作，请参见常见排查方法。关于Pod异常</li>
+<li>b. 状态及处理方式，请参见常见的Pod异常状态及处理方式。</li>
+</ul>
+<ol start="2">
+<li>如果Pod状态为Running但未正常工作，请参见Pod状态为Running但没正常工作。</li>
+<li>若确认是Pod OOM异常问题，请参见Pod OOM异常问题处理。</li>
+</ol>
+<p>如果问题仍未解决，请提交工单。</p>
+<h2 id="常见的pod异常状态及处理方式">常见的Pod异常状态及处理方式</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>Pod状态</th>
+<th>Pod含义</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pending</td>
+<td>Pod未被调度到节点上。</td>
+<td>Pod状态为Pending</td>
+</tr>
+<tr>
+<td>Init:N/M</td>
+<td>Pod包含M个Init容器，其中N个已经启动完成。</td>
+<td>Pod状态为Init:N/M（Init:Error和Init:CrashLoopBackOff）</td>
+</tr>
+<tr>
+<td>Init:Error</td>
+<td>Init容器已启动失败。</td>
+<td>Pod状态为Init:N/M（Init:Error和Init:CrashLoopBackOff）</td>
+</tr>
+<tr>
+<td>Init:CrashLoopBackOff</td>
+<td>Init容器启动失败，反复重启。</td>
+<td>Pod状态为Init:N/M（Init:Error和Init:CrashLoopBackOff）</td>
+</tr>
+<tr>
+<td>Completed</td>
+<td>Pod的启动命令已执行完毕。</td>
+<td>Pod状态为Completed</td>
+</tr>
+<tr>
+<td>CrashLoopBackOff</td>
+<td>Pod启动失败，反复重启。</td>
+<td>Pod状态为CrashLoopBackOff</td>
+</tr>
+<tr>
+<td>ImagePullBackOff</td>
+<td>Pod镜像拉取失败。</td>
+<td>Pod状态为ImagePullBackOff</td>
+</tr>
+<tr>
+<td>Running</td>
+<td>Pod运行正常。</td>
+<td>Pod Running但是未正常工作。</td>
+</tr>
+<tr>
+<td>Pod状态为Running但没正常工作</td>
+<td>Terminating</td>
+<td>Pod正在关闭中。</td>
+</tr>
+<tr>
+<td>Pod状态为Terminating</td>
+<td>Evicted</td>
+<td>Pod被驱逐。</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="常见排查方法">常见排查方法</h2>
+<h3 id="检查pod的状态">检查Pod的状态</h3>
+<ol>
+<li>登录容器服务管理控制台。</li>
+<li>在控制台左侧导航栏，单击集群。</li>
+<li>在集群列表页面，单击目标集群名称或者目标集群右侧操作列下的详情。</li>
+<li>在集群管理页左侧导航栏，选择工作负载 &gt; 容器组。</li>
+<li>在容器组页面左上角选择Pod所在的命名空间，查看Pod状态。</li>
+</ol>
+<ul>
+<li>若状态为Running，说明Pod运行正常。</li>
+<li>若状态不为Running，说明Pod状态异常，请参见常见的Pod异常状态及处理方式进行处理。</li>
+</ul>
+<h3 id="检查pod的详情">检查Pod的详情</h3>
+<ol>
+<li>登录容器服务管理控制台。</li>
+<li>在控制台左侧导航栏，单击集群。</li>
+<li>在集群列表页面中，单击目标集群名称或者目标集群右侧操作列下的详情。</li>
+<li>在集群管理页左侧导航栏，选择工作负载 &gt; 容器组。</li>
+<li>在容器组页面左上角选择Pod所在的命名空间，然后单击目标Pod名称或者目标Pod右侧操作列下的详情，查看Pod的名称、镜像、Pod IP、所在节点等详细信息。</li>
+</ol>
+<h3 id="检查pod的配置">检查Pod的配置</h3>
+<ol>
+<li>登录容器服务管理控制台。</li>
+<li>在控制台左侧导航栏，单击集群。</li>
+<li>在集群列表页面，单击目标集群名称或者目标集群右侧操作列下的详情。</li>
+<li>在集群管理页左侧导航栏，选择工作负载 &gt; 容器组。</li>
+<li>在容器组页面左上角选择Pod所在的命名空间，然后单击目标Pod名称或者目标Pod右侧操作列下的详情。</li>
+<li>在Pod详情页面右上角单击编辑，查看Pod的YAML文件和详细配置。</li>
+</ol>
+<h3 id="检查pod的事件">检查Pod的事件</h3>
+<ol>
+<li>登录容器服务管理控制台。</li>
+<li>在控制台左侧导航栏，单击集群。</li>
+<li>在集群列表页面，单击目标集群名称或者目标集群右侧操作列下的详情。</li>
+<li>在集群管理页左侧导航栏，选择工作负载 &gt; 容器组。</li>
+<li>在容器组页面左上角选择Pod所在的命名空间，然后单击目标Pod名称或者目标Pod右侧操作列下的详情。</li>
+<li>在Pod详情页面下方单击事件页签，查看Pod的事件。</li>
+</ol>
+<blockquote>
+<p>说明: Kubernetes默认保留最近1小时的事件，若需保存更长时间的事件，请参见创建并使用K8s事件中心。</p>
+</blockquote>
+<h3 id="检查pod的日志">检查Pod的日志</h3>
+<ol>
+<li>登录容器服务管理控制台。</li>
+<li>在控制台左侧导航栏，单击集群。</li>
+<li>在集群列表页面，单击目标集群名称或者目标集群右侧操作列下的详情。</li>
+<li>在集群管理页左侧导航栏，选择工作负载 &gt; 容器组。</li>
+<li>在容器组页面左上角选择Pod所在的命名空间，然后单击目标Pod名称或者目标Pod右侧操作列下的详情。</li>
+<li>在Pod详情页面下方单击日志页签，查看Pod的日志。</li>
+</ol>
+<blockquote>
+<p>说明: 阿里云ACK集群集成了日志服务，您可在创建集群时启用日志服务，快速采集集群的容器日志，包括容器的标准输出及容器内的文本文件。更多信息，请参见通过日志服务采集Kubernetes容器日志。</p>
+</blockquote>
+<h3 id="检查pod的监控">检查Pod的监控</h3>
+<ol>
+<li>登录容器服务管理控制台。</li>
+<li>在控制台左侧导航栏，单击集群。</li>
+<li>在集群列表页面，单击目标集群名称或者目标集群右侧操作列下的详情。</li>
+<li>在集群管理页左侧导航栏中，选择运维管理 &gt; Prometheus监控 。</li>
+<li>在Prometheus监控页面，单击集群监控概览页签，选择查看Pod的CPU、内存、网络I/O等监控大盘。</li>
+</ol>
+<h3 id="使用终端进入容器">使用终端进入容器</h3>
+<ol>
+<li>登录容器服务管理控制台。</li>
+<li>在控制台左侧导航栏，单击集群。</li>
+<li>在集群列表页面，单击目标集群名称或者目标集群右侧操作列下的详情。</li>
+<li>在集群管理页左侧导航栏，选择工作负载 &gt; 容器组。</li>
+<li>在容器组页面，单击目标容器组右侧操作列下的终端。<br>
+可通过终端进入容器，在容器内查看本地文件等信息。</li>
+</ol>
+<h3 id="pod故障诊断">Pod故障诊断</h3>
+<ol>
+<li>登录容器服务管理控制台。</li>
+<li>在控制台左侧导航栏，单击集群。</li>
+<li>在集群列表页面，单击目标集群名称或者目标集群右侧操作列下的详情。</li>
+<li>在集群管理页左侧导航栏，选择工作负载 &gt; 容器组。</li>
+<li>在容器组页面，单击目标容器组右侧操作列下的诊断。<br>
+对该容器组进行故障诊断，根据诊断结果解决问题。更多信息，请参见使用集群诊断。</li>
+</ol>
+<hr>
+<h3 id="pod状态为pending">Pod状态为Pending</h3>
+<h4 id="问题原因">问题原因</h4>
+<p>若Pod停留在Pending状态，说明该Pod不能被调度到某一个节点上。通常是由于资源依赖、资源不足、该Pod使用了hostPort、污点和容忍等原因导致集群中缺乏需要的资源。</p>
+<h4 id="问题现象">问题现象</h4>
+<p>Pod的状态为Pending。</p>
+<h4 id="解决方案">解决方案</h4>
+<p>查看Pod的事件，根据事件描述，定位Pod不能被调度到节点的原因。主要原因有以下几类：</p>
+<ul>
+<li>
+<h4 id="资源依赖">资源依赖</h4>
+</li>
+</ul>
+<p>创建Pod时，需要依赖于集群中ConfigMap、PVC等资源。例如，Pod添加存储卷声明前，存储卷声明需要先与存储卷绑定。</p>
+<ul>
+<li>
+<h4 id="资源不足">资源不足</h4>
+</li>
+<li>
+<ul>
+<li>a. 在集群信息页面，选择节点管理 &gt; 节点，查看容器组、CPU、内存的使用情况，确定集群的资源使用率。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>说明: 某个节点实际使用的CPU、内存资源非常低，新加入一个Pod时，如果会导致实际使用的资源超过该节点最大可供使用的资源，则调度程序不会将该Pod分配到该节点。这样可避免在日常的流量高峰时段，节点上出现资源短缺的情况。</p>
+</blockquote>
+<ul>
+<li>
+<ul>
+<li>b. 若集群中的CPU或内存都已经耗尽，可参考如下方法处理。</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>删除或减少不必要的Pod。具体操作，请参见管理容器组（Pod）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>根据自身业务情况，调整Pod的资源配置。具体操作，请参见设置容器的CPU和内存资源上下限。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>在集群中添加新的节点。具体操作，请参见创建节点池。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>为节点进行升配。具体操作，请参见升配Worker节点的资源。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h4 id="该pod使用了hostport">该Pod使用了hostPort</h4>
+</li>
+</ul>
+<p>如果您使用了hostPort，那么Deployment或ReplicationController中Replicas值不能超过集群中的节点数，因为每个实例的任意端口只有一个。如果该端口被其他应用占用，将导致Pod调度失败。因此建议您不要使用hostPort，您可以使用Service访问Pod，更多信息，请参见Service。</p>
+<ul>
+<li>
+<h4 id="污点和容忍">污点和容忍</h4>
+</li>
+</ul>
+<p>当您在Pod的事件中看到Taints或Tolerations时，说明是由于污点导致，您可以删除污点或者给Pod设置容忍。更多信息，请参见管理节点污点、创建无状态工作负载Deployment和污点和容忍。</p>
+<hr>
+<h2 id="pod状态为initnminiterror和initcrashloopbackoff">Pod状态为Init:N/M（Init:Error和Init:CrashLoopBackOff）</h2>
+<h4 id="问题原因-1">问题原因</h4>
+<ul>
+<li>若Pod停留在Init:N/M状态，说明该Pod包含M个Init容器，其中N个已经启动完成，但仍有M-N个Init容器未启动成功。</li>
+<li>若Pod停留在Init:Error状态，说明Pod中的Init容器启动失败。</li>
+<li>若Pod停留在Init:CrashLoopBackOff状态，说明Pod中的Init容器启动失败并处于反复重启状态。</li>
+</ul>
+<h4 id="问题现象-1">问题现象</h4>
+<ul>
+<li>Pod的状态为Init:N/M。</li>
+<li>Pod的状态为Init:Error。</li>
+<li>Pod的状态为Init:CrashLoopBackOff。</li>
+</ul>
+<h3 id="解决方案-1">解决方案</h3>
+<ul>
+<li>查看Pod的事件，确认当前Pod中未启动的Init容器是否存在异常。具体操作，请参见检查Pod的事件。</li>
+<li>查看Pod中未启动的Init容器的日志，通过日志内容排查问题。具体操作，请参见检查Pod的日志。</li>
+<li>查看Pod的配置，确认未启动的Init容器配置是否正常。具体操作，请参见检查Pod的配置。关于Init容器的更多信息，请参见调试Init容器。</li>
+</ul>
+<hr>
+<h2 id="pod状态为imagepullbackoff">Pod状态为ImagePullBackOff</h2>
+<h4 id="问题原因-2">问题原因</h4>
+<p>若Pod停留在ImagePullBackOff状态，说明此Pod已被调度到某个节点，但拉取镜像失败。</p>
+<h4 id="问题现象-2">问题现象</h4>
+<p>Pod的状态为ImagePullBackOff。</p>
+<h4 id="解决方案-2">解决方案</h4>
+<p>通过查看该Pod的事件描述，查看具体拉取失败的镜像名称。</p>
+<ol>
+<li>确认容器镜像名称是否正确。</li>
+<li>登录到Pod所在的节点，执行docker pull [$Image]命令，查看是否能正常抓取容器镜像。</li>
+</ol>
+<blockquote>
+<p>说明: [$Image]为容器镜像的名称。</p>
+</blockquote>
+<ul>
+<li>
+<ul>
+<li>若镜像拉取失败，请参见docker pull失败解决。</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>如果您使用的是私有镜像仓库，请参见使用私有镜像仓库创建应用解决。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="pod状态为crashloopbackoff">Pod状态为CrashLoopBackOff</h2>
+<h4 id="问题原因-3">问题原因</h4>
+<p>若Pod停留在CrashLoopBackOff状态，说明容器中应用程序有问题。</p>
+<h4 id="问题现象-3">问题现象</h4>
+<p>Pod的状态为CrashLoopBackOff。</p>
+<h4 id="解决方案-3">解决方案</h4>
+<ol>
+<li>查看Pod的事件，确认当前Pod是否存在异常。具体操作，请参见检查Pod的事件。</li>
+<li>查看Pod的日志，通过日志内容排查问题。具体操作，请参见检查Pod的日志。</li>
+<li>查看Pod的配置，确认容器中的健康检查配置是否正常。具体操作，请参见检查Pod的配置。关于Pod健康检查的更多信息，请参见配置存活、就绪和启动探测器。</li>
+</ol>
+<hr>
+<h2 id="pod状态为completed">Pod状态为Completed</h2>
+<h4 id="问题原因-4">问题原因</h4>
+<p>若Pod出现Completed状态，说明容器中的启动命令已执行完毕，容器中的所有进程都已退出。</p>
+<h4 id="问题现象-4">问题现象</h4>
+<p>Pod的状态为Completed。</p>
+<h4 id="解决方案-4">解决方案</h4>
+<ol>
+<li>查看Pod的配置，确定Pod中容器的启动命令。具体操作，请参见检查Pod的配置。</li>
+<li>查看Pod的日志，通过日志内容排查问题。具体操作，请参见检查Pod的日志。</li>
+</ol>
+<hr>
+<h2 id="pod状态为running但没正常工作">Pod状态为Running但没正常工作</h2>
+<h4 id="问题原因-5">问题原因</h4>
+<p>部署使用的YAML文件有问题。</p>
+<h4 id="问题现象-5">问题现象</h4>
+<p>Pod状态为Running但没正常工作。</p>
+<h4 id="解决方案-5">解决方案</h4>
+<ol>
+<li>查看Pod的配置，确定Pod中容器的配置是否符合预期。具体操作，请参见检查Pod的配置。</li>
+<li>使用以下方法，排查环境变量中的某一个Key是否存在拼写错误。<br>
+以command拼写成commnd为例，说明拼写问题排查方法。</li>
+</ol>
+<blockquote>
+<p>说明: 创建Pod时，环境变量中的某一个Key拼写错误的问题会被集群忽略，如Command拼写为Commnd，您仍能够使用该YAML文件创建资源。但容器运行时，不会执行有拼写问题的YAML文件，而是执行镜像中的默认命令。</p>
+</blockquote>
+<ul>
+<li>a. 在执行 <code>kubectl apply -f</code> 命令前为其添加 <code>--validate</code> ，然后执行 <code>kubectl apply --validate -f XXX.yaml</code> 命令。<br>
+如果您将 <code>command</code> 拼写成 <code>commnd</code> ，将看到错误信息 <code>XXX] unknown field: commnd XXX] this may be a false alarm, see https://gXXXb.XXX/6842pods/test</code> 。</li>
+<li>b. 执行以下命令，将输出结果的pod.yaml文件与您创建Pod使用的文件进行对比。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl get pods <span class="o">[</span><span class="nv">$Pod</span><span class="o">]</span> -o yaml &gt; pod.yaml
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>说明: [$Pod]为异常Pod的名称，您可以通过kubectl get pods命令查看。</p>
+</blockquote>
+<ul>
+<li>pod.yaml文件比您创建Pod所使用的文件多几行，说明已创建的Pod符合预期。</li>
+<li>如果您创建Pod所使用文件里的代码行在pod.yaml文件中没有，说明您创建Pod使用的文件存在拼写问题。</li>
+</ul>
+<ol start="3">
+<li>查看Pod的日志，通过日志内容排查问题。具体操作，请参见检查Pod的日志。</li>
+<li>可通过终端进入容器查看容器内的本地文件是否符合预期。具体操作，请参见使用终端进入容器。</li>
+</ol>
+<hr>
+<h2 id="pod状态为terminating">Pod状态为Terminating</h2>
+<h4 id="问题原因-6">问题原因</h4>
+<p>若Pod的状态为Terminating，说明此Pod正处于关闭状态。</p>
+<h4 id="问题现象-6">问题现象</h4>
+<p>Pod状态为Terminating。</p>
+<h4 id="解决方案-6">解决方案</h4>
+<p>Pod停留在Terminating状态一段时间后会被自动删除。若Pod一直停留在Terminating状态，可执行如下命令强制删除：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl delete pod <span class="o">[</span><span class="nv">$Pod</span><span class="o">]</span> -n <span class="o">[</span><span class="nv">$namespace</span><span class="o">]</span> --grace-period<span class="o">=</span><span class="m">0</span> --force
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="pod状态为evicted">Pod状态为Evicted</h2>
+<h4 id="问题原因-7">问题原因</h4>
+<p>当节点的内存、磁盘空间、文件系统的inode和操作系统可分配的PID等资源中的一个或者多个达到特定的消耗水平，就会引发kubelet主动地驱逐节点上一个或者多个Pod，以回收节点资源。</p>
+<h4 id="问题现象-7">问题现象</h4>
+<p>Pod的状态为Evicted。</p>
+<h4 id="解决方案-7">解决方案</h4>
+<ol>
+<li>执行以下命令，查看Pod的status.message字段，来确定Pod被驱逐的原因。</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl  get pod <span class="o">[</span><span class="nv">$Pod</span><span class="o">]</span> -o yaml -n <span class="o">[</span><span class="nv">$namespace</span><span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>预期输出：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">status:
+</span></span><span class="line"><span class="cl">    message: <span class="s1">&#39;Pod the node had condition: [DiskPressure].&#39;</span>
+</span></span><span class="line"><span class="cl">    phase: Failed
+</span></span><span class="line"><span class="cl">    reason: Evicted
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>通过上述 <code>status.message</code> 字段，可以判断当前Pod是因为节点磁盘压力 (DiskPressure) 被驱逐。</p>
+<blockquote>
+<p>说明: 注意这里仅以磁盘压力驱逐为例，其它例如内存压力（MemoryPressure）和PID压力（PIDPressure）等也会以类似的方式展示。</p>
+</blockquote>
+<ol start="2">
+<li>执行以下命令，删除被驱逐的Pod。</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl get pods -n <span class="o">[</span><span class="nv">$namespace</span><span class="o">]</span><span class="p">|</span> grep Evicted <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span> <span class="p">|</span> xargs kubectl delete pod -n <span class="o">[</span><span class="nv">$namespace</span><span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="以下汇总如何避免pod被驱逐的方法">以下汇总如何避免Pod被驱逐的方法：</h4>
+<ul>
+<li>内存压力：</li>
+<li>
+<ul>
+<li>根据自身业务情况，调整Pod的资源配置。具体操作，请参见设置容器的CPU和内存资源上下限。</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>为节点进行升配。具体操作，请参见升配Worker节点的资源。</li>
+</ul>
+</li>
+<li>磁盘压力：</li>
+<li>
+<ul>
+<li>定时清理节点上的业务Pod日志，避免磁盘被日志打满。</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>为节点进行磁盘扩容。具体操作，请参见步骤一：扩容云盘容量。</li>
+</ul>
+</li>
+<li>PID压力：</li>
+<li>
+<ul>
+<li>根据自身业务情况，调整Pod的资源配置，具体操作，请参见进程ID约束与预留。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="pod-oom异常问题处理">Pod OOM异常问题处理</h2>
+<h4 id="问题原因-8">问题原因</h4>
+<p>当集群中的容器使用超过其限制的内存，容器可能会被终止，触发OOM（Out Of Memory）事件，导致容器异常退出。关于OOM事件，请参见为容器和Pod分配内存资源。</p>
+<h4 id="问题现象-8">问题现象</h4>
+<ul>
+<li>若被终止的进程为容器的阻塞进程，可能导致容器异常重启。</li>
+<li>若出现OOM异常问题，登录容器服务管理控制台，在Pod详情页面单击事件页签可看到OOM事件pod was OOM killed。具体操作，请参见检查Pod的事件。</li>
+<li>若集群配置了集群容器副本异常报警，则OOM事件出现时可收到相关报警。关于配置报警，请参见容器服务报警管理。</li>
+</ul>
+<h4 id="解决方案-8">解决方案</h4>
+<ol>
+<li>查看发生OOM异常的Pod所在的节点。</li>
+</ol>
+<ul>
+<li>命令行方式查看：执行以下命令，查看容器信息。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl  get pod <span class="o">[</span><span class="nv">$Pod</span><span class="o">]</span> -o wide -n <span class="o">[</span><span class="nv">$namespace</span><span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>预期输出：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">NAME        READY   STATUS    RESTARTS   AGE   IP            NODE
+</span></span><span class="line"><span class="cl">pod_name    1/1     Running   0          25h   172.20.6.53   cn-hangzhou.192.168.0.198
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><strong>控制台方式查看</strong>：查看Pod详情下的节点信息，请参见检查Pod的详情。</li>
+</ul>
+<ol start="2">
+<li>登录Pod所在的Node，查看内核日志/var/log/message。在日志中查询关键字out of memory，确认具体被OOM终止的进程。如果该进程是容器的阻塞进程，OOM终止后容器会重启。</li>
+<li>通过Pod内存监控查看内存增长曲线，确定异常出现时间。具体操作，请参见检查Pod的监控。</li>
+<li>根据监控、内存增长时间点、日志、进程名等信息，排查Pod内对应进程是否存在内存泄漏。</li>
+</ol>
+<ul>
+<li>若OOM是进程内存泄漏导致，请您自行排查泄露原因。</li>
+<li>若进程运行状态正常，则根据实际运行需要，适当增大Pod的内存限制，建议Pod的内存实际使用量不超过内存限制值的80%。具体操作，请参见设置容器的CPU和内存资源上下限。</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/kubernetes/">kubernetes</a>
+        
+            <a href="/tags/pod/">pod</a>
+        
+            <a href="/tags/troubleshooting/">troubleshooting</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@300&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+
+    </body>
+</html>

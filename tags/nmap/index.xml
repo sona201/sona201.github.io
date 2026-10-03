@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>nmap on Ricardo</title>
+        <link>https://sona201.github.io/tags/nmap/</link>
+        <description>Recent content in nmap on Ricardo</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sat, 03 Oct 2026 22:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/nmap/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Nmap 端口扫描笔记</title>
+        <link>https://sona201.github.io/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/</link>
+        <pubDate>Sat, 03 Oct 2026 22:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/</guid>
+        <description>&lt;p&gt;以往只知道扫描端口用nmap，可以看出 open closed filtered 对应的状态是 开 关 防火墙拦截&lt;/p&gt;
+&lt;p&gt;nmap 10.1.1.1 -p 8080 -Pn&lt;/p&gt;
+&lt;p&gt;其实这个用法不对，-Pn是不使用ping，主要是在扫描多台机器的时候使用&lt;/p&gt;
+&lt;p&gt;对于我查看某一台机器的端口跟协议&lt;/p&gt;
+&lt;p&gt;nmap 10.1.1.1 -sU -p 514  # 扫描upd端口，在服务器上可以抓包看到udp
+nmap 10.1.1.1 -sP -p 8080 # 扫描tcp端口，在服务器上可以抓包看到tcp&lt;/p&gt;
+&lt;p&gt;同时检查两个类型&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[root@10.200.13.86 ~]# nmap 10.1.10.251 -sS -sU -p 514
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Starting Nmap 6.40 ( http://nmap.org ) at 2023-04-13 12:53 CST
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Nmap scan report for 10.1.10.251
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Host is up (0.00071s latency).
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;PORT    STATE         SERVICE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;514/tcp closed        shell
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;514/udp open|filtered syslog
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Nmap done: 1 IP address (1 host up) scanned in 0.31 seconds
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[root@10.200.13.86 ~]# nmap 10.1.10.251 -sT -sU -p 514
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Starting Nmap 6.40 ( http://nmap.org ) at 2023-04-13 12:53 CST
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Nmap scan report for 10.1.10.251
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Host is up (0.00087s latency).
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;PORT    STATE         SERVICE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;514/tcp closed        shell
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;514/udp open|filtered syslog
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Nmap done: 1 IP address (1 host up) scanned in 0.28 seconds
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;使用wireshark抓包显示(yum install -y wireshark)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;55
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[root@10.1.10.251 ~]# tshark -i eth0 host 10.200.13.86
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Running as user &amp;#34;root&amp;#34; and group &amp;#34;root&amp;#34;. This could be dangerous.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Capturing on &amp;#39;eth0&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  1 0.000000000 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 58 52956 &amp;gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  2 0.000025685  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 https &amp;gt; 52956 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  3 0.000684895 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0xfd77, seq=0/0, ttl=58
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  4 0.000691926  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0xfd77, seq=0/0, ttl=64 (request in 3)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  5 0.000700081 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 54 Timestamp request    id=0x0a0f, seq=0/0, ttl=47
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  6 0.000703470  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0x0a0f, seq=0/0, ttl=64
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  7 0.001042903 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 54 52956 &amp;gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  8 0.001046910  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 http &amp;gt; 52956 [RST] Seq=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  9 0.027864364 10.200.13.86 -&amp;gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 10 0.127943082 10.200.13.86 -&amp;gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 11 14.128607309 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 54 39871 &amp;gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 12 14.128627342  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 http &amp;gt; 39871 [RST] Seq=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 13 14.128641456 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0x0cd3, seq=0/0, ttl=45
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 14 14.128645487  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0x0cd3, seq=0/0, ttl=64 (request in 13)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 15 14.128700635 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 54 Timestamp request    id=0x548d, seq=0/0, ttl=38
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 16 14.128703903  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0x548d, seq=0/0, ttl=64
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 17 14.128931731 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 58 39871 &amp;gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 18 14.128934644  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 https &amp;gt; 39871 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 19 14.144575335 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 74 45644 &amp;gt; shell [SYN] Seq=0 Win=29200 Len=0 MSS=1460 SACK_PERM=1 TSval=1253548131 TSecr=0 WS=128
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 20 14.144579164  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 shell &amp;gt; 45644 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 21 110.999002405 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 58 47406 &amp;gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 22 110.999020511  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 https &amp;gt; 47406 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 23 110.999740448 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0x52de, seq=0/0, ttl=44
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 24 110.999745364  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0x52de, seq=0/0, ttl=64 (request in 23)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 25 110.999802251 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 54 Timestamp request    id=0x51bd, seq=0/0, ttl=39
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 26 110.999805574  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0x51bd, seq=0/0, ttl=64
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 27 111.000109881 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 54 47406 &amp;gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 28 111.000113185  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 http &amp;gt; 47406 [RST] Seq=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 29 111.014724099 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 74 48930 &amp;gt; 5140 [SYN] Seq=0 Win=29200 Len=0 MSS=1460 SACK_PERM=1 TSval=1253645001 TSecr=0 WS=128
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 30 111.014728072  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 5140 &amp;gt; 48930 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 31 124.893938777 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 54 40999 &amp;gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 32 124.893957805  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 http &amp;gt; 40999 [RST] Seq=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 33 124.894706497 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0xc1d2, seq=0/0, ttl=54
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 34 124.894711077  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0xc1d2, seq=0/0, ttl=64 (request in 33)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 35 124.894756587 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 54 Timestamp request    id=0xf398, seq=0/0, ttl=52
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 36 124.894759362  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0xf398, seq=0/0, ttl=64
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 37 124.895121682 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 58 40999 &amp;gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 38 124.895124588  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 https &amp;gt; 40999 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 39 124.920843490 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 41255  Destination port: 5140
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 40 124.920851871  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 41 1105.706644739 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 58 48674 &amp;gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 42 1105.706670049  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 https &amp;gt; 48674 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 43 1105.706680241 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 54 48674 &amp;gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 44 1105.706682527  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 http &amp;gt; 48674 [RST] Seq=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 45 1105.707410604 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0xb2e7, seq=0/0, ttl=53
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 46 1105.707415647  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0xb2e7, seq=0/0, ttl=64 (request in 45)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 47 1105.707491509 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 54 Timestamp request    id=0x2406, seq=0/0, ttl=55
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 48 1105.707494181  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0x2406, seq=0/0, ttl=64
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;多个不连续的端口，用逗号隔开。如果是连续的端口则可以写成 1-100。如果不加 p 参数，则默认是常用的 1000 个端口号（80、3306 这种）。示例使用500-520，如下：&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;客户端命令&#34;&gt;客户端命令&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[root@10.200.13.86 ~]# nmap 10.1.10.251 -sU -p 500-520
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Starting Nmap 6.40 ( http://nmap.org ) at 2023-04-13 12:44 CST
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Nmap scan report for 10.1.10.251
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Host is up (0.0020s latency).
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;PORT    STATE         SERVICE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;500/udp closed        isakmp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;501/udp open|filtered stmf
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;502/udp closed        asa-appl-proto
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;503/udp open|filtered intrinsa
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;504/udp closed        citadel
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;505/udp closed        mailbox-lm
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;506/udp closed        ohimsrv
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;507/udp open|filtered crs
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;508/udp closed        xvttp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;509/udp open|filtered snare
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;510/udp closed        fcp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;511/udp open|filtered passgo
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;512/udp closed        biff
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;513/udp open|filtered who
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;514/udp open|filtered syslog
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;515/udp open|filtered printer
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;516/udp closed        videotex
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;517/udp closed        talk
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;518/udp closed        ntalk
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;519/udp closed        utime
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;520/udp closed        route
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Nmap done: 1 IP address (1 host up) scanned in 7.34 seconds
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[root@10.200.13.86 ~]# 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;服务端抓包&#34;&gt;服务端抓包&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;  1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 55
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 56
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 57
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 58
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 59
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 60
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 61
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 62
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 63
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 64
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 65
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 66
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 67
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 68
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 69
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 70
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 71
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 72
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 73
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 74
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 75
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 76
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 77
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 78
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 79
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 80
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 81
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 82
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 83
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 84
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 85
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 86
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 87
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 88
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 89
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 90
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 91
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 92
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 93
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 94
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 95
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 96
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 97
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 98
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 99
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;100
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;101
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;102
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;103
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[root@10.1.10.251 ~]# tshark -i eth0 host 10.200.13.86
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Running as user &amp;#34;root&amp;#34; and group &amp;#34;root&amp;#34;. This could be dangerous.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Capturing on &amp;#39;eth0&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  1 0.000000000 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 54 62247 &amp;gt; http [ACK] Seq=1 Ack=1 Win=1024 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  2 0.000012221  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 http &amp;gt; 62247 [RST] Seq=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  3 0.000762781 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 42 Echo (ping) request  id=0xb3b0, seq=0/0, ttl=36
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  4 0.000766991  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 42 Echo (ping) reply    id=0xb3b0, seq=0/0, ttl=64 (request in 3)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  5 0.000838519 10.200.13.86 -&amp;gt; 10.1.10.251  ICMP 54 Timestamp request    id=0x06f6, seq=0/0, ttl=51
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  6 0.000841192  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 54 Timestamp reply      id=0x06f6, seq=0/0, ttl=64
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  7 0.000951930 10.200.13.86 -&amp;gt; 10.1.10.251  TCP 58 62247 &amp;gt; https [SYN] Seq=0 Win=1024 Len=0 MSS=1460
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  8 0.000954938  10.1.10.251 -&amp;gt; 10.200.13.86 TCP 54 https &amp;gt; 62247 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  9 0.027985374 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: fcp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 10 0.027994873  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 11 0.028001484 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: mailbox-lm
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 12 0.028003845  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 13 0.028022978 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: comsat
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 14 0.028025210  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 15 0.028027405 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: talk
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 16 0.028029347  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 17 0.028032578 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: utime
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 18 0.028034575  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 19 0.028036755 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: ntalk
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 20 0.028038599  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 21 0.028045655 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: ohimsrv
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 22 0.028948371 10.200.13.86 -&amp;gt; 10.1.10.251  RIPv1 66 Request
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 23 0.028969173 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: xvttp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 24 0.029197536 10.200.13.86 -&amp;gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 25 0.031863656 10.200.13.86 -&amp;gt; 10.1.10.251  ISAKMP 234 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 26 0.032008756 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: crs
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 27 0.032016229 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: snare
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 28 0.032033619 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: passgo
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 29 0.032036457 10.200.13.86 -&amp;gt; 10.1.10.251  WHO 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 30 0.032189560 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: stmf
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 31 0.032713768 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: citadel
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 32 0.033107393 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: printer
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 33 0.033109814 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: mbap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 34 0.033278278 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: intrinsa
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 35 0.033298074 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62503  Destination port: videotex
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 36 1.129203755 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: citadel
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 37 1.129223655  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 38 1.129284377 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: ohimsrv
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 39 1.129309553 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: videotex
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 40 1.129312606 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: xvttp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 41 1.129528131 10.200.13.86 -&amp;gt; 10.1.10.251  RIPv1 66 Request
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 42 1.130112522 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: intrinsa
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 43 1.130166382 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: stmf
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 44 1.130325399 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: printer
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 45 1.130332607 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: mbap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 46 1.130349056 10.200.13.86 -&amp;gt; 10.1.10.251  WHO 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 47 1.130432807 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: passgo
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 48 1.130480550 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: snare
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 49 1.130491911 10.200.13.86 -&amp;gt; 10.1.10.251  ISAKMP 234 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 50 1.130498465 10.200.13.86 -&amp;gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 51 1.130722396 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62504  Destination port: crs
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 52 2.230257219 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: xvttp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 53 2.230278546  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 54 2.231344354 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: ohimsrv
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 55 2.231462577 10.200.13.86 -&amp;gt; 10.1.10.251  RIPv1 66 Request
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 56 2.231471661 10.200.13.86 -&amp;gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 57 3.330665951 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: ohimsrv
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 58 3.330688702  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 59 3.331863055 10.200.13.86 -&amp;gt; 10.1.10.251  RIPv1 66 Request
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 60 3.335033853 10.200.13.86 -&amp;gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 61 4.431829038 10.200.13.86 -&amp;gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 62 4.431842894 10.200.13.86 -&amp;gt; 10.1.10.251  RIPv1 66 Request
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 63 4.431861359  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 94 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 64 4.482917482 10.200.13.86 -&amp;gt; 10.1.10.251  ISAKMP 234 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 65 5.534215739 10.200.13.86 -&amp;gt; 10.1.10.251  ISAKMP 234 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 66 5.534233734  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 262 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 67 5.583253458 10.200.13.86 -&amp;gt; 10.1.10.251  Syslog 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 68 5.633197137 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: crs
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 69 5.683380838 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: intrinsa
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 70 5.733662264 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: crs
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 71 5.783480335 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: intrinsa
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 72 5.833938985 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: crs
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 73 5.883631178 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: intrinsa
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 74 5.934858792 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: crs
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 75 5.984879106 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: intrinsa
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 76 6.034732591 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: mbap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 77 6.034746749  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 78 6.085044904 10.200.13.86 -&amp;gt; 10.1.10.251  WHO 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 79 6.135110230 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: stmf
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 80 6.185641460 10.200.13.86 -&amp;gt; 10.1.10.251  WHO 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 81 6.235075713 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: stmf
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 82 6.284280617 10.200.13.86 -&amp;gt; 10.1.10.251  WHO 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 83 6.334345777 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: stmf
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 84 6.384432615 10.200.13.86 -&amp;gt; 10.1.10.251  WHO 42 [Malformed Packet]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 85 6.434504759 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: stmf
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 86 6.484691016 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: passgo
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 87 6.534721820 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: printer
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 88 6.586292165 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: passgo
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 89 6.634804117 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: printer
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 90 6.685869463 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: passgo
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 91 6.734998702 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: printer
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 92 6.785940760 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: passgo
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 93 6.836494406 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: printer
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 94 6.885275082 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: snare
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 95 6.935324065 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62505  Destination port: videotex
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 96 6.986555913 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: snare
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 97 7.035634422 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62506  Destination port: videotex
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 98 7.035648502  10.1.10.251 -&amp;gt; 10.200.13.86 ICMP 70 Destination unreachable (Port unreachable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 99 7.085655195 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62507  Destination port: snare
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;100 7.188406089 10.200.13.86 -&amp;gt; 10.1.10.251  UDP 42 Source port: 62508  Destination port: snare
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;如果要扫描多个 ip，可以把 ip 放入到文件中，然后通过 iL 参数指定即可，格式：nmap -iL iplist.txt -sU -p 1-100。
+nmap 通过 sU 参数使用 udp 进行端口发现，原理是根据是否有返回信息，是否包含端口不可达来判断。&lt;/p&gt;
+&lt;p&gt;nmap 在二层做主机发现时使用的参数是 sn（ping 扫描，不做端口扫描）。在三层做主机发现时也是使用的 sn 参数，这里二三层都用的 sn 参数，而具体使用的是二层协议 arp 还是三层协议 icmp，判断依据是是否属于同一个网段。在四层发现时主要利用的是 tcp 和 udp，而 nmap 用到的主要参数就是 PU 和 PA。&lt;/p&gt;
+&lt;p&gt;nmap 使用 udp 来做端口扫描时，用到的参数是 sU，来看下 man 手册的介绍：
+&lt;img src=&#34;https://sona201.github.io/images/nmap-man.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;nmap man&#34;
+	
+	
+&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
