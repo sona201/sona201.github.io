@@ -3,10 +3,10 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://sona201.github.io/</loc>
-    <lastmod>2026-10-03T21:15:00+08:00</lastmod>
+    <lastmod>2026-10-03T22:00:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/categories/</loc>
-    <lastmod>2026-10-03T21:15:00+08:00</lastmod>
+    <lastmod>2026-10-03T22:00:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/fine-grained-pat/</loc>
     <lastmod>2026-10-03T21:15:00+08:00</lastmod>
@@ -27,10 +27,10 @@
     <lastmod>2026-10-03T21:15:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/post/</loc>
-    <lastmod>2026-10-03T21:15:00+08:00</lastmod>
+    <lastmod>2026-10-03T22:00:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/</loc>
-    <lastmod>2026-10-03T21:15:00+08:00</lastmod>
+    <lastmod>2026-10-03T22:00:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/token/</loc>
     <lastmod>2026-10-03T21:15:00+08:00</lastmod>
@@ -432,10 +432,10 @@
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/django/</loc>
-    <lastmod>2023-07-03T23:19:42+08:00</lastmod>
+    <lastmod>2026-10-03T22:00:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/categories/django/</loc>
-    <lastmod>2023-07-03T23:19:42+08:00</lastmod>
+    <lastmod>2026-10-03T22:00:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/posts/django-middleware/</loc>
     <lastmod>2023-07-03T00:00:00+00:00</lastmod>
@@ -464,14 +464,17 @@
     <loc>https://sona201.github.io/tags/runserver/</loc>
     <lastmod>2023-07-03T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://sona201.github.io/tags/wsgi/</loc>
+    <lastmod>2026-10-03T22:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://sona201.github.io/tags/wsgihandler/</loc>
     <lastmod>2023-07-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/wsgiref/</loc>
-    <lastmod>2023-07-03T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-03T22:00:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/posts/wsgiref/</loc>
-    <lastmod>2023-07-03T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-03T22:00:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/posts/tcp%E5%AE%9E%E9%AA%8C/</loc>
     <lastmod>2023-07-03T13:05:14+08:00</lastmod>
