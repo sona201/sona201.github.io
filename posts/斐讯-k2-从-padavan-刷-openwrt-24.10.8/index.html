@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='记录斐讯 K2 PSG1218 A6 从 Padavan 切换到 OpenWrt 24.10.8 的实际刷机过程，包括 Breed、备份、固件选择、SHA256 校验和刷机后的检查。'>
+<title>斐讯 K2 从 Padavan 刷 OpenWrt 24.10.8</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/%E6%96%90%E8%AE%AF-k2-%E4%BB%8E-padavan-%E5%88%B7-openwrt-24.10.8/'>
+
+<link rel="stylesheet" href="/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='斐讯 K2 从 Padavan 刷 OpenWrt 24.10.8'>
+<meta property='og:description' content='记录斐讯 K2 PSG1218 A6 从 Padavan 切换到 OpenWrt 24.10.8 的实际刷机过程，包括 Breed、备份、固件选择、SHA256 校验和刷机后的检查。'>
+<meta property='og:url' content='https://sona201.github.io/posts/%E6%96%90%E8%AE%AF-k2-%E4%BB%8E-padavan-%E5%88%B7-openwrt-24.10.8/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='OpenWrt' /><meta property='article:tag' content='斐讯K2' /><meta property='article:tag' content='Padavan' /><meta property='article:tag' content='Breed' /><meta property='article:tag' content='路由器' /><meta property='article:published_time' content='2026-10-03T17:30:00&#43;08:00'/><meta property='article:modified_time' content='2026-10-03T17:30:00&#43;08:00'/>
+<meta name="twitter:title" content="斐讯 K2 从 Padavan 刷 OpenWrt 24.10.8">
+<meta name="twitter:description" content="记录斐讯 K2 PSG1218 A6 从 Padavan 切换到 OpenWrt 24.10.8 的实际刷机过程，包括 Breed、备份、固件选择、SHA256 校验和刷机后的检查。">
+    <link rel="shortcut icon" href="/image/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="
+    article-page
+    "><div id="nav-border" class="container">
+  <nav id="nav" class="nav justify-content-center">
+      
+      <a class="nav-link" href="/">
+      
+      
+      主页
+      </a>
+      
+      <a class="nav-link" href="/%E5%85%B3%E4%BA%8E/">
+      
+      
+      关于
+      </a>
+      
+      <a class="nav-link" href="/archives/">
+      
+      
+      归档
+      </a>
+      
+      <a class="nav-link" href="/%E5%8F%8B%E9%93%BE/">
+      
+      
+      友链
+      </a>
+      
+      <a class="nav-link" href="/tags">
+      
+      
+      Tags
+      </a>
+      
+  </nav>
+</div>
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_300x0_resize_box_3.png" width="300"
+                            height="297" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Ricardo</a></h1>
+            <h2 class="site-description">人到中年，专业捧哏</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/sona201/'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E9%93%BE/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>友链</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags' target="_blank">
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+                
+                <span>Tags</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>暗色模式</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#一设备信息">一、设备信息</a></li>
+    <li><a href="#二先判断-padavan-卡顿是不是硬件问题">二、先判断 Padavan 卡顿是不是硬件问题</a></li>
+    <li><a href="#三确认-breed">三、确认 Breed</a></li>
+    <li><a href="#四刷之前一定先备份">四、刷之前一定先备份</a></li>
+    <li><a href="#五选择-openwrt-固件">五、选择 OpenWrt 固件</a>
+      <ol>
+        <li><a href="#校验-sha256">校验 SHA256</a></li>
+      </ol>
+    </li>
+    <li><a href="#六先进入-openwrt-recoveryinitramfs">六、先进入 OpenWrt recovery/initramfs</a></li>
+    <li><a href="#七正式刷入-openwrt">七、正式刷入 OpenWrt</a></li>
+    <li><a href="#八第一次启动">八、第一次启动</a></li>
+    <li><a href="#九8mb-flash-的现实限制">九、8MB Flash 的现实限制</a></li>
+    <li><a href="#十无线还能不能用">十、无线还能不能用？</a></li>
+    <li><a href="#总结">总结</a>
+      <ol>
+        <li><a href="#参考">参考</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E7%BD%91%E7%BB%9C/" >
+                网络
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/posts/%E6%96%90%E8%AE%AF-k2-%E4%BB%8E-padavan-%E5%88%B7-openwrt-24.10.8/">斐讯 K2 从 Padavan 刷 OpenWrt 24.10.8</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            记录斐讯 K2 PSG1218 A6 从 Padavan 切换到 OpenWrt 24.10.8 的实际刷机过程，包括 Breed、备份、固件选择、SHA256 校验和刷机后的检查。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2026-10-03</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>最近在学习 VLAN、子网、路由和家庭组网，手里正好有一台闲置多年的斐讯 K2。它之前已经刷成 Padavan，但管理页面切换一次经常需要 30 秒左右，于是决定把它重新刷成 OpenWrt，当作网络实验机。</p>
+<p>这篇文章记录这次实际操作过程。设备和 Breed 版本不同，操作方式可能不同，刷机前一定先确认自己的型号和 Flash 布局。</p>
+<h2 id="一设备信息">一、设备信息</h2>
+<p>路由器铭牌信息：</p>
+<ul>
+<li>型号：斐讯 K2 / PSG1218</li>
+<li>硬件版本：A6</li>
+<li>SoC：MediaTek MT7620A</li>
+<li>RAM：64 MB DDR2</li>
+<li>Flash：Winbond W25Q64，8 MB</li>
+<li>当前系统：Padavan 3.4.3.9-099</li>
+<li>Bootloader：Breed 1.1 r1033</li>
+</ul>
+<p>Padavan SSH 中可以看到：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">MediaTek SoC: MT7620A, RevID: 0206, RAM: DDR2, XTAL: 20MHz
+</span></span><span class="line"><span class="cl">CPU/OCP/SYS frequency: 580/193/193 MHz
+</span></span><span class="line"><span class="cl">SPI flash chip: W25Q64BV (ef 40170000) (8192 Kbytes)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当前 Flash 分区：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">0x000000000000-0x000000030000 : &#34;Bootloader&#34;
+</span></span><span class="line"><span class="cl">0x000000030000-0x000000040000 : &#34;Config&#34;
+</span></span><span class="line"><span class="cl">0x000000040000-0x000000050000 : &#34;Factory&#34;
+</span></span><span class="line"><span class="cl">0x000000050000-0x00000016c2d0 : &#34;Kernel&#34;
+</span></span><span class="line"><span class="cl">0x00000016c2d0-0x0000007c0000 : &#34;RootFS&#34;
+</span></span><span class="line"><span class="cl">0x0000007c0000-0x000000800000 : &#34;Storage&#34;
+</span></span><span class="line"><span class="cl">0x000000050000-0x000000800000 : &#34;Firmware_Stub&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>固件从 <code>0x50000</code> 开始，这一点后面选择 K2 v22.4 profile 时很重要。</p>
+<h2 id="二先判断-padavan-卡顿是不是硬件问题">二、先判断 Padavan 卡顿是不是硬件问题</h2>
+<p>Padavan 后台非常卡，但路由器本身负载并不高，所以先测试局域网延迟：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ping 192.168.123.1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>实际结果平均只有约 1 ms，并且没有丢包。同时 Padavan 页面显示 CPU 占用很低、还有约 30 MB 空闲内存。</p>
+<p>因此更像是旧 Padavan/Web 服务或配置问题，而不是单纯网络链路太慢。</p>
+<p>既然本来就准备把 K2 当实验机，最终没有继续修旧 Padavan。</p>
+<h2 id="三确认-breed">三、确认 Breed</h2>
+<p>Breed 可以理解为路由器上的 Bootloader/救援环境，有点类似 PC 的 BIOS/UEFI。只要 Breed 本身还在，即使后面的 OpenWrt 刷坏了，一般仍有机会重新刷固件恢复。</p>
+<p>进入 Breed 的方法：</p>
+<ol>
+<li>K2 断电。</li>
+<li>按住 RESET。</li>
+<li>保持 RESET 的同时通电。</li>
+<li>等几秒后松开 RESET。</li>
+<li>电脑有线连接 LAN 口。</li>
+<li>将电脑放到 <code>192.168.1.0/24</code> 网段。</li>
+<li>浏览器访问 <code>http://192.168.1.1</code>。</li>
+</ol>
+<p>这台机器成功进入 Breed，显示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Breed 版本：1.1 (r1033)
+</span></span><span class="line"><span class="cl">CPU：MediaTek MT7620A
+</span></span><span class="line"><span class="cl">内存：64MB DDR2
+</span></span><span class="line"><span class="cl">Flash：Winbond W25Q64 8MB
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="四刷之前一定先备份">四、刷之前一定先备份</h2>
+<p>在 Breed 的「固件备份」页面分别保存：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">eeprom.bin
+</span></span><span class="line"><span class="cl">firmware.bin
+</span></span><span class="line"><span class="cl">full.bin
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中：</p>
+<ul>
+<li><code>eeprom.bin</code>：Factory/EEPROM 数据，包含无线校准等设备相关信息，非常重要。</li>
+<li><code>firmware.bin</code>：当前 Padavan 固件备份。</li>
+<li><code>full.bin</code>：完整 Flash 备份，适合严重故障时恢复。</li>
+</ul>
+<p>这三个文件建议至少保存两份。</p>
+<p>刷机过程中不要随便执行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">mtd erase ...
+</span></span><span class="line"><span class="cl">mtd write ...
+</span></span><span class="line"><span class="cl">dd ... of=/dev/mtd...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>尤其不要乱写 Bootloader 和 Factory 分区。</p>
+<h2 id="五选择-openwrt-固件">五、选择 OpenWrt 固件</h2>
+<p>最终选择：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">OpenWrt 24.10.8
+</span></span><span class="line"><span class="cl">Target: ramips/mt7620
+</span></span><span class="line"><span class="cl">Device: Phicomm K2 v22.4 or older
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>官方目录：</p>
+<p><a class="link" href="https://downloads.openwrt.org/releases/24.10.8/targets/ramips/mt7620/"  target="_blank" rel="noopener"
+    >https://downloads.openwrt.org/releases/24.10.8/targets/ramips/mt7620/</a></p>
+<p>下载了两个文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">openwrt-24.10.8-ramips-mt7620-phicomm_k2-v22.4-initramfs-kernel.bin
+</span></span><span class="line"><span class="cl">openwrt-24.10.8-ramips-mt7620-phicomm_k2-v22.4-squashfs-sysupgrade.bin
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这台 K2 的 Padavan Flash 布局中 firmware 从 <code>0x50000</code> 开始，与 v22.4 profile 对应。正式启动 OpenWrt 后，LuCI 最终也识别为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Phicomm K2 v22.4 or older
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="校验-sha256">校验 SHA256</h3>
+<p>不要跳过固件校验。</p>
+<p>initramfs：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">shasum -a <span class="m">256</span> ~/Downloads/openwrt-24.10.8-ramips-mt7620-phicomm_k2-v22.4-initramfs-kernel.bin
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>得到：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">63fd43bd57e499e10e05fbaa46551a5150fa087f16c7030d348c9f77ff2539f2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>sysupgrade：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">shasum -a <span class="m">256</span> ~/Downloads/openwrt-24.10.8-ramips-mt7620-phicomm_k2-v22.4-squashfs-sysupgrade.bin
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>得到：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">da17725d7b626b67feeed0a4b3ccb71970238539450f43d5b36426cccb344dc8
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>都与 OpenWrt 官方 SHA256 一致后再继续。</p>
+<h2 id="六先进入-openwrt-recoveryinitramfs">六、先进入 OpenWrt recovery/initramfs</h2>
+<p>这次没有一上来就在 OpenWrt 中永久写入 sysupgrade，而是先进入 OpenWrt 的 recovery/initramfs 环境。</p>
+<p>成功后 LuCI 顶部会看到类似提示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">System running in recovery (initramfs) mode.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>此时 OpenWrt 是临时运行状态。</p>
+<p>确认页面能够正常打开、设备型号能够识别后，再进行正式安装。</p>
+<blockquote>
+<p>不同 Breed 版本提供的启动/刷写方式可能不同。这里最重要的是先确认自己已经进入 OpenWrt recovery/initramfs，再执行下面的 sysupgrade，而不是照搬其他型号路由器的 Breed 参数。</p>
+</blockquote>
+<h2 id="七正式刷入-openwrt">七、正式刷入 OpenWrt</h2>
+<p>进入 recovery OpenWrt 后：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">System
+</span></span><span class="line"><span class="cl">→ Backup / Flash Firmware
+</span></span><span class="line"><span class="cl">→ Flash new firmware image
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>选择：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">openwrt-24.10.8-ramips-mt7620-phicomm_k2-v22.4-squashfs-sysupgrade.bin
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>上传以后 OpenWrt 会再次显示文件大小和 SHA256。</p>
+<p>实际看到：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Size: 6.25 MiB
+</span></span><span class="line"><span class="cl">SHA256: da17725d7b626b67feeed0a4b3ccb71970238539450f43d5b36426cccb344dc8
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里再次确认 SHA256 与 Mac 本地以及官方值一致。</p>
+<p>由于是从 Padavan 全新切换到 OpenWrt，我取消了：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Keep settings and retain the current configuration
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后点击 Continue 开始写 Flash。</p>
+<p>写入期间：</p>
+<ul>
+<li>不断电。</li>
+<li>不按 RESET。</li>
+<li>不拔网线。</li>
+<li>不刷新页面。</li>
+</ul>
+<p>等待路由器完成写入和重启。</p>
+<h2 id="八第一次启动">八、第一次启动</h2>
+<p>正式 OpenWrt 启动后访问：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">http://192.168.1.1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>LuCI 显示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Model: Phicomm K2 v22.4 or older
+</span></span><span class="line"><span class="cl">Firmware Version: OpenWrt 24.10.8
+</span></span><span class="line"><span class="cl">Kernel Version: 6.6.144
+</span></span><span class="line"><span class="cl">Target Platform: ramips/mt7620
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这说明 profile 选择正确，刷机成功。</p>
+<p>第一件事先设置 root 密码，然后通过 SSH 检查：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ssh root@192.168.1.1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">df -h
+</span></span><span class="line"><span class="cl">free -m
+</span></span><span class="line"><span class="cl">uptime
+</span></span><span class="line"><span class="cl">cat /proc/mtd
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>最终 Flash 分区类似：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">mtd0: &#34;u-boot&#34;
+</span></span><span class="line"><span class="cl">mtd1: &#34;u-boot-env&#34;
+</span></span><span class="line"><span class="cl">mtd2: &#34;factory&#34;
+</span></span><span class="line"><span class="cl">mtd3: &#34;firmware&#34;
+</span></span><span class="line"><span class="cl">mtd4: &#34;kernel&#34;
+</span></span><span class="line"><span class="cl">mtd5: &#34;rootfs&#34;
+</span></span><span class="line"><span class="cl">mtd6: &#34;rootfs_data&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Breed 和 Factory 都还保留着。</p>
+<h2 id="九8mb-flash-的现实限制">九、8MB Flash 的现实限制</h2>
+<p>刷完以后：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">/overlay 总空间约 1.4 MB
+</span></span><span class="line"><span class="cl">剩余约 1.2 MB
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>所以 K2 跑 OpenWrt 最大的问题不是 CPU，而是 Flash 和 RAM 太小。</p>
+<p>看到：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">/dev/root  100%
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>不用紧张。OpenWrt 的 <code>/dev/root</code> 是只读 SquashFS，显示 100% 属于正常现象。真正需要关注的是可写的 <code>/overlay</code>。</p>
+<p>这台 K2 比较适合：</p>
+<ul>
+<li>学 VLAN。</li>
+<li>学 DHCP。</li>
+<li>学静态路由。</li>
+<li>学 NAT 和防火墙。</li>
+<li>学 DNS。</li>
+<li>测试 Wi-Fi 网络隔离。</li>
+</ul>
+<p>不适合：</p>
+<ul>
+<li>OpenClash。</li>
+<li>Passwall。</li>
+<li>AdGuard Home。</li>
+<li>大量 LuCI 插件。</li>
+</ul>
+<p>只有 1 MB 左右的可写空间，随便安装几个软件包就可能把 Flash 填满。</p>
+<h2 id="十无线还能不能用">十、无线还能不能用？</h2>
+<p>可以。</p>
+<p>刷 OpenWrt 后并不是无线功能消失了。K2 的官方 OpenWrt profile 已包含对应无线驱动，通常不需要另外安装驱动模块。</p>
+<p>OpenWrt 首次启动时无线可能默认关闭，在：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Network → Wireless
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置 SSID、加密方式并启用即可。</p>
+<p>如果无线页面没有识别到 Radio，可以通过 SSH 检查：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wifi status
+</span></span><span class="line"><span class="cl">iwinfo
+</span></span><span class="line"><span class="cl">ls /sys/class/ieee80211/
+</span></span><span class="line"><span class="cl">dmesg <span class="p">|</span> grep -Ei <span class="s1">&#39;mt76|wifi|wlan|80211&#39;</span>
+</span></span><span class="line"><span class="cl">opkg list-installed <span class="p">|</span> grep -E <span class="s1">&#39;mt76|mac80211|wireless|wpad&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>K2 的 Flash 太小，不要看到无线没开启就先执行 <code>opkg install</code>，应该先确认驱动是否已经存在。</p>
+<h2 id="总结">总结</h2>
+<p>这次实际升级路径可以概括成：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">K2 PSG1218 A6
+</span></span><span class="line"><span class="cl">      ↓
+</span></span><span class="line"><span class="cl">Padavan
+</span></span><span class="line"><span class="cl">      ↓
+</span></span><span class="line"><span class="cl">确认 Breed
+</span></span><span class="line"><span class="cl">      ↓
+</span></span><span class="line"><span class="cl">备份 EEPROM / Padavan / Full Flash
+</span></span><span class="line"><span class="cl">      ↓
+</span></span><span class="line"><span class="cl">OpenWrt 24.10.8 v22.4 initramfs/recovery
+</span></span><span class="line"><span class="cl">      ↓
+</span></span><span class="line"><span class="cl">校验 sysupgrade SHA256
+</span></span><span class="line"><span class="cl">      ↓
+</span></span><span class="line"><span class="cl">OpenWrt sysupgrade
+</span></span><span class="line"><span class="cl">      ↓
+</span></span><span class="line"><span class="cl">OpenWrt 24.10.8
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>对一台 8MB Flash、64MB RAM 的老 K2 来说，OpenWrt 24.10.8 已经比较吃紧，不适合继续堆插件。但拿来做 VLAN、子网、路由、DHCP、防火墙等网络实验，反而是个不错的废物利用方式。</p>
+<h3 id="参考">参考</h3>
+<ul>
+<li>OpenWrt Phicomm K2：https://openwrt.org/toh/phicomm/k2</li>
+<li>OpenWrt 24.10.8 ramips/mt7620：https://downloads.openwrt.org/releases/24.10.8/targets/ramips/mt7620/</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/openwrt/">OpenWrt</a>
+        
+            <a href="/tags/%E6%96%90%E8%AE%AFk2/">斐讯K2</a>
+        
+            <a href="/tags/padavan/">Padavan</a>
+        
+            <a href="/tags/breed/">Breed</a>
+        
+            <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/">路由器</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@300&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+
+    </body>
+</html>
