@@ -37,7 +37,7 @@ draft: false
 
 官方的`logging`模块工作流程图如下：  
 
-![logging流程图](assets/images/20240604-logging_flow.png)
+![logging流程图](/images/python-logging-flow.png)
 
 logging流程图
 
