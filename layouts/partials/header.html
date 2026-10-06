@@ -2,12 +2,15 @@
     <div class="top-navigation__inner">
         <a class="top-navigation__brand" href="{{ .Site.BaseURL | relLangURL }}">{{ .Site.Title }}</a>
 
-        <nav class="top-navigation__menu" aria-label="Main navigation">
+        <nav class="top-navigation__menu" aria-label="主导航">
             {{ $currentPage := . }}
             {{ range .Site.Menus.main }}
                 {{ $active := or (eq $currentPage.Title .Name) (or ($currentPage.HasMenuCurrent "main" .) ($currentPage.IsMenuCurrent "main" .)) }}
+                {{ if and (eq .Identifier "tags") (in (slice "taxonomy" "term") $currentPage.Kind) }}
+                    {{ $active = eq $currentPage.Data.Plural "tags" }}
+                {{ end }}
                 <a href="{{ .URL }}"
-                   {{ if $active }}class="current"{{ end }}
+                   {{ if $active }}class="current" aria-current="page"{{ end }}
                    {{ if eq .Params.newTab true }}target="_blank" rel="noopener"{{ end }}>
                     {{ .Name }}
                 </a>
@@ -15,21 +18,10 @@
         </nav>
 
         {{ if (default false .Site.Params.colorScheme.toggle) }}
-            <button class="top-navigation__theme" id="top-dark-mode-toggle" type="button" aria-label="{{ T `darkMode` }}">
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
                 {{ partial "helper/icon" "toggle-left" }}
+                {{ partial "helper/icon" "toggle-right" }}
             </button>
         {{ end }}
     </div>
 </header>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    var topToggle = document.getElementById('top-dark-mode-toggle');
-    var originalToggle = document.getElementById('dark-mode-toggle');
-    if (topToggle && originalToggle) {
-        topToggle.addEventListener('click', function () {
-            originalToggle.click();
-        });
-    }
-});
-</script>

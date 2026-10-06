@@ -1,0 +1,56 @@
+{{ define "body-class" }}collection-page template-archives{{ end }}
+
+{{ define "left-sidebar" }}<!-- Collection pages use the top navigation. -->{{ end }}
+
+{{ define "main" }}
+    {{- $sections := default (slice "post") .Site.Params.mainSections -}}
+    {{- $pages := where .Site.RegularPages "Type" "in" $sections -}}
+    {{- $pages = where $pages "Params.hidden" "!=" true -}}
+    {{- $groups := $pages.ByDate.Reverse.GroupByDate "2006" -}}
+
+    <header class="collection-header">
+        <div class="collection-heading">
+            <h1 class="collection-title">{{ .Title }}</h1>
+            <p class="collection-count">{{ len $pages }} 篇文章</p>
+        </div>
+        {{- with .Params.description -}}
+            {{- if ne . $.Title -}}
+                <p class="collection-description">{{ . }}</p>
+            {{- end -}}
+        {{- end -}}
+        {{- with .Content -}}
+            <div class="collection-intro">{{ . }}</div>
+        {{- end -}}
+    </header>
+
+    {{- with $groups -}}
+        <nav class="archive-years" aria-label="按年份浏览归档">
+            {{- range . -}}
+                <a href="#{{ .Key }}">{{ .Key }}<span class="archive-year-count">{{ len .Pages }}</span></a>
+            {{- end -}}
+        </nav>
+
+        <div class="archive-groups">
+            {{- range . -}}
+                <section class="archive-group" id="{{ .Key }}" aria-labelledby="archive-year-{{ .Key }}">
+                    <h2 class="archive-year" id="archive-year-{{ .Key }}">
+                        <a href="{{ $.RelPermalink }}#{{ .Key }}">{{ .Key }}</a>
+                        <span class="archive-year-count">{{ len .Pages }} 篇</span>
+                    </h2>
+                    <ol class="archive-list">
+                        {{- range .Pages -}}
+                            <li class="archive-row">
+                                <time class="collection-date archive-date" datetime="{{ .Date.Format "2006-01-02" }}" title="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01-02" }}</time>
+                                <a class="collection-link archive-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+                            </li>
+                        {{- end -}}
+                    </ol>
+                </section>
+            {{- end -}}
+        </div>
+    {{- else -}}
+        <p class="collection-empty">暂无公开文章。</p>
+    {{- end -}}
+
+    {{ partialCached "footer/footer" . }}
+{{ end }}

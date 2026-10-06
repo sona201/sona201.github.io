@@ -1,0 +1,12 @@
+{{- $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections -}}
+{{- $visible := where $pages "Params.hidden" "!=" true -}}
+{{- $public := where $visible "Draft" false -}}
+{{- $result := slice -}}
+{{- range $public.ByDate.Reverse -}}
+    {{- if le .PublishDate now -}}
+        {{- $categories := slice -}}
+        {{- with .Params.categories -}}{{- $categories = . -}}{{- end -}}
+        {{- $result = $result | append (dict "title" .Title "date" (.Date.Format "2006-01-02") "permalink" .RelPermalink "content" .Plain "categories" $categories) -}}
+    {{- end -}}
+{{- end -}}
+{{- jsonify $result -}}

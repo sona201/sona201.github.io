@@ -410,14 +410,6 @@ logging.exception("Exception occurred")
     logging.log(level=logging.DEBUG, msg="Exception occurred", exc_info=True)
 ```
 
-```
-
-py
-
-复制代码
-
- `1import logging    2    3logging.basicConfig(filename="test.log", filemode="w", format="%(asctime)s %(name)s:%(levelname)s:%(message)s", datefmt="%d-%M-%Y %H:%M:%S", level=logging.DEBUG)    4a = 5    5b = 0    6try:    7    c = a / b    8except Exception as e:    9    # 下面三种方式三选一，推荐使用第一种   10    logging.exception("Exception occurred")   11    logging.error("Exception occurred", exc_info=True)   12    logging.log(level=logging.DEBUG, msg="Exception occurred", exc_info=True)`
-
 输出文件`test.log`的内容:  
 
 ![在这里插入图片描述](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/1/2/16f658205f087401~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.png "在这里插入图片描述")

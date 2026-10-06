@@ -31,8 +31,11 @@ jobs:
           hugo-version: '0.101.0'
           extended: true
 
+      - name: Check public content
+        run: python3 scripts/sync_obsidian_blog.py --audit-public
+
       - name: Build Web
-        run: hugo
+        run: hugo --cleanDestinationDir
 
       - name: Deploy Web
         uses: peaceiris/actions-gh-pages@v4

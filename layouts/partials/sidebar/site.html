@@ -1,0 +1,84 @@
+{{- $context := .Context -}}
+{{- $site := $context.Site -}}
+{{- $sections := default (slice "post") $site.Params.mainSections -}}
+{{- $posts := where $site.RegularPages "Type" "in" $sections -}}
+{{- $posts = where $posts "Params.hidden" "!=" true -}}
+{{- $posts = where $posts "Draft" false -}}
+{{- $isArticle := and (eq $context.Kind "page") (in $sections $context.Type) -}}
+{{- $categories := slice -}}
+{{- range $site.Taxonomies.categories.ByCount -}}
+    {{- $visible := .Page.RegularPages | intersect $posts -}}
+    {{- if gt (len $visible) 0 -}}
+        {{- $categories = $categories | append (dict "page" .Page "count" (len $visible)) -}}
+    {{- end -}}
+{{- end -}}
+{{- $categories = sort $categories "count" "desc" -}}
+{{- $tagCount := 0 -}}
+{{- range $site.Taxonomies.tags -}}
+    {{- $visible := .Pages | intersect $posts -}}
+    {{- if gt (len $visible) 0 -}}{{- $tagCount = add $tagCount 1 -}}{{- end -}}
+{{- end -}}
+
+<aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky{{ if $isArticle }} article-sidebar{{ end }}" aria-label="站点侧栏">
+    <section class="homepage-profile-card">
+        {{- with $site.Params.sidebar.avatar -}}
+            {{- if (default true .enabled) -}}
+                {{- if .local -}}
+                    {{- with resources.Get .src -}}
+                        {{- $avatar := .Resize "160x" -}}
+                        <img class="homepage-profile-card__avatar" src="{{ $avatar.RelPermalink }}" width="{{ $avatar.Width }}" height="{{ $avatar.Height }}" alt="{{ $site.Title }} 的头像">
+                    {{- end -}}
+                {{- else -}}
+                    <img class="homepage-profile-card__avatar" src="{{ .src }}" width="80" height="80" alt="{{ $site.Title }} 的头像">
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+
+        <div>
+            <h2>{{ $site.Title }}</h2>
+            <p>{{ $site.Params.sidebar.subtitle }}</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>{{ len $posts }}</strong><span>文章</span></div>
+            <div><strong>{{ len $categories }}</strong><span>分类</span></div>
+            <div><strong>{{ $tagCount }}</strong><span>标签</span></div>
+        </div>
+
+        {{- range $site.Menus.social -}}
+            <a class="homepage-profile-card__link" href="{{ .URL }}"{{ if eq (default true .Params.newTab) true }} target="_blank" rel="noopener"{{ end }}>{{ .Name }} ↗</a>
+        {{- end -}}
+    </section>
+
+    {{- if $isArticle -}}
+        {{- if $context.Scratch.Get "hasWidget" -}}
+            {{- range $site.Params.widgets.page -}}
+                {{- if templates.Exists (printf "partials/widget/%s.html" .type) -}}
+                    {{- partial (printf "widget/%s" .type) (dict "Context" $context "Params" .params) -}}
+                {{- else -}}
+                    {{- warnf "Widget %s not found" .type -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+    {{- else -}}
+        <section class="homepage-side-list">
+            <h3>最近文章</h3>
+            {{- range first 5 $posts.ByDate.Reverse -}}
+                <a href="{{ .RelPermalink }}">
+                    <span>{{ .Title }}</span>
+                    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+                </a>
+            {{- end -}}
+        </section>
+
+        <section class="homepage-side-list homepage-categories">
+            <h3>分类</h3>
+            {{- range first 8 $categories -}}
+                <a href="{{ .page.RelPermalink }}">
+                    <span>{{ .page.Title }}</span>
+                    <strong>{{ .count }}</strong>
+                </a>
+            {{- end -}}
+        </section>
+    {{- end -}}
+</aside>

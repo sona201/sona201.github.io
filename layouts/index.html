@@ -1,10 +1,17 @@
-{{ define "left-sidebar" }}{{ end }}
+{{ define "body-class" }}homepage{{ end }}
 
 {{ define "main" }}
     {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
     {{ $notHidden := where .Site.RegularPages "Params.hidden" "!=" true }}
     {{ $filtered := ($pages | intersect $notHidden) }}
     {{ $pag := .Paginate ($filtered) }}
+
+    <header class="collection-header">
+        <div class="collection-heading">
+            <h1 class="collection-title">最新文章</h1>
+            <p class="collection-count">{{ len $filtered }} 篇文章</p>
+        </div>
+    </header>
 
     <section class="editorial-article-list">
         {{ range $pag.Pages }}
@@ -47,72 +54,4 @@
 
     {{- partial "pagination.html" . -}}
     {{- partial "footer/footer" . -}}
-{{ end }}
-
-{{ define "right-sidebar" }}
-    {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
-    {{ $notHidden := where .Site.RegularPages "Params.hidden" "!=" true }}
-    {{ $filtered := ($pages | intersect $notHidden) }}
-    <aside class="sidebar right-sidebar homepage-profile-sidebar sticky">
-        <section class="homepage-profile-card">
-            {{ with .Site.Params.sidebar.avatar }}
-                {{ if (default true .enabled) }}
-                    {{ if .local }}
-                        {{ $avatar := resources.Get (.src) }}
-                        {{ if $avatar }}
-                            {{ $avatarResized := $avatar.Resize "160x" }}
-                            <img class="homepage-profile-card__avatar"
-                                 src="{{ $avatarResized.RelPermalink }}"
-                                 width="{{ $avatarResized.Width }}"
-                                 height="{{ $avatarResized.Height }}"
-                                 alt="Avatar">
-                        {{ end }}
-                    {{ else }}
-                        <img class="homepage-profile-card__avatar" src="{{ .src }}" width="80" height="80" alt="Avatar">
-                    {{ end }}
-                {{ end }}
-            {{ end }}
-
-            <div>
-                <h2>{{ .Site.Title }}</h2>
-                <p>{{ .Site.Params.sidebar.subtitle }}</p>
-            </div>
-
-            <div class="homepage-profile-card__stats">
-                <div><strong>{{ len $filtered }}</strong><span>文章</span></div>
-                <div><strong>{{ len .Site.Taxonomies.categories }}</strong><span>分类</span></div>
-                <div><strong>{{ len .Site.Taxonomies.tags }}</strong><span>标签</span></div>
-            </div>
-
-            {{ with .Site.Menus.social }}
-                {{ range . }}
-                    <a class="homepage-profile-card__link"
-                       href="{{ .URL }}"
-                       {{ if eq (default true .Params.newTab) true }}target="_blank" rel="noopener"{{ end }}>
-                        {{ .Name }} ↗
-                    </a>
-                {{ end }}
-            {{ end }}
-        </section>
-
-        <section class="homepage-side-list">
-            <h3>最近文章</h3>
-            {{ range first 5 $filtered.ByDate.Reverse }}
-                <a href="{{ .RelPermalink }}">
-                    <span>{{ .Title }}</span>
-                    <time>{{ .Date.Format "2006-01-02" }}</time>
-                </a>
-            {{ end }}
-        </section>
-
-        <section class="homepage-side-list homepage-categories">
-            <h3>分类</h3>
-            {{ range first 8 .Site.Taxonomies.categories.ByCount }}
-                <a href="{{ .Page.RelPermalink }}">
-                    <span>{{ .Page.Title }}</span>
-                    <strong>{{ .Count }}</strong>
-                </a>
-            {{ end }}
-        </section>
-    </aside>
 {{ end }}

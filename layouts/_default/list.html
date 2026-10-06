@@ -1,0 +1,102 @@
+{{ define "body-class" }}collection-page template-list{{ end }}
+
+{{ define "left-sidebar" }}<!-- Collection pages use the top navigation. -->{{ end }}
+
+{{ define "main" }}
+    {{- $isTaxonomy := eq .Kind "taxonomy" -}}
+    {{- $articles := where .RegularPages "Params.hidden" "!=" true -}}
+    {{- if eq .Kind "section" -}}
+        {{- $articles = where .RegularPagesRecursive "Params.hidden" "!=" true -}}
+    {{- end -}}
+    {{- $articles = $articles.ByDate.Reverse -}}
+    {{- $terms := slice -}}
+    {{- if $isTaxonomy -}}
+        {{- range (where .Pages "Params.hidden" "!=" true).ByTitle -}}
+            {{- $visible := where .RegularPages "Params.hidden" "!=" true -}}
+            {{- if gt (len $visible) 0 -}}
+                {{- $terms = $terms | append (dict "page" . "count" (len $visible)) -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+
+    <header class="collection-header">
+        <div class="collection-heading">
+            <h1 class="collection-title">{{ if and $isTaxonomy (eq .Data.Plural "tags") }}标签{{ else if and $isTaxonomy (eq .Data.Plural "categories") }}分类{{ else }}{{ .Title }}{{ end }}</h1>
+            <p class="collection-count">
+                {{- if $isTaxonomy -}}
+                    {{- len $terms }} 个{{ if eq .Data.Plural "tags" }}标签{{ else if eq .Data.Plural "categories" }}分类{{ else }}词条{{ end -}}
+                {{- else -}}
+                    {{- len $articles }} 篇文章
+                {{- end -}}
+            </p>
+        </div>
+        {{- with .Params.description -}}
+            {{- if ne . $.Title -}}
+                <p class="collection-description">{{ . }}</p>
+            {{- end -}}
+        {{- end -}}
+        {{- with .Content -}}
+            <div class="collection-intro">{{ . }}</div>
+        {{- end -}}
+    </header>
+
+    {{- if $isTaxonomy -}}
+        {{- with $terms -}}
+            <ul class="taxonomy-list">
+                {{- range . -}}
+                    <li class="taxonomy-item">
+                        <a class="taxonomy-link" href="{{ .page.RelPermalink }}">
+                            <span class="taxonomy-name">{{ .page.Title }}</span>
+                            <span class="taxonomy-count">{{ .count }} 篇</span>
+                        </a>
+                    </li>
+                {{- end -}}
+            </ul>
+        {{- else -}}
+            <p class="collection-empty">暂无公开词条。</p>
+        {{- end -}}
+    {{- else -}}
+        {{- $subsections := slice -}}
+        {{- if eq .Kind "section" -}}
+            {{- range (where .Sections "Params.hidden" "!=" true).ByTitle -}}
+                {{- $visible := where .RegularPagesRecursive "Params.hidden" "!=" true -}}
+                {{- if gt (len $visible) 0 -}}
+                    {{- $subsections = $subsections | append (dict "page" . "count" (len $visible)) -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+        {{- with $subsections -}}
+            <section class="collection-subsections" aria-labelledby="collection-subsections-title">
+                <h2 class="collection-subtitle" id="collection-subsections-title">子分类</h2>
+                <ul class="taxonomy-list">
+                    {{- range . -}}
+                        <li class="taxonomy-item">
+                            <a class="taxonomy-link" href="{{ .page.RelPermalink }}">
+                                <span class="taxonomy-name">{{ .page.Title }}</span>
+                                <span class="taxonomy-count">{{ .count }} 篇</span>
+                            </a>
+                        </li>
+                    {{- end -}}
+                </ul>
+            </section>
+        {{- end -}}
+
+        {{- $paginator := .Paginate $articles -}}
+        {{- with $paginator.Pages -}}
+            <ol class="collection-list">
+                {{- range . -}}
+                    <li class="collection-row">
+                        <time class="collection-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+                        <a class="collection-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+                    </li>
+                {{- end -}}
+            </ol>
+        {{- else -}}
+            <p class="collection-empty">暂无公开文章。</p>
+        {{- end -}}
+
+        {{- partial "pagination.html" . -}}
+    {{- end -}}
+
+    {{ partialCached "footer/footer" . }}
+{{ end }}

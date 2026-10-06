@@ -1,0 +1,573 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "source": "博客/ARTS/2024/2024-01-07.md",
+      "target": "content/post/ARTS/2024/2024-01-07.md"
+    },
+    {
+      "source": "博客/ARTS/2024/2024-07-07.md",
+      "target": "content/post/ARTS/2024/2024-07-07.md"
+    },
+    {
+      "source": "博客/ARTS/2025/2025-week10.md",
+      "target": "content/post/ARTS/2025/2025-week10.md"
+    },
+    {
+      "source": "博客/ARTS/2025/2025-week11.md",
+      "target": "content/post/ARTS/2025/2025-week11.md"
+    },
+    {
+      "source": "博客/ARTS/2025/2025-week12.md",
+      "target": "content/post/ARTS/2025/2025-week12.md"
+    },
+    {
+      "source": "博客/ARTS/2025/2025-week13.md",
+      "target": "content/post/ARTS/2025/2025-week13.md"
+    },
+    {
+      "source": "博客/ARTS/2025/2025-week14.md",
+      "target": "content/post/ARTS/2025/2025-week14.md"
+    },
+    {
+      "source": "博客/ARTS/2025/2025-week7.md",
+      "target": "content/post/ARTS/2025/2025-week7.md"
+    },
+    {
+      "source": "博客/ARTS/2025/2025-week8.md",
+      "target": "content/post/ARTS/2025/2025-week8.md"
+    },
+    {
+      "source": "博客/ARTS/2025/2025-week9.md",
+      "target": "content/post/ARTS/2025/2025-week9.md"
+    },
+    {
+      "source": "博客/ARTS/what-is-ARTS.md",
+      "target": "content/post/ARTS/what-is-ARTS.md"
+    },
+    {
+      "source": "博客/Kubenertes/docker-operations-notes.md",
+      "target": "content/post/Kubenertes/docker-operations-notes.md"
+    },
+    {
+      "source": "博客/Kubenertes/ingress-nginx-deployment-notes.md",
+      "target": "content/post/Kubenertes/ingress-nginx-deployment-notes.md"
+    },
+    {
+      "source": "博客/Kubenertes/k8s-pod-status.md",
+      "target": "content/post/Kubenertes/k8s-pod-status.md"
+    },
+    {
+      "source": "博客/Kubenertes/pod-container-startup-order-notes.md",
+      "target": "content/post/Kubenertes/pod-container-startup-order-notes.md"
+    },
+    {
+      "source": "博客/Kubenertes/process-exit-signal-notes.md",
+      "target": "content/post/Kubenertes/process-exit-signal-notes.md"
+    },
+    {
+      "source": "博客/Linux/Where-are-your-Python-packages-installed.md",
+      "target": "content/post/Linux/Where-are-your-Python-packages-installed.md"
+    },
+    {
+      "source": "博客/Linux/access-log-statistics.md",
+      "target": "content/post/Linux/access-log-statistics.md"
+    },
+    {
+      "source": "博客/Linux/awk-text-replacement.md",
+      "target": "content/post/Linux/awk-text-replacement.md"
+    },
+    {
+      "source": "博客/Linux/bash-if-empty-string-notes.md",
+      "target": "content/post/Linux/bash-if-empty-string-notes.md"
+    },
+    {
+      "source": "博客/Linux/bash-line-iteration-notes.md",
+      "target": "content/post/Linux/bash-line-iteration-notes.md"
+    },
+    {
+      "source": "博客/Linux/bash-prompt-variables.md",
+      "target": "content/post/Linux/bash-prompt-variables.md"
+    },
+    {
+      "source": "博客/Linux/bash-source-function-command.md",
+      "target": "content/post/Linux/bash-source-function-command.md"
+    },
+    {
+      "source": "博客/Linux/bash-trap-sigint.md",
+      "target": "content/post/Linux/bash-trap-sigint.md"
+    },
+    {
+      "source": "博客/Linux/bash-while-read-lines.md",
+      "target": "content/post/Linux/bash-while-read-lines.md"
+    },
+    {
+      "source": "博客/Linux/disk-reserved-blocks-troubleshooting.md",
+      "target": "content/post/Linux/disk-reserved-blocks-troubleshooting.md"
+    },
+    {
+      "source": "博客/Linux/elasticsearch-ilm-hot-warm-cold-policy.md",
+      "target": "content/post/Linux/elasticsearch-ilm-hot-warm-cold-policy.md"
+    },
+    {
+      "source": "博客/Linux/linux-distribution-kernel-version.md",
+      "target": "content/post/Linux/linux-distribution-kernel-version.md"
+    },
+    {
+      "source": "博客/Linux/linux-iptables.md",
+      "target": "content/post/Linux/linux-iptables.md"
+    },
+    {
+      "source": "博客/Linux/linux-local-user-ldap-conflict.md",
+      "target": "content/post/Linux/linux-local-user-ldap-conflict.md"
+    },
+    {
+      "source": "博客/Linux/linux-timezone-update.md",
+      "target": "content/post/Linux/linux-timezone-update.md"
+    },
+    {
+      "source": "博客/Linux/nmap-notes.md",
+      "target": "content/post/Linux/nmap-notes.md"
+    },
+    {
+      "source": "博客/Linux/nvm-install.md",
+      "target": "content/post/Linux/nvm-install.md"
+    },
+    {
+      "source": "博客/Linux/screen-command.md",
+      "target": "content/post/Linux/screen-command.md"
+    },
+    {
+      "source": "博客/Linux/sed-command.md",
+      "target": "content/post/Linux/sed-command.md"
+    },
+    {
+      "source": "博客/Linux/shell-dash-standard-input.md",
+      "target": "content/post/Linux/shell-dash-standard-input.md"
+    },
+    {
+      "source": "博客/Linux/strace-notes.md",
+      "target": "content/post/Linux/strace-notes.md"
+    },
+    {
+      "source": "博客/Linux/vmware-lvm-disk-extension.md",
+      "target": "content/post/Linux/vmware-lvm-disk-extension.md"
+    },
+    {
+      "source": "博客/Linux/yum-repository-failure.md",
+      "target": "content/post/Linux/yum-repository-failure.md"
+    },
+    {
+      "source": "博客/ai/ai-agent-crewai-notes.md",
+      "target": "content/post/ai/ai-agent-crewai-notes.md"
+    },
+    {
+      "source": "博客/ai/gemini-learning-prompts.md",
+      "target": "content/post/ai/gemini-learning-prompts.md"
+    },
+    {
+      "source": "博客/django/2-core_http_middleware.md",
+      "target": "content/post/django/2-core_http_middleware.md"
+    },
+    {
+      "source": "博客/django/core-handlers-base.md",
+      "target": "content/post/django/core-handlers-base.md"
+    },
+    {
+      "source": "博客/django/core-runserver-1-wsgiref.md",
+      "target": "content/post/django/core-runserver-1-wsgiref.md"
+    },
+    {
+      "source": "博客/django/core-runserver-2-run.md",
+      "target": "content/post/django/core-runserver-2-run.md"
+    },
+    {
+      "source": "博客/django/django-1-runserver-source-notes.md",
+      "target": "content/post/django/django-1-runserver-source-notes.md"
+    },
+    {
+      "source": "博客/django/django-as-view-analysis.md",
+      "target": "content/post/django/django-as-view-analysis.md"
+    },
+    {
+      "source": "博客/django/django-basics-notes.md",
+      "target": "content/post/django/django-basics-notes.md"
+    },
+    {
+      "source": "博客/django/django-management-shell-source-notes.md",
+      "target": "content/post/django/django-management-shell-source-notes.md"
+    },
+    {
+      "source": "博客/django/django-migration-graph-notes.md",
+      "target": "content/post/django/django-migration-graph-notes.md"
+    },
+    {
+      "source": "博客/django/django-migration-recorder-notes.md",
+      "target": "content/post/django/django-migration-recorder-notes.md"
+    },
+    {
+      "source": "博客/django/django-setup-shell-notes.md",
+      "target": "content/post/django/django-setup-shell-notes.md"
+    },
+    {
+      "source": "博客/django/django-study.md",
+      "target": "content/post/django/django-study.md"
+    },
+    {
+      "source": "博客/django/drf-allowed-methods-source-notes.md",
+      "target": "content/post/django/drf-allowed-methods-source-notes.md"
+    },
+    {
+      "source": "博客/django/drf-exception-handler-notes.md",
+      "target": "content/post/django/drf-exception-handler-notes.md"
+    },
+    {
+      "source": "博客/django/drf-generic-view-refactoring-notes.md",
+      "target": "content/post/django/drf-generic-view-refactoring-notes.md"
+    },
+    {
+      "source": "博客/django/drf-response-rendering.md",
+      "target": "content/post/django/drf-response-rendering.md"
+    },
+    {
+      "source": "博客/django/drf-serializer-notes.md",
+      "target": "content/post/django/drf-serializer-notes.md"
+    },
+    {
+      "source": "博客/django/drf-total-pagination.md",
+      "target": "content/post/django/drf-total-pagination.md"
+    },
+    {
+      "source": "博客/django/drf-viewset-action-routing.md",
+      "target": "content/post/django/drf-viewset-action-routing.md"
+    },
+    {
+      "source": "博客/django/wsgiref.md",
+      "target": "content/post/django/wsgiref.md"
+    },
+    {
+      "source": "博客/hugo-framework.md",
+      "target": "content/post/hugo-framework.md"
+    },
+    {
+      "source": "博客/mysql/msyql-sql-command.md",
+      "target": "content/post/mysql/msyql-sql-command.md"
+    },
+    {
+      "source": "博客/mysql/mysqlclient-install.md",
+      "target": "content/post/mysql/mysqlclient-install.md"
+    },
+    {
+      "source": "博客/mysql/mysqldump-common-operation.md",
+      "target": "content/post/mysql/mysqldump-common-operation.md"
+    },
+    {
+      "source": "博客/mysql/sql-statement-categories.md",
+      "target": "content/post/mysql/sql-statement-categories.md"
+    },
+    {
+      "source": "博客/nginx/nginx-location.md",
+      "target": "content/post/nginx/nginx-location.md"
+    },
+    {
+      "source": "博客/nginx/nginx-stream-proxy.md",
+      "target": "content/post/nginx/nginx-stream-proxy.md"
+    },
+    {
+      "source": "博客/python/argparse-subcommands.md",
+      "target": "content/post/python/argparse-subcommands.md"
+    },
+    {
+      "source": "博客/python/celery-django-configuration.md",
+      "target": "content/post/python/celery-django-configuration.md"
+    },
+    {
+      "source": "博客/python/cffi-apple-silicon-error-notes.md",
+      "target": "content/post/python/cffi-apple-silicon-error-notes.md"
+    },
+    {
+      "source": "博客/python/flask-context-source-notes.md",
+      "target": "content/post/python/flask-context-source-notes.md"
+    },
+    {
+      "source": "博客/python/flask-flash-notes.md",
+      "target": "content/post/python/flask-flash-notes.md"
+    },
+    {
+      "source": "博客/python/flask-session-source-notes.md",
+      "target": "content/post/python/flask-session-source-notes.md"
+    },
+    {
+      "source": "博客/python/flask-template-notes.md",
+      "target": "content/post/python/flask-template-notes.md"
+    },
+    {
+      "source": "博客/python/flask-wsgi-socket-learning-notes.md",
+      "target": "content/post/python/flask-wsgi-socket-learning-notes.md"
+    },
+    {
+      "source": "博客/python/jsonencoder-datetime-notes.md",
+      "target": "content/post/python/jsonencoder-datetime-notes.md"
+    },
+    {
+      "source": "博客/python/m1-x86-python36.md",
+      "target": "content/post/python/m1-x86-python36.md"
+    },
+    {
+      "source": "博客/python/oss-sts-direct-upload.md",
+      "target": "content/post/python/oss-sts-direct-upload.md"
+    },
+    {
+      "source": "博客/python/pyenv-install-troubleshooting.md",
+      "target": "content/post/python/pyenv-install-troubleshooting.md"
+    },
+    {
+      "source": "博客/python/python-logging-analysis.md",
+      "target": "content/post/python/python-logging-analysis.md"
+    },
+    {
+      "source": "博客/python/python-metaclass-notes.md",
+      "target": "content/post/python/python-metaclass-notes.md"
+    },
+    {
+      "source": "博客/python/python-new-construction-notes.md",
+      "target": "content/post/python/python-new-construction-notes.md"
+    },
+    {
+      "source": "博客/python/python-traceback-notes.md",
+      "target": "content/post/python/python-traceback-notes.md"
+    },
+    {
+      "source": "博客/python/python2-apache-cgi-notes.md",
+      "target": "content/post/python/python2-apache-cgi-notes.md"
+    },
+    {
+      "source": "博客/python/requests-session-retry.md",
+      "target": "content/post/python/requests-session-retry.md"
+    },
+    {
+      "source": "博客/read/technical-blog-reading-notes.md",
+      "target": "content/post/read/technical-blog-reading-notes.md"
+    },
+    {
+      "source": "博客/tcp/Wireshark常用功能笔记.md",
+      "target": "content/post/tcp/Wireshark常用功能笔记.md"
+    },
+    {
+      "source": "博客/tcp/nginx-upload-zero-window-troubleshooting.md",
+      "target": "content/post/tcp/nginx-upload-zero-window-troubleshooting.md"
+    },
+    {
+      "source": "博客/tcp/phicomm-k2-padavan-to-openwrt-24.10.8.md",
+      "target": "content/post/tcp/phicomm-k2-padavan-to-openwrt-24.10.8.md"
+    },
+    {
+      "source": "博客/tcp/tc_实验.md",
+      "target": "content/post/tcp/tc_实验.md"
+    },
+    {
+      "source": "博客/tcp/tcp-netem-buffer-experiments.md",
+      "target": "content/post/tcp/tcp-netem-buffer-experiments.md"
+    },
+    {
+      "source": "博客/tcp/wireshark技巧.md",
+      "target": "content/post/tcp/wireshark技巧.md"
+    },
+    {
+      "source": "博客/tcp/wireshark本地劫持https.md",
+      "target": "content/post/tcp/wireshark本地劫持https.md"
+    },
+    {
+      "source": "博客/tcp/实验.md",
+      "target": "content/post/tcp/实验.md"
+    },
+    {
+      "source": "博客/think/2024_36_new_year_work_suggestions.md",
+      "target": "content/post/think/2024_36_new_year_work_suggestions.md"
+    },
+    {
+      "source": "博客/think/40-ask.md",
+      "target": "content/post/think/40-ask.md"
+    },
+    {
+      "source": "博客/think/Why-time-seems-to-pass-faster-as-we-age.md",
+      "target": "content/post/think/Why-time-seems-to-pass-faster-as-we-age.md"
+    },
+    {
+      "source": "博客/think/blog-theme.md",
+      "target": "content/post/think/blog-theme.md"
+    },
+    {
+      "source": "博客/think/emotional-anxiety.md",
+      "target": "content/post/think/emotional-anxiety.md"
+    },
+    {
+      "source": "博客/think/filter-bubble.md",
+      "target": "content/post/think/filter-bubble.md"
+    },
+    {
+      "source": "博客/think/gap-year-travel.md",
+      "target": "content/post/think/gap-year-travel.md"
+    },
+    {
+      "source": "博客/think/haoel.md",
+      "target": "content/post/think/haoel.md"
+    },
+    {
+      "source": "博客/think/how-to-learn-knowledge-without-forgetting-it.md",
+      "target": "content/post/think/how-to-learn-knowledge-without-forgetting-it.md"
+    },
+    {
+      "source": "博客/think/how-to-start-learning.md",
+      "target": "content/post/think/how-to-start-learning.md"
+    },
+    {
+      "source": "博客/think/somethingtosay.md",
+      "target": "content/post/think/somethingtosay.md"
+    },
+    {
+      "source": "博客/think/study_think.md",
+      "target": "content/post/think/study_think.md"
+    },
+    {
+      "source": "博客/think/stupid-diligence.md",
+      "target": "content/post/think/stupid-diligence.md"
+    },
+    {
+      "source": "博客/think/todolist-by-txt.md",
+      "target": "content/post/think/todolist-by-txt.md"
+    },
+    {
+      "source": "博客/think/zuoertingfeng_reading_thought.md",
+      "target": "content/post/think/zuoertingfeng_reading_thought.md"
+    },
+    {
+      "source": "博客/think/博客搭建.md",
+      "target": "content/post/think/博客搭建.md"
+    },
+    {
+      "source": "博客/tools/ansible-role-scaffolding.md",
+      "target": "content/post/tools/ansible-role-scaffolding.md"
+    },
+    {
+      "source": "博客/tools/apm-comparison-notes.md",
+      "target": "content/post/tools/apm-comparison-notes.md"
+    },
+    {
+      "source": "博客/tools/filco-bluetooth-pairing.md",
+      "target": "content/post/tools/filco-bluetooth-pairing.md"
+    },
+    {
+      "source": "博客/tools/git-change-commit-author.md",
+      "target": "content/post/tools/git-change-commit-author.md"
+    },
+    {
+      "source": "博客/tools/git-command-notes.md",
+      "target": "content/post/tools/git-command-notes.md"
+    },
+    {
+      "source": "博客/tools/git-dotfiles-setup.md",
+      "target": "content/post/tools/git-dotfiles-setup.md"
+    },
+    {
+      "source": "博客/tools/git-ignore-ds-store.md",
+      "target": "content/post/tools/git-ignore-ds-store.md"
+    },
+    {
+      "source": "博客/tools/git-rebase-notes.md",
+      "target": "content/post/tools/git-rebase-notes.md"
+    },
+    {
+      "source": "博客/tools/github-actions-fine-grained-pat-hugo-deploy.md",
+      "target": "content/post/tools/github-actions-fine-grained-pat-hugo-deploy.md"
+    },
+    {
+      "source": "博客/tools/github-project-search.md",
+      "target": "content/post/tools/github-project-search.md"
+    },
+    {
+      "source": "博客/tools/gitlab-pre-receive-hook.md",
+      "target": "content/post/tools/gitlab-pre-receive-hook.md"
+    },
+    {
+      "source": "博客/tools/java-method-syntax-notes.md",
+      "target": "content/post/tools/java-method-syntax-notes.md"
+    },
+    {
+      "source": "博客/tools/java-spring-first-notes.md",
+      "target": "content/post/tools/java-spring-first-notes.md"
+    },
+    {
+      "source": "博客/tools/javascript-module-notes.md",
+      "target": "content/post/tools/javascript-module-notes.md"
+    },
+    {
+      "source": "博客/tools/jumpserver-manual-download-notes.md",
+      "target": "content/post/tools/jumpserver-manual-download-notes.md"
+    },
+    {
+      "source": "博客/tools/kitty-icon.md",
+      "target": "content/post/tools/kitty-icon.md"
+    },
+    {
+      "source": "博客/tools/macos-migration-checklist.md",
+      "target": "content/post/tools/macos-migration-checklist.md"
+    },
+    {
+      "source": "博客/tools/macos-spotlight-key-repeat.md",
+      "target": "content/post/tools/macos-spotlight-key-repeat.md"
+    },
+    {
+      "source": "博客/tools/macos-trust-self-signed-certificate.md",
+      "target": "content/post/tools/macos-trust-self-signed-certificate.md"
+    },
+    {
+      "source": "博客/tools/obsidian-tool.md",
+      "target": "content/post/tools/obsidian-tool.md"
+    },
+    {
+      "source": "博客/tools/oh-my-zsh-git-slowness.md",
+      "target": "content/post/tools/oh-my-zsh-git-slowness.md"
+    },
+    {
+      "source": "博客/tools/pycharm-package-requirements-inspection.md",
+      "target": "content/post/tools/pycharm-package-requirements-inspection.md"
+    },
+    {
+      "source": "博客/tools/raycast-quicklink-notes.md",
+      "target": "content/post/tools/raycast-quicklink-notes.md"
+    },
+    {
+      "source": "博客/tools/rime-macos-install.md",
+      "target": "content/post/tools/rime-macos-install.md"
+    },
+    {
+      "source": "博客/tools/vim-operation.md",
+      "target": "content/post/tools/vim-operation.md"
+    },
+    {
+      "source": "博客/tools/vue-element-admin-keycloak-notes.md",
+      "target": "content/post/tools/vue-element-admin-keycloak-notes.md"
+    },
+    {
+      "source": "博客/tools/vue-router-navigation-notes.md",
+      "target": "content/post/tools/vue-router-navigation-notes.md"
+    },
+    {
+      "source": "博客/tools/zsh-oh-my-zsh-setup.md",
+      "target": "content/post/tools/zsh-oh-my-zsh-setup.md"
+    },
+    {
+      "source": "博客/travel/shaoxing.md",
+      "target": "content/post/travel/shaoxing.md"
+    },
+    {
+      "source": "博客/week/2023-year-end-summary.md",
+      "target": "content/post/week/2023-year-end-summary.md"
+    },
+    {
+      "source": "博客/week/week32.md",
+      "target": "content/post/week/week32.md"
+    }
+  ]
+}

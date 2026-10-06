@@ -41,7 +41,7 @@ tags: ["obsidian", "ish", "ios", "sync", "手机", "tool", "product", "生产力
 
 在使用 Obsidian 时，最大的问题就是手机端的同步。我是用 Github 存储笔记，手机端没有很好的同步方案，官方的同步方式无法满足需求，而且需要付费。我的需求是，macOS、windows、iPhone、iPad 四种设备上需要从 github 同步我的笔记，没有安卓端同步的需要，所以我使用 [iSH](https://ish.app/) 这个 app，它开源免费，支持 ios，完美的解决了我的问题。
 
-# 什么是 [iSH](obsidian-ish-tutorial.md)
+# 什么是 [iSH](https://ish.app/)
 
 它是一个在 ios 上模拟 Linux 环境的 app，使用的是 [alpine linux](https://www.alpinelinux.org/)，在你的 iPhone、iPad上都可以运行并创建 Linux Shell 环境。正好我可以使用它来同步 git 仓库到我的 ios 设备上。
 

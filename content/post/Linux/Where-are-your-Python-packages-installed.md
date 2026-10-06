@@ -86,7 +86,7 @@ ABS_BASE_DIR = os.path.abspath(BASE_DIR)
 
 第一种方式和第二种方式大同小异，区别是第一种方式使用的 Python 解释器是写在 pip 文件的 shebang 里的，一般情况下，如果你的 pip 路径是`$path_prefix/bin/pip`，那么 `Python` 路径对应的就是 `$path_prefix/bin/python`。如果你用的是 `Unix` 系统则 `cat $(which pip)` 第一行就包含了 `Python` 解释器的路径。第二种方式则显式地指定了 `Python` 的位置。这条规则，对于所有 `Python` 的可执行程序都是适用的。流程如下图所示。
 
-![20240517-python路径](/images/20240517-python路径.png)
+![20240517-python路径](/images/20240517-python%E8%B7%AF%E5%BE%84.png)
 
 那么，不加任何自定义配置时，使用 pip 安装包就会自动安装到 `$path_prefix/lib/pythonX.Y/site-packages` 下（`$path_prefix` 是从上一段里得到的），可执行程序安装到 `$path_prefix/bin` 下，如果需要在命令行直接使用 `my_cmd` 运行，记得加到 `PATH`。
 

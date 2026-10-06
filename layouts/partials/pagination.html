@@ -1,0 +1,26 @@
+{{- $paginator := .Paginator -}}
+{{- if gt $paginator.TotalPages 1 -}}
+    <nav class="collection-pagination" aria-label="文章列表分页">
+        {{- if $paginator.HasPrev -}}
+            <a class="collection-page-link collection-page-link--previous" href="{{ $paginator.Prev.URL }}" rel="prev">上一页</a>
+        {{- end -}}
+        {{- $previousDots := false -}}
+        {{- $nextDots := false -}}
+        {{- range $paginator.Pagers -}}
+            {{- if eq . $paginator -}}
+                <span class="collection-page-link collection-page-link--current" aria-current="page">{{ .PageNumber }}</span>
+            {{- else if or (or (eq . $paginator.First) (eq . $paginator.Prev)) (or (eq . $paginator.Next) (eq . $paginator.Last)) -}}
+                <a class="collection-page-link" href="{{ .URL }}" aria-label="第 {{ .PageNumber }} 页">{{ .PageNumber }}</a>
+            {{- else if and (not $previousDots) (lt .PageNumber $paginator.PageNumber) -}}
+                {{- $previousDots = true -}}
+                <span class="collection-page-link collection-page-link--ellipsis" aria-hidden="true">…</span>
+            {{- else if and (not $nextDots) (gt .PageNumber $paginator.PageNumber) -}}
+                {{- $nextDots = true -}}
+                <span class="collection-page-link collection-page-link--ellipsis" aria-hidden="true">…</span>
+            {{- end -}}
+        {{- end -}}
+        {{- if $paginator.HasNext -}}
+            <a class="collection-page-link collection-page-link--next" href="{{ $paginator.Next.URL }}" rel="next">下一页</a>
+        {{- end -}}
+    </nav>
+{{- end -}}

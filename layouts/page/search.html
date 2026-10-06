@@ -1,0 +1,37 @@
+{{ define "body-class" }}collection-page template-search{{ end }}
+
+{{ define "left-sidebar" }}<!-- Search uses the full collection column. -->{{ end }}
+
+{{ define "main" }}
+    <section class="collection-header search-header">
+        <h1 class="collection-title">{{ .Title }}</h1>
+        <p class="collection-description search-description">{{ .Description }}</p>
+    </section>
+
+    <form id="search-form" class="search-form" role="search" action="{{ .RelPermalink }}" method="get"{{ with .OutputFormats.Get "json" }} data-index-url="{{ .RelPermalink }}"{{ end }}>
+        <label class="search-label" for="search-keyword">关键词</label>
+        <div class="search-controls">
+            <input id="search-keyword" class="search-input" name="keyword" type="search" placeholder="搜索标题或正文" autocomplete="off" aria-describedby="search-help" aria-controls="search-results">
+            <button class="search-submit" type="submit">搜索</button>
+            <button class="search-clear" type="button" hidden>清空</button>
+        </div>
+        <p id="search-help" class="search-help">支持中文或英文，多个关键词用空格分隔。</p>
+    </form>
+
+    <div class="search-result-header">
+        <p class="search-status" role="status" aria-live="polite" aria-atomic="true">输入关键词，开始搜索。</p>
+        <button class="search-retry" type="button" hidden>重新加载</button>
+    </div>
+
+    <section id="search-results" class="search-results" data-state="idle" aria-label="搜索结果" aria-busy="false">
+        <div class="search-result-list"></div>
+    </section>
+
+    <noscript><p class="search-help">搜索需要启用 JavaScript。你也可以在<a href="{{ "archives/" | relURL }}">归档</a>中浏览文章。</p></noscript>
+
+    {{- $opts := dict "minify" hugo.IsProduction "targetPath" "js/search.js" -}}
+    {{- $searchScript := resources.Get "ts/search.ts" | js.Build $opts -}}
+    <script src="{{ $searchScript.RelPermalink }}" defer></script>
+
+    {{ partial "footer/footer" . }}
+{{ end }}

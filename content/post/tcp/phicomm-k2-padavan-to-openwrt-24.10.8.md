@@ -2,7 +2,7 @@
 title: "斐讯 K2 从 Padavan 刷 OpenWrt 24.10.8"
 description: "记录斐讯 K2 PSG1218 A6 从 Padavan 切换到 OpenWrt 24.10.8 的实际刷机过程，包括 Breed、备份、固件选择、SHA256 校验和刷机后的检查。"
 date: "2026-10-03T17:30:00+08:00"
-lastmod: "2026-10-03T17:30:00+08:00"
+lastmod: "2026-10-04T01:29:02+08:00"
 categories: ["网络"]
 tags: ["OpenWrt", "斐讯K2", "Padavan", "Breed", "路由器"]
 image:
@@ -199,6 +199,12 @@ System
 ```text
 openwrt-24.10.8-ramips-mt7620-phicomm_k2-v22.4-squashfs-sysupgrade.bin
 ```
+
+下面是这次刷机时的实际截图：当前仍处于 recovery/initramfs 模式，选择的是 K2 v22.4 的 sysupgrade 固件，文件大小为 6.25 MiB。
+
+![LuCI 在 recovery 模式下选择 K2 v22.4 的 sysupgrade 固件，大小为 6.25 MiB](/images/phicomm-k2-sysupgrade-upload.png)
+
+点击 Upload 后还会进入校验确认页面，此时尚未开始正式写入 Flash。
 
 上传以后 OpenWrt 会再次显示文件大小和 SHA256。
 

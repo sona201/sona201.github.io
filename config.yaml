@@ -44,7 +44,7 @@ params:
         - post
     featuredImageField: image
     rssFullContent: true
-    favicon: /image/favicon.ico
+    favicon: /images/favicon.ico
 
     footer:
         since: 2020
@@ -196,12 +196,12 @@ params:
 menu:
     main:
         - identifier: tags
-          name: Tags
-          url: /tags
-          weight: 100
+          name: 标签
+          url: /tags/
+          weight: -65
           params:
             icon: tag
-            newTab: true  # tag 是否要新标签页打开
+            newTab: false
 
     social:
         - identifier: github
@@ -244,4 +244,3 @@ markup:
         lineNos: true
         lineNumbersInTable: true
         tabWidth: 4
-
