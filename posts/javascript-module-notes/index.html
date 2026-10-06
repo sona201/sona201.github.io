@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='使用模块化作为出口 闭包函数 (function() { var flag = true })() 模块化 var ModuleA = (function() { // 1. 定义一个对象 var obj = {} // 2. 在对象内部添加变量和方法 obj.flag = true obj.myFunc = function(info) { console.log(info); } // 3. 将对象返回'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='常用的 JavaScript 模块化规范有 CommonJS、AMD、CMD 和 ES Modules。 闭包与模块化 闭包函数 JavaScript 1 2 3 (function() { var flag = true; })(); 使用闭包组织模块 使用模块化'>
 <title>JavaScript 模块化学习笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/javascript-module-notes/'>
 
 <link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='JavaScript 模块化学习笔记'>
-<meta property='og:description' content='使用模块化作为出口 闭包函数 (function() { var flag = true })() 模块化 var ModuleA = (function() { // 1. 定义一个对象 var obj = {} // 2. 在对象内部添加变量和方法 obj.flag = true obj.myFunc = function(info) { console.log(info); } // 3. 将对象返回'>
+<meta property='og:description' content='常用的 JavaScript 模块化规范有 CommonJS、AMD、CMD 和 ES Modules。 闭包与模块化 闭包函数 JavaScript 1 2 3 (function() { var flag = true; })(); 使用闭包组织模块 使用模块化'>
 <meta property='og:url' content='https://sona201.github.io/posts/javascript-module-notes/'>
 <meta property='og:site_name' content='Ricardo'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2022-11-17T00:11:17&#43;08:00'/><meta property='article:modified_time' content='2022-11-17T00:11:17&#43;08:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2022-11-17T00:11:17&#43;08:00'/><meta property='article:modified_time' content='2026-10-06T18:07:31&#43;08:00'/>
 <meta name="twitter:title" content="JavaScript 模块化学习笔记">
-<meta name="twitter:description" content="使用模块化作为出口 闭包函数 (function() { var flag = true })() 模块化 var ModuleA = (function() { // 1. 定义一个对象 var obj = {} // 2. 在对象内部添加变量和方法 obj.flag = true obj.myFunc = function(info) { console.log(info); } // 3. 将对象返回">
+<meta name="twitter:description" content="常用的 JavaScript 模块化规范有 CommonJS、AMD、CMD 和 ES Modules。 闭包与模块化 闭包函数 JavaScript 1 2 3 (function() { var flag = true; })(); 使用闭包组织模块 使用模块化">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
@@ -154,7 +154,7 @@ if (!doNotTrack) {
             
                 <time datetime="2022-11-17">2022-11-17</time>
             
-            <span>阅读时长: 1 分钟</span>
+            <span>阅读时长: 2 分钟</span>
         </div>
     
 
@@ -172,90 +172,248 @@ if (!doNotTrack) {
     </div>
     <span class="reading-tools__status" role="status" aria-live="polite"></span>
 </div>
-<section class="article-content"><hr>
-<p>使用模块化作为出口</p>
-<p>闭包函数</p>
-<p>(function() {
-var flag = true
-})()</p>
-<p>模块化</p>
-<p>var ModuleA = (function() {
-// 1. 定义一个对象
-var obj = {}
-// 2. 在对象内部添加变量和方法
-obj.flag = true
-obj.myFunc = function(info) {
-console.log(info);
-}
-// 3. 将对象返回
-return obj
-})()</p>
-<p>常用的模块化规范:
-CommonJS / AMD / CMD / ES6的Modules</p>
-<p>CommonJS 导出
-module.exports = {
-flag: true,
-test(a, b) {
-return a + b
-}
-demo(a, b) {
-return a * b
-}
-}</p>
-<p>CommonJS 导入
-// CommonJS 模块
-let { test, demo, flag } = require(&lsquo;moduleA&rsquo;)</p>
-<p>// 等同于
-let _mA = require(&lsquo;moduleA&rsquo;);
-let test = _mA.test;
-let demo = _mA.demo;
-let flag = _mA.flag;</p>
-<p>ES6 export/import</p>
-<p>导出函数或类</p>
-<p>export function test(content) {
-console.log(content);
-}</p>
-<p>export class Persion {
-constructor(name, age) {
-this.name = name;
-this.age = age;
-}</p>
-<p>run() {
-console.log(this.name + &lsquo;在奔跑&rsquo;)
-}
-}</p>
-<p>另外方式</p>
-<blockquote>
-<p>functions test(content) {
-console.log(content);
-}</p>
-</blockquote>
-<p>class Persion {
-constructor(name, age) {
-this.name = name;
-this.age = age;
-}</p>
-<p>run(){
-console.log(this.name = &lsquo;在奔跑&rsquo;)
-}
-}</p>
-<p>export {test, Persion}
-&laquo;&laquo;</p>
-<p>// 自己命名 export default</p>
-<blockquote>
-<p>某些情况下，一个模块中包含某个功能，我们并不希望给这个功能命名，而且让导入者自己来命名
-这个时候可以使用export default</p>
-</blockquote>
-<p>//info.js
-export default function () {
-console.log(&lsquo;default function&rsquo;)
-}</p>
-<p>我们来到main.js中，这样用就可以了
-这里的myFunc是我自己命名的，你可以根据需要命名它对应的名字
-import myFunc from &lsquo;./info.js&rsquo;
-myFunc()</p>
-<p>另外，需要注意：export default 在同一模块中，不允许同时存在对个.
-&laquo;&laquo;</p>
+<section class="article-content"><p>常用的 JavaScript 模块化规范有 CommonJS、AMD、CMD 和 ES Modules。</p>
+<h2 id="闭包与模块化">闭包与模块化</h2>
+<h3 id="闭包函数">闭包函数</h3>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">JavaScript</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">var</span> <span class="nx">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">})();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h3 id="使用闭包组织模块">使用闭包组织模块</h3>
+<p>使用模块化作为出口，将需要对外提供的变量和方法放入对象，再返回这个对象。</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">JavaScript</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">ModuleA</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// 1. 定义一个对象
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// 2. 在对象内部添加变量和方法
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">obj</span><span class="p">.</span><span class="nx">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">obj</span><span class="p">.</span><span class="nx">myFunc</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">info</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">info</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// 3. 将对象返回
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">})();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h2 id="commonjs">CommonJS</h2>
+<h3 id="导出模块">导出模块</h3>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">JavaScript</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">flag</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">test</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">demo</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h3 id="导入模块">导入模块</h3>
+<p>使用 <code>require()</code> 导入模块，并通过解构获取变量和方法：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">JavaScript</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kd">let</span> <span class="p">{</span> <span class="nx">test</span><span class="p">,</span> <span class="nx">demo</span><span class="p">,</span> <span class="nx">flag</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;moduleA&#39;</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>也可以先获取整个模块对象，再分别读取属性：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">JavaScript</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">_mA</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;moduleA&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">test</span> <span class="o">=</span> <span class="nx">_mA</span><span class="p">.</span><span class="nx">test</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">demo</span> <span class="o">=</span> <span class="nx">_mA</span><span class="p">.</span><span class="nx">demo</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">flag</span> <span class="o">=</span> <span class="nx">_mA</span><span class="p">.</span><span class="nx">flag</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h2 id="es-modulesexport--import">ES Modules：export / import</h2>
+<h3 id="直接导出函数或类">直接导出函数或类</h3>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">JavaScript</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">export</span> <span class="kd">function</span> <span class="nx">test</span><span class="p">(</span><span class="nx">content</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">content</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">Person</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">run</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;在奔跑&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h3 id="先定义再统一导出">先定义，再统一导出</h3>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">JavaScript</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">test</span><span class="p">(</span><span class="nx">content</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">content</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">class</span> <span class="nx">Person</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">run</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;在奔跑&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="p">{</span> <span class="nx">test</span><span class="p">,</span> <span class="nx">Person</span> <span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h3 id="默认导出export-default">默认导出：export default</h3>
+<p>某些情况下，一个模块包含的功能不需要指定导出名称，而是由导入者自行命名。这时可以使用 <code>export default</code>。</p>
+<p>在 <code>info.js</code> 中默认导出一个函数：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">JavaScript</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// info.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;default function&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>在 <code>main.js</code> 中导入并调用。这里的 <code>myFunc</code> 是导入时自行指定的名称：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">JavaScript</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// main.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">import</span> <span class="nx">myFunc</span> <span class="nx">from</span> <span class="s1">&#39;./info.js&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">myFunc</span><span class="p">();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p><strong>注意：同一个模块只能有一个 <code>export default</code>。</strong></p>
 
 </section>
 
@@ -275,7 +433,19 @@ myFunc()</p>
 
         <span>Licensed under CC BY-NC-SA 4.0</span>
     </section>
-    </footer>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 Oct 06, 2026 18:07 &#43;0800
+        </span>
+    </section></footer>
 
 
     
@@ -513,7 +683,49 @@ myFunc()</p>
             <div><strong>142</strong><span>文章</span></div>
             <div><strong>20</strong><span>分类</span></div>
             <div><strong>124</strong><span>标签</span></div>
-        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section></aside>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#闭包与模块化">闭包与模块化</a>
+      <ol>
+        <li><a href="#闭包函数">闭包函数</a></li>
+        <li><a href="#使用闭包组织模块">使用闭包组织模块</a></li>
+      </ol>
+    </li>
+    <li><a href="#commonjs">CommonJS</a>
+      <ol>
+        <li><a href="#导出模块">导出模块</a></li>
+        <li><a href="#导入模块">导入模块</a></li>
+      </ol>
+    </li>
+    <li><a href="#es-modulesexport--import">ES Modules：export / import</a>
+      <ol>
+        <li><a href="#直接导出函数或类">直接导出函数或类</a></li>
+        <li><a href="#先定义再统一导出">先定义，再统一导出</a></li>
+        <li><a href="#默认导出export-default">默认导出：export default</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
 
 
         </div>
