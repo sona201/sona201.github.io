@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='#vim/vi #linux vim operation 简明vim攻略 vim光标移动 vim笔记 Vim 学习笔记 2: 组合命令 打造vim ide vim 搜索忽略大小写 1 2 3 4 /foo\c # 选区，在 Visual 模式下选择区域后输入 :，'>
+<title>Vim 与 VSCodeVim 操作笔记</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/vim-operation/'>
+
+<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Vim 与 VSCodeVim 操作笔记'>
+<meta property='og:description' content='#vim/vi #linux vim operation 简明vim攻略 vim光标移动 vim笔记 Vim 学习笔记 2: 组合命令 打造vim ide vim 搜索忽略大小写 1 2 3 4 /foo\c # 选区，在 Visual 模式下选择区域后输入 :，'>
+<meta property='og:url' content='https://sona201.github.io/posts/vim-operation/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-07-06T01:17:38&#43;08:00'/><meta property='article:modified_time' content='2024-07-06T01:17:38&#43;08:00'/>
+<meta name="twitter:title" content="Vim 与 VSCodeVim 操作笔记">
+<meta name="twitter:description" content="#vim/vi #linux vim operation 简明vim攻略 vim光标移动 vim笔记 Vim 学习笔记 2: 组合命令 打造vim ide vim 搜索忽略大小写 1 2 3 4 /foo\c # 选区，在 Visual 模式下选择区域后输入 :，">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">Vim 与 VSCodeVim 操作笔记</h1>
+        
+        
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/tools/">tools</a>
+                </span>
+            
+            
+                <time datetime="2024-07-06">2024-07-06</time>
+            
+            <span>阅读时长: 5 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>#vim/vi #linux
+vim operation</p>
+<p><a class="link" href="https://coolshell.cn/articles/5426.html"  target="_blank" rel="noopener"
+    >简明vim攻略</a>
+<a class="link" href="https://harttle.land/2015/11/07/vim-cursor.html"  target="_blank" rel="noopener"
+    >vim光标移动</a>
+<a class="link" href="https://gist.github.com/taigetco/6fbb57f71e7e58d17b41"  target="_blank" rel="noopener"
+    >vim笔记</a>
+<a class="link" href="https://einverne.github.io/post/2015/05/vim-advanced-notes.html"  target="_blank" rel="noopener"
+    >Vim 学习笔记 2: 组合命令</a>
+<a class="link" href="https://harttle.land/2016/08/08/vim-search-in-file.html"  target="_blank" rel="noopener"
+    >打造vim ide</a></p>
+<p>vim 搜索忽略大小写</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/foo\c
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 选区，在 Visual 模式下选择区域后输入 :，Vim 即可自动补全为 :&#39;&lt;,&#39;&gt;。
+</span></span><span class="line"><span class="cl">:&#39;&lt;,&#39;&gt;s/foo/bar/g
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="光标移动">光标移动</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">--NROMAL--
+</span></span><span class="line"><span class="cl">w         跳到一个单词开头
+</span></span><span class="line"><span class="cl">b         跳到本单词或上一个单词开头
+</span></span><span class="line"><span class="cl">e         跳到本单词或下一个单词结尾
+</span></span><span class="line"><span class="cl">ge        跳到上一个单词结尾
+</span></span><span class="line"><span class="cl">0         跳到行首
+</span></span><span class="line"><span class="cl">^         跳到从行首开始第一个非空字符
+</span></span><span class="line"><span class="cl">$         跳到行尾
+</span></span><span class="line"><span class="cl">g_        到本行最后一个不是blank字符的位置
+</span></span><span class="line"><span class="cl">gg        跳到第一行
+</span></span><span class="line"><span class="cl">G         跳到最后一行
+</span></span><span class="line"><span class="cl">/pattern  搜索 pattern 的字符串(如果搜索出多个匹配,可按n键到下一个)
+</span></span><span class="line"><span class="cl">u         undo 撤销
+</span></span><span class="line"><span class="cl">Ctrl + r  redo
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">f{char}  光标跳到下个{char}所在位置
+</span></span><span class="line"><span class="cl">F{char}  反向移动到上一个{char}所在位置
+</span></span><span class="line"><span class="cl">t{char}  光标跳到下个{char}的前一个字符的位置
+</span></span><span class="line"><span class="cl">T{char}  光标反向移动到上个{char}的后一个字符的位置
+</span></span><span class="line"><span class="cl">这里的f/t查询均局限于当前行操作
+</span></span><span class="line"><span class="cl">;        重复上次的字符查找操作
+</span></span><span class="line"><span class="cl">,        反向查找上次查找的命令
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="操作符-operator">操作符 operator</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">--NROMAL--
+</span></span><span class="line"><span class="cl">d(delete)  删除
+</span></span><span class="line"><span class="cl">dd         删除当前行
+</span></span><span class="line"><span class="cl">p          粘贴剪切板
+</span></span><span class="line"><span class="cl">c(change)  修改(删除并进入插入模式)
+</span></span><span class="line"><span class="cl">C          删除当前光标至结尾，并进入insert入模式
+</span></span><span class="line"><span class="cl">cc         删除当前行所有内容，并进入insert模式
+</span></span><span class="line"><span class="cl">y(yank)    复制
+</span></span><span class="line"><span class="cl">v(visual)  选中并进入 VISUAL 模式
+</span></span><span class="line"><span class="cl">x          删除光标后一个字符
+</span></span><span class="line"><span class="cl">X          删除光标前一个字符
+</span></span><span class="line"><span class="cl">Ctrl + v   进入 VISUAL BLOCK 模式, (列模式)
+</span></span><span class="line"><span class="cl">Ctrl + v + I + #  批量使用 # 在行首注释
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="动作-motion">动作 motion</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">i     inner
+</span></span><span class="line"><span class="cl">a     around
+</span></span><span class="line"><span class="cl">ciw   删除当前单词并进入编辑模式
+</span></span><span class="line"><span class="cl">cw    从当前位置删除到单词结尾并进入编辑模式
+</span></span><span class="line"><span class="cl">ca&lt;   删除一对&lt;&gt; 匹配的内容和&lt;&gt;符号,并进入编辑模式
+</span></span><span class="line"><span class="cl">ci{   删除一对{} 内匹配的内容,不包括符号,并进入编辑模式
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="切换大小写">切换大小写</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">~     将光标下的字母改变大小写
+</span></span><span class="line"><span class="cl">3~    将光标位置开始的3个字母改变其大小写
+</span></span><span class="line"><span class="cl">g~~   改变当前行的字母的大小写
+</span></span><span class="line"><span class="cl">gUU   将当前行的字母改成大写
+</span></span><span class="line"><span class="cl">guu   将当前行的字母改成小写
+</span></span><span class="line"><span class="cl">gUaw(gUiw)  将光标下的单词改成大写
+</span></span><span class="line"><span class="cl">guaw(guiw)  将光标下的单词改成小写
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="滚屏操作-前缀n为按下的数字">滚屏操作 前缀(N)为按下的数字</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">--NROMAL--
+</span></span><span class="line"><span class="cl">(N)Ctrl-E    窗口向下滚动N行, 不加(N)默认向下滚动一行(光标没有移动)
+</span></span><span class="line"><span class="cl">(N)Ctrl-Y    窗口向上滚动N行, 不加(N)默认向上滚动一行(光标没有移动)
+</span></span><span class="line"><span class="cl">(N)Ctrl-D    窗口向下滚动N行, 不加(N)默认滚动窗口行数的一半(光标没有移动)
+</span></span><span class="line"><span class="cl">(N)Ctrl-U    窗口向上滚动N行, 不加(N)默认滚动窗口行数的一半(光标没有移动)
+</span></span><span class="line"><span class="cl">(N)Ctrl-F    窗口向下滚动N页, 不加(N)默认向下滚动一屏(光标被迫移动)
+</span></span><span class="line"><span class="cl">(N)Ctrl-B    窗口向上滚动N页, 不加(N)默认向下滚动一屏(光标被迫移动)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">zt(小写)      重新绘制窗口,光标所在行移动到屏幕的顶端(相当于        z&lt;enter&gt;)
+</span></span><span class="line"><span class="cl">zz(小写)      重新绘制窗口,光标所在行移动到屏幕的中间(相当于        z.)
+</span></span><span class="line"><span class="cl">zb(小写)      重新绘制窗口,光标所在行移动到屏幕的底端(相当于        zb)
+</span></span><span class="line"><span class="cl">H
+</span></span><span class="line"><span class="cl">L
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="打开保存退出改变文件buffer">打开/保存/退出/改变文件(Buffer)</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">--NROMAL--
+</span></span><span class="line"><span class="cl">:e &lt;path/to/file&gt;         打开一个文件
+</span></span><span class="line"><span class="cl">:w                        存盘
+</span></span><span class="line"><span class="cl">:saveas &lt;path/to/file&gt;    另存为 &lt;path/to/file&gt;
+</span></span><span class="line"><span class="cl">:x,ZZ 或 :wq              保存并退出 (:x 表示仅在需要时保存, ZZ不需要输入冒号并回车)
+</span></span><span class="line"><span class="cl">:q!  退出不保存 :qa!       强行退出所有的正在编辑的文件,就算别的文件有更改
+</span></span><span class="line"><span class="cl">:bn 和 :bp                你可以同时打开很多文件，使用这两个命令来切换下一个或上一个文件(陈皓注:我喜欢使用:n到下一个文件)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="文本编辑器的换行操作">文本编辑器的换行操作</h2>
+<p>Vim 通常会对长行自动回绕(换行),以便你可以看见所有的文字。但有时想让文字在一行中显示完。那么就要关闭自动回绕功能，你需要左右移动才能看到一整行。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">--NROMAL--
+</span></span><span class="line"><span class="cl">set wrap
+</span></span><span class="line"><span class="cl">set nowrap
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当nowrap生效时</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">--NROMAL--
+</span></span><span class="line"><span class="cl">(N)zh    屏幕向右滚动N个字符
+</span></span><span class="line"><span class="cl">(N)zl    屏幕向左滚动N个字符
+</span></span><span class="line"><span class="cl">(N)zH    屏幕向右滚动半个屏幕宽度的字符
+</span></span><span class="line"><span class="cl">(N)zL    屏幕向左滚动半个屏幕宽度的字符
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a class="link" href="https://github.com/mg979/vim-visual-multi"  target="_blank" rel="noopener"
+    >vim vscode plug</a></p>
+<p><a class="link" href="https://coolshell.cn/articles/1651.html"  target="_blank" rel="noopener"
+    >https://coolshell.cn/articles/1651.html</a></p>
+<p>在VIM中输入:h!试试看会发现什么。</p>
+<p>再输入:h 42呢？又会有什么发现？</p>
+<p><img src="/images/vim-42.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Vim 帮助页示例"
+	
+	
+></p>
+<p>查看历史命令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">用 q: 可以查看最近的历史命令的命令行窗口。用 up and down 选定，使用 Enter 就可以执行这个命令。
+</span></span><span class="line"><span class="cl">:&lt;up&gt; and &lt;down&gt;, 也可查看并用 Enter 使用这个命令。
+</span></span><span class="line"><span class="cl">:　CTRL-P　and CTRL-N , 查看历史命令.
+</span></span><span class="line"><span class="cl">:history  
+</span></span><span class="line"><span class="cl">:history /
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>vim 边界符号(英文字符下)，可以使用<code>b</code>, &lsquo;B&rsquo;来获取边界
+vim 下的 <code>%</code> 使用也是很神奇，会有偶尔用错的情况。
+还有就是要看下vscode 下，vim 对应的 <code>keymap</code>
+刚刚在练习使用 <code>f{char}</code> 速行定位时，用到 <code>.</code> 好像会删除行，这个不知道是不是跟我刚刚的操作有关，<code>.</code> 应该是重复上次的操作，刚好我上次操作是 &lsquo;删除&rsquo;
+vim 使用途中发现 <code>u</code> <code>U</code> 会出现很多问题，这个确实有点头疼。</p>
+<p>vscode vim插件使用问题汇总</p>
+<ul>
+<li>vim 批量操作行位处理，批量到行尾增加字符串(每行长度不一致，vscode可以直接command 方向键右，好像vim下也可以这么操作)
+ctrl + v 列块选择模式，切换到行尾 $，然后使用 A 在行位插入需要写入的字符串，然后两次 ESC，这样确实方便，以后在 vim 模式下也能操作，这个也是我比较喜欢的功能。
+<a class="link" href="https://jelly.jd.com/article/6006b1045b6c6a01506c87ce"  target="_blank" rel="noopener"
+    >行位批量操作3中方式</a></li>
+<li>批量正则替换，好像cammand + f也可以唤出替换，这样应该也是能满足我的需求</li>
+<li>批量选择某个单词，command + d, 这个是 vscode 特有的, 需要写个插件配置</li>
+</ul>
+<p>ide的相关快捷操作</p>
+<ol>
+<li>去定义的位置 gd go to define</li>
+<li>快速格式化</li>
+</ol>
+<p>vscode vim <!-- raw HTML omitted --> 无法正常翻页，只能向右移动一个字符
+按住 j ，不会一直向下移动一行，只能按一次向下移动一行，这是因为 输入法控制，避免连续按键问题。
+经常在vim 突然发现都变成一行了。自己也莫名其妙
+J → 把所有的行连接起来（变成一行）</p>
+<p>vim 下全选复制粘贴的快捷键。
+vim 快速增加引号 ysw&quot;，原生 vim 是不支持该操作，需要安装 <a class="link" href="https://github.com/tpope/vim-surround"  target="_blank" rel="noopener"
+    >插件</a>
+常规操作下列几种，在 vscode vim 下这个是默认支持的。
+<a class="link" href="https://blog.csdn.net/Xurui_Luo/article/details/106984427"  target="_blank" rel="noopener"
+    >https://blog.csdn.net/Xurui_Luo/article/details/106984427</a></p>
+<p><a class="link" href="https://github.com/ahrencode/Miscellaneous/blob/master/vim-cheatsheet.pdf"  target="_blank" rel="noopener"
+    >https://github.com/ahrencode/Miscellaneous/blob/master/vim-cheatsheet.pdf</a></p>
+<p>vim 光标乱跳的问题，不确定当前状态是啥，是不是已经触发按键 v/i/a 之类的 -&gt; 这个需要看 vim 操作大全</p>
+<p>找了一篇关于 vscode vim 的使用文章 <a class="link" href="https://blog.kalan.dev/posts/2022-01-13-vscode-vim-tips"  target="_blank" rel="noopener"
+    >我如何用 VSCodeVim 提升開發效率</a></p>
+<p>vim 下的 d/y 命令会把当前剪切板内容覆盖，这个比较头疼。 可能需要直接v-<!-- raw HTML omitted --> 模式，然后粘贴。</p>
+<p>vim  mark标记位置, 快速复制一段数据, 粘贴到当前光标下一行
+vim 寄存器  剪切板
+<a class="link" href="http://yyq123.blogspot.com/2011/06/vim-mark.html"  target="_blank" rel="noopener"
+    >http://yyq123.blogspot.com/2011/06/vim-mark.html</a></p>
+<p>vim 的复制粘贴p, 只能粘贴一次, 再次使用数据粘贴板变了; vim 寄存器问题, 关键字 vim registers</p>
+<p><a class="link" href="https://blog.csdn.net/weixin_43274002/article/details/120165079"  target="_blank" rel="noopener"
+    >https://blog.csdn.net/weixin_43274002/article/details/120165079</a></p>
+<p>vim u 命令, 回退会到哪一步, 操作错一步, 回退步步错</p>
+<p>vim 大小写问题</p>
+<p>shift + h 会跳到上一个空格的位置</p>
+<p>大写的 hjkl 是什么意思，会突然变的换行</p>
+<p><a class="link" href="https://hackmd.io/@lunzaizai/BJX4hlPKY"  target="_blank" rel="noopener"
+    >https://hackmd.io/@lunzaizai/BJX4hlPKY</a></p>
+<p><a class="link" href="https://www.cnblogs.com/yinheyi/p/6944144.html"  target="_blank" rel="noopener"
+    >https://www.cnblogs.com/yinheyi/p/6944144.html</a></p>
+<p>HL 命令解释</p>
+<p>vim yank 后 想粘贴到下一行</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/kitty-icon/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">macOS 更换 Kitty 图标</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/obsidian-tool-v1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">obsidian-sync-v1</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/git-ignore-ds-store/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Git 全局忽略 .DS_Store</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/macos-trust-self-signed-certificate/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">macOS 信任自签名证书的操作记录</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/git-dotfiles-setup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Git 本地与全局配置笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>142</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>124</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#光标移动">光标移动</a></li>
+    <li><a href="#操作符-operator">操作符 operator</a></li>
+    <li><a href="#动作-motion">动作 motion</a></li>
+    <li><a href="#切换大小写">切换大小写</a></li>
+    <li><a href="#滚屏操作-前缀n为按下的数字">滚屏操作 前缀(N)为按下的数字</a></li>
+    <li><a href="#打开保存退出改变文件buffer">打开/保存/退出/改变文件(Buffer)</a></li>
+    <li><a href="#文本编辑器的换行操作">文本编辑器的换行操作</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+
+    </body>
+</html>

@@ -44,7 +44,8 @@
     &gt;Markdown&lt;/a&gt; 它更加强大，但是语法也更复杂。Obsidian 目前并不支持，非常遗憾。&lt;/p&gt;
 &lt;p&gt;在使用 Obsidian 时，最大的问题就是手机端的同步。我是用 Github 存储笔记，手机端没有很好的同步方案，官方的同步方式无法满足需求，而且需要付费。我的需求是，macOS、windows、iPhone、iPad 四种设备上需要从 github 同步我的笔记，没有安卓端同步的需要，所以我使用 &lt;a class=&#34;link&#34; href=&#34;https://ish.app/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;iSH&lt;/a&gt; 这个 app，它开源免费，支持 ios，完美的解决了我的问题。&lt;/p&gt;
-&lt;h1 id=&#34;什么是-ishobsidian-ish-tutorialmd&#34;&gt;什么是 &lt;a class=&#34;link&#34; href=&#34;obsidian-ish-tutorial.md&#34; &gt;iSH&lt;/a&gt;&lt;/h1&gt;
+&lt;h1 id=&#34;什么是-ishhttpsishapp&#34;&gt;什么是 &lt;a class=&#34;link&#34; href=&#34;https://ish.app/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;iSH&lt;/a&gt;&lt;/h1&gt;
 &lt;p&gt;它是一个在 ios 上模拟 Linux 环境的 app，使用的是 &lt;a class=&#34;link&#34; href=&#34;https://www.alpinelinux.org/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;alpine linux&lt;/a&gt;，在你的 iPhone、iPad上都可以运行并创建 Linux Shell 环境。正好我可以使用它来同步 git 仓库到我的 ios 设备上。&lt;/p&gt;
 &lt;h1 id=&#34;安装-ish-app&#34;&gt;安装 ish app&lt;/h1&gt;

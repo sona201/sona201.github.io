@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='APM监控 一、概念 应用性能管理（Application Performance Management）是一个比较新的网络管理方向，主要指对企业的关键业务应用进行监测'>
+<title>APM 监控方案比较笔记</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/apm-comparison-notes/'>
+
+<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='APM 监控方案比较笔记'>
+<meta property='og:description' content='APM监控 一、概念 应用性能管理（Application Performance Management）是一个比较新的网络管理方向，主要指对企业的关键业务应用进行监测'>
+<meta property='og:url' content='https://sona201.github.io/posts/apm-comparison-notes/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-01-14T17:50:26&#43;08:00'/><meta property='article:modified_time' content='2024-01-14T17:50:26&#43;08:00'/>
+<meta name="twitter:title" content="APM 监控方案比较笔记">
+<meta name="twitter:description" content="APM监控 一、概念 应用性能管理（Application Performance Management）是一个比较新的网络管理方向，主要指对企业的关键业务应用进行监测">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">APM 监控方案比较笔记</h1>
+        
+        
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/tools/">tools</a>
+                </span>
+            
+            
+                <time datetime="2024-01-14">2024-01-14</time>
+            
+            <span>阅读时长: 2 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="apm监控">APM监控</h2>
+<h3 id="一概念">一、概念</h3>
+<p>应用性能管理（Application Performance Management）是一个比较新的网络管理方向，主要指对企业的关键业务应用进行监测、优化，提高企业应用的可靠性和质量，保证用户得到良好的服务，降低IT总拥有成本(TCO)。使用全业务链的敏捷APM监控，可使一个企业的关键业务应用的性能更强大，可以提高竞争力，并取得商业成功，因此，加强应用性能管理（APM）可以产生巨大商业利益。</p>
+<h3 id="二开源apm比较">二、开源APM比较</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>方案</th>
+<th>cat</th>
+<th>zipkin</th>
+<th>pinpoint</th>
+<th>skywalking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>依赖</td>
+<td>Java 6 7 8、Maven 3+ MySQL 5.6 5.7、Linux 2.6+ hadoop可选</td>
+<td>Java 6，7，8 Maven3.2+ rabbitMQ</td>
+<td>Java 6，7，8 maven3+ Hbase0.94+</td>
+<td>Java 6，7，8 maven3.0+ nodejs zookeeper elasticsearch</td>
+</tr>
+<tr>
+<td>实现方式</td>
+<td>代码埋点（拦截器，注解，过滤器等）</td>
+<td>拦截请求，发送（HTTP，mq）数据至zipkin服务</td>
+<td>java探针，字节码增强</td>
+<td>java探针，字节码增强</td>
+</tr>
+<tr>
+<td>存储</td>
+<td>mysql , hdfs</td>
+<td>in-memory ， mysql ， Cassandra ， Elasticsearch</td>
+<td>HBase</td>
+<td>elasticsearch , H2</td>
+</tr>
+<tr>
+<td>jvm监控</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>trace查询</td>
+<td>支持</td>
+<td>支持</td>
+<td>需要二次开发</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>stars</td>
+<td>12.8k</td>
+<td>12.5k</td>
+<td>10k</td>
+<td>12.4k</td>
+</tr>
+<tr>
+<td>侵入</td>
+<td>高，需要埋点</td>
+<td>高，需要开发</td>
+<td>低</td>
+<td>低</td>
+</tr>
+<tr>
+<td>部署成本</td>
+<td>中</td>
+<td>中</td>
+<td>较高</td>
+<td>低</td>
+</tr>
+</tbody>
+</table></div>
+<p>基于对应用尽可能的低侵入考虑，以上方案选型优先级pinpoint&gt;skywalking&gt;zipkin&gt;cat。</p>
+<p>百度百科APM</p>
+<p><a class="link" href="https://baike.baidu.com/item/%e5%ba%94%e7%94%a8%e6%80%a7%e8%83%bd%e7%ae%a1%e7%90%86/292984?fromtitle=APM&amp;fromid=2132727"  target="_blank" rel="noopener"
+    >https://baike.baidu.com/item/%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E7%AE%A1%E7%90%86/292984?fromtitle=APM&amp;fromid=2132727</a></p>
+<p>维基百科APM(英文版)</p>
+<p><a class="link" href="https://en.wikipedia.org/wiki/Application_performance_management"  target="_blank" rel="noopener"
+    >https://en.wikipedia.org/wiki/Application_performance_management</a></p>
+<p>skywalking官网文档</p>
+<p><a class="link" href="https://skywalking.apache.org/zh/blog/2019-03-29-introduction-of-skywalking-and-simple-practice.html"  target="_blank" rel="noopener"
+    >https://skywalking.apache.org/zh/blog/2019-03-29-introduction-of-skywalking-and-simple-practice.html</a></p>
+<p>这些应用都是参考google的Dapper方式</p>
+<p><a class="link" href="http://bigbully.github.io/Dapper-translation/"  target="_blank" rel="noopener"
+    >http://bigbully.github.io/Dapper-translation/</a></p>
+<p>网易云的APM思考</p>
+<p><a class="link" href="https://sq.163yun.com/blog/article/168169689970475008"  target="_blank" rel="noopener"
+    >https://sq.163yun.com/blog/article/168169689970475008</a></p>
+<p>网易云参考资料</p>
+<p><a class="link" href="https://github.com/naver/pinpoint/blob/master/quickstart/"  target="_blank" rel="noopener"
+    >https://github.com/naver/pinpoint/blob/master/quickstart/</a>
+<a class="link" href="http://www.jianshu.com/p/37d9bb233936"  target="_blank" rel="noopener"
+    >http://www.jianshu.com/p/37d9bb233936</a>
+<a class="link" href="http://bigbully.github.io/Dapper-translation"  target="_blank" rel="noopener"
+    >http://bigbully.github.io/Dapper-translation</a>
+<a class="link" href="https://skyao.gitbooks.io/learning-pinpoint/content/installation/quickstart.html"  target="_blank" rel="noopener"
+    >https://skyao.gitbooks.io/learning-pinpoint/content/installation/quickstart.html</a>
+<a class="link" href="https://www.youtube.com/watch?v=U4EwnB34Dus&amp;feature=youtu.be"  target="_blank" rel="noopener"
+    >Pinpoint v1.5.0 APM 视频介绍</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/kitty-icon/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">macOS 更换 Kitty 图标</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/obsidian-tool-v1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">obsidian-sync-v1</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/vim-operation/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Vim 与 VSCodeVim 操作笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/git-ignore-ds-store/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Git 全局忽略 .DS_Store</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/macos-trust-self-signed-certificate/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">macOS 信任自签名证书的操作记录</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>142</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>124</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#apm监控">APM监控</a>
+      <ol>
+        <li><a href="#一概念">一、概念</a></li>
+        <li><a href="#二开源apm比较">二、开源APM比较</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+
+    </body>
+</html>

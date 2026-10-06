@@ -97,7 +97,7 @@
 &lt;li&gt;&lt;code&gt;python -m pip ...&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;第一种方式和第二种方式大同小异，区别是第一种方式使用的 Python 解释器是写在 pip 文件的 shebang 里的，一般情况下，如果你的 pip 路径是&lt;code&gt;$path_prefix/bin/pip&lt;/code&gt;，那么 &lt;code&gt;Python&lt;/code&gt; 路径对应的就是 &lt;code&gt;$path_prefix/bin/python&lt;/code&gt;。如果你用的是 &lt;code&gt;Unix&lt;/code&gt; 系统则 &lt;code&gt;cat $(which pip)&lt;/code&gt; 第一行就包含了 &lt;code&gt;Python&lt;/code&gt; 解释器的路径。第二种方式则显式地指定了 &lt;code&gt;Python&lt;/code&gt; 的位置。这条规则，对于所有 &lt;code&gt;Python&lt;/code&gt; 的可执行程序都是适用的。流程如下图所示。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/20240517-python%e8%b7%af%e5%be%84.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/20240517-python%E8%B7%AF%E5%BE%84.png&#34;
 	
 	
 	

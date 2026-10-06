@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='文件上传卡住时的 TCP 与 Nginx 排查 一、背景 我写了一个python服务，里面有个文件上传的功能，直接把本地文件上传到服务器 我的服务：入口是nginx，'>
+<title>文件上传卡住时排查 TCP Zero Window 与 Nginx 缓冲</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/nginx-upload-zero-window-troubleshooting/'>
+
+<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='文件上传卡住时排查 TCP Zero Window 与 Nginx 缓冲'>
+<meta property='og:description' content='文件上传卡住时的 TCP 与 Nginx 排查 一、背景 我写了一个python服务，里面有个文件上传的功能，直接把本地文件上传到服务器 我的服务：入口是nginx，'>
+<meta property='og:url' content='https://sona201.github.io/posts/nginx-upload-zero-window-troubleshooting/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2023-06-28T15:52:28&#43;08:00'/><meta property='article:modified_time' content='2023-06-28T15:52:28&#43;08:00'/>
+<meta name="twitter:title" content="文件上传卡住时排查 TCP Zero Window 与 Nginx 缓冲">
+<meta name="twitter:description" content="文件上传卡住时的 TCP 与 Nginx 排查 一、背景 我写了一个python服务，里面有个文件上传的功能，直接把本地文件上传到服务器 我的服务：入口是nginx，">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">文件上传卡住时排查 TCP Zero Window 与 Nginx 缓冲</h1>
+        
+        
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/tcp/">tcp</a>
+                </span>
+            
+            
+                <time datetime="2023-06-28">2023-06-28</time>
+            
+            <span>阅读时长: 3 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="文件上传卡住时的-tcp-与-nginx-排查">文件上传卡住时的 TCP 与 Nginx 排查</h1>
+<h2 id="一背景">一、背景</h2>
+<p>我写了一个python服务，里面有个文件上传的功能，直接把本地文件上传到服务器
+我的服务：入口是nginx，用gunicorn 启动 django 框架
+本地测试&quot;文件上传接口&quot;，170M的文件传输没有问题，但部署在服务器上，传输会卡在47%的进度条这里。
+分析抓包，发现上传卡死的时候，会出现 tcp zero window，window窗口直接变0，然后一直不会恢复</p>
+<h2 id="二实验环境">二、实验环境</h2>
+<p>入口为 Nginx，后端使用 Gunicorn 启动 Django，监听 <code>127.0.0.1:8000</code>。当时服务器使用 Linux 3.10 内核。此前做过 <code>tc</code> 实验，排查时先确认原有延迟和丢包规则已经清理。</p>
+<h2 id="三最初的排查思路">三、最初的排查思路</h2>
+<p>最初怀疑是否需要通过内核参数强制 reset 连接，后来发现，应先检查接收方应用是否及时读取数据，以及反向代理的缓冲行为。</p>
+<h2 id="四解决方案">四、解决方案</h2>
+<p>确认 TCP 出现 <code>Zero Window</code> 后，最初认为可以通过调整某个内核参数直接解决。后续排查发现，窗口变为零只描述接收方暂时无法继续接收的状态，仍需要找到具体原因。</p>
+<p><img src="/images/kernel_tcp_cache.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="kernel_tcp_cache"
+	
+	
+></p>
+<p>TCP 数据先进入接收方的套接字接收缓冲区，再由应用读取。当接收方通告的可用接收窗口变为零时，发送方需要等待窗口恢复；排查时需要结合缓冲区状态和应用读取数据的行为。</p>
+<p>后续想到一个方法就是进行抓包，诡异的是，最外层nginx暴露的是443端口，抓包有数据，但python服务8000端口抓包却没有数据，最后发现是抓包条件有问题，在服务器上应该</p>
+<p>抓取nginx数据包</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo tcpdump -i eth0 &#34;tcp port 443&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>因为python服务是绑定是本地网卡，</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo netstat -lntp
+</span></span><span class="line"><span class="cl"># 本例只保留与上传链路相关的两条监听信息：
+</span></span><span class="line"><span class="cl"># Nginx: 0.0.0.0:443
+</span></span><span class="line"><span class="cl"># Gunicorn: 127.0.0.1:8000
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>根据网卡的 <code>inet</code> 来判断当前使用的网卡为lo，所以用如下命令进行python服务抓包</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">tcpdump -i lo &#34;tcp port 8000&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>通过抓包发现，当传输一个大文件时，在nginx端能抓包，但在python端却没有数据，最开始是tcpdump直接写入文件，发现python抓包数据包为0，后面就改为直接标准输出</p>
+<p>通过输出发现当进行文件传输时，nginx有数据，但python没有数据，这时开始怀疑是不是nginx的问题，多次搜索后发现<code>python</code>的<code>Gunicorn</code>服务建议nginx配置参数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">proxy_buffering off;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个参数在前端传大<code>json</code>文件给后端时也有人遇到过，似乎看到一丝希望，兴致冲冲的配置玩参数后测试，还是nginx端接收完数据最后一次性传给后端，外加几个<code>buffer_size</code>的结果还是一样，
+这就让我郁闷，我开始怀疑nginx版本问题，查看怎么确认参数是否正确，是否生效，但并没有找到一个标准结果，无奈只能先放弃</p>
+<p>后来在搜索 <code>proxy_buffering</code> 时发现了 <code>proxy_request_buffering</code>。两者方向不同：前者控制从上游收到的响应缓冲，后者控制发往上游的请求体缓冲。</p>
+<p>关闭请求体缓冲后重新测试，大文件上传期间，Nginx 与 Python 后端都能同时抓到数据，说明请求体开始持续传给上游。</p>
+<p>保留一个只展示关键请求缓冲参数的配置示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">upstream</span> <span class="s">app_backend</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">server</span> <span class="n">127.0.0.1</span><span class="p">:</span><span class="mi">8000</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">listen</span> <span class="mi">8080</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">server_name</span> <span class="s">localhost</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">client_max_body_size</span> <span class="mi">200m</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kn">location</span> <span class="s">/api/</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">proxy_pass</span> <span class="s">http://app_backend</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">proxy_http_version</span> <span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">proxy_request_buffering</span> <span class="no">off</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="nv">$host</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">proxy_set_header</span> <span class="s">X-Real-IP</span> <span class="nv">$remote_addr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-For</span> <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>至此，这个问题暂时先告一段落，不过这次也确实会发现不像以前特别害怕排查这类问题，完全没有思路，也不知道怎么面对<code>wireshark</code></p>
+<h2 id="参考文件">参考文件</h2>
+<p><a class="link" href="https://docs.gunicorn.org/en/latest/deploy.html"  target="_blank" rel="noopener"
+    >Gunicorn Doc</a> <br>
+<a class="link" href="https://blog.csdn.net/xieyuooo/article/details/83109971"  target="_blank" rel="noopener"
+    >MySQL JDBC StreamResult通信原理浅析</a> <br>
+<a class="link" href="https://www.wireshark.org/lists/wireshark-users/200805/msg00206.html#:~:text=1.-,what%20does%20%22TCP%20segment%20of%20a%20reassembled%20PDU%22%20mean%3F,packet%20will%20show%20the%20packet."  target="_blank" rel="noopener"
+    >wireshark tcp segment of a reassembled pdu</a> <br>
+<a class="link" href="https://blog.csdn.net/ynchyong/article/details/109110028"  target="_blank" rel="noopener"
+    >TCP报文（ tcp dup ack 、TCP Retransmission）</a> <br>
+<a class="link" href="https://blog.csdn.net/qzcsu/article/details/72861891"  target="_blank" rel="noopener"
+    >两张动图-彻底明白TCP的三次握手与四次挥手</a> <br>
+<a class="link" href="https://www.cnblogs.com/wshenjin/p/11608744.html"  target="_blank" rel="noopener"
+    >Nginx的proxy buffer参数总结</a> <br>
+<a class="link" href="http://nginx.org/en/docs/http/ngx_http_proxy_module.html"  target="_blank" rel="noopener"
+    >Module ngx_http_proxy_module</a> <br>
+<a class="link" href="https://stackoverflow.com/questions/47125684/nginx-proxy-request-buffering-is-not-working-as-expected"  target="_blank" rel="noopener"
+    >nginx-proxy-request-buffering-is-not-working-as-expected</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/wireshark-common-function-notes/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Wireshark常用功能笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/tc_%E5%AE%9E%E9%AA%8C/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tc_实验</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Wireshark本地劫持https</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Wireshark技巧</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/tcp-netem-buffer-experiments/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">用 Netem 和 TCP 缓冲区观察下载速度</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>142</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>124</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#一背景">一、背景</a></li>
+    <li><a href="#二实验环境">二、实验环境</a></li>
+    <li><a href="#三最初的排查思路">三、最初的排查思路</a></li>
+    <li><a href="#四解决方案">四、解决方案</a></li>
+    <li><a href="#参考文件">参考文件</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+
+    </body>
+</html>
