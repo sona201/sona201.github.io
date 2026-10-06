@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/gemini-learning-prompts/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='用 Gemini 设计自学 Prompt'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='用 Gemini 设计自学 Prompt'>
 <meta property='og:description' content='基于推文让 Gemini 设计 prompt，一共给出了两个 prompt 原推文 自学可能陷入一种困境，不知道 roadmap，没有 benchmark，没有 feedback'>
 <meta property='og:url' content='https://sona201.github.io/posts/gemini-learning-prompts/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>基于推文让 Gemini 设计 prompt，一共给出了两个 prompt</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>基于推文让 Gemini 设计 prompt，一共给出了两个 prompt</p>
 <h2 id="原推文">原推文</h2>
 <blockquote>
 <p>自学可能陷入一种困境，不知道 roadmap，没有 benchmark，没有 feedback，还会overfitting</p>
@@ -258,7 +264,9 @@ if (!doNotTrack) {
 <hr>
 <h1 id="以下是方便复制版代码形式右上角有复制按钮">以下是方便复制版，代码形式，右上角有复制按钮</h1>
 <h2 id="原推">原推</h2>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -266,9 +274,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">自学可能陷入一种困境，不知道 roadmap，没有 benchmark，没有 feedback，还会overfitting
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="1综合导师型-prompt-the-comprehensive-mentor-1">1、综合导师型 Prompt (The Comprehensive Mentor)</h2>
+</div>
+</div>
+<h2 id="1综合导师型-prompt-the-comprehensive-mentor-1">1、综合导师型 Prompt (The Comprehensive Mentor)</h2>
 <p>使用场景：当你准备系统性地学习一个全新的、比较复杂的领域时（例如：机器学习、前端开发、经济学）。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -340,9 +352,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">**现在，请根据以上规则，开始我们的第一步：为我制定一个关于 [再次插入你想学习的领域] 的学习路线图。**
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="2项目驱动型-prompt-the-project-based-deconstructor-1">2、项目驱动型 Prompt (The Project-Based Deconstructor)</h2>
+</div>
+</div>
+<h2 id="2项目驱动型-prompt-the-project-based-deconstructor-1">2、项目驱动型 Prompt (The Project-Based Deconstructor)</h2>
 <p>使用场景：当你想“做中学”，目标非常明确时（例如：我想开发一个个人博客网站）。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -379,6 +395,8 @@ if (!doNotTrack) {
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
+</div>
+
 </section>
 
 
@@ -609,7 +627,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

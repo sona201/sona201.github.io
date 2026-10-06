@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/nginx-upload-zero-window-troubleshooting/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='文件上传卡住时排查 TCP Zero Window 与 Nginx 缓冲'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='文件上传卡住时排查 TCP Zero Window 与 Nginx 缓冲'>
 <meta property='og:description' content='文件上传卡住时的 TCP 与 Nginx 排查 一、背景 我写了一个python服务，里面有个文件上传的功能，直接把本地文件上传到服务器 我的服务：入口是nginx，'>
 <meta property='og:url' content='https://sona201.github.io/posts/nginx-upload-zero-window-troubleshooting/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h1 id="文件上传卡住时的-tcp-与-nginx-排查">文件上传卡住时的 TCP 与 Nginx 排查</h1>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h1 id="文件上传卡住时的-tcp-与-nginx-排查">文件上传卡住时的 TCP 与 Nginx 排查</h1>
 <h2 id="一背景">一、背景</h2>
 <p>我写了一个python服务，里面有个文件上传的功能，直接把本地文件上传到服务器
 我的服务：入口是nginx，用gunicorn 启动 django 框架
@@ -191,7 +197,9 @@ if (!doNotTrack) {
 <p>TCP 数据先进入接收方的套接字接收缓冲区，再由应用读取。当接收方通告的可用接收窗口变为零时，发送方需要等待窗口恢复；排查时需要结合缓冲区状态和应用读取数据的行为。</p>
 <p>后续想到一个方法就是进行抓包，诡异的是，最外层nginx暴露的是443端口，抓包有数据，但python服务8000端口抓包却没有数据，最后发现是抓包条件有问题，在服务器上应该</p>
 <p>抓取nginx数据包</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -199,8 +207,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo tcpdump -i eth0 &#34;tcp port 443&#34;
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>因为python服务是绑定是本地网卡，</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>因为python服务是绑定是本地网卡，</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -214,8 +226,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"># Gunicorn: 127.0.0.1:8000
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>根据网卡的 <code>inet</code> 来判断当前使用的网卡为lo，所以用如下命令进行python服务抓包</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>根据网卡的 <code>inet</code> 来判断当前使用的网卡为lo，所以用如下命令进行python服务抓包</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -223,9 +239,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">tcpdump -i lo &#34;tcp port 8000&#34;
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>通过抓包发现，当传输一个大文件时，在nginx端能抓包，但在python端却没有数据，最开始是tcpdump直接写入文件，发现python抓包数据包为0，后面就改为直接标准输出</p>
+</div>
+</div>
+<p>通过抓包发现，当传输一个大文件时，在nginx端能抓包，但在python端却没有数据，最开始是tcpdump直接写入文件，发现python抓包数据包为0，后面就改为直接标准输出</p>
 <p>通过输出发现当进行文件传输时，nginx有数据，但python没有数据，这时开始怀疑是不是nginx的问题，多次搜索后发现<code>python</code>的<code>Gunicorn</code>服务建议nginx配置参数</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -233,12 +253,16 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">proxy_buffering off;
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>这个参数在前端传大<code>json</code>文件给后端时也有人遇到过，似乎看到一丝希望，兴致冲冲的配置玩参数后测试，还是nginx端接收完数据最后一次性传给后端，外加几个<code>buffer_size</code>的结果还是一样，
+</div>
+</div>
+<p>这个参数在前端传大<code>json</code>文件给后端时也有人遇到过，似乎看到一丝希望，兴致冲冲的配置玩参数后测试，还是nginx端接收完数据最后一次性传给后端，外加几个<code>buffer_size</code>的结果还是一样，
 这就让我郁闷，我开始怀疑nginx版本问题，查看怎么确认参数是否正确，是否生效，但并没有找到一个标准结果，无奈只能先放弃</p>
 <p>后来在搜索 <code>proxy_buffering</code> 时发现了 <code>proxy_request_buffering</code>。两者方向不同：前者控制从上游收到的响应缓冲，后者控制发往上游的请求体缓冲。</p>
 <p>关闭请求体缓冲后重新测试，大文件上传期间，Nginx 与 Python 后端都能同时抓到数据，说明请求体开始持续传给上游。</p>
 <p>保留一个只展示关键请求缓冲参数的配置示例：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">nginx</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -280,7 +304,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>至此，这个问题暂时先告一段落，不过这次也确实会发现不像以前特别害怕排查这类问题，完全没有思路，也不知道怎么面对<code>wireshark</code></p>
+</div>
+</div>
+<p>至此，这个问题暂时先告一段落，不过这次也确实会发现不像以前特别害怕排查这类问题，完全没有思路，也不知道怎么面对<code>wireshark</code></p>
 <h2 id="参考文件">参考文件</h2>
 <p><a class="link" href="https://docs.gunicorn.org/en/latest/deploy.html"  target="_blank" rel="noopener"
     >Gunicorn Doc</a> <br>
@@ -360,12 +386,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
+    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark本地劫持https</h2>
+            <h2 class="article-title">Wireshark技巧</h2>
         </div>
     </a>
 </article>
@@ -373,12 +399,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
+    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark技巧</h2>
+            <h2 class="article-title">Wireshark本地劫持https</h2>
         </div>
     </a>
 </article>
@@ -591,7 +617,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

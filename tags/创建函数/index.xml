@@ -14,7 +14,9 @@
         <guid>https://sona201.github.io/posts/python-new-construction-notes/</guid>
         <description>&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://mp.weixin.qq.com/s?__biz=Mzg5NTYyMDgyNg==&amp;amp;mid=2247489147&amp;amp;idx=1&amp;amp;sn=ebfcc0c8ddde7345cc79b224934d02f8&amp;amp;source=41#wechat_redirect&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;原文链接&lt;/a&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
@@ -90,14 +92,18 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;res 1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;res1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.cnblogs.com/techflow/p/13156361.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.cnblogs.com/techflow/p/13156361.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://www.cnblogs.com/techflow/p/13156361.html&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://changchen.me/blog/20201122/metaclass-with-django-orm/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://changchen.me/blog/20201122/metaclass-with-django-orm/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;实战演示
 &lt;a class=&#34;link&#34; href=&#34;https://segmentfault.com/a/1190000004426130&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://segmentfault.com/a/1190000004426130&lt;/a&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
@@ -179,7 +185,9 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# detect_sensitive_words(&amp;#39;avc&amp;#39;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description>
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
         </item>
         
     </channel>

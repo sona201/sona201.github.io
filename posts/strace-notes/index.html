@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='#linux #strace 监听命令执行的strace，不再适用 strace -p （已经启动的进程） 1 strace -f -tt -T -o yum_install.log yum install -y dnsmasq -f: 跟踪由 yum 产生的所有子进程（非常重要，因为下载和安装由不'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='#linux #strace 监听命令执行的strace，不再适用 strace -p （已经启动的进程） Bash 1 strace -f -tt -T -o yum_install.log yum install -y dnsmasq -f: 跟踪由 yum 产生的所有子进程（非常重要，因为下载和安装由'>
 <title>用 Strace 排查命令与网络问题</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/strace-notes/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='用 Strace 排查命令与网络问题'>
-<meta property='og:description' content='#linux #strace 监听命令执行的strace，不再适用 strace -p （已经启动的进程） 1 strace -f -tt -T -o yum_install.log yum install -y dnsmasq -f: 跟踪由 yum 产生的所有子进程（非常重要，因为下载和安装由不'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='用 Strace 排查命令与网络问题'>
+<meta property='og:description' content='#linux #strace 监听命令执行的strace，不再适用 strace -p （已经启动的进程） Bash 1 strace -f -tt -T -o yum_install.log yum install -y dnsmasq -f: 跟踪由 yum 产生的所有子进程（非常重要，因为下载和安装由'>
 <meta property='og:url' content='https://sona201.github.io/posts/strace-notes/'>
 <meta property='og:site_name' content='Ricardo'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2026-01-14T20:41:47&#43;08:00'/><meta property='article:modified_time' content='2026-01-14T20:41:47&#43;08:00'/>
 <meta name="twitter:title" content="用 Strace 排查命令与网络问题">
-<meta name="twitter:description" content="#linux #strace 监听命令执行的strace，不再适用 strace -p （已经启动的进程） 1 strace -f -tt -T -o yum_install.log yum install -y dnsmasq -f: 跟踪由 yum 产生的所有子进程（非常重要，因为下载和安装由不">
+<meta name="twitter:description" content="#linux #strace 监听命令执行的strace，不再适用 strace -p （已经启动的进程） Bash 1 strace -f -tt -T -o yum_install.log yum install -y dnsmasq -f: 跟踪由 yum 产生的所有子进程（非常重要，因为下载和安装由">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
@@ -163,12 +163,20 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>#linux #strace</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>#linux #strace</p>
 <p>监听命令执行的strace，不再适用 strace -p （已经启动的进程）</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -176,14 +184,18 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">strace -f -tt -T -o yum_install.log yum install -y dnsmasq
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li><strong><code>-f</code></strong>: 跟踪由 <code>yum</code> 产生的所有子进程（非常重要，因为下载和安装由不同进程处理）。</li>
 <li><strong><code>-tt</code></strong>: 在每行开头显示微秒级的时间戳，方便看哪里卡住了。</li>
 <li><strong><code>-T</code></strong>: 在行尾显示每个系统调用的耗时。</li>
 <li><strong><code>-o</code></strong>: 将结果输出到文件，避免刷屏。</li>
 </ul>
 <p>只检查网络连接问题</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -191,10 +203,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">strace -f -e trace=network yum makecache
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>理解 <code>strace</code> 的输出，其实就像是在看一份**“程序与系统内核的聊天记录”**。每一行都代表程序向系统申请做了一件事。</p>
+</div>
+</div>
+<p>理解 <code>strace</code> 的输出，其实就像是在看一份**“程序与系统内核的聊天记录”**。每一行都代表程序向系统申请做了一件事。</p>
 <p>为了让你快速上手，我们可以把每一行拆解为 <strong>“谁、在什么时候、想干什么、结果如何、花了多久”</strong> 这五个要素。</p>
 <p>输出内容</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -352,7 +368,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">5464  04:15:36.088894 +++ exited with 0 +++
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>我们可以把它拆成五个部分来理解：</p>
+</div>
+</div>
+<p>我们可以把它拆成五个部分来理解：</p>
 <ol>
 <li><strong><code>12345</code></strong>: 进程 ID (PID)。因为你加了 <code>-f</code>，所以能看到是哪个子进程在干活。</li>
 <li><strong><code>20:30:01...</code></strong>: 精确到微秒的时间戳（<code>-tt</code> 参数）。</li>
@@ -513,12 +531,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Linux iptables 使用笔记</h2>
+            <h2 class="article-title">Nmap 端口扫描笔记</h2>
         </div>
     </a>
 </article>
@@ -526,12 +544,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Nmap 端口扫描笔记</h2>
+            <h2 class="article-title">Linux iptables 使用笔记</h2>
         </div>
     </a>
 </article>
@@ -774,7 +792,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

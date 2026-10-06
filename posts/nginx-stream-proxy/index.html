@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/nginx-stream-proxy/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Nginx Stream 四层代理配置笔记'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Nginx Stream 四层代理配置笔记'>
 <meta property='og:description' content='nginx 4层代理(初级版) Nginx从1.9.0版本开始，新增加了一个stream模块，用来实现四层协议的转发、代理或者负载均衡 本笔记使用的 Nginx 1.16.1 软'>
 <meta property='og:url' content='https://sona201.github.io/posts/nginx-stream-proxy/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>nginx 4层代理(初级版)</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>nginx 4层代理(初级版)</p>
 <blockquote>
 <p>Nginx从1.9.0版本开始，新增加了一个stream模块，用来实现四层协议的转发、代理或者负载均衡</p>
 </blockquote>
@@ -179,7 +185,9 @@ if (!doNotTrack) {
 <a class="link" href="http://nginx.org/en/download.html"  target="_blank" rel="noopener"
     >http://nginx.org/en/download.html</a></p>
 <p>遇到问题：以下都是环境上缺少相关的依赖，安装即可</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -243,8 +251,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="nv">yum</span> <span class="nv">install</span> <span class="o">-</span><span class="nv">y</span> <span class="nv">openldap</span><span class="o">-</span><span class="nv">devel</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="配置文件样例">配置文件样例</h3>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h3 id="配置文件样例">配置文件样例</h3>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -396,8 +408,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="nginx-yum安装116-配置参数">nginx yum安装1.16 配置参数</h3>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h3 id="nginx-yum安装116-配置参数">nginx yum安装1.16 配置参数</h3>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -413,7 +429,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">configure arguments: --prefix<span class="o">=</span>/usr/share/nginx --sbin-path<span class="o">=</span>/usr/sbin/nginx --modules-path<span class="o">=</span>/usr/lib64/nginx/modules --conf-path<span class="o">=</span>/etc/nginx/nginx.conf --error-log-path<span class="o">=</span>/var/log/nginx/error.log --http-log-path<span class="o">=</span>/var/log/nginx/access.log --http-client-body-temp-path<span class="o">=</span>/var/lib/nginx/tmp/client_body --http-proxy-temp-path<span class="o">=</span>/var/lib/nginx/tmp/proxy --http-fastcgi-temp-path<span class="o">=</span>/var/lib/nginx/tmp/fastcgi --http-uwsgi-temp-path<span class="o">=</span>/var/lib/nginx/tmp/uwsgi --http-scgi-temp-path<span class="o">=</span>/var/lib/nginx/tmp/scgi --pid-path<span class="o">=</span>/run/nginx.pid --lock-path<span class="o">=</span>/run/lock/subsys/nginx --user<span class="o">=</span>nginx --group<span class="o">=</span>nginx --with-file-aio --with-ipv6 --with-http_ssl_module --with-http_v2_module --with-http_realip_module --with-stream_ssl_preread_module --with-http_addition_module --with-http_xslt_module<span class="o">=</span>dynamic --with-http_image_filter_module<span class="o">=</span>dynamic --with-http_sub_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_random_index_module --with-http_secure_link_module --with-http_degradation_module --with-http_slice_module --with-http_stub_status_module --with-http_perl_module<span class="o">=</span>dynamic --with-http_auth_request_module --with-mail<span class="o">=</span>dynamic --with-mail_ssl_module --with-pcre --with-pcre-jit --with-stream<span class="o">=</span>dynamic --with-stream_ssl_module --with-google_perftools_module --with-debug --with-cc-opt<span class="o">=</span><span class="s1">&#39;-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -m64 -mtune=generic&#39;</span> --with-ld-opt<span class="o">=</span><span class="s1">&#39;-Wl,-z,relro -specs=/usr/lib/rpm/redhat/redhat-hardened-ld -Wl,-E&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>有两个模块能达到效果:</p>
+</div>
+</div>
+<p>有两个模块能达到效果:</p>
 <ul>
 <li>ngx_stream_proxy_module</li>
 <li>ngx_stream_core_module</li>
@@ -660,7 +678,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/%E6%96%90%E8%AE%AF-k2-%E4%BB%8E-padavan-%E5%88%B7-openwrt-24.10.8/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='斐讯 K2 从 Padavan 刷 OpenWrt 24.10.8'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='斐讯 K2 从 Padavan 刷 OpenWrt 24.10.8'>
 <meta property='og:description' content='记录斐讯 K2 PSG1218 A6 从 Padavan 切换到 OpenWrt 24.10.8 的实际刷机过程，包括 Breed、备份、固件选择、SHA256 校验和刷机后的检查。'>
 <meta property='og:url' content='https://sona201.github.io/posts/%E6%96%90%E8%AE%AF-k2-%E4%BB%8E-padavan-%E5%88%B7-openwrt-24.10.8/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>最近在学习 VLAN、子网、路由和家庭组网，手里正好有一台闲置多年的斐讯 K2。它之前已经刷成 Padavan，但管理页面切换一次经常需要 30 秒左右，于是决定把它重新刷成 OpenWrt，当作网络实验机。</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>最近在学习 VLAN、子网、路由和家庭组网，手里正好有一台闲置多年的斐讯 K2。它之前已经刷成 Padavan，但管理页面切换一次经常需要 30 秒左右，于是决定把它重新刷成 OpenWrt，当作网络实验机。</p>
 <p>这篇文章记录这次实际操作过程。设备和 Breed 版本不同，操作方式可能不同，刷机前一定先确认自己的型号和 Flash 布局。</p>
 <h2 id="一设备信息">一、设备信息</h2>
 <p>路由器铭牌信息：</p>
@@ -180,7 +186,9 @@ if (!doNotTrack) {
 <li>Bootloader：Breed 1.1 r1033</li>
 </ul>
 <p>Padavan SSH 中可以看到：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -192,8 +200,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">SPI flash chip: W25Q64BV (ef 40170000) (8192 Kbytes)
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>当前 Flash 分区：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>当前 Flash 分区：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -213,10 +225,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">0x000000050000-0x000000800000 : &#34;Firmware_Stub&#34;
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>固件从 <code>0x50000</code> 开始，这一点后面选择 K2 v22.4 profile 时很重要。</p>
+</div>
+</div>
+<p>固件从 <code>0x50000</code> 开始，这一点后面选择 K2 v22.4 profile 时很重要。</p>
 <h2 id="二先判断-padavan-卡顿是不是硬件问题">二、先判断 Padavan 卡顿是不是硬件问题</h2>
 <p>Padavan 后台非常卡，但路由器本身负载并不高，所以先测试局域网延迟：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -224,7 +240,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ping 192.168.123.1
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>实际结果平均只有约 1 ms，并且没有丢包。同时 Padavan 页面显示 CPU 占用很低、还有约 30 MB 空闲内存。</p>
+</div>
+</div>
+<p>实际结果平均只有约 1 ms，并且没有丢包。同时 Padavan 页面显示 CPU 占用很低、还有约 30 MB 空闲内存。</p>
 <p>因此更像是旧 Padavan/Web 服务或配置问题，而不是单纯网络链路太慢。</p>
 <p>既然本来就准备把 K2 当实验机，最终没有继续修旧 Padavan。</p>
 <h2 id="三确认-breed">三、确认 Breed</h2>
@@ -240,7 +258,9 @@ if (!doNotTrack) {
 <li>浏览器访问 <code>http://192.168.1.1</code>。</li>
 </ol>
 <p>这台机器成功进入 Breed，显示：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -254,9 +274,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Flash：Winbond W25Q64 8MB
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="四刷之前一定先备份">四、刷之前一定先备份</h2>
+</div>
+</div>
+<h2 id="四刷之前一定先备份">四、刷之前一定先备份</h2>
 <p>在 Breed 的「固件备份」页面分别保存：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -268,7 +292,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">full.bin
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>其中：</p>
+</div>
+</div>
+<p>其中：</p>
 <ul>
 <li><code>eeprom.bin</code>：Factory/EEPROM 数据，包含无线校准等设备相关信息，非常重要。</li>
 <li><code>firmware.bin</code>：当前 Padavan 固件备份。</li>
@@ -276,7 +302,9 @@ if (!doNotTrack) {
 </ul>
 <p>这三个文件建议至少保存两份。</p>
 <p>刷机过程中不要随便执行：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -288,10 +316,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">dd ... of=/dev/mtd...
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>尤其不要乱写 Bootloader 和 Factory 分区。</p>
+</div>
+</div>
+<p>尤其不要乱写 Bootloader 和 Factory 分区。</p>
 <h2 id="五选择-openwrt-固件">五、选择 OpenWrt 固件</h2>
 <p>最终选择：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -303,11 +335,15 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Device: Phicomm K2 v22.4 or older
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>官方目录：</p>
+</div>
+</div>
+<p>官方目录：</p>
 <p><a class="link" href="https://downloads.openwrt.org/releases/24.10.8/targets/ramips/mt7620/"  target="_blank" rel="noopener"
     >https://downloads.openwrt.org/releases/24.10.8/targets/ramips/mt7620/</a></p>
 <p>下载了两个文件：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -317,8 +353,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">openwrt-24.10.8-ramips-mt7620-phicomm_k2-v22.4-squashfs-sysupgrade.bin
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>这台 K2 的 Padavan Flash 布局中 firmware 从 <code>0x50000</code> 开始，与 v22.4 profile 对应。正式启动 OpenWrt 后，LuCI 最终也识别为：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>这台 K2 的 Padavan Flash 布局中 firmware 从 <code>0x50000</code> 开始，与 v22.4 profile 对应。正式启动 OpenWrt 后，LuCI 最终也识别为：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -326,10 +366,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Phicomm K2 v22.4 or older
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="校验-sha256">校验 SHA256</h3>
+</div>
+</div>
+<h3 id="校验-sha256">校验 SHA256</h3>
 <p>不要跳过固件校验。</p>
 <p>initramfs：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -337,8 +381,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">shasum -a <span class="m">256</span> ~/Downloads/openwrt-24.10.8-ramips-mt7620-phicomm_k2-v22.4-initramfs-kernel.bin
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>得到：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>得到：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -346,8 +394,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">63fd43bd57e499e10e05fbaa46551a5150fa087f16c7030d348c9f77ff2539f2
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>sysupgrade：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>sysupgrade：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -355,8 +407,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">shasum -a <span class="m">256</span> ~/Downloads/openwrt-24.10.8-ramips-mt7620-phicomm_k2-v22.4-squashfs-sysupgrade.bin
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>得到：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>得到：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -364,11 +420,15 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">da17725d7b626b67feeed0a4b3ccb71970238539450f43d5b36426cccb344dc8
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>都与 OpenWrt 官方 SHA256 一致后再继续。</p>
+</div>
+</div>
+<p>都与 OpenWrt 官方 SHA256 一致后再继续。</p>
 <h2 id="六先进入-openwrt-recoveryinitramfs">六、先进入 OpenWrt recovery/initramfs</h2>
 <p>这次没有一上来就在 OpenWrt 中永久写入 sysupgrade，而是先进入 OpenWrt 的 recovery/initramfs 环境。</p>
 <p>成功后 LuCI 顶部会看到类似提示：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -376,14 +436,18 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">System running in recovery (initramfs) mode.
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>此时 OpenWrt 是临时运行状态。</p>
+</div>
+</div>
+<p>此时 OpenWrt 是临时运行状态。</p>
 <p>确认页面能够正常打开、设备型号能够识别后，再进行正式安装。</p>
 <blockquote>
 <p>不同 Breed 版本提供的启动/刷写方式可能不同。这里最重要的是先确认自己已经进入 OpenWrt recovery/initramfs，再执行下面的 sysupgrade，而不是照搬其他型号路由器的 Breed 参数。</p>
 </blockquote>
 <h2 id="七正式刷入-openwrt">七、正式刷入 OpenWrt</h2>
 <p>进入 recovery OpenWrt 后：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -395,8 +459,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">→ Flash new firmware image
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>选择：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>选择：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -404,7 +472,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">openwrt-24.10.8-ramips-mt7620-phicomm_k2-v22.4-squashfs-sysupgrade.bin
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>下面是这次刷机时的实际截图：当前仍处于 recovery/initramfs 模式，选择的是 K2 v22.4 的 sysupgrade 固件，文件大小为 6.25 MiB。</p>
+</div>
+</div>
+<p>下面是这次刷机时的实际截图：当前仍处于 recovery/initramfs 模式，选择的是 K2 v22.4 的 sysupgrade 固件，文件大小为 6.25 MiB。</p>
 <p><img src="/images/phicomm-k2-sysupgrade-upload.png"
 	
 	
@@ -418,7 +488,9 @@ if (!doNotTrack) {
 <p>点击 Upload 后还会进入校验确认页面，此时尚未开始正式写入 Flash。</p>
 <p>上传以后 OpenWrt 会再次显示文件大小和 SHA256。</p>
 <p>实际看到：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -428,9 +500,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">SHA256: da17725d7b626b67feeed0a4b3ccb71970238539450f43d5b36426cccb344dc8
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>这里再次确认 SHA256 与 Mac 本地以及官方值一致。</p>
+</div>
+</div>
+<p>这里再次确认 SHA256 与 Mac 本地以及官方值一致。</p>
 <p>由于是从 Padavan 全新切换到 OpenWrt，我取消了：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -438,7 +514,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Keep settings and retain the current configuration
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>然后点击 Continue 开始写 Flash。</p>
+</div>
+</div>
+<p>然后点击 Continue 开始写 Flash。</p>
 <p>写入期间：</p>
 <ul>
 <li>不断电。</li>
@@ -449,7 +527,9 @@ if (!doNotTrack) {
 <p>等待路由器完成写入和重启。</p>
 <h2 id="八第一次启动">八、第一次启动</h2>
 <p>正式 OpenWrt 启动后访问：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -457,8 +537,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">http://192.168.1.1
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>LuCI 显示：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>LuCI 显示：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -472,9 +556,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Target Platform: ramips/mt7620
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>这说明 profile 选择正确，刷机成功。</p>
+</div>
+</div>
+<p>这说明 profile 选择正确，刷机成功。</p>
 <p>第一件事先设置 root 密码，然后通过 SSH 检查：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -492,8 +580,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">cat /proc/mtd
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>最终 Flash 分区类似：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>最终 Flash 分区类似：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -513,10 +605,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">mtd6: &#34;rootfs_data&#34;
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Breed 和 Factory 都还保留着。</p>
+</div>
+</div>
+<p>Breed 和 Factory 都还保留着。</p>
 <h2 id="九8mb-flash-的现实限制">九、8MB Flash 的现实限制</h2>
 <p>刷完以后：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -526,9 +622,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">剩余约 1.2 MB
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>所以 K2 跑 OpenWrt 最大的问题不是 CPU，而是 Flash 和 RAM 太小。</p>
+</div>
+</div>
+<p>所以 K2 跑 OpenWrt 最大的问题不是 CPU，而是 Flash 和 RAM 太小。</p>
 <p>看到：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -536,7 +636,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">/dev/root  100%
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>不用紧张。OpenWrt 的 <code>/dev/root</code> 是只读 SquashFS，显示 100% 属于正常现象。真正需要关注的是可写的 <code>/overlay</code>。</p>
+</div>
+</div>
+<p>不用紧张。OpenWrt 的 <code>/dev/root</code> 是只读 SquashFS，显示 100% 属于正常现象。真正需要关注的是可写的 <code>/overlay</code>。</p>
 <p>这台 K2 比较适合：</p>
 <ul>
 <li>学 VLAN。</li>
@@ -558,7 +660,9 @@ if (!doNotTrack) {
 <p>可以。</p>
 <p>刷 OpenWrt 后并不是无线功能消失了。K2 的官方 OpenWrt profile 已包含对应无线驱动，通常不需要另外安装驱动模块。</p>
 <p>OpenWrt 首次启动时无线可能默认关闭，在：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -566,9 +670,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Network → Wireless
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>配置 SSID、加密方式并启用即可。</p>
+</div>
+</div>
+<p>配置 SSID、加密方式并启用即可。</p>
 <p>如果无线页面没有识别到 Radio，可以通过 SSH 检查：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -584,10 +692,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">opkg list-installed <span class="p">|</span> grep -E <span class="s1">&#39;mt76|mac80211|wireless|wpad&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>K2 的 Flash 太小，不要看到无线没开启就先执行 <code>opkg install</code>，应该先确认驱动是否已经存在。</p>
+</div>
+</div>
+<p>K2 的 Flash 太小，不要看到无线没开启就先执行 <code>opkg install</code>，应该先确认驱动是否已经存在。</p>
 <h2 id="总结">总结</h2>
 <p>这次实际升级路径可以概括成：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -623,7 +735,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">OpenWrt 24.10.8
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>对一台 8MB Flash、64MB RAM 的老 K2 来说，OpenWrt 24.10.8 已经比较吃紧，不适合继续堆插件。但拿来做 VLAN、子网、路由、DHCP、防火墙等网络实验，反而是个不错的废物利用方式。</p>
+</div>
+</div>
+<p>对一台 8MB Flash、64MB RAM 的老 K2 来说，OpenWrt 24.10.8 已经比较吃紧，不适合继续堆插件。但拿来做 VLAN、子网、路由、DHCP、防火墙等网络实验，反而是个不错的废物利用方式。</p>
 <h3 id="参考">参考</h3>
 <ul>
 <li>OpenWrt Phicomm K2：https://openwrt.org/toh/phicomm/k2</li>
@@ -888,7 +1002,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

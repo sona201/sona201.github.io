@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/blog-theme/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='blog-theme'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='blog-theme'>
 <meta property='og:description' content='博客折腾记录'>
 <meta property='og:url' content='https://sona201.github.io/posts/blog-theme/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h2 id="博客折腾">博客折腾</h2>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h2 id="博客折腾">博客折腾</h2>
 <p>这两天折腾博客，总是遇到困难就想放弃。想法无非就是博客的主题哪哪不好看，不满意。人生呐，很难满足(就是想安慰自己不努力)。
 不过早就明白了，博客的本质还是要内容好，而不是花里胡哨的样子。但都想有点虚荣心。</p>
 <p>这两天还是看见了一个基本满意的主题，但作者是外国人，估计对中文支持有点问题。其次是主题本地测试跑不起来，感觉是自愿获取被墙拦截了。
@@ -522,7 +528,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

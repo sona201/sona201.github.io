@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/wireshark%E6%8A%80%E5%B7%A7/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Wireshark技巧'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Wireshark技巧'>
 <meta property='og:description' content='阅读wireshark说明书的笔记'>
 <meta property='og:url' content='https://sona201.github.io/posts/wireshark%E6%8A%80%E5%B7%A7/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p><a class="link" href="https://developer.aliyun.com/article/100476"  target="_blank" rel="noopener"
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p><a class="link" href="https://developer.aliyun.com/article/100476"  target="_blank" rel="noopener"
     >相关文章</a> <br>
 <a class="link" href="https://www.ilikejobs.com/posts/wireshark/"  target="_blank" rel="noopener"
     >wireshark 常用功能笔记</a> <br>
@@ -204,7 +210,9 @@ if (!doNotTrack) {
 <blockquote>
 <p>wireshark 没有权限</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -222,7 +230,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">If you installed Wireshark using the package from wireshark.org, close this dialog and click on the &#34;installing ChmodBPF&#34; link in &#34;You can fix this by installing ChmodBPF.&#34; on the main screen, and then complete the installation procedure.
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/images/permission_denied.png"
+</div>
+</div>
+<p><img src="/images/permission_denied.png"
 	
 	
 	
@@ -247,7 +257,9 @@ if (!doNotTrack) {
 <ol>
 <li>直接简单粗暴的777</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -255,10 +267,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo chmod 777 /dev/bpf*
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ol start="2">
+</div>
+</div>
+<ol start="2">
 <li>查看当前用户名，给当前用户赋权</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -266,7 +282,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo chown clin:wheel /dev/bpf*
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>本来这个命令都不打算记录，但最近在自己电脑上重新安装就出现一次，还是老老实实的记录下</p>
 </blockquote>
 <h3 id="一抓包">一、抓包</h3>
@@ -302,7 +320,9 @@ if (!doNotTrack) {
 <p>如果问题涉及应用层，就应该再加上应用层协议头的长度。如果你像我一样经常忘记不同协议头的长度，可以输入一个大点的值。即便设成200字节，也比1514字节小多了。<br>
 以上是使用Wireshark抓包时的建议。用tcpdump命令抓包时可以用“-s”参数达到相同效果。比如以下命令只抓eth0上每个包的前80字节，并把结果存到/tmp/tcpdump.cap文件中。</p>
 <p>使用<code>tcpdump</code>指定抓包字节命令</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -310,7 +330,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@server_1 /]# tcpdump -i eth0 -s 80 -w /tmp/tcpdump.cap
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>2．只抓必要的包。服务器上的网络连接可能非常多，而我们只需要其中的一小部分。Wireshark的Capture Filter可以在抓包时过滤掉不需要的包。比如在成百上千的网络连接中，我们只对IP为10.32.200.131的包感兴趣，那就可以在Wireshark上这样设置：单击菜单栏上的Capture&ndash;&gt;Options，然后在Capture Filter中输入“host 10.32.200.131”（见图2）。</p>
+</div>
+</div>
+<p>2．只抓必要的包。服务器上的网络连接可能非常多，而我们只需要其中的一小部分。Wireshark的Capture Filter可以在抓包时过滤掉不需要的包。比如在成百上千的网络连接中，我们只对IP为10.32.200.131的包感兴趣，那就可以在Wireshark上这样设置：单击菜单栏上的Capture&ndash;&gt;Options，然后在Capture Filter中输入“host 10.32.200.131”（见图2）。</p>
 <blockquote>
 <p>老版本</p>
 </blockquote>
@@ -341,7 +363,9 @@ if (!doNotTrack) {
 <h4 id="wireshark官方的过滤文档httpswikiwiresharkorgcapturefilters"><a class="link" href="https://wiki.wireshark.org/CaptureFilters"  target="_blank" rel="noopener"
     >wireshark官方的过滤文档</a></h4>
 <p>用tcpdump命令抓包时，也可以用“host”参数达到相同效果。比如以下命令只抓与10.32.200.131通信的包，并把结果存到/tmp/tcpdump.cap文件中。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -349,11 +373,15 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@server_1 /]# tcpdump -i eth0 host 10.32.200.131 -w /tmp/tcpdump.cap
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="注意设置capture-filter之前务必三思以免把有用的包也过滤掉尤其是容易被忽略的广播包当然有时候再怎么考虑也会失算比如我有一次把对方的ip地址设为filter结果一个包都没抓到最后只能去掉filter再抓才发现是nat网络地址转换设备把对方的ip地址改掉了">注意：设置Capture Filter之前务必三思，以免把有用的包也过滤掉，尤其是容易被忽略的广播包。当然有时候再怎么考虑也会失算，比如我有一次把对方的IP地址设为filter，结果一个包都没抓到。最后只能去掉filter再抓，才发现是NAT（网络地址转换）设备把对方的IP地址改掉了。</h4>
+</div>
+</div>
+<h4 id="注意设置capture-filter之前务必三思以免把有用的包也过滤掉尤其是容易被忽略的广播包当然有时候再怎么考虑也会失算比如我有一次把对方的ip地址设为filter结果一个包都没抓到最后只能去掉filter再抓才发现是nat网络地址转换设备把对方的ip地址改掉了">注意：设置Capture Filter之前务必三思，以免把有用的包也过滤掉，尤其是容易被忽略的广播包。当然有时候再怎么考虑也会失算，比如我有一次把对方的IP地址设为filter，结果一个包都没抓到。最后只能去掉filter再抓，才发现是NAT（网络地址转换）设备把对方的IP地址改掉了。</h4>
 <p>抓的包除了要小，最好还能为每步操作打上标记。这样的包一目了然，赏心悦目。比如要在Windows上抓一个包含三步操作的问题，我会这样抓。</p>
 <p>想指定ping，发送三次包，每次只发送一个<code>ping</code>包(<code>count</code>)，不通次数发送的<code>ping</code>的<code>size</code>大小不一样，</p>
 <p>windows机器指定ping方式</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -371,8 +399,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">（6）操作步骤3
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>windows ping命令解释</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>windows ping命令解释</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -440,8 +472,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">    -6             强制使用 IPv6。
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>mac/linux ping命令执行</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>mac/linux ping命令执行</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -459,7 +495,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">操作步骤3
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/images/package_ping_old.jpeg"
+</div>
+</div>
+<p><img src="/images/package_ping_old.jpeg"
 	
 	
 	
@@ -1155,7 +1193,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

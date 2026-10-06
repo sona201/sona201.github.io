@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/gitlab-pre-receive-hook/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='GitLab pre-receive 提交检查笔记'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='GitLab pre-receive 提交检查笔记'>
 <meta property='og:description' content='Gitlab commit hook 1 hook概念 git 提供了一些hook，可以在提交代码时进行相关的检测，这些hook可以在客户端，也可以在服务端。目前主流都是在服务端进行'>
 <meta property='og:url' content='https://sona201.github.io/posts/gitlab-pre-receive-hook/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h1 id="gitlab-commit-hook">Gitlab commit hook</h1>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h1 id="gitlab-commit-hook">Gitlab commit hook</h1>
 <h3 id="1-hook概念">1 hook概念</h3>
 <p>git 提供了一些hook，可以在提交代码时进行相关的检测，这些hook可以在客户端，也可以在服务端。目前主流都是在服务端进行检测。</p>
 <h4 id="11-客户端钩子">1.1 客户端钩子</h4>
@@ -193,7 +199,9 @@ if (!doNotTrack) {
 <h3 id="21-查看仓库id">2.1 查看仓库id</h3>
 <p><code>gitlab</code> 使用<code>hash</code>id来作为目录名字，在服务器上找目录不是那么容易，甚至不知道怎么找。有两种方式，一个最简单，管理员可以直接看到对应仓库的<code>hash</code>id，这种暂不过多描述。</p>
 <p>另外一种是查看gitlab服务端的仓库的 <code>Settings</code> -&gt; <code>General</code> 页面有个 <code>Project ID</code>，拿到这个值，执行<code>shell</code>命令</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -203,10 +211,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="nb">echo</span> -n <span class="m">123</span> <span class="p">|</span> sha256sum
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>对应仓库位于 <code>/var/opt/gitlab/git-data/repositories/@hashed/</code> 下，通常按哈希的前四位分为两级目录，再进入完整哈希命名的仓库目录。</p>
+</div>
+</div>
+<p>对应仓库位于 <code>/var/opt/gitlab/git-data/repositories/@hashed/</code> 下，通常按哈希的前四位分为两级目录，再进入完整哈希命名的仓库目录。</p>
 <h3 id="22-添加hook配置">2.2 添加hook配置</h3>
 <p>创建hook目录，custom_hooks</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -218,9 +230,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">mkdir -p custom_hooks/pre-receive.d
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="23-添加hook文件文件名为pre-receive">2.3 添加hook文件，文件名为<code>pre-receive</code></h3>
+</div>
+</div>
+<h3 id="23-添加hook文件文件名为pre-receive">2.3 添加hook文件，文件名为<code>pre-receive</code></h3>
 <p><code>gitlab-hook</code> 可执行文件 <code>pre-receive</code></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -381,6 +397,8 @@ if (!doNotTrack) {
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
+</div>
+
 </section>
 
 
@@ -685,7 +703,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

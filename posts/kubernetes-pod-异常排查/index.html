@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/kubernetes-pod-%E5%BC%82%E5%B8%B8%E6%8E%92%E6%9F%A5/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Kubernetes Pod 异常排查'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Kubernetes Pod 异常排查'>
 <meta property='og:description' content='从个人笔记仓库整理迁移'>
 <meta property='og:url' content='https://sona201.github.io/posts/kubernetes-pod-%E5%BC%82%E5%B8%B8%E6%8E%92%E6%9F%A5/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h1 id="pod异常问题排查">Pod异常问题排查</h1>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h1 id="pod异常问题排查">Pod异常问题排查</h1>
 <p><a class="link" href="https://help.aliyun.com/zh/ack/ack-managed-and-ack-dedicated/user-guide/pod-troubleshooting-1"  target="_blank" rel="noopener"
     >阿里云原文链接</a></p>
 <p>源码
@@ -532,7 +538,9 @@ if (!doNotTrack) {
 如果您将 <code>command</code> 拼写成 <code>commnd</code> ，将看到错误信息 <code>XXX] unknown field: commnd XXX] this may be a false alarm, see https://gXXXb.XXX/6842pods/test</code> 。</li>
 <li>b. 执行以下命令，将输出结果的pod.yaml文件与您创建Pod使用的文件进行对比。</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -540,7 +548,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl get pods <span class="o">[</span><span class="nv">$Pod</span><span class="o">]</span> -o yaml &gt; pod.yaml
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>说明: [$Pod]为异常Pod的名称，您可以通过kubectl get pods命令查看。</p>
 </blockquote>
 <ul>
@@ -559,7 +569,9 @@ if (!doNotTrack) {
 <p>Pod状态为Terminating。</p>
 <h4 id="解决方案-6">解决方案</h4>
 <p>Pod停留在Terminating状态一段时间后会被自动删除。若Pod一直停留在Terminating状态，可执行如下命令强制删除：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -567,7 +579,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl delete pod <span class="o">[</span><span class="nv">$Pod</span><span class="o">]</span> -n <span class="o">[</span><span class="nv">$namespace</span><span class="o">]</span> --grace-period<span class="o">=</span><span class="m">0</span> --force
 </span></span></code></pre></td></tr></table>
 </div>
-</div><hr>
+</div>
+</div>
+<hr>
 <h2 id="pod状态为evicted">Pod状态为Evicted</h2>
 <h4 id="问题原因-7">问题原因</h4>
 <p>当节点的内存、磁盘空间、文件系统的inode和操作系统可分配的PID等资源中的一个或者多个达到特定的消耗水平，就会引发kubelet主动地驱逐节点上一个或者多个Pod，以回收节点资源。</p>
@@ -577,7 +591,9 @@ if (!doNotTrack) {
 <ol>
 <li>执行以下命令，查看Pod的status.message字段，来确定Pod被驱逐的原因。</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -585,8 +601,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl  get pod <span class="o">[</span><span class="nv">$Pod</span><span class="o">]</span> -o yaml -n <span class="o">[</span><span class="nv">$namespace</span><span class="o">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>预期输出：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>预期输出：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -600,14 +620,18 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">    reason: Evicted
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>通过上述 <code>status.message</code> 字段，可以判断当前Pod是因为节点磁盘压力 (DiskPressure) 被驱逐。</p>
+</div>
+</div>
+<p>通过上述 <code>status.message</code> 字段，可以判断当前Pod是因为节点磁盘压力 (DiskPressure) 被驱逐。</p>
 <blockquote>
 <p>说明: 注意这里仅以磁盘压力驱逐为例，其它例如内存压力（MemoryPressure）和PID压力（PIDPressure）等也会以类似的方式展示。</p>
 </blockquote>
 <ol start="2">
 <li>执行以下命令，删除被驱逐的Pod。</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -615,7 +639,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl get pods -n <span class="o">[</span><span class="nv">$namespace</span><span class="o">]</span><span class="p">|</span> grep Evicted <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span> <span class="p">|</span> xargs kubectl delete pod -n <span class="o">[</span><span class="nv">$namespace</span><span class="o">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="以下汇总如何避免pod被驱逐的方法">以下汇总如何避免Pod被驱逐的方法：</h4>
+</div>
+</div>
+<h4 id="以下汇总如何避免pod被驱逐的方法">以下汇总如何避免Pod被驱逐的方法：</h4>
 <ul>
 <li>内存压力：</li>
 <li>
@@ -663,7 +689,9 @@ if (!doNotTrack) {
 <ul>
 <li>命令行方式查看：执行以下命令，查看容器信息。</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -671,8 +699,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl  get pod <span class="o">[</span><span class="nv">$Pod</span><span class="o">]</span> -o wide -n <span class="o">[</span><span class="nv">$namespace</span><span class="o">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>预期输出：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>预期输出：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -682,7 +714,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">pod_name    1/1     Running   0          25h   172.20.6.53   cn-hangzhou.192.168.0.198
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li><strong>控制台方式查看</strong>：查看Pod详情下的节点信息，请参见检查Pod的详情。</li>
 </ul>
 <ol start="2">
@@ -1033,7 +1067,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

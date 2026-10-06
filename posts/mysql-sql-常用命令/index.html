@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/mysql-sql-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='MySQL SQL 常用命令'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='MySQL SQL 常用命令'>
 <meta property='og:description' content='从个人笔记仓库整理迁移'>
 <meta property='og:url' content='https://sona201.github.io/posts/mysql-sql-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -154,7 +154,7 @@ if (!doNotTrack) {
             
                 <time datetime="2026-10-03">2026-10-03</time>
             
-            <span>阅读时长: 10 分钟</span>
+            <span>阅读时长: 11 分钟</span>
         </div>
     
 
@@ -163,14 +163,22 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>#sql #mysql #command</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>#sql #mysql #command</p>
 <h2 id="1-库表结构操作">1 库表结构操作</h2>
 <h3 id="11-建库">1.1 建库</h3>
 <h4 id="111-ddl-创建数据库设置字符串集utf8">1.1.1 DDL 创建数据库设置字符串集utf8</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -180,7 +188,9 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">db_name</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><div class="table-wrapper"><table>
+</div>
+</div>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>字符集</th>
@@ -212,7 +222,9 @@ if (!doNotTrack) {
 </tbody>
 </table></div>
 <h4 id="112-ddl-删库">1.1.2 DDL 删库</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -220,9 +232,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">DROP</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="o">`</span><span class="n">db_name</span><span class="o">`</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>用户赋权</p>
+</div>
+</div>
+<p>用户赋权</p>
 <h4 id="查询当前用户权限">查询当前用户权限</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -232,8 +248,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="p">,</span><span class="w"> </span><span class="k">DROP</span><span class="p">,</span><span class="w"> </span><span class="n">RELOAD</span><span class="p">,</span><span class="w"> </span><span class="n">PROCESS</span><span class="p">,</span><span class="w"> </span><span class="k">REFERENCES</span><span class="p">,</span><span class="w"> </span><span class="k">INDEX</span><span class="p">,</span><span class="w"> </span><span class="k">ALTER</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TEMPORARY</span><span class="w"> </span><span class="n">TABLES</span><span class="p">,</span><span class="w"> </span><span class="k">LOCK</span><span class="w"> </span><span class="n">TABLES</span><span class="p">,</span><span class="w"> </span><span class="k">EXECUTE</span><span class="p">,</span><span class="w"> </span><span class="n">REPLICATION</span><span class="w"> </span><span class="n">SLAVE</span><span class="p">,</span><span class="w"> </span><span class="n">REPLICATION</span><span class="w"> </span><span class="n">CLIENT</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">SHOW</span><span class="w"> </span><span class="k">VIEW</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">ROUTINE</span><span class="p">,</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">ROUTINE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="p">,</span><span class="w"> </span><span class="n">EVENT</span><span class="p">,</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">*</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;username&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">GRANT</span><span class="w"> </span><span class="k">OPTION</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="删除权限">删除权限</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="删除权限">删除权限</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -241,8 +261,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">revoke</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">db_name</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="k">table_name</span><span class="o">`</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="s1">&#39;user_name&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="mysql-80-创建用户">mysql 8.0 创建用户</h3>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h3 id="mysql-80-创建用户">mysql 8.0 创建用户</h3>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -250,8 +274,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">create</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;username&#39;</span><span class="o">@</span><span class="s1">&#39;host&#39;</span><span class="w"> </span><span class="n">identified</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="s1">&#39;password&#39;</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="给用户赋权">给用户赋权</h3>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h3 id="给用户赋权">给用户赋权</h3>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -277,8 +305,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">db_web_gm</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">t_common_op_log</span><span class="o">`</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;activity_rd&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="赋权">赋权</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="赋权">赋权</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -294,8 +326,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="p">,</span><span class="w"> </span><span class="k">CREATE</span><span class="p">,</span><span class="w"> </span><span class="k">DROP</span><span class="p">,</span><span class="w"> </span><span class="k">INDEX</span><span class="p">,</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">yimi</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">erp_clients</span><span class="o">`</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;prod_sysmgr&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="授权之后刷新权限">授权之后刷新权限</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="授权之后刷新权限">授权之后刷新权限</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -303,9 +339,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">flush</span><span class="w"> </span><span class="k">privileges</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="查询用户权限">查询用户权限</h4>
+</div>
+</div>
+<h4 id="查询用户权限">查询用户权限</h4>
 <p>查询指定用户权限</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -319,8 +359,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">select</span><span class="w"> </span><span class="k">user</span><span class="p">();</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="删除用户">删除用户</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="删除用户">删除用户</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -328,10 +372,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">drop</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="n">Jenkins</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>数据库新建用户
+</div>
+</div>
+<p>数据库新建用户
 数据库用户修改密码</p>
 <h4 id="修改用户密码登录状态">修改用户密码(登录状态)</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -355,10 +403,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;password&#39;;
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>数据库用户赋权</p>
+</div>
+</div>
+<p>数据库用户赋权</p>
 <h3 id="12-数据库表的增删改查">1.2 数据库表的增删改查</h3>
 <h4 id="121-ddl-新增表-建表">1.2.1 DDL 新增表 建表</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -422,8 +474,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="w"> </span><span class="n">ROW_FORMAT</span><span class="o">=</span><span class="k">DYNAMIC</span><span class="w"> </span><span class="k">COMMENT</span><span class="o">=</span><span class="s1">&#39;故障上报观远报表关联字段&#39;</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="122-ddl-删除表">1.2.2 DDL 删除表</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="122-ddl-删除表">1.2.2 DDL 删除表</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -433,7 +489,11 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -443,8 +503,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="k">table_name</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="123-ddl-表新增字段并指定字段位置">1.2.3 DDL 表新增字段，并指定字段位置</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="123-ddl-表新增字段并指定字段位置">1.2.3 DDL 表新增字段，并指定字段位置</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -452,8 +516,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">cmdb_appops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">sysops_aliyun_sls</span><span class="o">`</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="o">`</span><span class="n">product_key</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;NA&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;数字产品 key&#39;</span><span class="w"> </span><span class="k">AFTER</span><span class="w"> </span><span class="o">`</span><span class="n">project_id</span><span class="o">`</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="124-ddl-修改表字段">1.2.4 DDL 修改表字段</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="124-ddl-修改表字段">1.2.4 DDL 修改表字段</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -461,8 +529,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">cmdb_appops</span><span class="p">.</span><span class="n">appops_kuber_dump_file</span><span class="w"> </span><span class="n">CHANGE</span><span class="w"> </span><span class="o">`</span><span class="n">oss_download_url</span><span class="o">`</span><span class="w"> </span><span class="o">`</span><span class="n">download_url</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">350</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;NA&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;下载url&#39;</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>修改表字段属性(类型, 长度)</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>修改表字段属性(类型, 长度)</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -470,9 +542,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">cmdb_appops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">techops_split_bill_instance</span><span class="o">`</span><span class="w"> </span><span class="k">MODIFY</span><span class="w"> </span><span class="o">`</span><span class="n">project_id_name</span><span class="o">`</span><span class="w"> </span><span class="nb">varchar</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;NA&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;关联项目名&#39;</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="修改表字段顺序">修改表字段顺序</h4>
+</div>
+</div>
+<h4 id="修改表字段顺序">修改表字段顺序</h4>
 <p>也可以用change</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -480,8 +556,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">alter</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">app03_book</span><span class="w"> </span><span class="n">modify</span><span class="w"> </span><span class="o">`</span><span class="n">price</span><span class="o">`</span><span class="w"> </span><span class="kt">decimal</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="no">NULL</span><span class="w">  </span><span class="n">after</span><span class="w"> </span><span class="n">publishDate</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="mysql自增id起始值修改方法">mysql自增ID起始值修改方法</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="mysql自增id起始值修改方法">mysql自增ID起始值修改方法</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -511,8 +591,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="kp">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="kp">AUTO_INCREMENT</span><span class="o">=</span><span class="mi">10000</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="kp">CHARSET</span><span class="o">=</span><span class="n">utf8</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="查看建表语句">查看建表语句</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="查看建表语句">查看建表语句</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -520,8 +604,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">show create table [table_name]
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="125-ddl-删除表字段">1.2.5 DDL 删除表字段</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="125-ddl-删除表字段">1.2.5 DDL 删除表字段</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -529,9 +617,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">cmdb_appops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">techops_split_bill_instance</span><span class="o">`</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="o">`</span><span class="n">product_key</span><span class="o">`</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>数据库表的索引操作</p>
+</div>
+</div>
+<p>数据库表的索引操作</p>
 <h4 id="126-ddl-新增表索引">1.2.6 DDL 新增表索引</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -543,8 +635,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">question_use_records</span><span class="o">`</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="o">`</span><span class="n">IDX_question_id</span><span class="o">`</span><span class="p">(</span><span class="o">`</span><span class="n">question_id</span><span class="o">`</span><span class="p">,</span><span class="o">`</span><span class="n">student_id</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">BTREE</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="127-ddl-删除表索引">1.2.7 DDL 删除表索引</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="127-ddl-删除表索引">1.2.7 DDL 删除表索引</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -552,8 +648,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">cmdb_appops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">appops_kubernetes_events</span><span class="o">`</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="o">`</span><span class="n">uid_v_unique_index</span><span class="o">`</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="dcl-控制语句设置自动提交">DCL 控制语句，设置自动提交</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="dcl-控制语句设置自动提交">DCL 控制语句，设置自动提交</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -561,8 +661,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">set</span><span class="w"> </span><span class="n">autocommit</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="修改index值新表默认从1开始">修改index值，新表默认从1开始</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="修改index值新表默认从1开始">修改index值，新表默认从1开始</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -570,9 +674,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">project_mark_table</span><span class="w"> </span><span class="n">auto_increment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>表数据的增删改查</p>
+</div>
+</div>
+<p>表数据的增删改查</p>
 <h4 id="dml-表数据插入">DML 表数据插入</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -604,8 +712,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">(</span><span class="s1">&#39;12&#39;</span><span class="p">,</span><span class="s1">&#39;三级分摊结果生成&#39;</span><span class="p">,</span><span class="s1">&#39;12&#39;</span><span class="p">,</span><span class="s1">&#39;11&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;NA&#39;</span><span class="p">,</span><span class="s1">&#39;根据关联逻辑分摊三级账单&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-01 23:59:35&#39;</span><span class="p">,</span><span class="s1">&#39;2023-03-06 23:35:30&#39;</span><span class="p">);</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="dml-表删除数据">DML 表删除数据</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="dml-表删除数据">DML 表删除数据</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -613,8 +725,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">company_devops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">rbac_permission</span><span class="o">`</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="o">`</span><span class="n">id</span><span class="o">`=</span><span class="mi">169</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="dml-清空表数据">DML 清空表数据</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="dml-清空表数据">DML 清空表数据</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -622,8 +738,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">TRUNCATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="dml-表数据更新">DML 表数据更新</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="dml-表数据更新">DML 表数据更新</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -635,8 +755,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">UPDATE</span><span class="w"> </span><span class="o">`</span><span class="n">company_devops</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">rbac_permission</span><span class="o">`</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">permission</span><span class="o">=</span><span class="mi">2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="o">`</span><span class="n">id</span><span class="o">`=</span><span class="mi">168</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="dml-表数据查询">DML 表数据查询</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="dml-表数据查询">DML 表数据查询</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -644,8 +768,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">select * from server_domain_and_port where type=&#34;1&#34;;
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="dml-查询指定行数的数据从第10行向后查询5条数据">DML 查询指定行数的数据，从第10行向后查询5条数据</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="dml-查询指定行数的数据从第10行向后查询5条数据">DML 查询指定行数的数据，从第10行向后查询5条数据</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -653,11 +781,15 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="n">userMobile</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">mis_user_info</span><span class="w"> </span><span class="k">limit</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="sql-其他操作">sql 其他操作</h3>
+</div>
+</div>
+<h3 id="sql-其他操作">sql 其他操作</h3>
 <p><a class="link" href="https://blog.csdn.net/yageeart/article/details/7973381"  target="_blank" rel="noopener"
     >https://blog.csdn.net/yageeart/article/details/7973381</a></p>
 <h3 id="手动灌sql">手动灌sql</h3>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -665,9 +797,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysql -h db.adress.mysql.rds.aliyuncs.com -P 3306 -u user_name -p&#39;password&#39; db_name &lt; insert.sql
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>也可以进入mysql，source file</p>
+</div>
+</div>
+<p>也可以进入mysql，source file</p>
 <h4 id="查看慢查询设置时间单位秒">查看慢查询设置时间，单位秒</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -675,8 +811,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">show VARIABLES like &#39;long_query_time&#39;;   
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="查询存储过程创建命令">查询存储过程创建命令</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="查询存储过程创建命令">查询存储过程创建命令</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -684,11 +824,15 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">show create procedure sp_add_view_lesson_doc;
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="查询从库master信息">查询从库master信息</h4>
+</div>
+</div>
+<h4 id="查询从库master信息">查询从库master信息</h4>
 <ol>
 <li>查看主库状态</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -696,8 +840,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SHOW</span><span class="w"> </span><span class="n">MASTER</span><span class="w"> </span><span class="n">STATUS</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>主库状态结果</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>主库状态结果</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -723,10 +871,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">mysql&gt; Bye
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ol start="2">
+</div>
+</div>
+<ol start="2">
 <li>查看从库状态</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -734,8 +886,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SHOW</span><span class="w"> </span><span class="n">SLAVE</span><span class="w"> </span><span class="n">STATUS</span><span class="err">\</span><span class="k">G</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>查看结果</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>查看结果</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -861,8 +1017,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">1 row in set (0.00 sec)v
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>在主库查看从库的信息</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>在主库查看从库的信息</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -870,7 +1030,11 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">show</span><span class="w"> </span><span class="n">processlist</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -980,8 +1144,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">mysql&gt; Bye
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>删除索引</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>删除索引</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -989,8 +1157,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">duty_schedule_group_rule_relationship</span><span class="o">`</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">duty_schedule_group_rule_group_id_rule_id_a918fd5a_uniq</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>复杂sql</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>复杂sql</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -1044,8 +1216,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">);</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>res</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>res</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -1071,7 +1247,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">ZoneManagerServer
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>server 的分区是 100，200，且不是55, 56, 57, 58, 59分区</p>
+</div>
+</div>
+<p>server 的分区是 100，200，且不是55, 56, 57, 58, 59分区</p>
 
 </section>
 
@@ -1396,7 +1574,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/tcp-netem-buffer-experiments/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='用 Netem 和 TCP 缓冲区观察下载速度'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='用 Netem 和 TCP 缓冲区观察下载速度'>
 <meta property='og:description' content='tcp实验 1 实验准备 1.1 虚拟机 使用 VMware 创建两台本地隔离虚拟机，系统为 Ubuntu 20.04 LTS。以下私有地址只作为本地实验示例，与图中的地址一致： tcp-server: 192.168.77.131 tcp-client: 192.168.77.132 1.1.1 虚拟'>
 <meta property='og:url' content='https://sona201.github.io/posts/tcp-netem-buffer-experiments/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h1 id="tcp实验">tcp实验</h1>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h1 id="tcp实验">tcp实验</h1>
 <h2 id="1-实验准备">1 实验准备</h2>
 <h3 id="11-虚拟机">1.1 虚拟机</h3>
 <p>使用 VMware 创建两台本地隔离虚拟机，系统为 <code>Ubuntu 20.04 LTS</code>。以下私有地址只作为本地实验示例，与图中的地址一致：</p>
@@ -181,7 +187,9 @@ if (!doNotTrack) {
 <li><code>tc qdesc</code>信息</li>
 <li>系统内核相关参数</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -221,12 +229,16 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">vm.lowmem_reserve_ratio = 256   256     32      0       0
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>Tips: 可以给虚拟机挂载本地文件目录，可以免去拷贝tcpdump file到本地，直接使用</p>
 </blockquote>
 <h3 id="12-大文件">1.2 大文件</h3>
 <h4 id="121-dd生成大文件">1.2.1 <code>dd</code>生成大文件</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -234,10 +246,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">dd if=/dev/zero of=large_file bs=1G count=2
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="13-服务器">1.3 服务器</h3>
+</div>
+</div>
+<h3 id="13-服务器">1.3 服务器</h3>
 <h4 id="131-ubuntu安装nginx">1.3.1 ubuntu安装<code>nginx</code></h4>
 <p>最早使用 Python HTTP 服务器，多次实验结果不够稳定。为减少应用服务器差异，本组实验改用 Nginx。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -287,13 +303,17 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="nx">May</span> <span class="mi">29</span> <span class="mi">15</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="nx">tcp</span><span class="o">-</span><span class="nx">server</span> <span class="nx">systemd</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="nx">Started</span> <span class="nx">A</span> <span class="nx">high</span> <span class="nx">performance</span> <span class="nx">web</span> <span class="nx">server</span> <span class="nx">and</span> <span class="nx">a</span> <span class="nx">reverse</span> <span class="nx">proxy</span> <span class="nx">server</span><span class="p">.</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="132-配置nginx">1.3.2 配置<code>nginx</code></h4>
+</div>
+</div>
+<h4 id="132-配置nginx">1.3.2 配置<code>nginx</code></h4>
 <p>修改nginx配置文件，能通过<code>http://ip/path</code>访问到文件。具体操作如下。</p>
 <p><code>nginx</code>默认配置文件启动了80端口，配置文件为<code>/etc/nginx/sites-enabled/default</code>，查看配置文件发现默认<code>nginx</code>的<code>html</code>路径为<code>/var/www/html</code>。
 将刚刚生成的大文件<code>large_file</code>移动到<code>/var/www/html</code>。</p>
 <h4 id="133-测试nginx服务器配置">1.3.3 测试<code>nginx</code>服务器配置</h4>
 <p>在<code>tcp-client</code>机器上访问文件</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -327,11 +347,15 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">rtt min/avg/max/mdev = 0.480/0.617/0.716/0.089 ms
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>不调整网络测试下载速度/时间，看看抓包分析rtt，tcptrace图</p>
+</div>
+</div>
+<p>不调整网络测试下载速度/时间，看看抓包分析rtt，tcptrace图</p>
 <ul>
 <li>客户端机器上抓包</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -347,10 +371,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">0 packets dropped by kernel
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>服务端上抓包</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -366,7 +394,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">0 packets dropped by kernel
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>抓包命令解释:</p>
+</div>
+</div>
+<p>抓包命令解释:</p>
 <ul>
 <li>可以不指定 <code>-s</code>，抓全量，这样可以看出更多信息，但也会导致文件下载很大。</li>
 <li>分析tcp图表，rtt(Round Trip Time)一个tcp包往返的时间，一般使用<code>ping</code>命令也能发现，但不能完全代替，因为会有内核数据处理损耗等导致误差。</li>
@@ -397,7 +427,9 @@ if (!doNotTrack) {
 <h2 id="2-实验1增加rt验证-tc-延迟">2 实验1:增加rt，验证 tc 延迟</h2>
 <p><code>clinet</code>使用<code>tc</code>模拟延迟</p>
 <p><code>root netem</code> 作用于所配置网卡的出站流量。本实验在 client 端配置，因此其发往 server 的请求和 ACK 会受到延迟影响；若在 server 端配置，则延迟作用于 server 发出的数据。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -417,7 +449,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  13.9M      0  0:02:27  0:02:27 --:--:-- 23.8M
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>服务端抓包，有几段很明显的ack响应延迟，平均下载速度也小了，13.9M</p>
+</div>
+</div>
+<p>服务端抓包，有几段很明显的ack响应延迟，平均下载速度也小了，13.9M</p>
 <p><img src="/images/tcpdump-server-tc-delay100-tcptrace.png"
 	
 	
@@ -441,7 +475,9 @@ if (!doNotTrack) {
 ></p>
 <h2 id="3-实验2写死-server-wmem">3 实验2:写死 server wmem</h2>
 <p>删除之前增加的延迟配置</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -455,9 +491,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">root@tcp-client:~# 
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>调整内核参数</p>
+</div>
+</div>
+<p>调整内核参数</p>
 <p>内核参数说明</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -471,12 +511,16 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">net.ipv4.tcp_wmem <span class="o">=</span> <span class="m">4096</span> <span class="m">16384</span> <span class="m">4194304</span> // 最小值、默认值、最大值
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>sysctl：可以查看和修改内核参数
+</div>
+</div>
+<p>sysctl：可以查看和修改内核参数
 rmem：套接字接收缓冲区大小
 wmem：套接字发送缓冲区大小</p>
 <p>下面的实现会调整 rmem 和 wmem 的大小做相关的实验。</p>
 <p>修改前参数</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -508,9 +552,13 @@ wmem：套接字发送缓冲区大小</p>
 </span></span><span class="line"><span class="cl">vm.lowmem_reserve_ratio = 256   256     32      0       0
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="31-不调整-rt仅调整server的wmem参数">3.1 不调整 RT，仅调整server的wmem参数</h3>
+</div>
+</div>
+<h3 id="31-不调整-rt仅调整server的wmem参数">3.1 不调整 RT，仅调整server的wmem参数</h3>
 <p>修改，限死 <code>wmem</code></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -520,8 +568,12 @@ wmem：套接字发送缓冲区大小</p>
 </span></span><span class="line"><span class="cl">net.ipv4.tcp_wmem = 4096 4096 4096
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>查看curl命令使用时间结果，下载速度很快，平均速度甚至大约不限制的情况</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>查看curl命令使用时间结果，下载速度很快，平均速度甚至大约不限制的情况</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -535,9 +587,13 @@ wmem：套接字发送缓冲区大小</p>
 </span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  48.4M      0  0:00:42  0:00:42 --:--:-- 43.5M
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>平均下载速度Average Dload: 48.4M</p>
+</div>
+</div>
+<p>平均下载速度Average Dload: 48.4M</p>
 <p>server抓包</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -553,8 +609,12 @@ wmem：套接字发送缓冲区大小</p>
 </span></span><span class="line"><span class="cl">0 packets dropped by kernel
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>client抓包</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>client抓包</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -570,7 +630,9 @@ wmem：套接字发送缓冲区大小</p>
 </span></span><span class="line"><span class="cl">0 packets dropped by kernel
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>看stevens概览图，很平滑
+</div>
+</div>
+<p>看stevens概览图，很平滑
 <img src="/images/tcpdump-client-wmem4096-stevens-overview.png"
 	
 	
@@ -604,7 +666,9 @@ wmem：套接字发送缓冲区大小</p>
 	
 ></p>
 <h3 id="32-接下来对-client-端调整-rt-为-100ms看下整个下载情况">3.2 接下来对 client 端调整 rt 为 100ms，看下整个下载情况。</h3>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -622,7 +686,9 @@ wmem：套接字发送缓冲区大小</p>
 </span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  2497k      0  0:13:59  0:13:59 --:--:-- 11.4M
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>平均下载速度Average Dload: 2497k</p>
+</div>
+</div>
+<p>平均下载速度Average Dload: 2497k</p>
 <p>很明显速度下降很多，最后的下载速度只有11.4M</p>
 <p>从stevens图里看结果，斜度比较平，中途还有很大的曲折</p>
 <p><img src="/images/tcpdump-clinet-wmem4096-delay100-stevens-overview.png"
@@ -669,7 +735,9 @@ wmem：套接字发送缓冲区大小</p>
 	
 ></p>
 <h3 id="33-调整-client-端调整-rt-为-10ms看下整个下载情况">3.3 调整 client 端调整 rt 为 10ms，看下整个下载情况。</h3>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -687,7 +755,9 @@ wmem：套接字发送缓冲区大小</p>
 </span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0   9.9M      0  0:03:25  0:03:25 --:--:-- 8479k
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>平均下载速度Average Dload: 9.9M</p>
+</div>
+</div>
+<p>平均下载速度Average Dload: 9.9M</p>
 <p><img src="/images/tcpdump-clinet-wmem4096-delay10-stevens-overview.png"
 	
 	
@@ -732,7 +802,9 @@ wmem：套接字发送缓冲区大小</p>
 ></p>
 <p>与上述100ms对比，发现同样的<code>wmem 4096</code>参数下, rt越大，速度越慢</p>
 <h3 id="34-调整-client-端调整-rt-为-200ms看下整个下载情况">3.4 调整 client 端调整 rt 为 200ms，看下整个下载情况。</h3>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -754,7 +826,9 @@ wmem：套接字发送缓冲区大小</p>
 </span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  2069k      0  0:16:53  0:16:53 --:--:-- 6733k
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>rt延迟时间200ms，平均下载速度Average Dload: 2069k</p>
+</div>
+</div>
+<p>rt延迟时间200ms，平均下载速度Average Dload: 2069k</p>
 
 </section>
 
@@ -817,12 +891,12 @@ wmem：套接字发送缓冲区大小</p>
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
+    <a href="/posts/tc_%E5%AE%9E%E9%AA%8C/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark技巧</h2>
+            <h2 class="article-title">Tc_实验</h2>
         </div>
     </a>
 </article>
@@ -830,12 +904,12 @@ wmem：套接字发送缓冲区大小</p>
             
                 
 <article class="">
-    <a href="/posts/tc_%E5%AE%9E%E9%AA%8C/">
+    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Tc_实验</h2>
+            <h2 class="article-title">Wireshark技巧</h2>
         </div>
     </a>
 </article>
@@ -1073,7 +1147,7 @@ wmem：套接字发送缓冲区大小</p>
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

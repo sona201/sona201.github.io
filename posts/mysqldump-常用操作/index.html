@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/mysqldump-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='mysqldump 常用操作'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='mysqldump 常用操作'>
 <meta property='og:description' content='从个人笔记仓库整理迁移'>
 <meta property='og:url' content='https://sona201.github.io/posts/mysqldump-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,14 +163,22 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>#mysql #sql #mysqldump</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>#mysql #sql #mysqldump</p>
 <h2 id="mysqldump">mysqldump</h2>
 <h3 id="mysqldump-57">mysqldump 5.7</h3>
 <h4 id="1-mysql-导出表结构和表数据-mysqldump用法命令行下具体用法如下">1. mysql 导出表结构和表数据 mysqldump用法，命令行下具体用法如下:</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -178,8 +186,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -u用戶名 -p密码 -d 数据库名 表名 &gt; 脚本名;
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="2-导出整个数据库结构和数据">2. 导出整个数据库结构和数据</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="2-导出整个数据库结构和数据">2. 导出整个数据库结构和数据</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -187,8 +199,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -h localhost -uroot -p123456 database &gt; dump.sql
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="3-导出单个数据表结构和数据">3. 导出单个数据表结构和数据</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="3-导出单个数据表结构和数据">3. 导出单个数据表结构和数据</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -196,8 +212,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -h localhost -uroot -p123456  database table &gt; dump.sql
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="4导出整个数据库结构不包含数据">4.导出整个数据库结构（不包含数据）</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="4导出整个数据库结构不包含数据">4.导出整个数据库结构（不包含数据）</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -205,8 +225,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -h localhost -uroot -p123456  -d database &gt; dump.sql
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="5导出单个数据表结构不包含数据">5.导出单个数据表结构（不包含数据）</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="5导出单个数据表结构不包含数据">5.导出单个数据表结构（不包含数据）</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -214,9 +238,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -h localhost -uroot -p123456  -d database table &gt; dump.sql
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="6mysqldump-备份导出数据排除某张表">6.mysqldump 备份导出数据排除某张表</h4>
+</div>
+</div>
+<h4 id="6mysqldump-备份导出数据排除某张表">6.mysqldump 备份导出数据排除某张表</h4>
 <p>就用 <code>--ignore-table=dbname.tablename</code> 参数就行了。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -224,9 +252,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -uusername -ppassword -h192.168.0.1 -P3306 dbname --ignore-table=dbname.dbtanles &gt; dump.sql
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="mysqldump-80">mysqldump 8.0</h3>
+</div>
+</div>
+<h3 id="mysqldump-80">mysqldump 8.0</h3>
 <p>mysqldump8.0 需要设置<code>--column-statistics=0</code>参数</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -238,7 +270,11 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">                      (Defaults to on; use --skip-column-statistics to disable.)
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -254,8 +290,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">--ignore-table=cmdb_appops.wfh_comment &gt; dump.sql
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>建议使用参数</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>建议使用参数</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -263,9 +303,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/usr/bin/mysqldump -u moba -pmoba2016 -h 10.162.84.200 --events --set-gtid-purged=OFF --single-transaction --databases db_log_zone_96005 &gt; /data/db_backup_mysqldump/db_backup_db_log/db_log_zone_96005.sql
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>--databases</code> 使用此参数导出数据时，会生成对应的创建数据库sql，免去要手动创建数据的麻烦</p>
+</div>
+</div>
+<p><code>--databases</code> 使用此参数导出数据时，会生成对应的创建数据库sql，免去要手动创建数据的麻烦</p>
 <p>生成的文件样例如下</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -349,7 +393,9 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="o">`</span><span class="mi">161</span><span class="n">activity_plugin_check</span><span class="o">`</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>CREATE DATABASE /<em>!32312 IF NOT EXISTS</em>/ <code>db_log_zone_96005</code> /*!40100 DEFAULT CHARACTER SET latin1 */;
 这句 sql ai的解释如下</p>
 </blockquote>
@@ -647,7 +693,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

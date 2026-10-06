@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/tcp%E5%AE%9E%E9%AA%8C/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='tcp实验'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='tcp实验'>
 <meta property='og:description' content='tcp实验记录'>
 <meta property='og:url' content='https://sona201.github.io/posts/tcp%E5%AE%9E%E9%AA%8C/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>抓包:
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>抓包:
 两台服务器，一台启动python http服务，上面有一个2G的文件。另一台下载。
 怎么抓包，在那台机器上抓包，是不是指定来源ip就可以了？
 是指定抓n个包，还是说指定ip，从开始下载到结束？
@@ -175,7 +181,9 @@ if (!doNotTrack) {
 rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助么？
 执行curl就出问题了</p>
 <p>服务端</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -191,8 +199,12 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
 </span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root 1.9G Mar 25 11:37 zookeeper.out
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>客户端</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>客户端</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -232,8 +244,12 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
 </span></span><span class="line"><span class="cl">100 1880M  100 1880M    0     0  77.0M      0  0:00:24  0:00:24 --:--:-- 54.3M
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>curl 控制速度</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>curl 控制速度</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -247,7 +263,9 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
 </span></span><span class="line"><span class="cl"> 33 1880M   33  625M    0     0  1023k      0  0:31:21  0:10:25  0:20:56  996k
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><a class="link" href="https://tonydeng.github.io/sdn-handbook/linux/tc.html"  target="_blank" rel="noopener"
+</div>
+</div>
+<p><a class="link" href="https://tonydeng.github.io/sdn-handbook/linux/tc.html"  target="_blank" rel="noopener"
     >tc命令介绍</a></p>
 <p>BDP和buffer、RT的关系
 搜这个问题发现别人早就看过任总的文章了，还写了笔记。https://blog.csdn.net/fdsafwagdagadg6576/article/details/121011575</p>
@@ -257,7 +275,9 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
 <li>Buffer: 指的是sysctl中的 rmem或者wmem</li>
 <li>rt: tcp的timestamps-&gt;time since previous frame in this tcp stream(我猜就是响应时间的一种)</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -299,7 +319,9 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
 </span></span><span class="line"><span class="cl">sysctl: reading key &#34;net.ipv6.conf.veth6cbfe80.stable_secret&#34;
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><a class="link" href="https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/"  target="_blank" rel="noopener"
+</div>
+</div>
+<p><a class="link" href="https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/"  target="_blank" rel="noopener"
     >参数相关</a></p>
 <p>更新了配置后，直接服务也启动失败，wget也异常了。</p>
 
@@ -373,12 +395,12 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
+    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark本地劫持https</h2>
+            <h2 class="article-title">Wireshark技巧</h2>
         </div>
     </a>
 </article>
@@ -386,12 +408,12 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
+    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark技巧</h2>
+            <h2 class="article-title">Wireshark本地劫持https</h2>
         </div>
     </a>
 </article>
@@ -589,7 +611,7 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

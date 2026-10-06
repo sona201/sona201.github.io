@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/linux-local-user-ldap-conflict/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Linux 本地用户与 LDAP 同名冲突排查'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Linux 本地用户与 LDAP 同名冲突排查'>
 <meta property='og:description' content='User already exists error when user doesn&amp;rsquo;t exist on the system » Easy as Linux 问题描述 创建本地 admin 用户时系统提示该用户已存在，但本地用户文件中找不到该用户，需要排查 NSS 目录服务是否返回了同名账'>
 <meta property='og:url' content='https://sona201.github.io/posts/linux-local-user-ldap-conflict/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>User already exists  error when user doesn&rsquo;t exist on the system » Easy as Linux</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>User already exists  error when user doesn&rsquo;t exist on the system » Easy as Linux</p>
 <h2 id="问题描述">问题描述</h2>
 <p>创建本地 <code>admin</code> 用户时系统提示该用户已存在，但本地用户文件中找不到该用户，需要排查 NSS 目录服务是否返回了同名账户。</p>
 <h2 id="目标">目标</h2>
@@ -176,7 +182,9 @@ if (!doNotTrack) {
 <h2 id="核心技术">核心技术</h2>
 <p><code>google</code>，<code>经验</code></p>
 <p>猜测1: 用户创建时关联的group存在，不能创建。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -190,13 +198,17 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"># 本地 group 文件没有对应的 admin 用户组
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>发现并不存在对应用户组</p>
+</div>
+</div>
+<p>发现并不存在对应用户组</p>
 <p>猜测2: 谷歌搜到方法: easyaslinux
 <a class="link" href="https://www.easyaslinux.com/quick-fix/user-already-exists-error-when-user-doesnt-exist-on-the-system/"  target="_blank" rel="noopener"
     >easyaslinux</a></p>
 <p>使用 getent 命令 搜索用户信息 <br>
 getent is a Linux command that helps the user to get the entries in a number of important text files called databases.</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -210,11 +222,15 @@ getent is a Linux command that helps the user to get the entries in a number of 
 </span></span><span class="line"><span class="cl">example-user:x:1001:1001::/home/example-user:/bin/bash
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>发现admin用户输出的信息跟普通用户有区别 <br>
+</div>
+</div>
+<p>发现admin用户输出的信息跟普通用户有区别 <br>
 密码栏(冒号为分隔符第二个)，显示的结果是* ，一般是x，表示密码存在 /etc/shadow 文件里 <br>
 Lets dig into Name Service Switch library config file. 查查nss的库文件 <br>
 备注: The Name Service Switch (NSS) framework was designed to let administrators specify which files or directory services to query to obtain information. \</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -224,8 +240,12 @@ Lets dig into Name Service Switch library config file. 查查nss的库文件 <br
 </span></span><span class="line"><span class="cl">passwd:     files sss
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>问题找到了，nss在ldap中搜到当前用户，(sss被当成一个ldap客户端配置相关信息)</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>问题找到了，nss在ldap中搜到当前用户，(sss被当成一个ldap客户端配置相关信息)</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -233,11 +253,15 @@ Lets dig into Name Service Switch library config file. 查查nss的库文件 <br
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl status sssd
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>SSSD 正在运行，NSS 会通过目录服务查询用户。</p>
+</div>
+</div>
+<p>SSSD 正在运行，NSS 会通过目录服务查询用户。</p>
 <p>机器使用目录服务进行统一身份管理，SSSD 作为客户端也返回了同名 <code>admin</code> 用户，导致本地创建用户发生冲突。</p>
 <h2 id="动手实践">动手实践</h2>
 <p>卸载后这台机器信息就能新增用户了，此时发现用户密码配置变了</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -247,7 +271,9 @@ Lets dig into Name Service Switch library config file. 查查nss的库文件 <br
 </span></span><span class="line"><span class="cl">admin:x:1002:1002:Local User:/home/admin:/bin/bash
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>此时表示用户不在是一个ldap用户了，他的密码配置文件又变成了 /etc/shadow</p>
+</div>
+</div>
+<p>此时表示用户不在是一个ldap用户了，他的密码配置文件又变成了 /etc/shadow</p>
 <p>权限相关的问题也解决了</p>
 <h2 id="优化">优化</h2>
 <p>找到问题的根源，现在有三个方式解决问题</p>
@@ -273,7 +299,9 @@ Lets dig into Name Service Switch library config file. 查查nss的库文件 <br
 </ol>
 <p>很明显，最好的解决方法是第三种:
 使用<code>luseradd</code>命令</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -283,7 +311,9 @@ Lets dig into Name Service Switch library config file. 查查nss的库文件 <br
 </span></span><span class="line"><span class="cl">luseradd admin
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>不需要停止ipa服务，不影响权限，完美解决问题</p>
+</div>
+</div>
+<p>不需要停止ipa服务，不影响权限，完美解决问题</p>
 
 </section>
 
@@ -578,7 +608,7 @@ Lets dig into Name Service Switch library config file. 查查nss的库文件 <br
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

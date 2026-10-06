@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/disk-reserved-blocks-troubleshooting/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Linux 磁盘写满与保留空间排查'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Linux 磁盘写满与保留空间排查'>
 <meta property='og:description' content='Linux下磁盘写满问题 一、问题描述 总是会出现磁盘不小心打满，然后执行 rm 命令发现 rm: cannot remove &#39;test&#39;: No space left on device，这种情况不知道如何处理。 二、解'>
 <meta property='og:url' content='https://sona201.github.io/posts/disk-reserved-blocks-troubleshooting/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h2 id="linux下磁盘写满问题">Linux下磁盘写满问题</h2>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h2 id="linux下磁盘写满问题">Linux下磁盘写满问题</h2>
 <h3 id="一问题描述">一、问题描述</h3>
 <p>总是会出现磁盘不小心打满，然后执行 <code>rm</code> 命令发现 <code>rm: cannot remove 'test': No space left on device</code>，这种情况不知道如何处理。</p>
 <h3 id="二解决方案">二、解决方案</h3>
@@ -175,7 +181,9 @@ if (!doNotTrack) {
 <h4 id="2-保留磁盘空间">2. 保留磁盘空间</h4>
 <p>linux的硬盘分区程序会自动为root或指定的用户保留一定的磁盘空间默认是5％，可以通过这个方式解决。这其实也是这篇文章的主要目的之一。</p>
 <p>本次实验使用 ext 文件系统。ext2/ext3/ext4 可以通过保留块机制为超级用户留出空间；本文的 tune2fs 操作针对这类文件系统。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -195,8 +203,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">              Specify  the percentage of the filesystem blocks reserved <span class="k">for</span> the super-user.  This avoids fragmentation, and allows root-owned daemons, such as syslogd<span class="o">(</span>8<span class="o">)</span>, to <span class="k">continue</span> to <span class="k">function</span> correctly after non-privileged processes are prevented from writing to the filesystem.  The default percentage is 5%.
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>只摘要重点，谷歌机器翻译下</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>只摘要重点，谷歌机器翻译下</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -204,14 +216,18 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">指定为超级用户保留的文件系统块的百分比。这可以避免碎片，并允许 root 拥有的守护进程（例如 syslogd(8)）在阻止非特权进程写入文件系统后继续正常运行。默认百分比为 5%。
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>简单说就是系统怕磁盘打满，给管理员留了 5% 的磁盘空间，给特殊处理情况。</p>
+</div>
+</div>
+<p>简单说就是系统怕磁盘打满，给管理员留了 5% 的磁盘空间，给特殊处理情况。</p>
 <h5 id="一个猜想">一个猜想</h5>
 <p>一次排障时，虚拟机上直接运行的 Docker 应用持续报错并输出到控制台，容器日志文件增长到 93G。
 想起来释放磁盘这个方法，就决定试一试。</p>
 <p>当时释放保留空间没有解决问题，猜测可能是日志写入过快，释放的空间很快再次耗尽。这个猜测没有直接验证。</p>
 <h5 id="相关命令">相关命令</h5>
 <p>相关的执行命令</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -227,8 +243,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">tune2fs -m <span class="m">5</span> /dev/sda1  <span class="c1"># 指定 Reserved block 百分比为 5%</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>系统执行命令</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>系统执行命令</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -276,7 +296,11 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">tmpfs            <span class="m">1577780</span>        <span class="m">0</span>   <span class="m">1577780</span>   0% /run/user/0
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
@@ -514,9 +538,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Setting reserved blocks percentage to 5% <span class="o">(</span><span class="m">1310706</span> blocks<span class="o">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="实际解决方案-devnull">实际解决方案 /dev/null</h4>
+</div>
+</div>
+<h4 id="实际解决方案-devnull">实际解决方案 /dev/null</h4>
 <p>说到上面的问题，磁盘已经打满，当时因为只有一块盘，<code>rm</code> 也失效。在我手足无措的时候，同事来帮忙解决了。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -526,7 +554,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">cat /dev/null &gt; <span class="s2">&#34;/var/lib/docker/containers/</span><span class="si">${</span><span class="nv">container_id</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">container_id</span><span class="si">}</span><span class="s2">-json.log&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>通过将 <code>/dev/null</code> 重定向到日志文件，直接把现有日志截断为零字节。当时删除文件失败，而截断文件成功释放了空间；这不意味着 <code>rm</code> 必须申请与文件大小相同的空间。</p>
+</div>
+</div>
+<p>通过将 <code>/dev/null</code> 重定向到日志文件，直接把现有日志截断为零字节。当时删除文件失败，而截断文件成功释放了空间；这不意味着 <code>rm</code> 必须申请与文件大小相同的空间。</p>
 <p>当然似乎是运气不错，理论上磁盘打满夸张点会直接导致 <code>ssh</code> 都无法登录。</p>
 
 </section>
@@ -564,12 +594,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Linux iptables 使用笔记</h2>
+            <h2 class="article-title">Nmap 端口扫描笔记</h2>
         </div>
     </a>
 </article>
@@ -577,12 +607,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Nmap 端口扫描笔记</h2>
+            <h2 class="article-title">Linux iptables 使用笔记</h2>
         </div>
     </a>
 </article>
@@ -828,7 +858,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

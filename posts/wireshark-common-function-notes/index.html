@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/wireshark-common-function-notes/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Wireshark常用功能笔记'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Wireshark常用功能笔记'>
 <meta property='og:description' content='wireshark笔记记录'>
 <meta property='og:url' content='https://sona201.github.io/posts/wireshark-common-function-notes/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p><a class="link" href="https://www.ilikejobs.com/posts/wireshark/"  target="_blank" rel="noopener"
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p><a class="link" href="https://www.ilikejobs.com/posts/wireshark/"  target="_blank" rel="noopener"
     >原文链接</a></p>
 <h1 id="wireshark常用功能笔记">Wireshark常用功能笔记</h1>
 <h1 id="wireshark">wireshark</h1>
@@ -189,7 +195,9 @@ if (!doNotTrack) {
 ></p>
 <p><code>pcapng 还有很多别的特性，比如更细粒度的报文时间戳、允许对报文添加注释、更灵活的元数据，如果你是用版本比较新的 Wireshark 和 tshark 做抓包，默认生成的抓包文件就已经是 pcapng 格式了</code></p>
 <h1 id="tcpdump">tcpdump</h1>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -219,11 +227,15 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">PS：加更多的限制可能会抓不到包，比如NAT把对方的包给改掉了。
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="常用参数">常用参数</h2>
+</div>
+</div>
+<h2 id="常用参数">常用参数</h2>
 <ul>
 <li>-h：帮助</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -297,10 +309,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">  -f &lt;capture filter&gt;      packet filter in libpcap filter syntax
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>-D：查看有哪些网卡</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -422,10 +438,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">23.ap1 <span class="o">[</span>Wireless, Association status unknown<span class="o">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>-i : 指定网卡，这里1指定的是-D中的网卡序号</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -441,10 +461,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Packets received/dropped on interface <span class="s1">&#39;Wi-Fi: en0&#39;</span>: 923/0 <span class="o">(</span>pcap:0/dumpcap:0/flushed:0/ps_ifdrop:0<span class="o">)</span> <span class="o">(</span>100.0%<span class="o">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>-w：指定存储在的位置</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -460,7 +484,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Packets received/dropped on interface <span class="s1">&#39;Wi-Fi: en0&#39;</span>: 573/0 <span class="o">(</span>pcap:0/dumpcap:0/flushed:0/ps_ifdrop:0<span class="o">)</span> <span class="o">(</span>100.0%<span class="o">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>-b
 <ul>
 <li>filesize:500000 // 代表500M</li>
@@ -468,7 +494,9 @@ if (!doNotTrack) {
 </ul>
 </li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -494,7 +522,11 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">                                           <span class="o">(</span>can use <span class="s1">&#39;stdout&#39;</span> or <span class="s1">&#39;stderr&#39;</span><span class="o">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -512,7 +544,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Packets received/dropped on interface <span class="s1">&#39;Wi-Fi: en0&#39;</span>: 1238/0 <span class="o">(</span>pcap:0/dumpcap:0/flushed:0/ps_ifdrop:0<span class="o">)</span> <span class="o">(</span>100.0%<span class="o">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>
 <p>-c ： 数量，可以抓取固定数量的保文，在流量较高时，可以避免一不小心抓取过多报文</p>
 </li>
@@ -534,7 +568,9 @@ if (!doNotTrack) {
 </li>
 </ul>
 <p><code>这个参数很有用啊，可以看到具体的请求内容了，快速排查问题的时候是可以这么做的。</code></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
@@ -838,7 +874,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">        0x0260:  <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span> <span class="m">0000</span>            ............
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h1 id="抓包技巧">抓包技巧</h1>
+</div>
+</div>
+<h1 id="抓包技巧">抓包技巧</h1>
 <h2 id="打标记">打标记</h2>
 <p>包除了小以外，还需要为每步操作打标记，这样的包一目了然，赏心悦目。比如：</p>
 <ol>
@@ -855,7 +893,9 @@ if (!doNotTrack) {
 <blockquote>
 <p>解释（MacOS下）：-c 指定ping次数，-s指定包大小</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -891,7 +931,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">            --apple-time          <span class="c1"># display current time</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>在抓包时可以看到包下面Data（-s部分大小），byte的大小表示当前是第几步，就不容易出错。</p>
+</div>
+</div>
+<p>在抓包时可以看到包下面Data（-s部分大小），byte的大小表示当前是第几步，就不容易出错。</p>
 <p><img src="/images/wireshark_pcapng2.png"
 	
 	
@@ -908,7 +950,9 @@ if (!doNotTrack) {
 <li>ip+端口号是比较常用的过滤方式，例如：ip.addr eq 172.22.183.226 &amp;&amp; tcp.port eq 8080，还可以右键单击感兴趣的包，选择follow TCP/UDP Stream，就可以自动过滤当前的包了。</li>
 <li>过滤跟某个IP地址相关的包</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -916,10 +960,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ip.addr <span class="o">==</span> 192.168.0.1
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>排除某些端口</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -927,10 +975,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">not <span class="o">(</span>tcp or arp or smtp<span class="o">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>根据端口范围查找</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -938,10 +990,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcp.port in <span class="o">{</span>80,443,8080<span class="o">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>按照关键词查询：区分大小写</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -949,7 +1005,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">frame contains <span class="s2">&#34;baidu.com&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/images/wireshark_pcapng3.png"
+</div>
+</div>
+<p><img src="/images/wireshark_pcapng3.png"
 	
 	
 	
@@ -962,7 +1020,9 @@ if (!doNotTrack) {
 <ul>
 <li>按照关键词查询：不区分大小写（matches采用的是regex）</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -970,7 +1030,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">frame matches <span class="s2">&#34;baidu.com&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/images/wireshark_pcapng4.png"
+</div>
+</div>
+<p><img src="/images/wireshark_pcapng4.png"
 	
 	
 	
@@ -1016,7 +1078,9 @@ if (!doNotTrack) {
 <p>过滤失败的握手</p>
 </li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -1024,11 +1088,15 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcp.flags.reset <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;&amp;</span> tcp.seq<span class="o">==</span><span class="m">1</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>过滤重传的握手请求</li>
 </ul>
 <p>过滤完查看完整的包流程，可以看到服务端的端口被使用了。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -1036,7 +1104,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcp.flags.syn <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;&amp;</span> tcp.analysis.retransmission
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/images/wireshark_pcapng6.png"
+</div>
+</div>
+<p><img src="/images/wireshark_pcapng6.png"
 	
 	
 	
@@ -1049,7 +1119,9 @@ if (!doNotTrack) {
 <h2 id="抓包时过滤">抓包时过滤</h2>
 <p>需求：统计某个HTTPS VIP的访问流量里，TLS版本（主要是TLS1.0、1.1、1.2、1.3）的分布。为了控制抓包文件的大小，不抓TLS的所有报文，只想抓TLS版本信息。</p>
 <p>针对这个需求，tcpdump本身没有现成的过滤器。BPF本身是基于偏移量来做解析的，所以可以在tcpdump中使用这种偏移量技术，所以类似如下命令：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -1057,7 +1129,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcpdump -w /tmp/<span class="o">[</span>fileter_TLS_Client_Hello.pcap<span class="o">](</span>https://drive.google.com/file/d/112X8cKH78DQ0GQL8kMlT2RvI3gxUwbHv/view?usp<span class="o">=</span>drive_link<span class="o">)</span> <span class="s1">&#39;dst port 443 &amp;&amp; tcp[20]==22 &amp;&amp; tcp[25]==1&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>dst port 443：这个最简单，就是抓取从客户端发过来的访问 HTTPS 的报文。</li>
 <li>tcp[20]==22：这是提取了 TCP 的第 21 个字节（因为初始序号是从 0 开始的），由于 TCP 头部占 20 字节，TLS 又是 TCP 的载荷，那么 TLS 的第 1 个字节就是 TCP 的第 21 个字节，也就是 TCP[20]，这个位置的值如果是 22（十进制），那么就表明这个是 TLS 握手报文。</li>
 <li>tcp[25]==1：同理，这是 TCP 头部的第 26 个字节，如果它等于 1，那么就表明这个是 Client Hello 类型的 TLS 握手报文。</li>
@@ -1084,7 +1158,9 @@ if (!doNotTrack) {
 	
 ></p>
 <p>tcpdump 也预定义了一些相对方便的过滤器。比如我们想要过滤出 TCP RST 报文，那么可以用下面这种写法，相对来说比用数字做偏移量的写法，要更加容易理解和记忆：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -1092,8 +1168,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcpdump -w file.pcap <span class="s1">&#39;tcp[tcpflags]&amp;(tcp-rst) != 0&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>对应到偏移量的写法如下：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>对应到偏移量的写法如下：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -1101,9 +1181,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcpdump -w file.pcap <span class="s1">&#39;tcp[13]&amp;4 != 0&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="读取抓包文件">读取抓包文件</h2>
+</div>
+</div>
+<h2 id="读取抓包文件">读取抓包文件</h2>
 <p>tcpdump后面加上-r参数和文件名称，就可以读取这个文件了，也可以加上过滤条件：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -1111,9 +1195,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcpdump -r file.pcap <span class="s1">&#39;tcp[tcpflags] &amp; (tcp-rst) != 0&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="过滤后转存">过滤后转存</h2>
+</div>
+</div>
+<h2 id="过滤后转存">过滤后转存</h2>
 <p>抓包以后过滤想要的报文，并保存到另一个文件中，如下所示：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -1121,7 +1209,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tcpdump -r file.pcap <span class="s1">&#39;tcp[tcpflags]&amp;(tcp-rst)!=0&#39;</span> -w rst.pcap
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h1 id="配置">配置</h1>
+</div>
+</div>
+<h1 id="配置">配置</h1>
 <h2 id="解析已知协议与ip域名映射">解析已知协议与IP域名映射</h2>
 <p><img src="/images/wireshark_pcapng9.png"
 	
@@ -1376,7 +1466,9 @@ if (!doNotTrack) {
 	
 ></p>
 <h1 id="查看走哪个网卡">查看走哪个网卡</h1>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -1394,7 +1486,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">104.21.42.70 via 172.16.0.1 dev **en0**  src 172.16.0.52
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h1 id="tshark">TShark</h1>
+</div>
+</div>
+<h1 id="tshark">TShark</h1>
 <p><a class="link" href="https://www.notion.so/tshark-de1f0be16cd0480c990e894b44fe1dec?pvs=21"  target="_blank" rel="noopener"
     ><strong>tshark</strong></a></p>
 <h1 id="layout">Layout</h1>
@@ -1442,7 +1536,9 @@ if (!doNotTrack) {
 <p>TCP中的“win=”代表接收窗口的大小，表示这个包的<strong>发送方</strong>当前还有多少缓冲区可以接收数据。</p>
 <p>上面这两个的区别：TCP window full表示这个包的发送方暂时没办法再发送数据了，TCP Zerowindow 表示这个包的发送方暂时没办法再接受数据了。也就是说两者都意味着传输暂停，都必须引起重视。</p>
 <h2 id="package-size-limited-during-capture">Package size limited during capture</h2>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -1452,7 +1548,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="o">[</span>root<span class="o">]</span> tcpdump -i eth0 -s <span class="m">1000</span> -w /tmp/tcpdump.cap
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="tcp-previous-segment-not-captured">TCP Previous segment not captured</h2>
+</div>
+</div>
+<h2 id="tcp-previous-segment-not-captured">TCP Previous segment not captured</h2>
 <p>TCP传输过程中，同一台主机发出的数据段应该是连续的，即后一个包的Seq号等于前一个包的Seq+Len（三次握手和四次挥手是例外）。</p>
 <p>如果wireshark发现一个包的seq号大于前一个包的seq+len，就知道中间缺失了一段数据。假如缺失的那段数据在整个网络包中都找不到（即排除乱序），就会提示[TCP Previous segment not captured]。</p>
 <p>🔔：</p>
@@ -1491,7 +1589,9 @@ if (!doNotTrack) {
 <h1 id="问题">问题</h1>
 <h2 id="为什么macbook上提示you-dont-have-permission-to-capture-on-local-interfaces">为什么MacBook上提示：You don’t have permission to capture on local interfaces.</h2>
 <p>解决方法：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -1525,7 +1625,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">crwx--x--x  <span class="m">1</span> zhengxianle  admin  0x17000003  <span class="m">5</span> <span class="m">17</span> 11:42 /dev/bpf3*
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>参考：<a class="link" href="https://andrewbaker.ninja/2023/01/14/macbook-fixing-the-wireshark-permissions-bug-you-dont-have-permission-to-capture-on-that-device/"  target="_blank" rel="noopener"
+</div>
+</div>
+<p>参考：<a class="link" href="https://andrewbaker.ninja/2023/01/14/macbook-fixing-the-wireshark-permissions-bug-you-dont-have-permission-to-capture-on-that-device/"  target="_blank" rel="noopener"
     >https://andrewbaker.ninja/2023/01/14/macbook-fixing-the-wireshark-permissions-bug-you-dont-have-permission-to-capture-on-that-device/</a></p>
 <h2 id="四次挥手的疑惑">四次挥手的疑惑</h2>
 <p>如下图，这个包的ack为什么没有加1呢？</p>
@@ -1612,12 +1714,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
+    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark技巧</h2>
+            <h2 class="article-title">Wireshark本地劫持https</h2>
         </div>
     </a>
 </article>
@@ -1625,12 +1727,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
+    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark本地劫持https</h2>
+            <h2 class="article-title">Wireshark技巧</h2>
         </div>
     </a>
 </article>
@@ -1915,7 +2017,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

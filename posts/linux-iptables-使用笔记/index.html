@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Linux iptables 使用笔记'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Linux iptables 使用笔记'>
 <meta property='og:description' content='从个人笔记仓库整理迁移'>
 <meta property='og:url' content='https://sona201.github.io/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>#iptable #linux</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>#iptable #linux</p>
 <p>本文主要介绍如下几点内容。</p>
 <ul>
 <li><a class="link" href="https://help.aliyun.com/zh/ecs/how-to-use-iptables-in-centos7#HMwSJ"  target="_blank" rel="noopener"
@@ -181,7 +187,9 @@ if (!doNotTrack) {
 <h3 id="禁止filewalld开机启动">禁止Filewalld开机启动</h3>
 <p>为了防止与iptables冲突，您必须先禁止Filewalld开机启动。</p>
 <h4 id="1-查看firewalld服务状态">1. 查看<code>firewalld</code>服务状态。</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -189,8 +197,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl status firewalld
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="2-当服务处于active状态运行以下命令关闭firewalld服务">2. 当服务处于active状态，运行以下命令关闭Firewalld服务。</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="2-当服务处于active状态运行以下命令关闭firewalld服务">2. 当服务处于active状态，运行以下命令关闭Firewalld服务。</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -198,8 +210,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl stop firewalld
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="3-执行如下命令禁止filewalld开机启动">3. 执行如下命令，禁止Filewalld开机启动。</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="3-执行如下命令禁止filewalld开机启动">3. 执行如下命令，禁止Filewalld开机启动。</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -207,9 +223,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl disable firewalld
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="安装iptables">安装iptables</h3>
+</div>
+</div>
+<h3 id="安装iptables">安装iptables</h3>
 <h4 id="安装iptables-1">安装iptables。</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -217,9 +237,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">yum install -y iptables-services
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="启动iptables并设置为开机启动">启动iptables并设置为开机启动</h3>
+</div>
+</div>
+<h3 id="启动iptables并设置为开机启动">启动iptables并设置为开机启动</h3>
 <h4 id="1-启动iptables">1. 启动iptables。</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -227,8 +251,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl start iptables
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="2-查看iptables是否成功启动">2. 查看iptables是否成功启动。</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="2-查看iptables是否成功启动">2. 查看iptables是否成功启动。</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -236,8 +264,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl status iptables
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="3-设置iptables开机启动">3. 设置iptables开机启动。</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="3-设置iptables开机启动">3. 设置iptables开机启动。</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -245,8 +277,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl <span class="nb">enable</span> iptables.service
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="4-设置完成后重启实例验证配置">4. 设置完成后，重启实例验证配置。</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="4-设置完成后重启实例验证配置">4. 设置完成后，重启实例验证配置。</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -254,10 +290,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl reboot
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="查看并修改iptables默认规则">查看并修改iptables默认规则</h3>
+</div>
+</div>
+<h3 id="查看并修改iptables默认规则">查看并修改iptables默认规则</h3>
 <p>执行<code>iptables -L</code>命令，查看iptables默认规则，发现在默认规则下，INTPUT链允许来自任何主机的访问。可以参考如下步骤修改默认规则。</p>
 <h4 id="1-如果之前已经设置过规则建议执行如下命令备份原有的iptables文件避免之前设置的规则丢失">1. 如果之前已经设置过规则，建议执行如下命令，备份原有的iptables文件，避免之前设置的规则丢失。</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -265,8 +305,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cp -a /etc/sysconfig/iptables /etc/sysconfig/iptables.bak
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="2-清空所有规则">2. 清空所有规则。</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="2-清空所有规则">2. 清空所有规则。</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -274,8 +318,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">iptables -F
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="3-根据业务需求添加规则放行或者禁用端口示例依次执行如下命令放行80端口和22端口">3. 根据业务需求添加规则，放行或者禁用端口。示例：依次执行如下命令，放行80端口和22端口。</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="3-根据业务需求添加规则放行或者禁用端口示例依次执行如下命令放行80端口和22端口">3. 根据业务需求添加规则，放行或者禁用端口。示例：依次执行如下命令，放行80端口和22端口。</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -285,10 +333,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">iptables -I INPUT -p tcp --dport <span class="m">22</span> -m state --state NEW -j ACCEPT
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>示例：依次执行如下命令，添加规则，使INPUT链拒绝所有请求，即ECS实例会拒绝所有请求。如果是线上业务请勿直接操作，会直接中断业务。</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -296,8 +348,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">iptables -P INPUT DROP
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="4-确认新规则生效">4. 确认新规则生效。</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="4-确认新规则生效">4. 确认新规则生效。</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -305,8 +361,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">iptables -L
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="5-保存添加的规则">5. 保存添加的规则。</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="5-保存添加的规则">5. 保存添加的规则。</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -314,8 +374,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">iptables-save &gt; /etc/sysconfig/iptables
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="6-将规则导入到iptables">6. 将规则导入到iptables</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="6-将规则导入到iptables">6. 将规则导入到iptables</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -323,9 +387,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">iptables-restore &lt; /etc/sysconfig/iptables
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="案例实际操作命令">案例：实际操作命令</h3>
+</div>
+</div>
+<h3 id="案例实际操作命令">案例：实际操作命令</h3>
 <h4 id="仅对相关ip开放22端口">仅对相关ip开放22端口</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -346,6 +414,8 @@ if (!doNotTrack) {
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
+</div>
+
 </section>
 
 
@@ -682,7 +752,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

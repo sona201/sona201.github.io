@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/obsidian-tool-v1/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='obsidian-sync-v1'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='obsidian-sync-v1'>
 <meta property='og:description' content='笔记工具obsidian, 一个生产力工具'>
 <meta property='og:url' content='https://sona201.github.io/posts/obsidian-tool-v1/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p><a class="link" href="https://hankmo.com/posts/artifact/ios-sync-obsidian/"  target="_blank" rel="noopener"
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p><a class="link" href="https://hankmo.com/posts/artifact/ios-sync-obsidian/"  target="_blank" rel="noopener"
     >原文链接</a></p>
 <h2 id="前言">前言</h2>
 <p>用了不少笔记软件，好多都是半途而废，总感觉有各种各样的问题。笔记格式支持问题，云端网络问题(不支持本地)，样式同步问题。
@@ -216,7 +222,9 @@ if (!doNotTrack) {
 </blockquote>
 <p>iSH 中，操作基本上都以 <code>apk</code> 命令开头。</p>
 <p>首先，输出 <code>apk update</code> 然后换行即可更新 package。 然后，输入 <code>uname -a</code> 来查看操作系统信息：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -226,7 +234,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Linux localhost 4.20.69-ish SUPER AWESOME May <span class="m">20</span> <span class="m">2023</span> 23:41:32 i686 Linux
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>接下来，继续安装 obsidian app。</p>
+</div>
+</div>
+<p>接下来，继续安装 obsidian app。</p>
 <h1 id="创建-obsidian-仓库">创建 obsidian 仓库</h1>
 <p>同样地，ios 应用商店下载后打开 obsidian，此时没有任何 vault，首先手动创建一个，比如名称为 notebook（下文中的所有 notebook 都可以改为你自己的仓库名称）。此时，你只是创建了一个空的仓库，我们需要让其与 github 同步。</p>
 <blockquote>
@@ -235,7 +245,9 @@ if (!doNotTrack) {
 <h1 id="创建-ssh-key-并授权给-github">创建 ssh key 并授权给 github</h1>
 <p>我的笔记仓库托管在 github，处于安全考虑，github 禁止使用 http 连接，需要改为 ssh。</p>
 <p>打开 iSH app，创建 ssh key，需要安装几个软件：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -245,9 +257,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">apk add openssh
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>依次执行上边的命令安装 git、openssh，耐心等待安装完成。</p>
+</div>
+</div>
+<p>依次执行上边的命令安装 git、openssh，耐心等待安装完成。</p>
 <p>然后，执行以下命令生成 ssh key：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -255,8 +271,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ssh-keygen -t ed25519 -C <span class="s2">&#34;&lt;你的邮箱&gt;&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>接着，拷贝生成的公钥：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>接着，拷贝生成的公钥：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -264,9 +284,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">cat ~/.ssh/id_ed25519.pub
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>登录 github，点击用户头像，在 <code>setting</code> -&gt; <code>SSH and GPG keys</code> -&gt; <code>New SSH key</code> 新建一个授权的key并粘贴刚才拷贝的公钥，保存即可。</p>
+</div>
+</div>
+<p>登录 github，点击用户头像，在 <code>setting</code> -&gt; <code>SSH and GPG keys</code> -&gt; <code>New SSH key</code> 新建一个授权的key并粘贴刚才拷贝的公钥，保存即可。</p>
 <p>测试一下在 iSH 中能否正常连接 github：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -276,11 +300,15 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Hi username! You<span class="err">&#39;</span>ve successfully authenticated, but GitHub does not provide shell access.
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>输出上述信息说明 ssh 连接成功。</p>
+</div>
+</div>
+<p>输出上述信息说明 ssh 连接成功。</p>
 <h1 id="配置-git-环境">配置 git 环境</h1>
 <p>上一步安装了 git，现在来配置 git 环境。</p>
 <p>打开 iSH，依次执行如下命令：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -290,8 +318,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">git config --global user.email <span class="s2">&#34;你的github邮箱&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>此外，还需要添加安全目录，否则git可能出错：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>此外，还需要添加安全目录，否则git可能出错：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -299,13 +331,17 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git config --global --add safe.directory /root/obsidian/notebook
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>PS: 这里不操作的话问题不大，在第一次执行<code>git pull</code>的时候，会提醒你，直接复制粘贴更方便</p>
 </blockquote>
 <h1 id="同步-github-仓库到-ish">同步 github 仓库到 iSH</h1>
 <p>现在，你可以在 iSH pull github 仓库代码了。</p>
 <p>首先，打开 iSH，创建一个 <code>obsidian</code> 目录：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -313,8 +349,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">cd</span> ~ <span class="o">&amp;&amp;</span> mkdir obsidian
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>然后，挂载 obsidian app 的文件存储目录到刚才创建的 <code>obsidian</code> 目录:</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>然后，挂载 obsidian app 的文件存储目录到刚才创建的 <code>obsidian</code> 目录:</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -322,7 +362,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">mount -t ios . obsidian
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>这里的命令解释：</p>
+</div>
+</div>
+<p>这里的命令解释：</p>
 <ul>
 <li><code>mount</code>是挂载命令</li>
 <li><code>-t</code> 指定文件格式<code>ios</code></li>
@@ -330,7 +372,9 @@ if (!doNotTrack) {
 <li><code>obsidian</code>刚刚创建的目录</li>
 </ul>
 <p>挂载的命令是在网上找的，至于为啥是<code>ios</code>格式，可以通过命令<code>df -T</code>来查看</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -350,11 +394,15 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">localhost:~/obsidian/notebook# 
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>iSH 会弹出一个窗口，在里边选择 <code>Obsidian</code> 文件夹即可，不需要选择 <code>notebook</code> 仓库，这样就可以访问多个仓库。</p>
+</div>
+</div>
+<p>iSH 会弹出一个窗口，在里边选择 <code>Obsidian</code> 文件夹即可，不需要选择 <code>notebook</code> 仓库，这样就可以访问多个仓库。</p>
 <p>到此，git配置完成，现在可以在 iSH 中拉取git仓库了。</p>
 <p>首先，复制 github 仓库的 ssh 地址。</p>
 <p>然后，进入 <code>obsidian/notebook</code> 文件夹：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -362,9 +410,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">cd</span> obsidian/notebook/
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>删除下边的 <code>.obsidian</code> 文件夹，这是 obsidian 为其仓库创建的，这里先删除，保证这个目录是空的。</p>
+</div>
+</div>
+<p>删除下边的 <code>.obsidian</code> 文件夹，这是 obsidian 为其仓库创建的，这里先删除，保证这个目录是空的。</p>
 <p>接着，进入上层目录：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -372,8 +424,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">cd</span> ..
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>克隆仓库：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>克隆仓库：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -381,7 +437,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git clone 你的仓库ssh地址 notebook
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>表示将 github 仓库下的文件克隆到 notebook 目录。</p>
+</div>
+</div>
+<p>表示将 github 仓库下的文件克隆到 notebook 目录。</p>
 <p>耐心等待克隆完成，如果失败了重试即可。</p>
 <blockquote>
 <p>PS: 上面说的，如果不在仓库地址后面加 notebook ，就会在notebook下面新建仓库目录，目录层级会多一层</p>
@@ -393,7 +451,9 @@ if (!doNotTrack) {
 <p>这些操作都需要打开 iSH app，进入 <code>~/obsidian/notebook</code> 操作。</p>
 </blockquote>
 <p>1、同步仓库 pc端修改了笔记，ios可以同步仓库：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -401,8 +461,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git pull origin main
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>2、提交更改 ios上修改了笔记，需要提交到 git 仓库：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>2、提交更改 ios上修改了笔记，需要提交到 git 仓库：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -414,12 +478,16 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">git push origin main
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h1 id="快捷操作">快捷操作</h1>
+</div>
+</div>
+<h1 id="快捷操作">快捷操作</h1>
 <p>同步数据需要打开iSH app，执行拉代码，可以配置快捷命令。
 根据 <code>linux</code> 的特性，可以在打开iSH app后，自动执行相关操作，比如直接进入我们的相应的目录，打开软件自动拉取最新数据
 linux 下，系统会自动执行家目录下面(直接执行命令<code>cd</code>即可到家目录下)的 <code>.profile</code> 文件，再配置 <code>.ashrc</code> 文件，即可完成需求
 直接复制粘贴下面的命令：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -447,12 +515,16 @@ linux 下，系统会自动执行家目录下面(直接执行命令<code>cd</cod
 </span></span></span><span class="line"><span class="cl"><span class="s">EOF</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>PS: 简单解释下命令的作用，先cd到家目录下，然后创建<code>.profile</code>，内容的作用就是开启时执行<code>.ashrc</code>里的命令，<code>.ashrc</code>里的命令意思是到<code>/root/obsidian/notebook</code>目录下，然后执行<code>git pull</code>命令，最后做了一个别名，即在命令行输入<code>gl</code>，等同于执行<code>git pull</code>命令，因为在手机上操作还是能简化点比较好</p>
 </blockquote>
 <h1 id="git-配置">git 配置</h1>
 <p>当文件名含有中文的时候，git 显示会异常，需要执行下面命令</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -460,7 +532,9 @@ linux 下，系统会自动执行家目录下面(直接执行命令<code>cd</cod
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git config --global core.quotepath <span class="nb">false</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>PS 不过还是建议尽量使用英文做标题，也可以锻炼英语水平，也能避免很多奇奇怪怪的问题</p>
 </blockquote>
 <h1 id="总结">总结</h1>
@@ -775,7 +849,7 @@ linux 下，系统会自动执行家目录下面(直接执行命令<code>cd</cod
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 
