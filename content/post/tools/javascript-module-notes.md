@@ -1,122 +1,138 @@
 ---
 title: "JavaScript 模块化学习笔记"
 date: "2022-11-17T00:11:17+08:00"
-lastmod: "2022-11-17T00:11:17+08:00"
+lastmod: "2026-10-06T18:07:31+08:00"
 categories: ["tools"]
 slug: "javascript-module-notes"
 draft: false
 ---
 
+常用的 JavaScript 模块化规范有 CommonJS、AMD、CMD 和 ES Modules。
 
+## 闭包与模块化
 
+### 闭包函数
 
---------------
-
-使用模块化作为出口
-
-闭包函数
-
+```javascript
 (function() {
-  var flag = true
-})()
+  var flag = true;
+})();
+```
 
+### 使用闭包组织模块
 
-模块化
+使用模块化作为出口，将需要对外提供的变量和方法放入对象，再返回这个对象。
 
+```javascript
 var ModuleA = (function() {
   // 1. 定义一个对象
-  var obj = {}
+  var obj = {};
+
   // 2. 在对象内部添加变量和方法
-  obj.flag = true
+  obj.flag = true;
   obj.myFunc = function(info) {
     console.log(info);
-  }
+  };
+
   // 3. 将对象返回
-  return obj
-})()
+  return obj;
+})();
+```
 
+## CommonJS
 
-常用的模块化规范:
-  CommonJS / AMD / CMD / ES6的Modules
+### 导出模块
 
-
-CommonJS 导出
+```javascript
 module.exports = {
   flag: true,
   test(a, b) {
-    return a + b
-  }
+    return a + b;
+  },
   demo(a, b) {
-    return a * b
+    return a * b;
   }
-}
+};
+```
 
-CommonJS 导入
-// CommonJS 模块
-let { test, demo, flag } = require('moduleA')
+### 导入模块
 
-// 等同于
+使用 `require()` 导入模块，并通过解构获取变量和方法：
+
+```javascript
+let { test, demo, flag } = require('moduleA');
+```
+
+也可以先获取整个模块对象，再分别读取属性：
+
+```javascript
 let _mA = require('moduleA');
 let test = _mA.test;
 let demo = _mA.demo;
 let flag = _mA.flag;
+```
 
+## ES Modules：export / import
 
-ES6 export/import
+### 直接导出函数或类
 
-导出函数或类
-
+```javascript
 export function test(content) {
   console.log(content);
 }
 
-export class Persion {
+export class Person {
   constructor(name, age) {
     this.name = name;
     this.age = age;
   }
 
   run() {
-    console.log(this.name + '在奔跑')
+    console.log(this.name + '在奔跑');
   }
 }
+```
 
+### 先定义，再统一导出
 
-另外方式
+```javascript
+function test(content) {
+  console.log(content);
+}
 
->functions test(content) {
->console.log(content);
->}
-
-class Persion {
+class Person {
   constructor(name, age) {
     this.name = name;
     this.age = age;
   }
 
-  run(){
-    console.log(this.name = '在奔跑')
+  run() {
+    console.log(this.name + '在奔跑');
   }
 }
 
-export {test, Persion}
-<<<<
+export { test, Person };
+```
 
+### 默认导出：export default
 
-// 自己命名 export default
+某些情况下，一个模块包含的功能不需要指定导出名称，而是由导入者自行命名。这时可以使用 `export default`。
 
->某些情况下，一个模块中包含某个功能，我们并不希望给这个功能命名，而且让导入者自己来命名
->这个时候可以使用export default
+在 `info.js` 中默认导出一个函数：
 
-//info.js
+```javascript
+// info.js
 export default function () {
-  console.log('default function')
+  console.log('default function');
 }
+```
 
-我们来到main.js中，这样用就可以了
-这里的myFunc是我自己命名的，你可以根据需要命名它对应的名字
-import myFunc from './info.js'
-myFunc()
+在 `main.js` 中导入并调用。这里的 `myFunc` 是导入时自行指定的名称：
 
-另外，需要注意：export default 在同一模块中，不允许同时存在对个.
-<<<<
+```javascript
+// main.js
+import myFunc from './info.js';
+myFunc();
+```
+
+**注意：同一个模块只能有一个 `export default`。**
