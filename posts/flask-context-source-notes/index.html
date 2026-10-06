@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Flask 上下文管理 内容回顾: 1. Linux命令 2. 面向对象： 特殊方法 1. `obj[&#39;x&#39;] = 123` 2. `obj.x = 123` 3. `obj &#43; 123` functools 1 2 3 4 5 6 7 def func(a1, a2, a3): return a1 &#43; a2 &#43; a3 v1 = func(1, 2, 3) new_func = functions.partial(func, 111, 2) new_func(3)'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Flask 上下文管理 内容回顾: 1. Linux命令 2. 面向对象： 特殊方法 1. `obj[&#39;x&#39;] = 123` 2. `obj.x = 123` 3. `obj &#43; 123` functools Python 1 2 3 4 5 6 7 def func(a1, a2, a3): return a1 &#43; a2 &#43; a3 v1 = func(1, 2, 3) new_func = functions.partial(func, 111, 2)'>
 <title>Flask 上下文与 LocalProxy 学习笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/flask-context-source-notes/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Flask 上下文与 LocalProxy 学习笔记'>
-<meta property='og:description' content='Flask 上下文管理 内容回顾: 1. Linux命令 2. 面向对象： 特殊方法 1. `obj[&#39;x&#39;] = 123` 2. `obj.x = 123` 3. `obj &#43; 123` functools 1 2 3 4 5 6 7 def func(a1, a2, a3): return a1 &#43; a2 &#43; a3 v1 = func(1, 2, 3) new_func = functions.partial(func, 111, 2) new_func(3)'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Flask 上下文与 LocalProxy 学习笔记'>
+<meta property='og:description' content='Flask 上下文管理 内容回顾: 1. Linux命令 2. 面向对象： 特殊方法 1. `obj[&#39;x&#39;] = 123` 2. `obj.x = 123` 3. `obj &#43; 123` functools Python 1 2 3 4 5 6 7 def func(a1, a2, a3): return a1 &#43; a2 &#43; a3 v1 = func(1, 2, 3) new_func = functions.partial(func, 111, 2)'>
 <meta property='og:url' content='https://sona201.github.io/posts/flask-context-source-notes/'>
 <meta property='og:site_name' content='Ricardo'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2021-01-10T00:51:58&#43;08:00'/><meta property='article:modified_time' content='2021-01-10T00:51:58&#43;08:00'/>
 <meta name="twitter:title" content="Flask 上下文与 LocalProxy 学习笔记">
-<meta name="twitter:description" content="Flask 上下文管理 内容回顾: 1. Linux命令 2. 面向对象： 特殊方法 1. `obj[&#39;x&#39;] = 123` 2. `obj.x = 123` 3. `obj &#43; 123` functools 1 2 3 4 5 6 7 def func(a1, a2, a3): return a1 &#43; a2 &#43; a3 v1 = func(1, 2, 3) new_func = functions.partial(func, 111, 2) new_func(3)">
+<meta name="twitter:description" content="Flask 上下文管理 内容回顾: 1. Linux命令 2. 面向对象： 特殊方法 1. `obj[&#39;x&#39;] = 123` 2. `obj.x = 123` 3. `obj &#43; 123` functools Python 1 2 3 4 5 6 7 def func(a1, a2, a3): return a1 &#43; a2 &#43; a3 v1 = func(1, 2, 3) new_func = functions.partial(func, 111, 2)">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h4 id="flask-上下文管理">Flask 上下文管理</h4>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h4 id="flask-上下文管理">Flask 上下文管理</h4>
 <p>内容回顾:</p>
 <pre><code>	1. Linux命令
 	2. 面向对象： 特殊方法
@@ -178,7 +184,9 @@ if (!doNotTrack) {
 <ol start="3">
 <li>
 <p>functools</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -198,7 +206,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="n">new_func</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div></li>
+</div>
+</div>
+</li>
 <li>
 <p>你认识的装饰器？应用场景？</p>
 <ul>
@@ -278,7 +288,9 @@ if (!doNotTrack) {
 </li>
 <li></li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -292,7 +304,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="c1"># _lookup_req_object 对象方法，反射  getattr 方法</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/images/requestContext3.png"
+</div>
+</div>
+<p><img src="/images/requestContext3.png"
 	
 	
 	
@@ -602,7 +616,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

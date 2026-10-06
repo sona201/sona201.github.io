@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/ingress-nginx-deployment-notes/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Ingress NGINX 部署与 RBAC 学习笔记'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Ingress NGINX 部署与 RBAC 学习笔记'>
 <meta property='og:description' content='kubernetes deploy ingress-controller 会启动job，是一次性任务。主要是创建证书使用 docker 镜像使用 orbstack 当成 docker 容器会开启 docker 最新实验特性，根据芯片下载对应的版本，这也算一个坑 yaml 文件提'>
 <meta property='og:url' content='https://sona201.github.io/posts/ingress-nginx-deployment-notes/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,14 +163,22 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h2 id="kubernetes-deploy-ingress-controller">kubernetes deploy ingress-controller</h2>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h2 id="kubernetes-deploy-ingress-controller">kubernetes deploy ingress-controller</h2>
 <p>会启动job，是一次性任务。主要是创建证书使用</p>
 <p>docker 镜像使用 orbstack 当成 docker 容器会开启 docker 最新实验特性，根据芯片下载对应的版本，这也算一个坑</p>
 <p>yaml 文件提供的镜像地址都是国外的，需要转换为国内的， 刚好也自建 nexus docker 仓库，需要配置服务器配置 docker 信任源</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -184,7 +192,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>当前对应的k8s版本是 1.23，(官网提示)能安装的 ingress 版本
+</div>
+</div>
+<p>当前对应的k8s版本是 1.23，(官网提示)能安装的 ingress 版本
 v1.3.0、v1.3.1、v1.4.0、v1.5.1、v1.6.4</p>
 <p>之前找到一个 ingress 安装入门文档，结果文档太老，使用的是 v0.15.0镜像，对应的部署控制器还是 rc ，这个控制器在 0.47这个版本里已经被删除了。
 <a class="link" href="https://developer.aliyun.com/article/642705"  target="_blank" rel="noopener"
@@ -197,7 +207,9 @@ v1.3.0、v1.3.1、v1.4.0、v1.5.1、v1.6.4</p>
     >https://www.cnblogs.com/wtzbk/p/15427237.html</a> 这个版本比较新，但我没用
 <a class="link" href="https://cloud.tencent.com/developer/article/1579931"  target="_blank" rel="noopener"
     >https://cloud.tencent.com/developer/article/1579931</a> 这个讲的也行，只有回过头才知道哪些是对的</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -205,9 +217,13 @@ v1.3.0、v1.3.1、v1.4.0、v1.5.1、v1.6.4</p>
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">registry.k8s.io/ingress-nginx/controller:v1.9.4@sha256:5b161f051d017e55d358435f295f5e9a297e66158f136321d9b04520ec6c48a3
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>后面的@sha 表示文件的校验码，类似 md5，我直接下载这个链接的时候，发现下载的镜像没有对应的版本，后来还是指定版本了</p>
+</div>
+</div>
+<p>后面的@sha 表示文件的校验码，类似 md5，我直接下载这个链接的时候，发现下载的镜像没有对应的版本，后来还是指定版本了</p>
 <p>安装 ingress 的 yaml 文件里有job，这个是一次性的任务，如果执行报错了，再次执行</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -215,8 +231,12 @@ v1.3.0、v1.3.1、v1.4.0、v1.5.1、v1.6.4</p>
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">kubectl apply -f ingress-nginx.yaml
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>会提示报错，需要执行删除 job 命令</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>会提示报错，需要执行删除 job 命令</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -224,8 +244,12 @@ v1.3.0、v1.3.1、v1.4.0、v1.5.1、v1.6.4</p>
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl delete job --all -n ingress-nginx --context<span class="o">=</span>huawei
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>查看容器是否启动，直接看应用是否 ready</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>查看容器是否启动，直接看应用是否 ready</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -233,10 +257,14 @@ v1.3.0、v1.3.1、v1.4.0、v1.5.1、v1.6.4</p>
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl get po -n ingress-nginx --context<span class="o">=</span>huawei -w
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>-w 表示&ndash;watch，就是监视，在 watch 的时候出现一次弹出多条重复的信息，表示有多个变动，只是展示信息不够详细
+</div>
+</div>
+<p>-w 表示&ndash;watch，就是监视，在 watch 的时候出现一次弹出多条重复的信息，表示有多个变动，只是展示信息不够详细
 只能看到多条重复信息，不是实现故障，信息重复</p>
 <p>容器未启动需要查看事件 events</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -244,8 +272,12 @@ v1.3.0、v1.3.1、v1.4.0、v1.5.1、v1.6.4</p>
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl describe po xxx
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>查看事件只提示拉镜像成功，没有更多的有用信息，就需要在看看容器日志</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>查看事件只提示拉镜像成功，没有更多的有用信息，就需要在看看容器日志</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -253,7 +285,9 @@ v1.3.0、v1.3.1、v1.4.0、v1.5.1、v1.6.4</p>
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl logs xxx
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>ingress-nginx.yaml 文件解释</p>
+</div>
+</div>
+<p>ingress-nginx.yaml 文件解释</p>
 <p>创建两个账户 ServiceAccount</p>
 <ul>
 <li>ingress-nginx</li>
@@ -263,7 +297,9 @@ ingress-nginx 设置了
 automountServiceAccountToken: true
 属于 namespace 下自动调用的 token，不需要在调用时指定 ServiceAccountName</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -273,7 +309,9 @@ automountServiceAccountToken: true
 </span></span><span class="line"><span class="cl">当您创建 pod 的时候，如果您没有指定一个 service account，系统会自动得在与该pod 相同的 namespace 下为其指派一个default service account。如果您获取刚创建的 pod 的原始 json 或 yaml 信息（例如使用kubectl get pods/podename -o yaml命令），您将看到spec.serviceAccountName字段已经被设置为 default。
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>然后就是对应的 Role ClusterRole
+</div>
+</div>
+<p>然后就是对应的 Role ClusterRole
 RoleBinding ClusterRoleBinding</p>
 <p>ServiceAccount(ingress-nginx) &ndash;RoleBinding&ndash;&gt;  Role(ingress-nginx)
 ServiceAccount(ingress-nginx) &ndash;ClusterRoleBinding&ndash;&gt;  ClusterRole(ingress-nginx)</p>
@@ -283,7 +321,9 @@ ServiceAccount(ingress-nginx-admission) &ndash;ClusterRoleBinding&ndash;&gt;  Cl
 <p>在 deployment 中用到了 serviceAccountName: ingress-nginx
 在  2 个 job 中用到了 serviceAccountName: ingress-nginx-admission</p>
 <p>下面是一个摘要</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -341,7 +381,11 @@ ServiceAccount(ingress-nginx-admission) &ndash;ClusterRoleBinding&ndash;&gt;  Cl
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="l">volumes:...</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -425,7 +469,9 @@ ServiceAccount(ingress-nginx-admission) &ndash;ClusterRoleBinding&ndash;&gt;  Cl
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l">ingress-nginx-admission</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>ValidatingWebhookConfiguration 描述准入Webhook 的配置，该Webhook 可在不更改对象的情况下接受或拒绝对象请求。</p>
+</div>
+</div>
+<p>ValidatingWebhookConfiguration 描述准入Webhook 的配置，该Webhook 可在不更改对象的情况下接受或拒绝对象请求。</p>
 <p>准入 Webhook 是一种用于接收准入请求并对其进行处理的 HTTP 回调机制。 可以定义两种类型的准入 Webhook， 即验证性质的准入 Webhook 和变更性质的准入 Webhook。 变更性质的准入 Webhook 会先被调用。它们可以修改发送到 API 服务器的对象以执行自定义的设置默认值操作。</p>
 
 </section>
@@ -690,7 +736,7 @@ ServiceAccount(ingress-nginx-admission) &ndash;ClusterRoleBinding&ndash;&gt;  Cl
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

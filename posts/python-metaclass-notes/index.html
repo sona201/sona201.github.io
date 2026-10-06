@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/python-metaclass-notes/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='metaclass学习'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='metaclass学习'>
 <meta property='og:description' content='本文主要介绍Python的MetaClass的用法。 MetaClass也是一个class，这个class继承自type，它用于生产新的cla'>
 <meta property='og:url' content='https://sona201.github.io/posts/python-metaclass-notes/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>本文主要介绍Python的MetaClass的用法。</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>本文主要介绍Python的MetaClass的用法。</p>
 <p>MetaClass也是一个class，这个class继承自type，它用于生产新的class对象。定义class的时候，就会执行到MetaClass的__new__()代码。</p>
 <p>从这里出发，我们需要一个新的class的时候，就可以使用MetaClass定义它的行为。本文介绍MetaClass的三种用法：</p>
 <ul>
@@ -175,7 +181,9 @@ if (!doNotTrack) {
 <li>定义新的class的时候，自动修改class的属性</li>
 </ul>
 <p>MetaClass可以读取和修改class的属性。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -245,12 +253,16 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>关于__new__方法讲解文章： <a class="link" href="https://www.51cto.com/article/711136.html"  target="_blank" rel="noopener"
+</div>
+</div>
+<p>关于__new__方法讲解文章： <a class="link" href="https://www.51cto.com/article/711136.html"  target="_blank" rel="noopener"
     >一文详解Python中__new__方法的作用</a></p>
 <h2 id="用metaclass验证">用MetaClass验证</h2>
 <p>定义一个新的class相当于调用type创建一个新的class对象，所以覆盖__new__()方法可以实现一些验证的动作。</p>
 <p>下面的代码定义了一个多边形的MetaClass，在定义新的class的时候，验证边数是否小于3，如果小于3，这不科学。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -310,12 +322,16 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>这一段有问题，会触发sides=None的报错，应该是执行顺序问题</p>
+</div>
+</div>
+<p>这一段有问题，会触发sides=None的报错，应该是执行顺序问题</p>
 <p><a class="link" href="https://realpython.com/python-metaclasses/"  target="_blank" rel="noopener"
     >realpython metaclass</a></p>
 <h2 id="修改class的属性">修改class的属性</h2>
 <p>假设我们想要实现一个Python对象到数据库字段的对应（也就是ORM），我们可以使用前面博客提到的Descriptor，如下。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -353,8 +369,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">       <span class="n">suffix</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="err">‘</span><span class="n">suffix</span><span class="err">’</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>但是这里存在的问题是，first_name已经写了一次了，还要在创建Field的时候再写一次，不是有些多余吗？Field应该自动根据引用它的变量名自动命名。这可以通过MetaClass来做到。</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>但是这里存在的问题是，first_name已经写了一次了，还要在创建Field的时候再写一次，不是有些多余吗？Field应该自动根据引用它的变量名自动命名。这可以通过MetaClass来做到。</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -490,7 +510,9 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>综上，MetaClass是非常实用的，可以帮我们减少很多需要重复复制粘贴的代码。</p>
+</div>
+</div>
+<p>综上，MetaClass是非常实用的，可以帮我们减少很多需要重复复制粘贴的代码。</p>
 <p>python learning website <br>
 <a class="link" href="https://www.pythontutorial.net/python-oop/python-__new__/"  target="_blank" rel="noopener"
     >Python <strong>new</strong></a> <br>
@@ -802,7 +824,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

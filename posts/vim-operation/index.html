@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='#vim/vi #linux vim operation 简明vim攻略 vim光标移动 vim笔记 Vim 学习笔记 2: 组合命令 打造vim ide vim 搜索忽略大小写 1 2 3 4 /foo\c # 选区，在 Visual 模式下选择区域后输入 :，'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='#vim/vi #linux vim operation 简明vim攻略 vim光标移动 vim笔记 Vim 学习笔记 2: 组合命令 打造vim ide vim 搜索忽略大小写 代码 1 2 3 4 /foo\c # 选区，在 Visual 模式下选择区域后输入'>
 <title>Vim 与 VSCodeVim 操作笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/vim-operation/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Vim 与 VSCodeVim 操作笔记'>
-<meta property='og:description' content='#vim/vi #linux vim operation 简明vim攻略 vim光标移动 vim笔记 Vim 学习笔记 2: 组合命令 打造vim ide vim 搜索忽略大小写 1 2 3 4 /foo\c # 选区，在 Visual 模式下选择区域后输入 :，'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Vim 与 VSCodeVim 操作笔记'>
+<meta property='og:description' content='#vim/vi #linux vim operation 简明vim攻略 vim光标移动 vim笔记 Vim 学习笔记 2: 组合命令 打造vim ide vim 搜索忽略大小写 代码 1 2 3 4 /foo\c # 选区，在 Visual 模式下选择区域后输入'>
 <meta property='og:url' content='https://sona201.github.io/posts/vim-operation/'>
 <meta property='og:site_name' content='Ricardo'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-07-06T01:17:38&#43;08:00'/><meta property='article:modified_time' content='2024-07-06T01:17:38&#43;08:00'/>
 <meta name="twitter:title" content="Vim 与 VSCodeVim 操作笔记">
-<meta name="twitter:description" content="#vim/vi #linux vim operation 简明vim攻略 vim光标移动 vim笔记 Vim 学习笔记 2: 组合命令 打造vim ide vim 搜索忽略大小写 1 2 3 4 /foo\c # 选区，在 Visual 模式下选择区域后输入 :，">
+<meta name="twitter:description" content="#vim/vi #linux vim operation 简明vim攻略 vim光标移动 vim笔记 Vim 学习笔记 2: 组合命令 打造vim ide vim 搜索忽略大小写 代码 1 2 3 4 /foo\c # 选区，在 Visual 模式下选择区域后输入">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>#vim/vi #linux
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>#vim/vi #linux
 vim operation</p>
 <p><a class="link" href="https://coolshell.cn/articles/5426.html"  target="_blank" rel="noopener"
     >简明vim攻略</a>
@@ -179,7 +185,9 @@ vim operation</p>
 <a class="link" href="https://harttle.land/2016/08/08/vim-search-in-file.html"  target="_blank" rel="noopener"
     >打造vim ide</a></p>
 <p>vim 搜索忽略大小写</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -193,8 +201,12 @@ vim operation</p>
 </span></span><span class="line"><span class="cl">:&#39;&lt;,&#39;&gt;s/foo/bar/g
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="光标移动">光标移动</h2>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h2 id="光标移动">光标移动</h2>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -244,8 +256,12 @@ vim operation</p>
 </span></span><span class="line"><span class="cl">,        反向查找上次查找的命令
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="操作符-operator">操作符 operator</h2>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h2 id="操作符-operator">操作符 operator</h2>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -277,8 +293,12 @@ vim operation</p>
 </span></span><span class="line"><span class="cl">Ctrl + v + I + #  批量使用 # 在行首注释
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="动作-motion">动作 motion</h2>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h2 id="动作-motion">动作 motion</h2>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -296,8 +316,12 @@ vim operation</p>
 </span></span><span class="line"><span class="cl">ci{   删除一对{} 内匹配的内容,不包括符号,并进入编辑模式
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="切换大小写">切换大小写</h2>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h2 id="切换大小写">切换大小写</h2>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -317,8 +341,12 @@ vim operation</p>
 </span></span><span class="line"><span class="cl">guaw(guiw)  将光标下的单词改成小写
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="滚屏操作-前缀n为按下的数字">滚屏操作 前缀(N)为按下的数字</h2>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h2 id="滚屏操作-前缀n为按下的数字">滚屏操作 前缀(N)为按下的数字</h2>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -350,8 +378,12 @@ vim operation</p>
 </span></span><span class="line"><span class="cl">L
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="打开保存退出改变文件buffer">打开/保存/退出/改变文件(Buffer)</h2>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h2 id="打开保存退出改变文件buffer">打开/保存/退出/改变文件(Buffer)</h2>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -371,9 +403,13 @@ vim operation</p>
 </span></span><span class="line"><span class="cl">:bn 和 :bp                你可以同时打开很多文件，使用这两个命令来切换下一个或上一个文件(陈皓注:我喜欢使用:n到下一个文件)
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="文本编辑器的换行操作">文本编辑器的换行操作</h2>
+</div>
+</div>
+<h2 id="文本编辑器的换行操作">文本编辑器的换行操作</h2>
 <p>Vim 通常会对长行自动回绕(换行),以便你可以看见所有的文字。但有时想让文字在一行中显示完。那么就要关闭自动回绕功能，你需要左右移动才能看到一整行。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -385,8 +421,12 @@ vim operation</p>
 </span></span><span class="line"><span class="cl">set nowrap
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>当nowrap生效时</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>当nowrap生效时</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -402,7 +442,9 @@ vim operation</p>
 </span></span><span class="line"><span class="cl">(N)zL    屏幕向左滚动半个屏幕宽度的字符
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><a class="link" href="https://github.com/mg979/vim-visual-multi"  target="_blank" rel="noopener"
+</div>
+</div>
+<p><a class="link" href="https://github.com/mg979/vim-visual-multi"  target="_blank" rel="noopener"
     >vim vscode plug</a></p>
 <p><a class="link" href="https://coolshell.cn/articles/1651.html"  target="_blank" rel="noopener"
     >https://coolshell.cn/articles/1651.html</a></p>
@@ -419,7 +461,9 @@ vim operation</p>
 	
 ></p>
 <p>查看历史命令</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -435,7 +479,9 @@ vim operation</p>
 </span></span><span class="line"><span class="cl">:history /
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>vim 边界符号(英文字符下)，可以使用<code>b</code>, &lsquo;B&rsquo;来获取边界
+</div>
+</div>
+<p>vim 边界符号(英文字符下)，可以使用<code>b</code>, &lsquo;B&rsquo;来获取边界
 vim 下的 <code>%</code> 使用也是很神奇，会有偶尔用错的情况。
 还有就是要看下vscode 下，vim 对应的 <code>keymap</code>
 刚刚在练习使用 <code>f{char}</code> 速行定位时，用到 <code>.</code> 好像会删除行，这个不知道是不是跟我刚刚的操作有关，<code>.</code> 应该是重复上次的操作，刚好我上次操作是 &lsquo;删除&rsquo;
@@ -782,7 +828,7 @@ vim 寄存器  剪切板
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

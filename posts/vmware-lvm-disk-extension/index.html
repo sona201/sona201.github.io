@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/vmware-lvm-disk-extension/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='VMware 虚拟机扩容与 LVM 文件系统调整'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='VMware 虚拟机扩容与 LVM 文件系统调整'>
 <meta property='og:description' content='vmware 给已有机器扩容 1 vmware 虚机增加磁盘空间 修改完成后，会提示硬盘已准备。需要重启虚拟机。 在 VMware 的虚拟机设置中扩大已有虚拟磁盘容量，本例将磁盘从 60 GiB 扩'>
 <meta property='og:url' content='https://sona201.github.io/posts/vmware-lvm-disk-extension/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,16 +163,24 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h1 id="vmware-给已有机器扩容">vmware 给已有机器扩容</h1>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h1 id="vmware-给已有机器扩容">vmware 给已有机器扩容</h1>
 <h2 id="1-vmware-虚机增加磁盘空间">1 vmware 虚机增加磁盘空间</h2>
 <p>修改完成后，会提示硬盘已准备。需要重启虚拟机。</p>
 <p>在 VMware 的虚拟机设置中扩大已有虚拟磁盘容量，本例将磁盘从 60 GiB 扩到 80 GiB。</p>
 <h3 id="11-查看重启后机器的磁盘是否有变化">1.1 查看重启后机器的磁盘是否有变化</h3>
 <p>下面的图是磁盘更新前跟磁盘更新后的 lsblk 命令的结果</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -180,10 +188,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">lsblk
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>本例扩容前 <code>/dev/sda</code> 为 60G，扩容后为 80G；已有 <code>/dev/sda3</code> 分区仍为 44G，需要继续更新分区。</p>
+</div>
+</div>
+<p>本例扩容前 <code>/dev/sda</code> 为 60G，扩容后为 80G；已有 <code>/dev/sda3</code> 分区仍为 44G，需要继续更新分区。</p>
 <h2 id="2-更新磁盘分区">2 更新磁盘分区</h2>
 <h3 id="21-查看磁盘分区">2.1 查看磁盘分区</h3>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -191,7 +203,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">fdisk -l /dev/sda
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>记录需要扩容的 <code>/dev/sda3</code> 分区起始扇区，重新创建时必须保留这个起点。</p>
+</div>
+</div>
+<p>记录需要扩容的 <code>/dev/sda3</code> 分区起始扇区，重新创建时必须保留这个起点。</p>
 <h3 id="22-修改磁盘分区">2.2 修改磁盘分区</h3>
 <p>本例需要扩容的是 LVM 物理卷所在的 <code>/dev/sda3</code> 分区，简化为以下步骤：</p>
 <ol>
@@ -203,7 +217,9 @@ if (!doNotTrack) {
 <p>本例重新创建后，<code>/dev/sda3</code> 从 44 GiB 扩到 64 GiB。其他分区保持原位置和大小。</p>
 <h3 id="23-刷新一下分区信息">2.3 刷新一下分区信息</h3>
 <p>分区操作完成，刷新一下分区信息并再次查看分区信息</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -211,7 +227,11 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">partprobe /dev/sda
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -221,11 +241,15 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">pvdisplay
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>刷新后分区显示为 64G，但 LVM 物理卷大小可能仍是 44G。</p>
+</div>
+</div>
+<p>刷新后分区显示为 64G，但 LVM 物理卷大小可能仍是 44G。</p>
 <h2 id="3-调整lvm中物理卷">3 调整LVM中物理卷</h2>
 <p>可以看到 pv的 /dev/sda3还是 44G 没有更新完成
 需要调整LVM中物理卷的容量大小，执行命令</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -233,7 +257,11 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">pvresize /dev/sda3
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -241,11 +269,15 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">pvdisplay
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>确认 <code>/dev/sda3</code> 对应的物理卷大小已经更新为 64 GiB。</p>
+</div>
+</div>
+<p>确认 <code>/dev/sda3</code> 对应的物理卷大小已经更新为 64 GiB。</p>
 <p>可以看到  /dev/sda3 的pv 大小已经更新为 64G</p>
 <h2 id="4-扩展逻辑卷">4 扩展逻辑卷</h2>
 <p>查看逻辑卷大小</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -253,8 +285,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">lvdisplay
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>执行命令扩展逻辑卷，并再次查看</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>执行命令扩展逻辑卷，并再次查看</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -262,7 +298,11 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">lvextend -l +100%FREE /dev/centos/root
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -270,10 +310,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">lvdisplay
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>逻辑卷 <code>/dev/centos/root</code> 扩容后，再确认其容量已经增长。</p>
+</div>
+</div>
+<p>逻辑卷 <code>/dev/centos/root</code> 扩容后，再确认其容量已经增长。</p>
 <h2 id="5-文件系统扩容">5 文件系统扩容</h2>
 <p>df查看磁盘大小，还是没有更新，需要对文件系统扩容，默认文件系统为xfs，所以使用 xfs_growfs 命令</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -281,7 +325,11 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">xfs_growfs /dev/centos/root
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -289,7 +337,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">df -Th /
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>最后查看磁盘大小已经更新为80G</p>
+</div>
+</div>
+<p>最后查看磁盘大小已经更新为80G</p>
 
 </section>
 
@@ -593,7 +643,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

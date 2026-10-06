@@ -43,7 +43,9 @@
 &lt;li&gt;除此之外，还可以在命令行中运行&lt;code&gt;python -m site&lt;/code&gt;，会打印出当前的 &lt;code&gt;Python&lt;/code&gt; 的一些信息，包括搜索路径列表。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;例：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
@@ -69,11 +71,15 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/Users/admin/PycharmProjects/opstools/.venv&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;h2 id=&#34;使用环境变量添加搜索路径&#34;&gt;使用环境变量添加搜索路径&lt;/h2&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;使用环境变量添加搜索路径&#34;&gt;使用环境变量添加搜索路径&lt;/h2&gt;
 &lt;p&gt;如果你的包的路径不存在上面列出的搜索路径列表里，可以把路径加到&lt;code&gt;PYTHONPATH&lt;/code&gt;环境变量里，多个路径用&lt;code&gt;:&lt;/code&gt;隔开(Windows用&lt;code&gt;;&lt;/code&gt;)。&lt;/p&gt;
 &lt;p&gt;但需注意，避免把不同&lt;code&gt;Python&lt;/code&gt;版本包的路径加到&lt;code&gt;PYTHONPATH&lt;/code&gt;里，比如&lt;code&gt;PYTHONPATH=/home/admin/.local/lib/python2.7/site-packages&lt;/code&gt;，因为&lt;code&gt;PYTHONPATH&lt;/code&gt;中的路径是优先于默认搜索路径，如果用&lt;code&gt;Python3&lt;/code&gt;的话会有兼容性问题。事实上&lt;code&gt;PYTHONPATH&lt;/code&gt;里最好不要出现任何带&lt;code&gt;site-packages&lt;/code&gt;的路径。&lt;/p&gt;
 &lt;p&gt;简单附一个&lt;code&gt;PYTHONPATH&lt;/code&gt;实际案例，django项目经常有人自定义一个&lt;code&gt;apps&lt;/code&gt;目录用来放所有项目，一般都是将路径放到&lt;code&gt;sys.path&lt;/code&gt;里。这里可以设置环境变量&lt;code&gt;PYTHONPATH&lt;/code&gt;来解决这个问题，代码如下&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -87,7 +93,9 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;ABS_BASE_DIR&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;os&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;abspath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BASE_DIR&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;顺便说下&lt;code&gt;PATH&lt;/code&gt;是用来找&lt;strong&gt;可执行程序&lt;/strong&gt;的搜索路径，假如你在终端运行命令&lt;code&gt;my_cmd&lt;/code&gt;，系统会依次扫描&lt;code&gt;PATH&lt;/code&gt;中的路径，看&lt;code&gt;my_cmd&lt;/code&gt;是否在于该路径下，所以如果是提示找不到程序或命令无法识别，那你就要看路径是否加到&lt;code&gt;PATH&lt;/code&gt;里了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;顺便说下&lt;code&gt;PATH&lt;/code&gt;是用来找&lt;strong&gt;可执行程序&lt;/strong&gt;的搜索路径，假如你在终端运行命令&lt;code&gt;my_cmd&lt;/code&gt;，系统会依次扫描&lt;code&gt;PATH&lt;/code&gt;中的路径，看&lt;code&gt;my_cmd&lt;/code&gt;是否在于该路径下，所以如果是提示找不到程序或命令无法识别，那你就要看路径是否加到&lt;code&gt;PATH&lt;/code&gt;里了。&lt;/p&gt;
 &lt;h2 id=&#34;python-是如何安装包的&#34;&gt;Python 是如何安装包的&lt;/h2&gt;
 &lt;p&gt;现在用安装&lt;code&gt;Python&lt;/code&gt;包基本是用的&lt;code&gt;pip&lt;/code&gt;，就算你是用&lt;code&gt;pipenv&lt;/code&gt;，&lt;code&gt;poetry&lt;/code&gt;，底层依然是&lt;code&gt;pip&lt;/code&gt;，一律适用。如果你没有安装&lt;code&gt;pip&lt;/code&gt;，请参考&lt;a class=&#34;link&#34; href=&#34;https://pip.pypa.io/en/stable/installation/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;pip 安装&lt;/a&gt;，如果安装了还无法使用&lt;code&gt;pip&lt;/code&gt;命令请看上一节。&lt;/p&gt;
@@ -120,7 +128,9 @@
 &lt;p&gt;从上面的介绍大家可以知道，Python 找不找得到一个包，最直接的原因是&lt;code&gt;sys.path&lt;/code&gt;，而更进一步的原因是&lt;code&gt;sys.executable&lt;/code&gt;的路径。程序写完了，我们总得需要运行它，不同的运行方法却有可能影响到&lt;code&gt;sys.path&lt;/code&gt;而造成不同的行为，下面我们就来讨论这个问题。&lt;/p&gt;
 &lt;h3 id=&#34;情况一&#34;&gt;情况一&lt;/h3&gt;
 &lt;p&gt;假设你的包结构如下&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;代码&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -134,8 +144,12 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    └── b.py
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;code&gt;main.py&lt;/code&gt;的内容：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;main.py&lt;/code&gt;的内容：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
@@ -143,8 +157,12 @@
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;my_package.b&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;code&gt;b.py&lt;/code&gt; 的文件内容很简单：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;b.py&lt;/code&gt; 的文件内容很简单：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -158,8 +176,12 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sys&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;现在在 &lt;code&gt;main.py&lt;/code&gt; 同级的目录下执行，可以看到正常输出&lt;code&gt;path&lt;/code&gt;，且&lt;code&gt;path&lt;/code&gt;路径第一个就是我们项目的当前目录&lt;code&gt;py_test&lt;/code&gt;，也是我们的执行目录&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;现在在 &lt;code&gt;main.py&lt;/code&gt; 同级的目录下执行，可以看到正常输出&lt;code&gt;path&lt;/code&gt;，且&lt;code&gt;path&lt;/code&gt;路径第一个就是我们项目的当前目录&lt;code&gt;py_test&lt;/code&gt;，也是我们的执行目录&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -171,11 +193,15 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;[&amp;#39;&lt;/span&gt;/Users/admin/Files/Projects/py_test&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;code&gt;python xxx.py&lt;/code&gt; 的运行方式叫做直接运行，这时该文件中的 &lt;code&gt;__name__&lt;/code&gt; 值会指定为 &lt;code&gt;__main__&lt;/code&gt;，IDE 中的「 Run File」「 运行脚本」用的就是这种方式。可以看到这时 &lt;code&gt;sys.path&lt;/code&gt;的第一个值是该脚本文件所在的目录，随脚本路径而变化，记住我们执行测试始终是在 &lt;code&gt;/home/admin/test_path&lt;/code&gt; 这个目录下。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;python xxx.py&lt;/code&gt; 的运行方式叫做直接运行，这时该文件中的 &lt;code&gt;__name__&lt;/code&gt; 值会指定为 &lt;code&gt;__main__&lt;/code&gt;，IDE 中的「 Run File」「 运行脚本」用的就是这种方式。可以看到这时 &lt;code&gt;sys.path&lt;/code&gt;的第一个值是该脚本文件所在的目录，随脚本路径而变化，记住我们执行测试始终是在 &lt;code&gt;/home/admin/test_path&lt;/code&gt; 这个目录下。&lt;/p&gt;
 &lt;h3 id=&#34;情况二&#34;&gt;情况二&lt;/h3&gt;
 &lt;p&gt;还是那个结构，我们将项目复制一份，在&lt;code&gt;my_package&lt;/code&gt;目录里增加一个&lt;code&gt;a.py&lt;/code&gt;文件，仅做一个简单的打印`print(&amp;ldquo;I&amp;rsquo;m a&amp;rdquo;)&lt;/p&gt;
 &lt;p&gt;项目结构如下&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;代码&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -191,8 +217,12 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    └── b.py
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;code&gt;a.py&lt;/code&gt; 的文件内容：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;a.py&lt;/code&gt; 的文件内容：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
@@ -200,9 +230,13 @@
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;I&amp;#39;m a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;好，那么如果我们需要在 &lt;code&gt;b.py&lt;/code&gt; 中导入 &lt;code&gt;a.py&lt;/code&gt;，那么 &lt;code&gt;b.py&lt;/code&gt; 脚本中应该怎么写呢？&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;好，那么如果我们需要在 &lt;code&gt;b.py&lt;/code&gt; 中导入 &lt;code&gt;a.py&lt;/code&gt;，那么 &lt;code&gt;b.py&lt;/code&gt; 脚本中应该怎么写呢？&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;b.py&lt;/code&gt; 的文件内容，这里的&lt;code&gt;import&lt;/code&gt;并没有写在最上面是为了能看到&lt;code&gt;sys.path&lt;/code&gt;的输出：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -220,10 +254,14 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;a&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;ol&gt;
 &lt;li&gt;此时，再执行一遍上面的测试&lt;/li&gt;
 &lt;/ol&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -247,9 +285,13 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;ModuleNotFoundError: No module named &amp;#39;&lt;/span&gt;a&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;执行报错了，根据前面讲的内容，这个报错就是意料之中了——&lt;code&gt;a.py&lt;/code&gt;所在的目录 &lt;code&gt;/Users/admin/Files/Projects/py_test1/my_package&lt;/code&gt; 压根没有包含  &lt;code&gt;sys.path&lt;/code&gt;中 ，自然就找不到 &lt;code&gt;a&lt;/code&gt; 文件了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;执行报错了，根据前面讲的内容，这个报错就是意料之中了——&lt;code&gt;a.py&lt;/code&gt;所在的目录 &lt;code&gt;/Users/admin/Files/Projects/py_test1/my_package&lt;/code&gt; 压根没有包含  &lt;code&gt;sys.path&lt;/code&gt;中 ，自然就找不到 &lt;code&gt;a&lt;/code&gt; 文件了。&lt;/p&gt;
 &lt;p&gt;那换个思路，直接在当前main目录执行&lt;code&gt;b.py&lt;/code&gt;是否会报错？&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -263,10 +305,14 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;I&amp;#39;&lt;/span&gt;m a
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;结果没有报错，相应的目录位置也变了，不是&lt;code&gt;main.py&lt;/code&gt;所在的&lt;code&gt;/Users/admin/Files/Projects/py_test1&lt;/code&gt;目录，而是&lt;code&gt;my_package&lt;/code&gt;目录&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;结果没有报错，相应的目录位置也变了，不是&lt;code&gt;main.py&lt;/code&gt;所在的&lt;code&gt;/Users/admin/Files/Projects/py_test1&lt;/code&gt;目录，而是&lt;code&gt;my_package&lt;/code&gt;目录&lt;/p&gt;
 &lt;h3 id=&#34;情况三&#34;&gt;情况三&lt;/h3&gt;
 &lt;p&gt;还是刚刚的代码，只是把&lt;code&gt;b.py&lt;/code&gt;的内容更新了下，将 &lt;code&gt;import a&lt;/code&gt; 改成 &lt;code&gt;from my_package import a&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -284,8 +330,12 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;my_package&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;同样的先执行&lt;code&gt;python main.py&lt;/code&gt;测试（我重新拷贝了项目命名为&lt;code&gt;py_test2&lt;/code&gt;）&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;同样的先执行&lt;code&gt;python main.py&lt;/code&gt;测试（我重新拷贝了项目命名为&lt;code&gt;py_test2&lt;/code&gt;）&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -299,9 +349,13 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;I&amp;#39;&lt;/span&gt;m a
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;改成 &lt;code&gt;from my_package import a&lt;/code&gt;，执行不报错了，注意由于 &lt;code&gt;b&lt;/code&gt; 是在 &lt;code&gt;my_package&lt;/code&gt; 包中的，这时可以使用相对导入，写 &lt;code&gt;from . import a&lt;/code&gt; 和 &lt;code&gt;from my_package import a&lt;/code&gt; 的效果是一样的。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;改成 &lt;code&gt;from my_package import a&lt;/code&gt;，执行不报错了，注意由于 &lt;code&gt;b&lt;/code&gt; 是在 &lt;code&gt;my_package&lt;/code&gt; 包中的，这时可以使用相对导入，写 &lt;code&gt;from . import a&lt;/code&gt; 和 &lt;code&gt;from my_package import a&lt;/code&gt; 的效果是一样的。&lt;/p&gt;
 &lt;p&gt;因为基于同样的分析，我们可以推断直接执行 &lt;code&gt;python my_package/b.py&lt;/code&gt;会报错提示&lt;code&gt;找不到 my_package&lt;/code&gt;，运行结果如下&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -321,10 +375,14 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;ModuleNotFoundError: No module named &amp;#39;&lt;/span&gt;my_package&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;果然跟我们推理的一样，就是路径不对报错。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;果然跟我们推理的一样，就是路径不对报错。&lt;/p&gt;
 &lt;h3 id=&#34;情况四&#34;&gt;情况四&lt;/h3&gt;
 &lt;p&gt;那么我有没有让这两次运行都不报错的方法呢？有。我们要知道，一个项目中的入口是有限的，实际上不会出现可以执行的代码既在顶层有，又在子目录里也有。我们应该把主要的运行逻辑，都放在 &lt;code&gt;main.py&lt;/code&gt; 中（不一定是这个名字，比如 &lt;code&gt;Django&lt;/code&gt; 项目是 &lt;code&gt;manage.py&lt;/code&gt;），如果这时确实需要运行一个子目录中某脚本的代码，应该用 &lt;code&gt;python -m &amp;lt;module_name&amp;gt;&lt;/code&gt;，而 &lt;code&gt;b.py&lt;/code&gt; 中导入 &lt;code&gt;a&lt;/code&gt; 的语句应为 &lt;code&gt;from my_package import a&lt;/code&gt;，我们来看一下运行效果：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
@@ -346,7 +404,9 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;I&amp;#39;&lt;/span&gt;m a
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;可以看到这两次运行的 &lt;code&gt;sys.path&lt;/code&gt; 内容一致了，它的第一个值是当前运行所在的目录。这种运行方式叫做以模块方式运行，&lt;code&gt;python -m&lt;/code&gt; 后面的参数是（以 &lt;code&gt;.&lt;/code&gt; 分隔的）模块名，而不是路径名。由于这种统一性，你在项目中的所有导入都可以用相同的定义方式，而不用管是在哪个脚本中。这也是为什么 &lt;code&gt;Django&lt;/code&gt; 官方文档中推荐导入名称全部用 &lt;code&gt;myapp.models.users&lt;/code&gt; 这种形式。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;可以看到这两次运行的 &lt;code&gt;sys.path&lt;/code&gt; 内容一致了，它的第一个值是当前运行所在的目录。这种运行方式叫做以模块方式运行，&lt;code&gt;python -m&lt;/code&gt; 后面的参数是（以 &lt;code&gt;.&lt;/code&gt; 分隔的）模块名，而不是路径名。由于这种统一性，你在项目中的所有导入都可以用相同的定义方式，而不用管是在哪个脚本中。这也是为什么 &lt;code&gt;Django&lt;/code&gt; 官方文档中推荐导入名称全部用 &lt;code&gt;myapp.models.users&lt;/code&gt; 这种形式。&lt;/p&gt;
 &lt;p&gt;除此之外，以模块方式运行的时候，传入模块名的每一级父模块（或包）都会以模块形式运行，这意味着你可以在模块中使用相对导入（以直接运行方式运行不可以），并且传入的模块中&lt;code&gt;__name__&lt;/code&gt; 的值会置为 &lt;code&gt;__main__&lt;/code&gt;，你依然可以应用 &lt;code&gt;if __name__ == &amp;quot;__main__&amp;quot;:&lt;/code&gt; 的判断。如果 &lt;code&gt;python -m &amp;lt;module_name&amp;gt;&lt;/code&gt; 中传入的模块是个包，那么会执行包目录中的 &lt;code&gt;__main__.py&lt;/code&gt; 脚本（如果存在），此时该脚本的 &lt;code&gt;__name__&lt;/code&gt; 值为 &lt;code&gt;__main__&lt;/code&gt;。&lt;/p&gt;
 &lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
 &lt;p&gt;看到这里大家可以发现，关于包路径搜索最重要的就是这个&lt;code&gt;$path_prefix&lt;/code&gt;路径前缀，而这个值又是从使用的 &lt;code&gt;Python&lt;/code&gt; 解释器路径推导出来的。所以要找到包的路径，只需要知道解释器的路径就可以了，如果遇到改变包的路径，只需要通过正确的PATH设置，指定你想要的 &lt;code&gt;Python&lt;/code&gt; 解释器即可。&lt;/p&gt;

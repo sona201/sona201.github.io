@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/ai-agent-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0crewai-%E4%B8%8E-react/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='AI Agent 学习笔记：CrewAI 与 ReAct'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='AI Agent 学习笔记：CrewAI 与 ReAct'>
 <meta property='og:description' content='从个人笔记仓库整理迁移'>
 <meta property='og:url' content='https://sona201.github.io/posts/ai-agent-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0crewai-%E4%B8%8E-react/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>#agent #ai #react #plantegg</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>#agent #ai #react #plantegg</p>
 <h1 id="学习笔记使用-crewai-复刻-claude-code-级的-ai-agent">学习笔记：使用 CrewAI 复刻 Claude Code 级的 AI Agent</h1>
 <h2 id="1-什么是-crewai">1. 什么是 CrewAI？</h2>
 <p><strong>CrewAI</strong> 是一个用于编排协同式 AI Agent 的 Python 框架。如果说 LLM（大语言模型）是一个聪明的“大脑”，那么 CrewAI 就是一个**“项目经理”**。</p>
@@ -240,8 +246,9 @@ if (!doNotTrack) {
 <p>根据参考文章，构建一个 MySQL 运维 Agent 的步骤如下：</p>
 <h3 id="step-1-定义自定义工具">Step 1: 定义自定义工具</h3>
 <p>工具是 Agent 的“手脚”。每个工具必须包含 <code>description</code>，因为<strong>模型是靠这段描述来判断何时使用该工具的</strong>。</p>
-<p>Python</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -254,20 +261,23 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">from crewai.tools import BaseTool
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">crewai.tools</span> <span class="kn">import</span> <span class="n">BaseTool</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">class MySQLQueryTool(BaseTool):
-</span></span><span class="line"><span class="cl">    name: str = &#34;mysql_query&#34;
-</span></span><span class="line"><span class="cl">    description: str = &#34;用于执行 MySQL 只读查询语句，获取数据库状态。&#34;
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">MySQLQueryTool</span><span class="p">(</span><span class="n">BaseTool</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&#34;mysql_query&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&#34;用于执行 MySQL 只读查询语句，获取数据库状态。&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    def _run(self, query: str):
-</span></span><span class="line"><span class="cl">        # 实际执行 SQL 的 Python 代码
-</span></span><span class="line"><span class="cl">        return &#34;查询结果文本&#34;
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 实际执行 SQL 的 Python 代码</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s2">&#34;查询结果文本&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="step-2-配置-agent-与-task">Step 2: 配置 Agent 与 Task</h3>
-<p>Python</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h3 id="step-2-配置-agent-与-task">Step 2: 配置 Agent 与 Task</h3>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -292,30 +302,32 @@ if (!doNotTrack) {
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">from crewai import Agent, Task, Crew
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">crewai</span> <span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Task</span><span class="p">,</span> <span class="n">Crew</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># 1. 定义 Agent
-</span></span><span class="line"><span class="cl">dba_agent = Agent(
-</span></span><span class="line"><span class="cl">    role=&#34;DBA 运维专家&#34;,
-</span></span><span class="line"><span class="cl">    goal=&#34;诊断 MySQL 性能瓶颈&#34;,
-</span></span><span class="line"><span class="cl">    backstory=&#34;你拥有 10 年运维经验，擅长通过慢查询日志定位问题。&#34;,
-</span></span><span class="line"><span class="cl">    tools=[MySQLQueryTool()], # 载入工具
-</span></span><span class="line"><span class="cl">    verbose=True # 开启 debug 模式，查看思考过程
-</span></span><span class="line"><span class="cl">)
+</span></span><span class="line"><span class="cl"><span class="c1"># 1. 定义 Agent</span>
+</span></span><span class="line"><span class="cl"><span class="n">dba_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">role</span><span class="o">=</span><span class="s2">&#34;DBA 运维专家&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">goal</span><span class="o">=</span><span class="s2">&#34;诊断 MySQL 性能瓶颈&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">backstory</span><span class="o">=</span><span class="s2">&#34;你拥有 10 年运维经验，擅长通过慢查询日志定位问题。&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">MySQLQueryTool</span><span class="p">()],</span> <span class="c1"># 载入工具</span>
+</span></span><span class="line"><span class="cl">    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span> <span class="c1"># 开启 debug 模式，查看思考过程</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># 3. 定义任务
-</span></span><span class="line"><span class="cl">task = Task(
-</span></span><span class="line"><span class="cl">    description=&#34;分析 10.0.0.1 机器上的慢查询并给出优化建议&#34;,
-</span></span><span class="line"><span class="cl">    expected_output=&#34;一份包含问题原因和优化建议的 MD 报告&#34;,
-</span></span><span class="line"><span class="cl">    agent=dba_agent
-</span></span><span class="line"><span class="cl">)
+</span></span><span class="line"><span class="cl"><span class="c1"># 3. 定义任务</span>
+</span></span><span class="line"><span class="cl"><span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">description</span><span class="o">=</span><span class="s2">&#34;分析 10.0.0.1 机器上的慢查询并给出优化建议&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">expected_output</span><span class="o">=</span><span class="s2">&#34;一份包含问题原因和优化建议的 MD 报告&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">agent</span><span class="o">=</span><span class="n">dba_agent</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># 4. 组建团队启动
-</span></span><span class="line"><span class="cl">crew = Crew(agents=[dba_agent], tasks=[task])
-</span></span><span class="line"><span class="cl">result = crew.kickoff()
+</span></span><span class="line"><span class="cl"><span class="c1"># 4. 组建团队启动</span>
+</span></span><span class="line"><span class="cl"><span class="n">crew</span> <span class="o">=</span> <span class="n">Crew</span><span class="p">(</span><span class="n">agents</span><span class="o">=</span><span class="p">[</span><span class="n">dba_agent</span><span class="p">],</span> <span class="n">tasks</span><span class="o">=</span><span class="p">[</span><span class="n">task</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="n">crew</span><span class="o">.</span><span class="n">kickoff</span><span class="p">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><hr>
+</div>
+</div>
+<hr>
 <h2 id="5-关键洞察踩坑总结">5. 关键洞察（踩坑总结）</h2>
 <ul>
 <li>
@@ -592,7 +604,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

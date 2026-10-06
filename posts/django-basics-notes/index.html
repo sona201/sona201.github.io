@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Django基础 一、Django 基础操作 创建Django项目 1 2 # 命令行方式创建项目 django-admin startproject devops Django项目目录结构介绍 1 2 3 4 5 6 |-- manage.py `-- devops |--'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Django基础 一、Django 基础操作 创建Django项目 Bash 1 2 # 命令行方式创建项目 django-admin startproject devops Django项目目录结构介绍 代码 1 2 3 4 5 6 |-- manage.py'>
 <title>Django 基础操作与请求响应对象笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/django-basics-notes/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Django 基础操作与请求响应对象笔记'>
-<meta property='og:description' content='Django基础 一、Django 基础操作 创建Django项目 1 2 # 命令行方式创建项目 django-admin startproject devops Django项目目录结构介绍 1 2 3 4 5 6 |-- manage.py `-- devops |--'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Django 基础操作与请求响应对象笔记'>
+<meta property='og:description' content='Django基础 一、Django 基础操作 创建Django项目 Bash 1 2 # 命令行方式创建项目 django-admin startproject devops Django项目目录结构介绍 代码 1 2 3 4 5 6 |-- manage.py'>
 <meta property='og:url' content='https://sona201.github.io/posts/django-basics-notes/'>
 <meta property='og:site_name' content='Ricardo'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-11-28T17:16:52&#43;08:00'/><meta property='article:modified_time' content='2020-11-28T17:16:52&#43;08:00'/>
 <meta name="twitter:title" content="Django 基础操作与请求响应对象笔记">
-<meta name="twitter:description" content="Django基础 一、Django 基础操作 创建Django项目 1 2 # 命令行方式创建项目 django-admin startproject devops Django项目目录结构介绍 1 2 3 4 5 6 |-- manage.py `-- devops |--">
+<meta name="twitter:description" content="Django基础 一、Django 基础操作 创建Django项目 Bash 1 2 # 命令行方式创建项目 django-admin startproject devops Django项目目录结构介绍 代码 1 2 3 4 5 6 |-- manage.py">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
@@ -163,13 +163,21 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h2 id="django基础">Django基础</h2>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h2 id="django基础">Django基础</h2>
 <h3 id="一django-基础操作">一、Django 基础操作</h3>
 <h4 id="创建django项目">创建Django项目</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -179,8 +187,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">django-admin startproject devops
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="django项目目录结构介绍">Django项目目录结构介绍</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="django项目目录结构介绍">Django项目目录结构介绍</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -198,7 +210,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">      `-- wsgi.py
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>最外层的devops/目录只是你项目的一个容器</li>
 <li><code>manage.py</code> 一个实用的命令行工具，可让你以各种方式与该 <code>Django</code> 项目进行交互</li>
 <li>内层 <code>devops/</code> 目录是你项目中的实际Python包。通过它你可以导入它里面的任何东西</li>
@@ -211,7 +225,9 @@ if (!doNotTrack) {
 <ul>
 <li>起动服务</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -221,11 +237,15 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">python manage.py runserver
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>可以直接通过<code>python3 manage.py</code>查看命令</p>
+</div>
+</div>
+<p>可以直接通过<code>python3 manage.py</code>查看命令</p>
 <ul>
 <li>指定端口起动服务</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -233,10 +253,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python manage.py runserver <span class="m">8000</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li>指定ip与端口起动服务</li>
 </ul>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -244,11 +268,15 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python manage.py runserver 0.0.0.0:8000
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="新建django-app">新建Django app</h4>
+</div>
+</div>
+<h4 id="新建django-app">新建Django app</h4>
 <ol>
 <li>新建一个名为dashboard的app</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -256,10 +284,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python manage.py startapp dashboard
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ol start="2">
+</div>
+</div>
+<ol start="2">
 <li>配置url</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -275,10 +307,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="p">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ol start="3">
+</div>
+</div>
+<ol start="3">
 <li>激活app</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -292,9 +328,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="hello-world">Hello world</h4>
+</div>
+</div>
+<h4 id="hello-world">Hello world</h4>
 <h5 id="step-1-编写视图">step 1: 编写视图</h5>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -306,8 +346,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&#34;Hello world !!!&#34;</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h5 id="step-2-配置url">step 2: 配置url</h5>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h5 id="step-2-配置url">step 2: 配置url</h5>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -323,12 +367,16 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="p">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="django-之模板">Django 之模板</h4>
+</div>
+</div>
+<h4 id="django-之模板">Django 之模板</h4>
 <blockquote>
 <p>加载模版</p>
 </blockquote>
 <p><code>django.template.loader</code> 这个模块提供了两种方法加载模板</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -336,8 +384,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">get_template</span><span class="p">(</span><span class="n">template_name</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>加载指定模板并返回Template对象</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>加载指定模板并返回Template对象</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -345,11 +397,15 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">select_template</span><span class="p">(</span><span class="n">template_name_list</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>它与get_template类似，它尝试每个名称并返回第一个存在的模板</p>
+</div>
+</div>
+<p>它与get_template类似，它尝试每个名称并返回第一个存在的模板</p>
 <blockquote>
 <p>从文件加载内容</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -365,10 +421,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">request</span><span class="p">))</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>快捷方式：render()</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -382,9 +442,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;test.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="二django-配置">二、<code>Django</code> 配置</h3>
+</div>
+</div>
+<h3 id="二django-配置">二、<code>Django</code> 配置</h3>
 <h4 id="配置静态文件">配置静态文件</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -398,8 +462,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="配置时区">配置时区</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="配置时区">配置时区</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -407,10 +475,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">TIME_ZONE</span> <span class="o">=</span> <span class="err">’</span><span class="n">Asia</span><span class="o">/</span><span class="n">Shanghai</span><span class="err">’</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="配置数据库">配置数据库</h4>
+</div>
+</div>
+<h4 id="配置数据库">配置数据库</h4>
 <p><code>opsweb/settings.py</code>是一个普通的<code>python</code>模块，每项配置都是一对<code>key/value</code></p>
 <p>数据库的配置是以dict的形式存放在这个模块中，key名为：DATABASES</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -436,7 +508,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="日志配置">日志配置</h4>
+</div>
+</div>
+<h4 id="日志配置">日志配置</h4>
 <p>待续&hellip;</p>
 <h3 id="三django-http相关-对象">三、Django Http相关 对象</h3>
 <p>Django的对象流程，先获取url，创建wsgi对象，request</p>
@@ -445,7 +519,9 @@ if (!doNotTrack) {
 <blockquote>
 <p>属性：</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -467,10 +543,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">META</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>方法：</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -486,11 +566,15 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">is_ajax</span><span class="p">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="b-httpresponse对象">b. HttpResponse对象</h4>
+</div>
+</div>
+<h4 id="b-httpresponse对象">b. HttpResponse对象</h4>
 <blockquote>
 <p>传递一个字符串作为页面的内容到 HttpResponse 构造函数</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -502,10 +586,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&#34;Text only, please.&#34;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&#34;text/plain&#34;</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>属性：</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -519,10 +607,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="n">HttpResponse</span><span class="o">.</span><span class="n">reason_phrase</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>方法：</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -530,8 +622,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">HttpResponse</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="err">”</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="c-jsonresponse-对象">c. JsonResponse 对象</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="c-jsonresponse-对象">c. JsonResponse 对象</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -539,8 +635,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">JsonResponse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">encoder</span><span class="o">=</span><span class="n">DjangoJSONEncoder</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">json_dumps_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>示例：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>示例：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -556,7 +656,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">JsonResponse</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">safe</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>GET与POST请求</p>
 </blockquote>
 <ul>
@@ -569,7 +671,9 @@ if (!doNotTrack) {
 <li>request.POST 和request.GET 的QueryDict 在一个正常的请求/响应循环中是不可变的。若要获得可变的版本，需要使用.copy()。</li>
 </ul>
 <p>实例化QueryDict</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -577,8 +681,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">query_string</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mutable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>示例</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>示例</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -588,10 +696,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">QueryDict</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;3&#39;</span><span class="p">]}</span><span class="o">&gt;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>通过fromkeys实例化QueryDict</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -599,8 +711,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">classmethod</span> <span class="n">QueryDict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="err">”</span><span class="p">,</span> <span class="n">mutable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>示例</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>示例</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -610,10 +726,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">QueryDict</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">,</span> <span class="s1">&#39;val&#39;</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">]}</span><span class="o">&gt;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>QueryDict方法：</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -649,7 +769,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">safe</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="四django用户配置使用">四、<code>Django</code>用户配置使用</h3>
+</div>
+</div>
+<h3 id="四django用户配置使用">四、<code>Django</code>用户配置使用</h3>
 <ol>
 <li>配置<code>django</code>数据库</li>
 <li>同步数据</li>
@@ -659,7 +781,9 @@ if (!doNotTrack) {
 </ol>
 <h4 id="同步数据">同步数据</h4>
 <p>使用django的命令行工具同步数据库</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -667,9 +791,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python manage.py migrate
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="创建用户">创建用户</h4>
+</div>
+</div>
+<h4 id="创建用户">创建用户</h4>
 <p>使用django shell 创建普通用户：创建users最直接的方法是使用create_user()辅助函数</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -679,8 +807,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s1">&#39;demo_user&#39;</span><span class="p">,</span> <span class="s1">&#39;demo@example.com&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;set-your-own-password&gt;&#39;</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="创建管理员">创建管理员</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="创建管理员">创建管理员</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -688,9 +820,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python manage.py createsuperuser --username<span class="o">=</span>user1 --email<span class="o">=</span>user@example.com
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="修改密码">修改密码</h4>
+</div>
+</div>
+<h4 id="修改密码">修改密码</h4>
 <p>Django不会在user模型上存储原始的（明文）密码，而只是一个哈希。因为这个原因，不要尝试直接操作user的password属性。这也是为什么创建一个user时要使用辅助函数。</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -704,7 +840,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">u</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="用户登陆">用户登陆</h4>
+</div>
+</div>
+<h4 id="用户登陆">用户登陆</h4>
 <ul>
 <li>执行用户登陆</li>
 <li>用户登陆过程详解</li>
@@ -1036,7 +1174,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

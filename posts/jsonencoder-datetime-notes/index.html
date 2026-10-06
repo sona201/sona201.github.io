@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/jsonencoder-datetime-notes/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='JSONEncoder'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='JSONEncoder'>
 <meta property='og:description' content='json dumps date类型数据 原文参考 json 默认只支持6种数据格式转换，遇到特殊的类型，需要自己定制化, json提供了json.JSONEncoder 类来'>
 <meta property='og:url' content='https://sona201.github.io/posts/jsonencoder-datetime-notes/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h2 id="json-dumps-date类型数据">json dumps date类型数据</h2>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h2 id="json-dumps-date类型数据">json dumps date类型数据</h2>
 <p><a class="link" href="https://pynative.com/python-serialize-datetime-into-json/#:~:text=As%20per%20ISO%208601%2C%20It,dump%28%29%20and%20json."  target="_blank" rel="noopener"
     >原文参考</a></p>
 <blockquote>
@@ -181,7 +187,9 @@ Python json module provides a json.JSONEncoder Class. We can extend it If we wan
 <h4 id="1-dump原理">1. dump原理</h4>
 <p>在<code>json.dumps</code>方法中，本质还是执行序列化类cls, 默认这个类为<code>JSONEncoder</code>，可以根据自己的情况定制。<br>
 python的<code>json</code>模块里，源码如下</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -299,9 +307,13 @@ python的<code>json</code>模块里，源码如下</p>
 </span></span><span class="line"><span class="cl">        <span class="o">**</span><span class="n">kw</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="jsonencoder的方法使用">JSONEncoder的方法使用</h4>
+</div>
+</div>
+<h4 id="jsonencoder的方法使用">JSONEncoder的方法使用</h4>
 <p>在<code>JSONEncoder</code>模块中，关键点如下</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
@@ -523,10 +535,14 @@ python的<code>json</code>模块里，源码如下</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="n">f</span><span class="s1">&#39;is not JSON serializable&#39;</span><span class="p">)</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="使用案例">使用案例</h3>
+</div>
+</div>
+<h3 id="使用案例">使用案例</h3>
 <h4 id="默认方式执行">默认方式执行</h4>
 <p>直接使用<code>json.dumps</code>会报错没有对应的类型，<code>JSONEncoder</code>只支持6种基础类型转换</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -558,8 +574,12 @@ python的<code>json</code>模块里，源码如下</p>
 </span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">employeeJSONData</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>output</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>output</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -597,8 +617,12 @@ python的<code>json</code>模块里，源码如下</p>
 </span></span><span class="line"><span class="cl">TypeError: Object of type datetime is not JSON serializable
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="使用自定义datetimeencoder序列化">使用自定义<code>DateTimeEncoder</code>序列化</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="使用自定义datetimeencoder序列化">使用自定义<code>DateTimeEncoder</code>序列化</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -656,8 +680,12 @@ python的<code>json</code>模块里，源码如下</p>
 </span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">employeeJSONData</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>output</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>output</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -681,8 +709,12 @@ python的<code>json</code>模块里，源码如下</p>
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="使用自定义datetimeencoder序列化更改缩进序列化值优化">使用自定义<code>DateTimeEncoder</code>序列化，更改缩进，序列化值优化</h4>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h4 id="使用自定义datetimeencoder序列化更改缩进序列化值优化">使用自定义<code>DateTimeEncoder</code>序列化，更改缩进，序列化值优化</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -742,8 +774,12 @@ python的<code>json</code>模块里，源码如下</p>
 </span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">employeeJSONData</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>output</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>output</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -770,6 +806,8 @@ python的<code>json</code>模块里，源码如下</p>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
+</div>
+
 </section>
 
 
@@ -1087,7 +1125,7 @@ python的<code>json</code>模块里，源码如下</p>
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

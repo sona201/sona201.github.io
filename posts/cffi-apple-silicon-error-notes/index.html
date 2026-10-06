@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='问题django启动异常 提示跟包 cffi 有关，甚至还和 arm 芯片有关 1 2 3 4 5 6 7 8 这里是相关的关键字 mach-o file, but is an incompatible architecture (have &amp;#39;x86_64&amp;#39;, need &amp;#39;arm64&amp;#39;) from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions pyo3_runtime.PanicException: Python API call failed pyo3-0.18.3/src/err/mod.rs:790:5 No'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='问题django启动异常 提示跟包 cffi 有关，甚至还和 arm 芯片有关 代码 1 2 3 4 5 6 7 8 这里是相关的关键字 mach-o file, but is an incompatible architecture (have &amp;#39;x86_64&amp;#39;, need &amp;#39;arm64&amp;#39;) from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions pyo3_runtime.PanicException: Python API call failed'>
 <title>Apple Silicon cffi 架构错误排查记录</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/cffi-apple-silicon-error-notes/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Apple Silicon cffi 架构错误排查记录'>
-<meta property='og:description' content='问题django启动异常 提示跟包 cffi 有关，甚至还和 arm 芯片有关 1 2 3 4 5 6 7 8 这里是相关的关键字 mach-o file, but is an incompatible architecture (have &amp;#39;x86_64&amp;#39;, need &amp;#39;arm64&amp;#39;) from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions pyo3_runtime.PanicException: Python API call failed pyo3-0.18.3/src/err/mod.rs:790:5 No'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Apple Silicon cffi 架构错误排查记录'>
+<meta property='og:description' content='问题django启动异常 提示跟包 cffi 有关，甚至还和 arm 芯片有关 代码 1 2 3 4 5 6 7 8 这里是相关的关键字 mach-o file, but is an incompatible architecture (have &amp;#39;x86_64&amp;#39;, need &amp;#39;arm64&amp;#39;) from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions pyo3_runtime.PanicException: Python API call failed'>
 <meta property='og:url' content='https://sona201.github.io/posts/cffi-apple-silicon-error-notes/'>
 <meta property='og:site_name' content='Ricardo'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2023-11-09T00:40:38&#43;08:00'/><meta property='article:modified_time' content='2023-11-09T00:40:38&#43;08:00'/>
 <meta name="twitter:title" content="Apple Silicon cffi 架构错误排查记录">
-<meta name="twitter:description" content="问题django启动异常 提示跟包 cffi 有关，甚至还和 arm 芯片有关 1 2 3 4 5 6 7 8 这里是相关的关键字 mach-o file, but is an incompatible architecture (have &amp;#39;x86_64&amp;#39;, need &amp;#39;arm64&amp;#39;) from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions pyo3_runtime.PanicException: Python API call failed pyo3-0.18.3/src/err/mod.rs:790:5 No">
+<meta name="twitter:description" content="问题django启动异常 提示跟包 cffi 有关，甚至还和 arm 芯片有关 代码 1 2 3 4 5 6 7 8 这里是相关的关键字 mach-o file, but is an incompatible architecture (have &amp;#39;x86_64&amp;#39;, need &amp;#39;arm64&amp;#39;) from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions pyo3_runtime.PanicException: Python API call failed">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
@@ -163,12 +163,20 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h2 id="问题django启动异常">问题django启动异常</h2>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h2 id="问题django启动异常">问题django启动异常</h2>
 <p>提示跟包 cffi 有关，甚至还和 arm 芯片有关</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -190,8 +198,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="nc">No</span> <span class="kn">module</span> <span class="nv">named</span> <span class="nv">_cffi_backend</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>后续安装</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>后续安装</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -202,6 +214,8 @@ if (!doNotTrack) {
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
+</div>
+
 </section>
 
 
@@ -490,7 +504,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

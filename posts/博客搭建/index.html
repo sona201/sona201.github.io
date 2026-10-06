@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='博客搭建'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='博客搭建'>
 <meta property='og:description' content='Hugo 博客搭建与主题配置记录，合并自旧笔记仓库'>
 <meta property='og:url' content='https://sona201.github.io/posts/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h2 id="博客搭建">博客搭建</h2>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h2 id="博客搭建">博客搭建</h2>
 <h3 id="前言">前言</h3>
 <blockquote>
 <p>最早博客搭建是用的wordpress，挑了好久(就是拖延)，最后选了hugo，说是快。因为看到很多人从hexo转hugo，想一步到位。其实可能并不能写太多文章发布 <br>
@@ -241,7 +247,9 @@ if (!doNotTrack) {
     >cloudflare Deploy a Hugo site</a></li>
 </ul>
 <h3 id="博客安装">博客安装</h3>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -261,10 +269,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="nv">git</span> <span class="nv">submodule</span> <span class="nv">update</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="git子模块功能安装使用">git子模块功能安装使用</h3>
+</div>
+</div>
+<h3 id="git子模块功能安装使用">git子模块功能安装使用</h3>
 <p><a class="link" href="https://www.jianshu.com/p/9000cd49822c"  target="_blank" rel="noopener"
     >Git submodule 子模块的管理和使用</a></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -284,7 +296,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="nv">git</span> <span class="nv">rm</span> <span class="o">--</span><span class="nv">cached</span> <span class="nv">themes</span><span class="o">/</span><span class="nv">hugo</span><span class="o">-</span><span class="nv">theme</span><span class="o">-</span><span class="nv">stack</span> <span class="o">-</span><span class="nv">rf</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li><a class="link" href="https://hugocn.netlify.app/configuration.html"  target="_blank" rel="noopener"
     >Hugo 配置讲解</a></li>
 <li><a class="link" href="https://orianna-zzo.github.io/sci-tech/2018-01/blog%E5%85%BB%E6%88%90%E8%AE%B04-hugo%E4%B8%AD%E5%A2%9E%E5%8A%A0tags%E7%AD%89%E5%88%86%E7%B1%BB/"  target="_blank" rel="noopener"
@@ -686,7 +700,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

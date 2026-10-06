@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='#python #celery celery 简介 celery 是一个分布式任务队列 1 2 3 4 5 6 7 Celery is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system. It’s a task queue with focus on real-time processing, while also supporting task scheduling. Celery has a'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='#python #celery celery 简介 celery 是一个分布式任务队列 代码 1 2 3 4 5 6 7 Celery is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system. It’s a task queue with focus on real-time processing, while also supporting task scheduling. Celery'>
 <title>Celery 与 Django 配置笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/celery-django-configuration/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Celery 与 Django 配置笔记'>
-<meta property='og:description' content='#python #celery celery 简介 celery 是一个分布式任务队列 1 2 3 4 5 6 7 Celery is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system. It’s a task queue with focus on real-time processing, while also supporting task scheduling. Celery has a'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Celery 与 Django 配置笔记'>
+<meta property='og:description' content='#python #celery celery 简介 celery 是一个分布式任务队列 代码 1 2 3 4 5 6 7 Celery is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system. It’s a task queue with focus on real-time processing, while also supporting task scheduling. Celery'>
 <meta property='og:url' content='https://sona201.github.io/posts/celery-django-configuration/'>
 <meta property='og:site_name' content='Ricardo'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2026-01-14T20:41:39&#43;08:00'/><meta property='article:modified_time' content='2026-01-14T20:41:39&#43;08:00'/>
 <meta name="twitter:title" content="Celery 与 Django 配置笔记">
-<meta name="twitter:description" content="#python #celery celery 简介 celery 是一个分布式任务队列 1 2 3 4 5 6 7 Celery is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system. It’s a task queue with focus on real-time processing, while also supporting task scheduling. Celery has a">
+<meta name="twitter:description" content="#python #celery celery 简介 celery 是一个分布式任务队列 代码 1 2 3 4 5 6 7 Celery is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system. It’s a task queue with focus on real-time processing, while also supporting task scheduling. Celery">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
@@ -163,13 +163,21 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>#python #celery</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>#python #celery</p>
 <h1 id="celery-简介">celery 简介</h1>
 <p>celery 是一个分布式任务队列</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -189,10 +197,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Celery is Open Source and licensed under the [BSD License](http://www.opensource.org/licenses/BSD-3-Clause).
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="当前使用-celery-版本">当前使用 celery 版本</h2>
+</div>
+</div>
+<h2 id="当前使用-celery-版本">当前使用 celery 版本</h2>
 <p>5.2.7</p>
 <h3 id="安装">安装</h3>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -204,8 +216,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">django-celery-beat==2.8.1
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="注册应用">注册应用</h3>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h3 id="注册应用">注册应用</h3>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -221,8 +237,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">]
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="执行数据库迁移">执行数据库迁移</h3>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h3 id="执行数据库迁移">执行数据库迁移</h3>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -230,8 +250,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">python manage.py migrate django_celery_beat django_celery_results 
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>celery 配置</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>celery 配置</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -257,8 +281,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="n">CELERY_RESULT_EXPIRES</span> <span class="o">=</span> <span class="mi">86400</span> <span class="o">*</span> <span class="mi">7</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>celery 相关命令</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>celery 相关命令</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -273,6 +301,8 @@ if (!doNotTrack) {
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
+</div>
+
 </section>
 
 
@@ -567,7 +597,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

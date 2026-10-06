@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/where-are-your-python-packages-installed/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='python包都安装到哪里去了'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='python包都安装到哪里去了'>
 <meta property='og:description' content='python的包找不到等问题的处理，理解'>
 <meta property='og:url' content='https://sona201.github.io/posts/where-are-your-python-packages-installed/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h1 id="python包都安装到哪里去了">python包都安装到哪里去了？</h1>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h1 id="python包都安装到哪里去了">python包都安装到哪里去了？</h1>
 <p><a class="link" href="https://frostming.com/2019/03-13/where-do-your-packages-go/"  target="_blank" rel="noopener"
     >原文链接: 你的 Python 包都装到哪了？</a></p>
 <blockquote>
@@ -197,7 +203,9 @@ if (!doNotTrack) {
 <li>除此之外，还可以在命令行中运行<code>python -m site</code>，会打印出当前的 <code>Python</code> 的一些信息，包括搜索路径列表。</li>
 </ul>
 <p>例：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -223,11 +231,15 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="s1">&#39;/Users/admin/PycharmProjects/opstools/.venv&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="使用环境变量添加搜索路径">使用环境变量添加搜索路径</h2>
+</div>
+</div>
+<h2 id="使用环境变量添加搜索路径">使用环境变量添加搜索路径</h2>
 <p>如果你的包的路径不存在上面列出的搜索路径列表里，可以把路径加到<code>PYTHONPATH</code>环境变量里，多个路径用<code>:</code>隔开(Windows用<code>;</code>)。</p>
 <p>但需注意，避免把不同<code>Python</code>版本包的路径加到<code>PYTHONPATH</code>里，比如<code>PYTHONPATH=/home/admin/.local/lib/python2.7/site-packages</code>，因为<code>PYTHONPATH</code>中的路径是优先于默认搜索路径，如果用<code>Python3</code>的话会有兼容性问题。事实上<code>PYTHONPATH</code>里最好不要出现任何带<code>site-packages</code>的路径。</p>
 <p>简单附一个<code>PYTHONPATH</code>实际案例，django项目经常有人自定义一个<code>apps</code>目录用来放所有项目，一般都是将路径放到<code>sys.path</code>里。这里可以设置环境变量<code>PYTHONPATH</code>来解决这个问题，代码如下</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -241,7 +253,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="n">ABS_BASE_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>顺便说下<code>PATH</code>是用来找<strong>可执行程序</strong>的搜索路径，假如你在终端运行命令<code>my_cmd</code>，系统会依次扫描<code>PATH</code>中的路径，看<code>my_cmd</code>是否在于该路径下，所以如果是提示找不到程序或命令无法识别，那你就要看路径是否加到<code>PATH</code>里了。</p>
+</div>
+</div>
+<p>顺便说下<code>PATH</code>是用来找<strong>可执行程序</strong>的搜索路径，假如你在终端运行命令<code>my_cmd</code>，系统会依次扫描<code>PATH</code>中的路径，看<code>my_cmd</code>是否在于该路径下，所以如果是提示找不到程序或命令无法识别，那你就要看路径是否加到<code>PATH</code>里了。</p>
 <h2 id="python-是如何安装包的">Python 是如何安装包的</h2>
 <p>现在用安装<code>Python</code>包基本是用的<code>pip</code>，就算你是用<code>pipenv</code>，<code>poetry</code>，底层依然是<code>pip</code>，一律适用。如果你没有安装<code>pip</code>，请参考<a class="link" href="https://pip.pypa.io/en/stable/installation/"  target="_blank" rel="noopener"
     >pip 安装</a>，如果安装了还无法使用<code>pip</code>命令请看上一节。</p>
@@ -274,7 +288,9 @@ if (!doNotTrack) {
 <p>从上面的介绍大家可以知道，Python 找不找得到一个包，最直接的原因是<code>sys.path</code>，而更进一步的原因是<code>sys.executable</code>的路径。程序写完了，我们总得需要运行它，不同的运行方法却有可能影响到<code>sys.path</code>而造成不同的行为，下面我们就来讨论这个问题。</p>
 <h3 id="情况一">情况一</h3>
 <p>假设你的包结构如下</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -288,8 +304,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">    └── b.py
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>main.py</code>的内容：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p><code>main.py</code>的内容：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -297,8 +317,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">my_package.b</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>b.py</code> 的文件内容很简单：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p><code>b.py</code> 的文件内容很简单：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -312,8 +336,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>现在在 <code>main.py</code> 同级的目录下执行，可以看到正常输出<code>path</code>，且<code>path</code>路径第一个就是我们项目的当前目录<code>py_test</code>，也是我们的执行目录</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>现在在 <code>main.py</code> 同级的目录下执行，可以看到正常输出<code>path</code>，且<code>path</code>路径第一个就是我们项目的当前目录<code>py_test</code>，也是我们的执行目录</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -325,11 +353,15 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="s1">[&#39;</span>/Users/admin/Files/Projects/py_test<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload<span class="s1">&#39;, &#39;</span>/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages<span class="err">&#39;</span><span class="o">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>python xxx.py</code> 的运行方式叫做直接运行，这时该文件中的 <code>__name__</code> 值会指定为 <code>__main__</code>，IDE 中的「 Run File」「 运行脚本」用的就是这种方式。可以看到这时 <code>sys.path</code>的第一个值是该脚本文件所在的目录，随脚本路径而变化，记住我们执行测试始终是在 <code>/home/admin/test_path</code> 这个目录下。</p>
+</div>
+</div>
+<p><code>python xxx.py</code> 的运行方式叫做直接运行，这时该文件中的 <code>__name__</code> 值会指定为 <code>__main__</code>，IDE 中的「 Run File」「 运行脚本」用的就是这种方式。可以看到这时 <code>sys.path</code>的第一个值是该脚本文件所在的目录，随脚本路径而变化，记住我们执行测试始终是在 <code>/home/admin/test_path</code> 这个目录下。</p>
 <h3 id="情况二">情况二</h3>
 <p>还是那个结构，我们将项目复制一份，在<code>my_package</code>目录里增加一个<code>a.py</code>文件，仅做一个简单的打印`print(&ldquo;I&rsquo;m a&rdquo;)</p>
 <p>项目结构如下</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -345,8 +377,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">    └── b.py
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>a.py</code> 的文件内容：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p><code>a.py</code> 的文件内容：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -354,9 +390,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;I&#39;m a&#34;</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>好，那么如果我们需要在 <code>b.py</code> 中导入 <code>a.py</code>，那么 <code>b.py</code> 脚本中应该怎么写呢？</p>
+</div>
+</div>
+<p>好，那么如果我们需要在 <code>b.py</code> 中导入 <code>a.py</code>，那么 <code>b.py</code> 脚本中应该怎么写呢？</p>
 <p><code>b.py</code> 的文件内容，这里的<code>import</code>并没有写在最上面是为了能看到<code>sys.path</code>的输出：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -374,10 +414,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">a</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ol>
+</div>
+</div>
+<ol>
 <li>此时，再执行一遍上面的测试</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -401,9 +445,13 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="s1">ModuleNotFoundError: No module named &#39;</span>a<span class="err">&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>执行报错了，根据前面讲的内容，这个报错就是意料之中了——<code>a.py</code>所在的目录 <code>/Users/admin/Files/Projects/py_test1/my_package</code> 压根没有包含  <code>sys.path</code>中 ，自然就找不到 <code>a</code> 文件了。</p>
+</div>
+</div>
+<p>执行报错了，根据前面讲的内容，这个报错就是意料之中了——<code>a.py</code>所在的目录 <code>/Users/admin/Files/Projects/py_test1/my_package</code> 压根没有包含  <code>sys.path</code>中 ，自然就找不到 <code>a</code> 文件了。</p>
 <p>那换个思路，直接在当前main目录执行<code>b.py</code>是否会报错？</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -417,10 +465,14 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="s1">I&#39;</span>m a
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>结果没有报错，相应的目录位置也变了，不是<code>main.py</code>所在的<code>/Users/admin/Files/Projects/py_test1</code>目录，而是<code>my_package</code>目录</p>
+</div>
+</div>
+<p>结果没有报错，相应的目录位置也变了，不是<code>main.py</code>所在的<code>/Users/admin/Files/Projects/py_test1</code>目录，而是<code>my_package</code>目录</p>
 <h3 id="情况三">情况三</h3>
 <p>还是刚刚的代码，只是把<code>b.py</code>的内容更新了下，将 <code>import a</code> 改成 <code>from my_package import a</code></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -438,8 +490,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">my_package</span> <span class="kn">import</span> <span class="n">a</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>同样的先执行<code>python main.py</code>测试（我重新拷贝了项目命名为<code>py_test2</code>）</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>同样的先执行<code>python main.py</code>测试（我重新拷贝了项目命名为<code>py_test2</code>）</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -453,9 +509,13 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="s1">I&#39;</span>m a
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>改成 <code>from my_package import a</code>，执行不报错了，注意由于 <code>b</code> 是在 <code>my_package</code> 包中的，这时可以使用相对导入，写 <code>from . import a</code> 和 <code>from my_package import a</code> 的效果是一样的。</p>
+</div>
+</div>
+<p>改成 <code>from my_package import a</code>，执行不报错了，注意由于 <code>b</code> 是在 <code>my_package</code> 包中的，这时可以使用相对导入，写 <code>from . import a</code> 和 <code>from my_package import a</code> 的效果是一样的。</p>
 <p>因为基于同样的分析，我们可以推断直接执行 <code>python my_package/b.py</code>会报错提示<code>找不到 my_package</code>，运行结果如下</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -475,10 +535,14 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="s1">ModuleNotFoundError: No module named &#39;</span>my_package<span class="err">&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>果然跟我们推理的一样，就是路径不对报错。</p>
+</div>
+</div>
+<p>果然跟我们推理的一样，就是路径不对报错。</p>
 <h3 id="情况四">情况四</h3>
 <p>那么我有没有让这两次运行都不报错的方法呢？有。我们要知道，一个项目中的入口是有限的，实际上不会出现可以执行的代码既在顶层有，又在子目录里也有。我们应该把主要的运行逻辑，都放在 <code>main.py</code> 中（不一定是这个名字，比如 <code>Django</code> 项目是 <code>manage.py</code>），如果这时确实需要运行一个子目录中某脚本的代码，应该用 <code>python -m &lt;module_name&gt;</code>，而 <code>b.py</code> 中导入 <code>a</code> 的语句应为 <code>from my_package import a</code>，我们来看一下运行效果：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -500,7 +564,9 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="s1">I&#39;</span>m a
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>可以看到这两次运行的 <code>sys.path</code> 内容一致了，它的第一个值是当前运行所在的目录。这种运行方式叫做以模块方式运行，<code>python -m</code> 后面的参数是（以 <code>.</code> 分隔的）模块名，而不是路径名。由于这种统一性，你在项目中的所有导入都可以用相同的定义方式，而不用管是在哪个脚本中。这也是为什么 <code>Django</code> 官方文档中推荐导入名称全部用 <code>myapp.models.users</code> 这种形式。</p>
+</div>
+</div>
+<p>可以看到这两次运行的 <code>sys.path</code> 内容一致了，它的第一个值是当前运行所在的目录。这种运行方式叫做以模块方式运行，<code>python -m</code> 后面的参数是（以 <code>.</code> 分隔的）模块名，而不是路径名。由于这种统一性，你在项目中的所有导入都可以用相同的定义方式，而不用管是在哪个脚本中。这也是为什么 <code>Django</code> 官方文档中推荐导入名称全部用 <code>myapp.models.users</code> 这种形式。</p>
 <p>除此之外，以模块方式运行的时候，传入模块名的每一级父模块（或包）都会以模块形式运行，这意味着你可以在模块中使用相对导入（以直接运行方式运行不可以），并且传入的模块中<code>__name__</code> 的值会置为 <code>__main__</code>，你依然可以应用 <code>if __name__ == &quot;__main__&quot;:</code> 的判断。如果 <code>python -m &lt;module_name&gt;</code> 中传入的模块是个包，那么会执行包目录中的 <code>__main__.py</code> 脚本（如果存在），此时该脚本的 <code>__name__</code> 值为 <code>__main__</code>。</p>
 <h2 id="总结">总结</h2>
 <p>看到这里大家可以发现，关于包路径搜索最重要的就是这个<code>$path_prefix</code>路径前缀，而这个值又是从使用的 <code>Python</code> 解释器路径推导出来的。所以要找到包的路径，只需要知道解释器的路径就可以了，如果遇到改变包的路径，只需要通过正确的PATH设置，指定你想要的 <code>Python</code> 解释器即可。</p>
@@ -821,7 +887,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

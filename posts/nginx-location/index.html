@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/nginx-location/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Nginx location 匹配'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Nginx location 匹配'>
 <meta property='og:description' content='nginx的location匹配逻辑'>
 <meta property='og:url' content='https://sona201.github.io/posts/nginx-location/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,15 +163,23 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p><a class="link" href="https://juejin.cn/post/6844903849166110733"  target="_blank" rel="noopener"
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p><a class="link" href="https://juejin.cn/post/6844903849166110733"  target="_blank" rel="noopener"
     >原文作者：挖坑的张师傅</a></p>
 <h1 id="彻底弄懂-nginx-location-匹配">彻底弄懂 Nginx location 匹配</h1>
 <p>Nginx 的 location 实现了对请求的细分处理，有些 URI 返回静态内容，有些分发到后端服务器等，今天来彻底弄懂它的匹配规则</p>
 <p>一个最简单的 location 的例子如下</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -191,10 +199,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>location 支持的语法 <code>location [=|~|~*|^~|@] pattern { ... }</code>，乍一看还挺复杂的，来逐个看一下。</p>
+</div>
+</div>
+<p>location 支持的语法 <code>location [=|~|~*|^~|@] pattern { ... }</code>，乍一看还挺复杂的，来逐个看一下。</p>
 <h1 id="location修饰符类型">location修饰符类型</h1>
 <h2 id="-修饰符要求路径完全匹配">「=」 修饰符：要求路径完全匹配</h2>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -212,7 +224,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li><code>http://website.com/abcd</code><strong>匹配</strong></li>
 <li><code>http://website.com/ABCD</code><strong>可能会匹配</strong> ，也可以不匹配，取决于操作系统的文件系统是否大小写敏感（case-sensitive）。ps: Mac 默认是大小写不敏感的，git 使用会有大坑。</li>
 <li><code>http://website.com/abcd?param1&amp;param2</code><strong>匹配</strong>，忽略 querystring</li>
@@ -220,7 +234,9 @@ if (!doNotTrack) {
 <li><code>http://website.com/abcde</code><strong>不匹配</strong></li>
 </ul>
 <h2 id="修饰符区分大小写的正则匹配">「~」修饰符：区分大小写的正则匹配</h2>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -238,7 +254,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>^/abcd$</code>这个正则表达式表示字符串必须以<code>/</code>开始，以<code>$</code>结束，中间必须是<code>abcd</code></p>
+</div>
+</div>
+<p><code>^/abcd$</code>这个正则表达式表示字符串必须以<code>/</code>开始，以<code>$</code>结束，中间必须是<code>abcd</code></p>
 <ul>
 <li><code>http://website.com/abcd</code><strong>匹配</strong>（完全匹配）</li>
 <li><code>http://website.com/ABCD</code><strong>不匹配</strong>，大小写敏感</li>
@@ -247,7 +265,9 @@ if (!doNotTrack) {
 <li><code>http://website.com/abcde</code><strong>不匹配</strong>，不能匹配正则表达式</li>
 </ul>
 <h2 id="不区分大小写的正则匹配">「~*」不区分大小写的正则匹配</h2>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -265,7 +285,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ul>
+</div>
+</div>
+<ul>
 <li><code>http://website.com/abcd</code><strong>匹配</strong> (完全匹配)</li>
 <li><code>http://website.com/ABCD</code><strong>匹配</strong> (大小写不敏感)</li>
 <li><code>http://website.com/abcd?param1&amp;param2</code><strong>匹配</strong></li>
@@ -288,7 +310,9 @@ if (!doNotTrack) {
 <blockquote>
 <p>如果上述规则不好理解，可以看下面的伪代码（非常重要）</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -324,8 +348,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">  return rv
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>一个简化过的<code>Node.js</code>写的代码如下</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>一个简化过的<code>Node.js</code>写的代码如下</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -389,9 +417,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h1 id="案例分析">案例分析</h1>
+</div>
+</div>
+<h1 id="案例分析">案例分析</h1>
 <h2 id="案例-1">案例 1</h2>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -423,9 +455,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">HTTP/1.1 702
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>按照上述的规则，第二个会有更高的优先级</p>
+</div>
+</div>
+<p>按照上述的规则，第二个会有更高的优先级</p>
 <h2 id="案例2">案例2</h2>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -451,9 +487,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">curl -I  website.com:8080/document
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>第二个匹配了正则表达式，优先级高于第一个普通前缀匹配</p>
+</div>
+</div>
+<p>第二个匹配了正则表达式，优先级高于第一个普通前缀匹配</p>
 <h2 id="案例-3">案例 3</h2>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -481,9 +521,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">HTTP/1.1 701
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>第一个前缀匹配<code>^~</code>命中以后不会再搜寻正则匹配，所以会第一个命中</p>
+</div>
+</div>
+<p>第一个前缀匹配<code>^~</code>命中以后不会再搜寻正则匹配，所以会第一个命中</p>
 <h2 id="案例-4">案例 4</h2>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -507,8 +551,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>curl -I website.com:8080/document</code> 返回 <code>HTTP/1.1 701</code>，</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p><code>curl -I website.com:8080/document</code> 返回 <code>HTTP/1.1 701</code>，</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -532,10 +580,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>curl -I website.com:8080/document</code> 依然返回 <code>HTTP/1.1 701</code></p>
+</div>
+</div>
+<p><code>curl -I website.com:8080/document</code> 依然返回 <code>HTTP/1.1 701</code></p>
 <p><strong>前缀匹配下，返回最长匹配的 location，与 location 所在位置顺序无关</strong></p>
 <h2 id="案例-5">案例 5</h2>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -565,9 +617,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>curl -I website.com:8080/document</code> 返回 <code>HTTP/1.1 701</code></p>
+</div>
+</div>
+<p><code>curl -I website.com:8080/document</code> 返回 <code>HTTP/1.1 701</code></p>
 <p>把顺序换一下</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -597,7 +653,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>curl -I website.com:8080/document</code> 返回 <code>HTTP/1.1 702</code></p>
+</div>
+</div>
+<p><code>curl -I website.com:8080/document</code> 返回 <code>HTTP/1.1 702</code></p>
 <p><strong>正则匹配是使用文件中的顺序，找到返回</strong></p>
 
 </section>
@@ -854,7 +912,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

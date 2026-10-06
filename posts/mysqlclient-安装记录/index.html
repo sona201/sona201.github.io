@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/mysqlclient-%E5%AE%89%E8%A3%85%E8%AE%B0%E5%BD%95/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='mysqlclient 安装记录'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='mysqlclient 安装记录'>
 <meta property='og:description' content='从个人笔记仓库整理迁移'>
 <meta property='og:url' content='https://sona201.github.io/posts/mysqlclient-%E5%AE%89%E8%A3%85%E8%AE%B0%E5%BD%95/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,15 +163,23 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>#mysql #python #install #mysqlclient</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>#mysql #python #install #mysqlclient</p>
 <h1 id="mysqlclient-安装">mysqlclient 安装</h1>
 <h2 id="一官方安装操作">一、官方安装操作</h2>
 <p><a class="link" href="https://pypi.org/project/mysqlclient/2.2.0rc1/"  target="_blank" rel="noopener"
     >pypi 安装</a></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -185,10 +193,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">$ pip install mysqlclient
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="二安装问题解决">二、安装问题解决</h2>
+</div>
+</div>
+<h2 id="二安装问题解决">二、安装问题解决</h2>
 <h3 id="1-xcode-问题">1. xcode 问题</h3>
 <p><strong>解决操作命令</strong></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -196,7 +208,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">xcode-select --install
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>xcrun error xcode error</p>
 </blockquote>
 <p>报错内容</p>
@@ -210,7 +224,9 @@ if (!doNotTrack) {
 	
 	
 ></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -340,9 +356,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">ERROR: Could not build wheels for mysqlclient, which is required to install pyproject.toml-based projects
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="1-mysql-80-兼容问题">1. mysql 8.0 兼容问题</h3>
+</div>
+</div>
+<h3 id="1-mysql-80-兼容问题">1. mysql 8.0 兼容问题</h3>
 <p><strong>解决操作命令</strong></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -350,7 +370,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pip install -e git+https://github.com/etripier/mysqlclient.git@ee1882e02e3c73910b1d6df86bbdce784edbb881#egg=mysqlclient
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/images/mysqlclient-install-error.png"
+</div>
+</div>
+<p><img src="/images/mysqlclient-install-error.png"
 	
 	
 	
@@ -362,7 +384,9 @@ if (!doNotTrack) {
 ></p>
 <p><a class="link" href="https://github.com/PyMySQL/mysqlclient/issues/688"  target="_blank" rel="noopener"
     >git fix link https://github.com/PyMySQL/mysqlclient/issues/688</a></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -526,9 +550,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">ERROR: Could not build wheels for mysqlclient, which is required to install pyproject.toml-based projects
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="2-arm-芯片-安装异常报错">2. arm 芯片 安装异常报错</h3>
+</div>
+</div>
+<h3 id="2-arm-芯片-安装异常报错">2. arm 芯片 安装异常报错</h3>
 <p>应用启动报错</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -606,8 +634,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Process finished with exit code 1
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>解决方案，先卸载，然后安装对应arm版本</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>解决方案，先卸载，然后安装对应arm版本</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -665,10 +697,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">You should consider upgrading via the &#39;/Users/clin/File/Project/shuhe/devops-api/venv/bin/python -m pip install --upgrade pip&#39; command.
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="3-另辟蹊径安装pymysql解决问题">3. 另辟蹊径，安装pymysql解决问题</h3>
+</div>
+</div>
+<h3 id="3-另辟蹊径安装pymysql解决问题">3. 另辟蹊径，安装pymysql解决问题</h3>
 <p>pip install pymysql</p>
 <p>在项目的<code>__init__</code>文件里配置(与<code>settings</code>同级)添加模块</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -681,6 +717,8 @@ if (!doNotTrack) {
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
+</div>
+
 </section>
 
 
@@ -726,12 +764,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/mysql-sql-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+    <a href="/posts/mysqldump-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">MySQL SQL 常用命令</h2>
+            <h2 class="article-title">mysqldump 常用操作</h2>
         </div>
     </a>
 </article>
@@ -739,12 +777,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/mysqldump-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">
+    <a href="/posts/mysql-sql-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">mysqldump 常用操作</h2>
+            <h2 class="article-title">MySQL SQL 常用命令</h2>
         </div>
     </a>
 </article>
@@ -961,7 +999,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

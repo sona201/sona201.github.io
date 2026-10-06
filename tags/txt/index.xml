@@ -38,7 +38,9 @@
 &lt;p&gt;&lt;strong&gt;前置工具&lt;/strong&gt;：日历。我使用的一个外部工具是一个在线日历，我把所有任务都放在这个日历上，即使是那些实际上不是固定时间的工作，比如「在车间制作一张咖啡桌」或「弄清楚如何招募新的博士生」 「——我会把他们安排在我想考虑的日期。这样我未来的所有计划和日程安排都在一起，而不是一堆我必须跟踪的清单。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;制作每日清单&lt;/strong&gt;：每晚我上床之前，我会把第二天日历上的所有项目都记下来，并将其作为每日待办事项列表附加到文本文件的末尾，这样当我醒来时我就能确切地知道我将做什么。这个清单包含计划好的任务（下午 2 点与麦当娜会面，下午 4 点办公时间）、差事（签署表格、归还书籍）和工作项目（审阅论文、准备演示文稿）。这份清单也让我思考我一天的工作量是否合适。&lt;/p&gt;
 &lt;p&gt;明天我不想做的任何事情，我都会重新把它放进我日历里靠后的日期。在这样做了很多年后，我已经非常擅长估计我一天能完成的事情。下面一个替换了名称的示例，因此当我从日历中改动一天的日程安排时，您可以看到它的样子。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;代码&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
@@ -78,7 +80,11 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;6pm faculty interview dinner with Madonna
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;代码&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
@@ -118,9 +124,13 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;18:00 和 Madonna 的教师访谈晚餐
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;作为记录：每天的待办事项清单同样也是我的笔记本，这样它就从一个待办清单变成了一个已完成清单。我觉得这样做最棒的是我将所有的事情全部保存在一个文本文件中（.txt)，靠日期来区分内容，这样我就可以记录我做过的所有事情以及我什么时候做过。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;作为记录：每天的待办事项清单同样也是我的笔记本，这样它就从一个待办清单变成了一个已完成清单。我觉得这样做最棒的是我将所有的事情全部保存在一个文本文件中（.txt)，靠日期来区分内容，这样我就可以记录我做过的所有事情以及我什么时候做过。&lt;/p&gt;
 &lt;p&gt;我现在使用的文件大约是 7（9） 年前创建的，那时我刚刚开始我现在的工作。这个文件可以用来作为研究笔记本，也可以用来做会议记录。我已经在这个文件中写了 37773（51,690） 行，记录了我作为一个教授做过的所有事情，遇到的几乎每一个人，以及我讨论过的内容或者我产生的想法。一天工作结束后我的清单会变成下面这样，表示工作已经完成：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;代码&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
@@ -208,7 +218,11 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;#note maybe visit Monsters University next spring, Bono does related work
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;代码&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
@@ -300,7 +314,9 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;#note 或许明年春天会去参观 Monsters 大学，Bono 在那做相关的工作
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;快捷键和特点：我使用一致的写作风格，所以使用一些短语就可以很容易进行搜索。当我搜索「meet with」时，它显示我已经安排了 3,000 多次会议。我有一些标签，比如 #annual 用于在我的下一份年度报告中添加内容， #nextui 用于在我下次运行我的下一个 UI 课程时添加的内容。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;快捷键和特点：我使用一致的写作风格，所以使用一些短语就可以很容易进行搜索。当我搜索「meet with」时，它显示我已经安排了 3,000 多次会议。我有一些标签，比如 #annual 用于在我的下一份年度报告中添加内容， #nextui 用于在我下次运行我的下一个 UI 课程时添加的内容。&lt;/p&gt;
 &lt;p&gt;文本文件非常灵活，在任何时候，我都可以快速浏览一下那天我做了什么，还剩下什么。当一项任务完成时，这是最常见的情况，我就把这个文件抛之脑后。我可以使用搜索框计算聚合统计信息，或者列出包含标签的所有行，以及使用我的文本编辑器进行其他操作。我使用 &lt;a class=&#34;link&#34; href=&#34;https://www.ultraedit.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Ultraedit&lt;/a&gt; 是因为我熟悉它，但我想任何文本编辑器都会有类似的功能。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;电子邮件&lt;/strong&gt; ：电子邮件显然是我工作流程的一部分。怎么处理电子邮件，但我发现一个简单的标记系统就足够了——如果我需要处理它，标记红色，如果我最终需要处理它但需要一些思考或其他人来标记橙色处理它，并为我发送的等待回复的电子邮件标记黄色，以便我知道稍后跟进。只要方便，我会在电子邮件进来时对其进行标记。&lt;/p&gt;

@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/django-1-runserver-source-notes/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Django 1.0 runserver 启动流程'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Django 1.0 runserver 启动流程'>
 <meta property='og:description' content='Django源码: 从入口到请求响应 execute_from_command_line(sys.argv) django python manage.py runserver 流程 python manage.py runserver 流程分析 版本 python27 django 1.0 搭建可运行的环境 创建python27 虚拟环境 github 下载 django-1.'>
 <meta property='og:url' content='https://sona201.github.io/posts/django-1-runserver-source-notes/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>Django源码: 从入口到请求响应</p>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>Django源码: 从入口到请求响应</p>
 <p>execute_from_command_line(sys.argv)</p>
 <p>django python manage.py runserver 流程
 python manage.py runserver 流程分析
@@ -180,7 +186,9 @@ github 下载 django-1.0.tar.gz（1.0 版本的django）
 可以看到，有个 demo 在 examples 目录
 把 django 目录拷贝到 examples 下面，这样 example 可以正确导入 django1.0
 启动项目</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -188,11 +196,15 @@ github 下载 django-1.0.tar.gz（1.0 版本的django）
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python manage.py runserver
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>项目启动成功，可以修改代码来跟踪执行流程</p>
+</div>
+</div>
+<p>项目启动成功，可以修改代码来跟踪执行流程</p>
 <p>流程
 以下代码存在删减，主要展示代码流程</p>
 <p>从 manage.py 开始，执行了 execute_manager 方法，传入 settings 模块</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -220,8 +232,12 @@ github 下载 django-1.0.tar.gz（1.0 版本的django）
 </span></span><span class="line"><span class="cl">    <span class="n">utility</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>ManagementUtility 类</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>ManagementUtility 类</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -305,8 +321,12 @@ github 下载 django-1.0.tar.gz（1.0 版本的django）
 </span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">klass</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>run_from_argv 方法</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>run_from_argv 方法</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -391,6 +411,8 @@ github 下载 django-1.0.tar.gz（1.0 版本的django）
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
+</div>
+
 </section>
 
 
@@ -465,12 +487,12 @@ github 下载 django-1.0.tar.gz（1.0 版本的django）
             
                 
 <article class="">
-    <a href="/posts/drf-response-rendering/">
+    <a href="/posts/drf-allowed-methods-source-notes/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">DRF finalize_response 与渲染器配置</h2>
+            <h2 class="article-title">Django 与 DRF allowed_methods 源码笔记</h2>
         </div>
     </a>
 </article>
@@ -478,12 +500,12 @@ github 下载 django-1.0.tar.gz（1.0 版本的django）
             
                 
 <article class="">
-    <a href="/posts/drf-allowed-methods-source-notes/">
+    <a href="/posts/drf-response-rendering/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Django 与 DRF allowed_methods 源码笔记</h2>
+            <h2 class="article-title">DRF finalize_response 与渲染器配置</h2>
         </div>
     </a>
 </article>
@@ -655,7 +677,7 @@ github 下载 django-1.0.tar.gz（1.0 版本的django）
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

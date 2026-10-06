@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/django-runserver/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='django runserver'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='django runserver'>
 <meta property='og:description' content='This is an category for runserver'>
 <meta property='og:url' content='https://sona201.github.io/posts/django-runserver/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,11 +163,19 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>启动命令</p>
-<div class="highlight"><div class="chroma">
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>启动命令</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -175,9 +183,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">python3 manage.py runserver 0.0.0.0:8000
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>平时用的命令就是这个, 入口是 <code>manage.py</code> 文件</p>
+</div>
+</div>
+<p>平时用的命令就是这个, 入口是 <code>manage.py</code> 文件</p>
 <h4 id="managepy-管理入口文件">manage.py 管理入口文件</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -207,9 +219,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">    <span class="n">execute_from_command_line</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>manage.py 先配置环境变量, 执行命令后会把参数 <code>runserver 0.0.0.0:8000</code> 作为系统参数传给函数 <code>execute_from_command_line</code></p>
+</div>
+</div>
+<p>manage.py 先配置环境变量, 执行命令后会把参数 <code>runserver 0.0.0.0:8000</code> 作为系统参数传给函数 <code>execute_from_command_line</code></p>
 <h4 id="site-packagesdjangocoremanagement__init__py">site-packages/django/core/management/<strong>init</strong>.py</h4>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -223,9 +239,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">    <span class="n">utility</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>该函数仅仅是处理命令的方法, 实际做的就是实例化 <code>ManagementUtility()</code> , 调用实例的 <code>execute()</code> 方法
+</div>
+</div>
+<p>该函数仅仅是处理命令的方法, 实际做的就是实例化 <code>ManagementUtility()</code> , 调用实例的 <code>execute()</code> 方法
 <code>ManagementUtility</code> 和 <code>execute_from_command_line</code> 都在 management 的 <strong>init</strong> 下</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -399,14 +419,18 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">fetch_command</span><span class="p">(</span><span class="n">subcommand</span><span class="p">)</span><span class="o">.</span><span class="n">run_from_argv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>截取了 ManagementUtility 的 execute 方法代码
+</div>
+</div>
+<p>截取了 ManagementUtility 的 execute 方法代码
 这个就是 <code>CommandParser</code> 对命令的解析, 优先加载django的配置
 最重要的是最后一句 <code>self.fetch_command(subcommand).Command(self.argv)</code>
 执行 <code>fetch_command(subcommand)</code> 得到了 &lsquo;django.contrib.staticfiles.management.commands.runserver&rsquo; 结果
 对应的文件路径: <code>site-packages/django/contrib/staticfiles/management/commands/runserver.py</code></p>
 <h4 id="site-packagesdjangocoremanagementcommandsrunserverpy">site-packages/django/core/management/commands/runserver.py</h4>
 <p>执行函数导入</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -428,7 +452,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">module</span><span class="o">.</span><span class="n">Command</span><span class="p">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>即将 <code>command</code> 模块导入
+</div>
+</div>
+<p>即将 <code>command</code> 模块导入
 然后实例化 django.contrib.staticfiles.management.commands.runserver.Command()
 所有的命令方法都是有 command 类</p>
 <p>这个函数就是获取对应文件名, 然后导入Command类, 执行 <code>run_from_argv</code> 方法</p>
@@ -436,7 +462,9 @@ if (!doNotTrack) {
 django.core.management.commands.runserver 中也没有 run_from_argv 方法
 django.core.management.base.BaseCommand 中有 run_from_argv 方法 主要是执行 self.execute 方法</p>
 <p>django.core.management.commands.runserver 的execute方法</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -456,8 +484,12 @@ django.core.management.base.BaseCommand 中有 run_from_argv 方法 主要是执
 </span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>django.core.management.base.BaseCommand  的execute 方法</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>django.core.management.base.BaseCommand  的execute 方法</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -539,11 +571,15 @@ django.core.management.base.BaseCommand 中有 run_from_argv 方法 主要是执
 </span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">output</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>执行 self.handle 方法
+</div>
+</div>
+<p>执行 self.handle 方法
 django.core.management.commands.runserver 的 handle 方法</p>
 <p>django.core.management.commands.runserver 的 run 方法
 django.core.management.commands.runserver 的 inner_run 方法</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -567,8 +603,12 @@ django.core.management.commands.runserver 的 inner_run 方法</p>
 </span></span><span class="line"><span class="cl">            <span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="runserver-最终执行逻辑">runserver 最终执行逻辑</h2>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h2 id="runserver-最终执行逻辑">runserver 最终执行逻辑</h2>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -620,12 +660,16 @@ django.core.management.commands.runserver 的 inner_run 方法</p>
 </span></span><span class="line"><span class="cl">    <span class="n">httpd</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>run 方法 与 wsgiref封装的模型中的 make_server 很相似
 表面上都是实例化一个叫 WSGIServer 的类, 然后执行实例的 serve_forever 方法(这个方法是通过多层继承 BaseServer 类的方法, 乃 python 原生方法)
 但django run 中 WSGIServer 与 make_server 中 WSGIServer 不是同一个类</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -645,10 +689,14 @@ django.core.management.commands.runserver 的 inner_run 方法</p>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">server</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div>
+</div>
+<blockquote>
 <p>在 wsgiref封装的模型中, WSGIServer 是使用 <code>simple_server.WSGIServer</code> 这个类</p>
 </blockquote>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -706,9 +754,13 @@ django.core.management.commands.runserver 的 inner_run 方法</p>
 </span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">application</span> <span class="o">=</span> <span class="n">application</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Django 中 run 方法中的 WSGIServer 继承了 simple_server.WSGIServer
+</div>
+</div>
+<p>Django 中 run 方法中的 WSGIServer 继承了 simple_server.WSGIServer
 增加了一些错误处理, 本质上其实一样</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -746,8 +798,12 @@ django.core.management.commands.runserver 的 inner_run 方法</p>
 </span></span><span class="line"><span class="cl">            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">handle_error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">client_address</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="runserver-最终执行逻辑-1">runserver 最终执行逻辑</h2>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<h2 id="runserver-最终执行逻辑-1">runserver 最终执行逻辑</h2>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -783,12 +839,16 @@ django.core.management.commands.runserver 的 inner_run 方法</p>
 </span></span><span class="line"><span class="cl">    <span class="n">httpd</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>handler = self.get_handler(*args, **options)  -&gt;
+</div>
+</div>
+<p>handler = self.get_handler(*args, **options)  -&gt;
 get_internal_wsgi_application()  -&gt;
 get_wsgi_application()  -&gt;
 WSGIHandler()
 handler = WSGIHandler()  -&gt;  handler(environ, start_response)  -&gt;  WSGIHandler.<strong>call</strong>(environ, start_response)</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -859,6 +919,8 @@ handler = WSGIHandler()  -&gt;  handler(environ, start_response)  -&gt;  WSGIHan
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
+</div>
+
 </section>
 
 
@@ -1181,7 +1243,7 @@ handler = WSGIHandler()  -&gt;  handler(environ, start_response)  -&gt;  WSGIHan
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

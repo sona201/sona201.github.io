@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/django-middleware/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='django middleware'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='django middleware'>
 <meta property='og:description' content='This is an category for middleware'>
 <meta property='og:url' content='https://sona201.github.io/posts/django-middleware/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,12 +163,20 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h2 id="middlewareget_response">MIDDLEWARE/get_response</h2>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h2 id="middlewareget_response">MIDDLEWARE/get_response</h2>
 <p>5.2 django处理http请求源码</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -222,12 +230,16 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">response</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>研究 django.http.request.py
+</div>
+</div>
+<p>研究 django.http.request.py
 研究 django.http.response.py
 self._middleware_chain(request)
 他的上一步是 self.load_middleware()
 在实例化 WSGIHandler 的时候就有 self.load_middleware()</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -261,8 +273,12 @@ self._middleware_chain(request)
 </span></span><span class="line"><span class="cl">        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>研究url 分发</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>研究url 分发</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -270,13 +286,17 @@ self._middleware_chain(request)
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">set_urlconf</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">ROOT_URLCONF</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>大的议题</p>
+</div>
+</div>
+<p>大的议题</p>
 <ol>
 <li>request response</li>
 <li>callback, callback_args, callback_kwargs = self.resolve_request(request)</li>
 <li>视图层的问题, as_view</li>
 </ol>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -300,7 +320,11 @@ self._middleware_chain(request)
 </span></span><span class="line"><span class="cl"><span class="p">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -356,7 +380,11 @@ self._middleware_chain(request)
 </span></span><span class="line"><span class="cl"><span class="c1">#  client  &lt;-  1  &lt;-  2  &lt;-  3  &lt;-  response</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -378,9 +406,13 @@ self._middleware_chain(request)
 </span></span><span class="line"><span class="cl">                                                                                                                                            self._get_response
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>变成一个链式调用, 请求进来时, 最外层先执行</p>
+</div>
+</div>
+<p>变成一个链式调用, 请求进来时, 最外层先执行</p>
 <p>请求进来WSGIHandler() 实例化后, 调用 <strong>call</strong></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -414,8 +446,12 @@ self._middleware_chain(request)
 </span></span><span class="line"><span class="cl">        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>然后调用</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>然后调用</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -423,10 +459,14 @@ self._middleware_chain(request)
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_middleware_chain</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>会执行调用链
+</div>
+</div>
+<p>会执行调用链
 SecurityMiddleware(SessionMiddleware(CommonMiddleware(CsrfViewMiddleware(AuthenticationMiddleware(MessageMiddleware(XFrameOptionsMiddleware(self._get_response)))))))</p>
 <p>因为继承了 MiddlewareMixin, 调用触发 <strong>call</strong></p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -458,8 +498,12 @@ SecurityMiddleware(SessionMiddleware(CommonMiddleware(CsrfViewMiddleware(Authent
 </span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">response</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>会递归执行</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>会递归执行</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -467,8 +511,12 @@ SecurityMiddleware(SessionMiddleware(CommonMiddleware(CsrfViewMiddleware(Authent
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">response</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>然后才执行</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>然后才执行</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -476,7 +524,11 @@ SecurityMiddleware(SessionMiddleware(CommonMiddleware(CsrfViewMiddleware(Authent
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="bp">self</span><span class="o">.</span><span class="n">process_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -557,6 +609,8 @@ SecurityMiddleware(SessionMiddleware(CommonMiddleware(CsrfViewMiddleware(Authent
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
+</div>
+
 </section>
 
 
@@ -867,7 +921,7 @@ SecurityMiddleware(SessionMiddleware(CommonMiddleware(CsrfViewMiddleware(Authent
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

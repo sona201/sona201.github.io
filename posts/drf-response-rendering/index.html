@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/drf-response-rendering/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='DRF finalize_response 与渲染器配置'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='DRF finalize_response 与渲染器配置'>
 <meta property='og:description' content='drf渲染模块源码分析 原文链接 搜了好多源码文章，都只是简单介绍 drf 的 rest_framework.response.Response 方法，这块的源码虽然没有完全读懂，但是也看了大概，感觉没有讲到点子上 都没'>
 <meta property='og:url' content='https://sona201.github.io/posts/drf-response-rendering/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,10 +163,16 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <h2 id="drf渲染模块源码分析">drf渲染模块源码分析</h2>
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><h2 id="drf渲染模块源码分析">drf渲染模块源码分析</h2>
 <p><a class="link" href="https://blog.51cto.com/u_15183212/2970460"  target="_blank" rel="noopener"
     >原文链接</a></p>
 <p>搜了好多源码文章，都只是简单介绍 drf 的 rest_framework.response.Response 方法，这块的源码虽然没有完全读懂，但是也看了大概，感觉没有讲到点子上
@@ -177,7 +183,9 @@ if (!doNotTrack) {
 入口：APIView类中dispatch方法中的：self.response = self.finalize_response(request, response, *args, **kwargs)</p>
 <p>渲染模块源码分析
 我们首先点击finalize_response进入查看源码</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -243,8 +251,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">response</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>上述代码是响应模块的源码，该源码中包含了渲染模块的源码，就是这句neg = self.perform_content_negotiation(request, force=True)，我们可以点击查看</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>上述代码是响应模块的源码，该源码中包含了渲染模块的源码，就是这句neg = self.perform_content_negotiation(request, force=True)，我们可以点击查看</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -280,8 +292,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">            <span class="k">raise</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>代码中有个get_renderers就是渲染器列表，点击查看</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>代码中有个get_renderers就是渲染器列表，点击查看</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -297,8 +313,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">[</span><span class="n">renderer</span><span class="p">()</span> <span class="k">for</span> <span class="n">renderer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer_classes</span><span class="p">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>这就是渲染器列表的源码，跟解析器列表的源码大同小异，接着再点击renderer_classer查看</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>这就是渲染器列表的源码，跟解析器列表的源码大同小异，接着再点击renderer_classer查看</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -306,8 +326,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">renderer_classes</span> <span class="o">=</span> <span class="n">api_settings</span><span class="o">.</span><span class="n">DEFAULT_RENDERER_CLASSES</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>到这里我们就知道了，drf默认的渲染器在settings下的DEFAUIT_RENDERER_CLASSES中，配置如下</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>到这里我们就知道了，drf默认的渲染器在settings下的DEFAUIT_RENDERER_CLASSES中，配置如下</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Python</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -337,7 +361,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>如果我们想局部配置渲染器，只需在自己定义的视图类中添加render_classes 即可，一般也不用做修改，以上分析只是让大家知道drf是怎么配置渲染器的，这样以后我们自定义渲染器也就十分简单了</p>
+</div>
+</div>
+<p>如果我们想局部配置渲染器，只需在自己定义的视图类中添加render_classes 即可，一般也不用做修改，以上分析只是让大家知道drf是怎么配置渲染器的，这样以后我们自定义渲染器也就十分简单了</p>
 <p>参考
 <a class="link" href="https://cloud.tencent.com/developer/article/2114529"  target="_blank" rel="noopener"
     >https://cloud.tencent.com/developer/article/2114529</a></p>
@@ -630,7 +656,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

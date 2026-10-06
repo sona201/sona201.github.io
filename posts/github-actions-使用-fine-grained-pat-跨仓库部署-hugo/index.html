@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/github-actions-%E4%BD%BF%E7%94%A8-fine-grained-pat-%E8%B7%A8%E4%BB%93%E5%BA%93%E9%83%A8%E7%BD%B2-hugo/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='GitHub Actions 使用 Fine-grained PAT 跨仓库部署 Hugo'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='GitHub Actions 使用 Fine-grained PAT 跨仓库部署 Hugo'>
 <meta property='og:description' content='记录 GitHub Actions 从 Hugo 源码仓库向 GitHub Pages 仓库发布时，创建 Fine-grained Personal Access Token、最小权限配置和 Actions Secret 的完整过程。'>
 <meta property='og:url' content='https://sona201.github.io/posts/github-actions-%E4%BD%BF%E7%94%A8-fine-grained-pat-%E8%B7%A8%E4%BB%93%E5%BA%93%E9%83%A8%E7%BD%B2-hugo/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -163,11 +163,19 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>博客使用两个 GitHub 仓库：</p>
-<div class="highlight"><div class="chroma">
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>博客使用两个 GitHub 仓库：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -185,9 +193,13 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">GitHub Pages
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>其中 <code>blogs</code> 保存 Hugo 源码，<code>sona201.github.io</code> 保存 Hugo 生成的静态页面。</p>
+</div>
+</div>
+<p>其中 <code>blogs</code> 保存 Hugo 源码，<code>sona201.github.io</code> 保存 Hugo 生成的静态页面。</p>
 <p>原来的 GitHub Actions 一直使用 <code>PERSONAL_TOKEN</code> 将 <code>public/</code> push 到另一个仓库。很久没有更新博客后再次发布，Actions 在 Deploy 阶段失败：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -203,12 +215,16 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">&#39;https://github.com/sona201/sona201.github.io.git/&#39;
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Hugo 的 Build Web 是成功的，因此问题不是文章或 Hugo 构建，而是跨仓库 push 使用的旧 Personal Access Token 已失效。</p>
+</div>
+</div>
+<p>Hugo 的 Build Web 是成功的，因此问题不是文章或 Hugo 构建，而是跨仓库 push 使用的旧 Personal Access Token 已失效。</p>
 <p>这篇记录如何创建一个权限尽可能小的 Fine-grained Personal Access Token，并更新 GitHub Actions Secret。</p>
 <h2 id="一为什么需要额外-token">一、为什么需要额外 Token</h2>
 <p>GitHub Actions 会自动提供 <code>GITHUB_TOKEN</code>，但它主要针对当前 workflow 所在仓库。</p>
 <p>当前 workflow 位于：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -216,8 +232,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">sona201/blogs
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>而构建结果需要 push 到：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>而构建结果需要 push 到：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -225,9 +245,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">sona201/sona201.github.io
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>这是跨仓库写入，因此这里继续使用一个只允许写目标仓库的 Fine-grained PAT。</p>
+</div>
+</div>
+<p>这是跨仓库写入，因此这里继续使用一个只允许写目标仓库的 Fine-grained PAT。</p>
 <p>目标是让 token 只具备：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -239,10 +263,14 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Contents: Read and write
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>不授予整个账号所有仓库的写权限。</p>
+</div>
+</div>
+<p>不授予整个账号所有仓库的写权限。</p>
 <h2 id="二创建-fine-grained-personal-access-token">二、创建 Fine-grained Personal Access Token</h2>
 <p>进入 GitHub 个人设置：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -260,8 +288,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">→ Generate new token
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Token name 可以填写：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>Token name 可以填写：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -269,8 +301,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">blogs-deploy
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Description 可以填写：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>Description 可以填写：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -278,8 +314,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Deploy Hugo build output from sona201/blogs to sona201/sona201.github.io
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Expiration 根据自己的维护习惯设置。例如设置一年有效期：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>Expiration 根据自己的维护习惯设置。例如设置一年有效期：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -287,10 +327,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">2027/10/03
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>需要注意：Fine-grained PAT 到期后不会自动生成新的 token，也不会自动更新 GitHub Actions Secret。到期后需要重新创建并替换 Secret。</p>
+</div>
+</div>
+<p>需要注意：Fine-grained PAT 到期后不会自动生成新的 token，也不会自动更新 GitHub Actions Secret。到期后需要重新创建并替换 Secret。</p>
 <h2 id="三限制-repository-access">三、限制 Repository access</h2>
 <p>Repository access 选择：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -298,8 +342,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Only select repositories
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>然后只选择：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>然后只选择：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -307,12 +355,16 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">sona201/sona201.github.io
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>不要选择 <code>All repositories</code>。</p>
+</div>
+</div>
+<p>不要选择 <code>All repositories</code>。</p>
 <p>这样即使这个 token 泄漏，它也不能修改账号下其他仓库。</p>
 <h2 id="四配置最小-repository-permissions">四、配置最小 Repository permissions</h2>
 <p>这里最容易选错。</p>
 <p>最开始容易误选：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -320,8 +372,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Actions: Read and write
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>但部署动作本质上是：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>但部署动作本质上是：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -329,9 +385,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git push origin master
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>需要修改的是仓库内容，而不是管理 GitHub Actions。</p>
+</div>
+</div>
+<p>需要修改的是仓库内容，而不是管理 GitHub Actions。</p>
 <p>因此删除 Actions / Workflows 等无关权限，然后：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -343,8 +403,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">→ Read and write
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>最终权限应该只有：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>最终权限应该只有：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -368,7 +432,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">    └── Read-only
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>其中 Metadata Read-only 是 GitHub 要求的基础权限。</p>
+</div>
+</div>
+<p>其中 Metadata Read-only 是 GitHub 要求的基础权限。</p>
 <p>不需要：</p>
 <ul>
 <li>Actions: Read and write</li>
@@ -380,7 +446,9 @@ if (!doNotTrack) {
 <p>权限越少越好。</p>
 <h2 id="五生成-token">五、生成 Token</h2>
 <p>确认配置以后点击：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -388,8 +456,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Generate token
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>GitHub 会生成类似：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>GitHub 会生成类似：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -397,14 +469,18 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">github_pat_xxxxxxxxxxxxxxxxx
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>注意：</p>
+</div>
+</div>
+<p>注意：</p>
 <blockquote>
 <p>Token 属于凭据，不要写进博客、代码、commit、截图或聊天记录中。</p>
 </blockquote>
 <p>生成后的 token 通常只会完整显示一次，立即复制。</p>
 <h2 id="六更新-github-actions-secret">六、更新 GitHub Actions Secret</h2>
 <p>进入 Hugo 源码仓库：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -418,8 +494,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">→ Actions
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>找到：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>找到：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -427,9 +507,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">PERSONAL_TOKEN
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>点击 Update。</p>
+</div>
+</div>
+<p>点击 Update。</p>
 <p>将刚才生成的 <code>github_pat_...</code> 粘贴到 Value：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -439,8 +523,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Value: [新的 Fine-grained PAT]
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>点击：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>点击：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -448,10 +536,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">Update secret
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>GitHub 不会再把 Secret 的原值显示出来，这是正常的。</p>
+</div>
+</div>
+<p>GitHub 不会再把 Secret 的原值显示出来，这是正常的。</p>
 <h2 id="七workflow-如何使用-secret">七、Workflow 如何使用 Secret</h2>
 <p>当前 Hugo 部署 workflow 使用 <code>peaceiris/actions-gh-pages</code>：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -473,8 +565,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">commit_message</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.event.head_commit.message || &#39;manual deploy&#39; }}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>这里不要直接写：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>这里不要直接写：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -482,8 +578,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">personal_token</span><span class="p">:</span><span class="w"> </span><span class="l">github_pat_xxxxx</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>正确方式始终是从 GitHub Actions Secret 读取：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>正确方式始终是从 GitHub Actions Secret 读取：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -491,9 +591,13 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">personal_token</span><span class="p">:</span><span class="w"> </span><span class="l">${{ secrets.PERSONAL_TOKEN }}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="八重新运行失败的-workflow">八、重新运行失败的 Workflow</h2>
+</div>
+</div>
+<h2 id="八重新运行失败的-workflow">八、重新运行失败的 Workflow</h2>
 <p>更新 Secret 后：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -511,8 +615,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">→ Re-run failed jobs
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>正常流程应该变成：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>正常流程应该变成：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -526,8 +634,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Deploy Web     ✓
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>如果 Build Web 成功但 Deploy Web 仍然出现：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>如果 Build Web 成功但 Deploy Web 仍然出现：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -537,7 +649,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">Authentication failed
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>优先检查：</p>
+</div>
+</div>
+<p>优先检查：</p>
 <ol>
 <li><code>PERSONAL_TOKEN</code> Secret 是否确实更新。</li>
 <li>Fine-grained PAT 是否选择了正确的 Resource owner。</li>
@@ -548,7 +662,9 @@ if (!doNotTrack) {
 </ol>
 <h2 id="九顺便升级旧-github-actions">九、顺便升级旧 GitHub Actions</h2>
 <p>这次排查时还发现旧 workflow 使用：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -560,9 +676,13 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">peaceiris/actions-gh-pages@v3</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>GitHub Runner 已提示旧 Node.js runtime 被弃用。</p>
+</div>
+</div>
+<p>GitHub Runner 已提示旧 Node.js runtime 被弃用。</p>
 <p>因此同步更新为：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -574,8 +694,12 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">peaceiris/actions-gh-pages@v4</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>并增加：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>并增加：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -593,10 +717,14 @@ if (!doNotTrack) {
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>Hugo 本身暂时仍保持原来的 <code>0.101.0</code>，避免同时升级 Hugo 和主题导致额外兼容问题。先恢复部署链路，再单独处理 Hugo/主题升级。</p>
+</div>
+</div>
+<p>Hugo 本身暂时仍保持原来的 <code>0.101.0</code>，避免同时升级 Hugo 和主题导致额外兼容问题。先恢复部署链路，再单独处理 Hugo/主题升级。</p>
 <h2 id="十pat-方案的缺点">十、PAT 方案的缺点</h2>
 <p>这个方案虽然简单，但有一个长期维护问题：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -620,7 +748,9 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">更新 PERSONAL_TOKEN
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>GitHub 不会自动轮换这个 PAT。</p>
+</div>
+</div>
+<p>GitHub 不会自动轮换这个 PAT。</p>
 <p>如果以后不想维护 PAT，可以考虑：</p>
 <ul>
 <li>使用 Deploy Key，让源码仓库固定向 Pages 仓库发布。</li>
@@ -628,7 +758,9 @@ if (!doNotTrack) {
 <li>重新设计发布流程，避免 workflow 跨仓库 push。</li>
 </ul>
 <p>目前对于已有的：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -636,10 +768,14 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">blogs → sona201.github.io
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>双仓库结构，Fine-grained PAT 的优点是迁移成本低，并且可以把写权限严格限制在 <code>sona201.github.io</code> 一个仓库。</p>
+</div>
+</div>
+<p>双仓库结构，Fine-grained PAT 的优点是迁移成本低，并且可以把写权限严格限制在 <code>sona201.github.io</code> 一个仓库。</p>
 <h2 id="总结">总结</h2>
 <p>这次实际配置最终为：</p>
-<div class="highlight"><div class="chroma">
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -671,8 +807,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">└── Metadata: Read-only
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>然后保存到：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>然后保存到：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -688,8 +828,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl">→ PERSONAL_TOKEN
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>GitHub Actions 再通过：</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>GitHub Actions 再通过：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -697,7 +841,9 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">personal_token</span><span class="p">:</span><span class="w"> </span><span class="l">${{ secrets.PERSONAL_TOKEN }}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>完成 Hugo 构建产物向 <code>sona201.github.io</code> 的跨仓库发布。</p>
+</div>
+</div>
+<p>完成 Hugo 构建产物向 <code>sona201.github.io</code> 的跨仓库发布。</p>
 <p>这套权限已经足够完成部署，没有必要为了方便给 token 整个账号或所有仓库的写权限。</p>
 
 </section>
@@ -938,7 +1084,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 

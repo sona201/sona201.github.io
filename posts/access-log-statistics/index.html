@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='1.根据访问IP统计UV 1 awk &amp;#39;{print $1}&amp;#39; access.log | sort | uniq -c | wc -l 2.统计访问URL统计PV 1 awk &amp;#39;{print $7}&amp;#39; access.log | wc -l 3.查询访问最频繁的URL 1 awk &amp;#39;{print $7}&amp;#39; access.log | sort | uniq -c |'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='1.根据访问IP统计UV Bash 1 awk &amp;#39;{print $1}&amp;#39; access.log | sort | uniq -c | wc -l 2.统计访问URL统计PV Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | wc -l 3.查询访问最频繁的URL Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | sort |'>
 <title>Access Log 常用统计命令</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/access-log-statistics/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Access Log 常用统计命令'>
-<meta property='og:description' content='1.根据访问IP统计UV 1 awk &amp;#39;{print $1}&amp;#39; access.log | sort | uniq -c | wc -l 2.统计访问URL统计PV 1 awk &amp;#39;{print $7}&amp;#39; access.log | wc -l 3.查询访问最频繁的URL 1 awk &amp;#39;{print $7}&amp;#39; access.log | sort | uniq -c |'>
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Access Log 常用统计命令'>
+<meta property='og:description' content='1.根据访问IP统计UV Bash 1 awk &amp;#39;{print $1}&amp;#39; access.log | sort | uniq -c | wc -l 2.统计访问URL统计PV Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | wc -l 3.查询访问最频繁的URL Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | sort |'>
 <meta property='og:url' content='https://sona201.github.io/posts/access-log-statistics/'>
 <meta property='og:site_name' content='Ricardo'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-07-06T01:17:38&#43;08:00'/><meta property='article:modified_time' content='2024-07-06T01:17:38&#43;08:00'/>
 <meta name="twitter:title" content="Access Log 常用统计命令">
-<meta name="twitter:description" content="1.根据访问IP统计UV 1 awk &amp;#39;{print $1}&amp;#39; access.log | sort | uniq -c | wc -l 2.统计访问URL统计PV 1 awk &amp;#39;{print $7}&amp;#39; access.log | wc -l 3.查询访问最频繁的URL 1 awk &amp;#39;{print $7}&amp;#39; access.log | sort | uniq -c |">
+<meta name="twitter:description" content="1.根据访问IP统计UV Bash 1 awk &amp;#39;{print $1}&amp;#39; access.log | sort | uniq -c | wc -l 2.统计访问URL统计PV Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | wc -l 3.查询访问最频繁的URL Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | sort |">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
@@ -163,11 +163,19 @@ if (!doNotTrack) {
 
 </header>
 
-    <section class="article-content">
-    
-    
-    <p>1.根据访问IP统计UV</p>
-<div class="highlight"><div class="chroma">
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>1.根据访问IP统计UV</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -175,8 +183,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">awk <span class="s1">&#39;{print $1}&#39;</span> access.log <span class="p">|</span> sort <span class="p">|</span> uniq -c <span class="p">|</span> wc -l
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>2.统计访问URL统计PV</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>2.统计访问URL统计PV</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -184,8 +196,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">awk <span class="s1">&#39;{print $7}&#39;</span> access.log <span class="p">|</span> wc -l
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>3.查询访问最频繁的URL</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>3.查询访问最频繁的URL</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -193,8 +209,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">awk <span class="s1">&#39;{print $7}&#39;</span> access.log <span class="p">|</span> sort <span class="p">|</span> uniq -c <span class="p">|</span> sort -n -k <span class="m">1</span> -r <span class="p">|</span> more
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>4.查询访问最频繁的IP</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>4.查询访问最频繁的IP</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -202,8 +222,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">awk <span class="s1">&#39;{print $1}&#39;</span> access.log <span class="p">|</span> sort <span class="p">|</span> uniq -c <span class="p">|</span> sort -n -k <span class="m">1</span> -r <span class="p">|</span> more
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>5.根据时间段统计查看日志</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>5.根据时间段统计查看日志</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -211,8 +235,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cat  access.log <span class="p">|</span> sed -n <span class="s1">&#39;/14\/Mar\/2015:21/,/14\/Mar\/2015:22/p&#39;</span> <span class="p">|</span> more
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>6.通过日志查看含有send的url,统计ip地址的总连接数</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>6.通过日志查看含有send的url,统计ip地址的总连接数</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -220,8 +248,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cat access.log <span class="p">|</span> grep <span class="s2">&#34;send&#34;</span> <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span> <span class="p">|</span> sort <span class="p">|</span> uniq -c <span class="p">|</span> sort -nr
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>7.通过日志查看当天访问次数最多的时间段</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>7.通过日志查看当天访问次数最多的时间段</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -229,8 +261,12 @@ if (!doNotTrack) {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">awk <span class="s1">&#39;{print $4}&#39;</span> access.log <span class="p">|</span> grep <span class="s2">&#34;24/Mar/2011&#34;</span> <span class="p">|</span>cut -c 14-18 <span class="p">|</span> sort <span class="p">|</span> uniq -c <span class="p">|</span> sort -nr <span class="p">|</span> head
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>8.通过日志查看当天指定ip访问次数过的url和访问次数</p>
-<div class="highlight"><div class="chroma">
+</div>
+</div>
+<p>8.通过日志查看当天指定ip访问次数过的url和访问次数</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -239,6 +275,8 @@ if (!doNotTrack) {
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
+</div>
+
 </section>
 
 
@@ -274,12 +312,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Nmap 端口扫描笔记</h2>
+            <h2 class="article-title">Linux iptables 使用笔记</h2>
         </div>
     </a>
 </article>
@@ -287,12 +325,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Linux iptables 使用笔记</h2>
+            <h2 class="article-title">Nmap 端口扫描笔记</h2>
         </div>
     </a>
 </article>
@@ -503,7 +541,7 @@ if (!doNotTrack) {
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
 
 
 
