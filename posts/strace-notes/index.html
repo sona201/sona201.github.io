@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='#linux #strace 监听命令执行的strace，不再适用 strace -p （已经启动的进程） 1 strace -f -tt -T -o yum_install.log yum install -y dnsmasq -f: 跟踪由 yum 产生的所有子进程（非常重要，因为下载和安装由不'>
+<title>用 Strace 排查命令与网络问题</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/strace-notes/'>
+
+<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='用 Strace 排查命令与网络问题'>
+<meta property='og:description' content='#linux #strace 监听命令执行的strace，不再适用 strace -p （已经启动的进程） 1 strace -f -tt -T -o yum_install.log yum install -y dnsmasq -f: 跟踪由 yum 产生的所有子进程（非常重要，因为下载和安装由不'>
+<meta property='og:url' content='https://sona201.github.io/posts/strace-notes/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2026-01-14T20:41:47&#43;08:00'/><meta property='article:modified_time' content='2026-01-14T20:41:47&#43;08:00'/>
+<meta name="twitter:title" content="用 Strace 排查命令与网络问题">
+<meta name="twitter:description" content="#linux #strace 监听命令执行的strace，不再适用 strace -p （已经启动的进程） 1 strace -f -tt -T -o yum_install.log yum install -y dnsmasq -f: 跟踪由 yum 产生的所有子进程（非常重要，因为下载和安装由不">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">用 Strace 排查命令与网络问题</h1>
+        
+        
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/linux/">Linux</a>
+                </span>
+            
+            
+                <time datetime="2026-01-14">2026-01-14</time>
+            
+            <span>阅读时长: 4 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>#linux #strace</p>
+<p>监听命令执行的strace，不再适用 strace -p （已经启动的进程）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">strace -f -tt -T -o yum_install.log yum install -y dnsmasq
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><strong><code>-f</code></strong>: 跟踪由 <code>yum</code> 产生的所有子进程（非常重要，因为下载和安装由不同进程处理）。</li>
+<li><strong><code>-tt</code></strong>: 在每行开头显示微秒级的时间戳，方便看哪里卡住了。</li>
+<li><strong><code>-T</code></strong>: 在行尾显示每个系统调用的耗时。</li>
+<li><strong><code>-o</code></strong>: 将结果输出到文件，避免刷屏。</li>
+</ul>
+<p>只检查网络连接问题</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">strace -f -e trace=network yum makecache
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>理解 <code>strace</code> 的输出，其实就像是在看一份**“程序与系统内核的聊天记录”**。每一行都代表程序向系统申请做了一件事。</p>
+<p>为了让你快速上手，我们可以把每一行拆解为 <strong>“谁、在什么时候、想干什么、结果如何、花了多久”</strong> 这五个要素。</p>
+<p>输出内容</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">5464  04:15:36.052606 close(14)         = 0 &lt;0.000010&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.052658 fdatasync(17)     = 0 &lt;0.000064&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.052744 close(17)         = 0 &lt;0.000009&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.052773 stat(&#34;/var/lib/rpm/Group&#34;, {st_mode=S_IFREG|0644, st_size=16384, ...}) = 0 &lt;0.000008&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.052814 open(&#34;/var/lib/rpm/Group&#34;, O_RDWR) = 14 &lt;0.000012&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.052854 fcntl(14, F_GETFD) = 0 &lt;0.000010&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.052886 fcntl(14, F_SETFD, FD_CLOEXEC) = 0 &lt;0.000007&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.052914 fdatasync(14)     = 0 &lt;0.000056&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.052989 close(14)         = 0 &lt;0.000009&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053032 fdatasync(16)     = 0 &lt;0.000075&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053136 close(16)         = 0 &lt;0.000009&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053167 stat(&#34;/var/lib/rpm/Basenames&#34;, {st_mode=S_IFREG|0644, st_size=3485696, ...}) = 0 &lt;0.000008&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053200 open(&#34;/var/lib/rpm/Basenames&#34;, O_RDWR) = 14 &lt;0.000008&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053229 fcntl(14, F_GETFD) = 0 &lt;0.000006&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053254 fcntl(14, F_SETFD, FD_CLOEXEC) = 0 &lt;0.000006&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053278 fdatasync(14)     = 0 &lt;0.000058&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053355 close(14)         = 0 &lt;0.000007&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053392 fdatasync(15)     = 0 &lt;0.000063&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053477 close(15)         = 0 &lt;0.000007&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053505 stat(&#34;/var/lib/rpm/Name&#34;, {st_mode=S_IFREG|0644, st_size=32768, ...}) = 0 &lt;0.000007&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053536 open(&#34;/var/lib/rpm/Name&#34;, O_RDWR) = 14 &lt;0.000007&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053563 fcntl(14, F_GETFD) = 0 &lt;0.000006&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053588 fcntl(14, F_SETFD, FD_CLOEXEC) = 0 &lt;0.000006&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053616 fdatasync(14)     = 0 &lt;0.000068&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053704 close(14)         = 0 &lt;0.000009&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053752 fdatasync(8)      = 0 &lt;0.000062&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053837 close(8)          = 0 &lt;0.000009&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053874 umask(022)        = 022 &lt;0.000007&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053900 open(&#34;/var/lib/rpm/.dbenv.lock&#34;, O_RDWR|O_CREAT, 0644) = 8 &lt;0.000009&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053930 umask(022)        = 022 &lt;0.000007&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053956 fcntl(8, F_SETLKW, {l_type=F_WRLCK, l_whence=SEEK_SET, l_start=0, l_len=0}) = 0 &lt;0.000008&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.053988 close(13)         = 0 &lt;0.000008&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054015 munmap(0x7f6a94e16000, 1318912) = 0 &lt;0.000136&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054184 close(12)         = 0 &lt;0.000006&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054215 munmap(0x7f6a94f58000, 294912) = 0 &lt;0.000018&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054253 close(11)         = 0 &lt;0.000006&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054277 munmap(0x7f6a95368000, 1032192) = 0 &lt;0.000027&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054327 close(8)          = 0 &lt;0.000007&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054357 rt_sigaction(SIGHUP, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f6aade8d630}, NULL, 8) = 0 &lt;0.000005&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054387 rt_sigaction(SIGINT, {sa_handler=0x7f6aae1b0ca0, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f6aade8d630}, NULL, 8) = 0 &lt;0.000007&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054415 rt_sigaction(SIGTERM, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f6aade8d630}, NULL, 8) = 0 &lt;0.000006&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054442 rt_sigaction(SIGQUIT, {sa_handler=0x7f6aae1b0ca0, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f6aade8d630}, NULL, 8) = 0 &lt;0.000006&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054468 rt_sigaction(SIGPIPE, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f6aade8d630}, NULL, 8) = 0 &lt;0.000006&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.054531 close(27)         = 0 &lt;0.000020&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061259 munmap(0x7f6a9411a000, 262144) = 0 &lt;0.000040&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061337 munmap(0x7f6a940da000, 262144) = 0 &lt;0.000030&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061405 munmap(0x7f6a9401a000, 262144) = 0 &lt;0.000034&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061461 munmap(0x7f6a8fec0000, 262144) = 0 &lt;0.000033&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061514 munmap(0x7f6a8ffc0000, 262144) = 0 &lt;0.000030&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061566 munmap(0x7f6a8ff00000, 262144) = 0 &lt;0.000034&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061622 munmap(0x7f6a9419a000, 262144) = 0 &lt;0.000031&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061682 munmap(0x7f6a8fe80000, 262144) = 0 &lt;0.000029&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061730 munmap(0x7f6a9415a000, 262144) = 0 &lt;0.000028&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061778 munmap(0x7f6a9409a000, 262144) = 0 &lt;0.000035&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061841 munmap(0x7f6a9405a000, 262144) = 0 &lt;0.000029&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061890 munmap(0x7f6a8ff40000, 262144) = 0 &lt;0.000029&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.061943 munmap(0x7f6a8fe40000, 262144) = 0 &lt;0.000029&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.062092 unlink(&#34;/var/run/yum.pid&#34;) = 0 &lt;0.000023&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.062469 close(5)          = 0 &lt;0.000011&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.062500 munmap(0x7f6aae683000, 4096) = 0 &lt;0.000011&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.062563 close(4)          = 0 &lt;0.000009&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.062597 munmap(0x7f6aae681000, 4096) = 0 &lt;0.000008&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.062680 close(3)          = 0 &lt;0.000014&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.062761 rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f6aade8d630}, {sa_handler=0x7f6aae1b0ca0, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f6aade8d630}, 8) = 0 &lt;0.000006&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.062818 rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f6aade8d630}, {sa_handler=0x7f6aae1b0ca0, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f6aade8d630}, 8) = 0 &lt;0.000005&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.072577 munmap(0x7f6a8f3c0000, 262144) = 0 &lt;0.000046&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.072891 munmap(0x7f6a8fa80000, 262144) = 0 &lt;0.000046&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.072962 munmap(0x7f6a8fa00000, 262144) = 0 &lt;0.000040&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.073367 munmap(0x7f6a8f840000, 262144) = 0 &lt;0.000042&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.073896 munmap(0x7f6a8fe00000, 262144) = 0 &lt;0.000037&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.081421 munmap(0x7f6a946ec000, 262144) = 0 &lt;0.000048&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.081505 close(6)          = 0 &lt;0.000010&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.081593 rt_sigprocmask(SIG_BLOCK, ~[RTMIN RT_1], [], 8) = 0 &lt;0.000006&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.081627 rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0 &lt;0.000005&gt;
+</span></span><span class="line"><span class="cl">5464  04:15:36.082218 exit_group(0)     = ?
+</span></span><span class="line"><span class="cl">5464  04:15:36.088894 +++ exited with 0 +++
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们可以把它拆成五个部分来理解：</p>
+<ol>
+<li><strong><code>12345</code></strong>: 进程 ID (PID)。因为你加了 <code>-f</code>，所以能看到是哪个子进程在干活。</li>
+<li><strong><code>20:30:01...</code></strong>: 精确到微秒的时间戳（<code>-tt</code> 参数）。</li>
+<li><strong><code>connect(...)</code></strong>: <strong>动作名称及参数</strong>。这里表示尝试连接网络。你可以看到它尝试连接的是哪个 IP 和端口（80）。</li>
+<li><strong><code>= -1 ETIMEDOUT</code></strong>: <strong>返回值</strong>。这是最重要的部分！
+<ul>
+<li><code>= 0</code> 或正数：代表成功。</li>
+<li><code>-1</code> 紧跟错误码：代表失败。这里的 <code>ETIMEDOUT</code> 明确告诉你：<strong>网络不通，超时了</strong>。</li>
+</ul>
+</li>
+<li><strong><code>&lt;5.000123&gt;</code></strong>: <strong>耗时</strong>（<code>-T</code> 参数）。这个连接动作卡了 5 秒钟才返回失败。</li>
+</ol>
+<hr>
+<h3 id="1-核心公式五位一体法">1. 核心公式：五位一体法</h3>
+<p>以下是一行典型的 <code>strace</code> 输出（以你排查内网镜像站为例）：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th><strong>示例组成部分</strong></th>
+<th><strong>对应的实际内容</strong></th>
+<th><strong>翻译成人类语言</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PID (进程号)</strong></td>
+<td><code>2834</code></td>
+<td>编号为 2834 的进程（可能是 yum 的子进程）。</td>
+</tr>
+<tr>
+<td><strong>时间戳</strong></td>
+<td><code>10:30:01.5</code></td>
+<td>动作发生的精确时间。</td>
+</tr>
+<tr>
+<td><strong>系统调用名</strong></td>
+<td><code>connect</code></td>
+<td>程序想发起一个<strong>网络连接</strong>。</td>
+</tr>
+<tr>
+<td><strong>参数</strong></td>
+<td><code>(3, {IP=&quot;192.0.2.10&quot;, port=80}, ...)</code></td>
+<td>目标是<strong>示例镜像源 IP</strong>，端口是 <strong>80</strong>。</td>
+</tr>
+<tr>
+<td><strong>返回值</strong></td>
+<td><code>= -1 ETIMEDOUT</code></td>
+<td><strong>重点：</strong> 结果失败了，原因是<strong>连接超时</strong>。</td>
+</tr>
+<tr>
+<td><strong>耗时</strong></td>
+<td><code>&lt;5.000123&gt;</code></td>
+<td>这个动作让程序傻等了 5 秒钟。</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h3 id="2-常见动作系统调用分类">2. 常见“动作”（系统调用）分类</h3>
+<p>在 <code>yum install</code> 的日志里，你主要会看到这几类动作：</p>
+<ul>
+<li><strong>文件操作类</strong>：
+<ul>
+<li><code>openat</code> / <code>open</code>: 打开文件（看看它是不是在读 <code>/etc/yum.repos.d/</code> 下的配置）。</li>
+<li><code>read</code> / <code>write</code>: 读写数据。</li>
+</ul>
+</li>
+<li><strong>网络操作类（排查重点）</strong>：
+<ul>
+<li><code>socket</code>: 创建一个联网的插座。</li>
+<li><code>connect</code>: <strong>去连服务器</strong>。如果后面跟着 <code>ETIMEDOUT</code>，表示连接超时，需要进一步检查路由、防火墙和目标服务。</li>
+<li><code>recvfrom</code> / <code>sendto</code>: 接收或发送网络包（比如 DNS 查询）。</li>
+</ul>
+</li>
+<li><strong>进程控制类</strong>：
+<ul>
+<li><code>execve</code>: 运行一个新程序（比如 <code>yum</code> 调用了 <code>rpm</code>）。</li>
+<li><code>clone</code> / <code>fork</code>: 创建子进程。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="3-看懂返回值问题的答案就在这里">3. 看懂“返回值”：问题的答案就在这里</h3>
+<p>返回值（等号 <code>=</code> 后面的内容）是排查的关键：</p>
+<ul>
+<li><strong>正整数（如 <code>= 3</code>）</strong>：<strong>成功</strong>。程序拿到了一个资源（比如文件句柄）。</li>
+<li><strong><code>EACCES</code> (Permission denied)</strong>：<strong>权限不足</strong>。你可能忘了加 <code>sudo</code>。</li>
+<li><strong><code>ENOENT</code> (No such file or directory)</strong>：<strong>文件不存在</strong>。说明 repo 配置文件路径写错了。</li>
+<li><strong><code>ETIMEDOUT</code> (Connection timed out)</strong>：<strong>超时</strong>。网络包发出去没人理，通常是<strong>安全组/防火墙</strong>的问题。</li>
+<li><strong><code>ECONNREFUSED</code> (Connection refused)</strong>：<strong>被拒绝</strong>。目标服务器活着，但不允许你访问这个端口。</li>
+</ul>
+<hr>
+<h3 id="4-你的实战技巧搜索三部曲">4. 你的实战技巧：搜索三部曲</h3>
+<p>面对几万行的 <code>yum_install.log</code>，不要从头看，用 <code>grep</code> 降维打击：</p>
+<ol>
+<li>
+<p>搜网络错误：</p>
+<p>grep &ldquo;ETIMEDOUT&rdquo; yum_install.log</p>
+<p>如果有结果，说明发生了网络超时，仍需要结合地址、路由和服务状态定位原因。</p>
+</li>
+<li>
+<p>搜 IP 地址：</p>
+<p>grep &ldquo;100.&rdquo; yum_install.log</p>
+<p>看看它到底有没有尝试去连你设定的那个内网 IP。</p>
+</li>
+<li>
+<p>搜 DNS 解析：</p>
+<p>grep &ldquo;53&rdquo; yum_install.log</p>
+<p>看 53 端口（DNS）有没有返回成功。如果 DNS 挂了，它连 IP 都拿不到。</p>
+</li>
+</ol>
+<hr>
+<h3 id="总结">总结</h3>
+<p>理解 <code>strace</code> 不需要你会写 C 语言或汇编。你只需要像看<strong>物流单据</strong>一样：</p>
+<ul>
+<li>
+<p><strong>发货地</strong>：你的 ECS</p>
+</li>
+<li>
+<p><strong>目的地</strong>：<code>mirrors.cloud.aliyuncs.com</code> (100.x.x.x)</p>
+</li>
+<li>
+<p><strong>状态</strong>：是“已签收”还是“查无此人”或“运输中（超时）”？</p>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux iptables 使用笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Nmap 端口扫描笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/yum-repository-failure/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Yum 软件源失败时的处理</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/linux-timezone-update/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux 修改时区与 crontab 时间排查</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/awk-text-replacement/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AWK 文本替换笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>142</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>124</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#1-核心公式五位一体法">1. 核心公式：五位一体法</a></li>
+        <li><a href="#2-常见动作系统调用分类">2. 常见“动作”（系统调用）分类</a></li>
+        <li><a href="#3-看懂返回值问题的答案就在这里">3. 看懂“返回值”：问题的答案就在这里</a></li>
+        <li><a href="#4-你的实战技巧搜索三部曲">4. 你的实战技巧：搜索三部曲</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+
+    </body>
+</html>

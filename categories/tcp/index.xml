@@ -1413,6 +1413,146 @@
 </description>
         </item>
         <item>
+        <title>文件上传卡住时排查 TCP Zero Window 与 Nginx 缓冲</title>
+        <link>https://sona201.github.io/posts/nginx-upload-zero-window-troubleshooting/</link>
+        <pubDate>Wed, 28 Jun 2023 15:52:28 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/nginx-upload-zero-window-troubleshooting/</guid>
+        <description>&lt;h1 id=&#34;文件上传卡住时的-tcp-与-nginx-排查&#34;&gt;文件上传卡住时的 TCP 与 Nginx 排查&lt;/h1&gt;
+&lt;h2 id=&#34;一背景&#34;&gt;一、背景&lt;/h2&gt;
+&lt;p&gt;我写了一个python服务，里面有个文件上传的功能，直接把本地文件上传到服务器
+我的服务：入口是nginx，用gunicorn 启动 django 框架
+本地测试&amp;quot;文件上传接口&amp;quot;，170M的文件传输没有问题，但部署在服务器上，传输会卡在47%的进度条这里。
+分析抓包，发现上传卡死的时候，会出现 tcp zero window，window窗口直接变0，然后一直不会恢复&lt;/p&gt;
+&lt;h2 id=&#34;二实验环境&#34;&gt;二、实验环境&lt;/h2&gt;
+&lt;p&gt;入口为 Nginx，后端使用 Gunicorn 启动 Django，监听 &lt;code&gt;127.0.0.1:8000&lt;/code&gt;。当时服务器使用 Linux 3.10 内核。此前做过 &lt;code&gt;tc&lt;/code&gt; 实验，排查时先确认原有延迟和丢包规则已经清理。&lt;/p&gt;
+&lt;h2 id=&#34;三最初的排查思路&#34;&gt;三、最初的排查思路&lt;/h2&gt;
+&lt;p&gt;最初怀疑是否需要通过内核参数强制 reset 连接，后来发现，应先检查接收方应用是否及时读取数据，以及反向代理的缓冲行为。&lt;/p&gt;
+&lt;h2 id=&#34;四解决方案&#34;&gt;四、解决方案&lt;/h2&gt;
+&lt;p&gt;确认 TCP 出现 &lt;code&gt;Zero Window&lt;/code&gt; 后，最初认为可以通过调整某个内核参数直接解决。后续排查发现，窗口变为零只描述接收方暂时无法继续接收的状态，仍需要找到具体原因。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/kernel_tcp_cache.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;kernel_tcp_cache&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;TCP 数据先进入接收方的套接字接收缓冲区，再由应用读取。当接收方通告的可用接收窗口变为零时，发送方需要等待窗口恢复；排查时需要结合缓冲区状态和应用读取数据的行为。&lt;/p&gt;
+&lt;p&gt;后续想到一个方法就是进行抓包，诡异的是，最外层nginx暴露的是443端口，抓包有数据，但python服务8000端口抓包却没有数据，最后发现是抓包条件有问题，在服务器上应该&lt;/p&gt;
+&lt;p&gt;抓取nginx数据包&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo tcpdump -i eth0 &amp;#34;tcp port 443&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;因为python服务是绑定是本地网卡，&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo netstat -lntp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 本例只保留与上传链路相关的两条监听信息：
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# Nginx: 0.0.0.0:443
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# Gunicorn: 127.0.0.1:8000
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;根据网卡的 &lt;code&gt;inet&lt;/code&gt; 来判断当前使用的网卡为lo，所以用如下命令进行python服务抓包&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;tcpdump -i lo &amp;#34;tcp port 8000&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;通过抓包发现，当传输一个大文件时，在nginx端能抓包，但在python端却没有数据，最开始是tcpdump直接写入文件，发现python抓包数据包为0，后面就改为直接标准输出&lt;/p&gt;
+&lt;p&gt;通过输出发现当进行文件传输时，nginx有数据，但python没有数据，这时开始怀疑是不是nginx的问题，多次搜索后发现&lt;code&gt;python&lt;/code&gt;的&lt;code&gt;Gunicorn&lt;/code&gt;服务建议nginx配置参数&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;proxy_buffering off;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这个参数在前端传大&lt;code&gt;json&lt;/code&gt;文件给后端时也有人遇到过，似乎看到一丝希望，兴致冲冲的配置玩参数后测试，还是nginx端接收完数据最后一次性传给后端，外加几个&lt;code&gt;buffer_size&lt;/code&gt;的结果还是一样，
+这就让我郁闷，我开始怀疑nginx版本问题，查看怎么确认参数是否正确，是否生效，但并没有找到一个标准结果，无奈只能先放弃&lt;/p&gt;
+&lt;p&gt;后来在搜索 &lt;code&gt;proxy_buffering&lt;/code&gt; 时发现了 &lt;code&gt;proxy_request_buffering&lt;/code&gt;。两者方向不同：前者控制从上游收到的响应缓冲，后者控制发往上游的请求体缓冲。&lt;/p&gt;
+&lt;p&gt;关闭请求体缓冲后重新测试，大文件上传期间，Nginx 与 Python 后端都能同时抓到数据，说明请求体开始持续传给上游。&lt;/p&gt;
+&lt;p&gt;保留一个只展示关键请求缓冲参数的配置示例：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-nginx&#34; data-lang=&#34;nginx&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;upstream&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;app_backend&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;kn&#34;&gt;server&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;127.0.0.1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;server&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;kn&#34;&gt;listen&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8080&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;kn&#34;&gt;server_name&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;localhost&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;kn&#34;&gt;client_max_body_size&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;200m&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;kn&#34;&gt;location&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;/api/&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;kn&#34;&gt;proxy_pass&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;http://app_backend&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;kn&#34;&gt;proxy_http_version&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;.1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;kn&#34;&gt;proxy_request_buffering&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;off&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;kn&#34;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;Host&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$host&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;kn&#34;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;X-Real-IP&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$remote_addr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;kn&#34;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;X-Forwarded-For&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;至此，这个问题暂时先告一段落，不过这次也确实会发现不像以前特别害怕排查这类问题，完全没有思路，也不知道怎么面对&lt;code&gt;wireshark&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;参考文件&#34;&gt;参考文件&lt;/h2&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://docs.gunicorn.org/en/latest/deploy.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gunicorn Doc&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/xieyuooo/article/details/83109971&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;MySQL JDBC StreamResult通信原理浅析&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://www.wireshark.org/lists/wireshark-users/200805/msg00206.html#:~:text=1.-,what%20does%20%22TCP%20segment%20of%20a%20reassembled%20PDU%22%20mean%3F,packet%20will%20show%20the%20packet.&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;wireshark tcp segment of a reassembled pdu&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/ynchyong/article/details/109110028&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;TCP报文（ tcp dup ack 、TCP Retransmission）&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/qzcsu/article/details/72861891&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;两张动图-彻底明白TCP的三次握手与四次挥手&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://www.cnblogs.com/wshenjin/p/11608744.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Nginx的proxy buffer参数总结&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;http://nginx.org/en/docs/http/ngx_http_proxy_module.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Module ngx_http_proxy_module&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://stackoverflow.com/questions/47125684/nginx-proxy-request-buffering-is-not-working-as-expected&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;nginx-proxy-request-buffering-is-not-working-as-expected&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>Tc_实验</title>
         <link>https://sona201.github.io/posts/tc_%E5%AE%9E%E9%AA%8C/</link>
         <pubDate>Fri, 19 May 2023 01:05:14 +0800</pubDate>
@@ -1722,7 +1862,11 @@
         
         <guid>https://sona201.github.io/posts/wireshark%E6%8A%80%E5%B7%A7/</guid>
         <description>&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://developer.aliyun.com/article/100476&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;相关文章&lt;/a&gt;&lt;/p&gt;
+    &gt;相关文章&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://www.ilikejobs.com/posts/wireshark/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;wireshark 常用功能笔记&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://www.kawabangga.com/posts/4794&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;用 Wireshark 分析 TCP 吞吐瓶颈&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;wireshark你一定会喜欢的技巧摘要&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;修改seq的为绝对值 relative
@@ -1753,8 +1897,27 @@
     &gt;分析图&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;wireshark https 抓包 tls contains &amp;ldquo;baidu.com&amp;rdquo;&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;wireshark 没有权限
-&lt;img src=&#34;https://sona201.github.io/images/permission_denied.png&#34;
+&lt;p&gt;wireshark 没有权限&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;You do not have permission to capture on device &amp;#34;utun7&amp;#34;.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;((cannot open BPF device) /dev/bpf0: Permission denied)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Please check to make sure you have sufficient permissions.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;If you installed Wireshark using the package from wireshark.org, close this dialog and click on the &amp;#34;installing ChmodBPF&amp;#34; link in &amp;#34;You can fix this by installing ChmodBPF.&amp;#34; on the main screen, and then complete the installation procedure.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/permission_denied.png&#34;
 	
 	
 	
@@ -1764,7 +1927,6 @@
 	
 	
 &gt;&lt;/p&gt;
-&lt;/blockquote&gt;
 &lt;p&gt;或者下图&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/permission_denied_wireshark.png&#34;
 	
@@ -2113,7 +2275,7 @@
 &gt;&lt;/p&gt;
 &lt;p&gt;要说过滤的作用与技巧，就算专门写一本小册子都不为过。篇幅所限，本文只能&amp;quot;过滤&amp;quot;出最适合初学者的部分。&lt;/p&gt;
 &lt;p&gt;1．如果已知某个协议发生问题，可以用协议名称过滤一下。以Windows Domain的身份验证问题为例，如果已知该域的验证协议是Kerberos，那么就在Filter框输入Kerberos作为关键字过滤。除了纯粹的Kerberos包，你还将得到Session Setup之类包含Kerberos的包。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/wireshark_filter_Kerberos.jpeg&#34;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/wireshark_filter_kerberos.jpeg&#34;
 	
 	
 	
@@ -2367,6 +2529,603 @@
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;一篇文章不可能涵盖所有技巧，本文就到此为止。最后要分享的，是我认为最“笨”但也是最重要的一个技巧——勤加练习。只要练到这些技巧都变成习惯，就可以算登堂入室了。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>用 Netem 和 TCP 缓冲区观察下载速度</title>
+        <link>https://sona201.github.io/posts/tcp-netem-buffer-experiments/</link>
+        <pubDate>Mon, 15 May 2023 00:56:03 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/tcp-netem-buffer-experiments/</guid>
+        <description>&lt;h1 id=&#34;tcp实验&#34;&gt;tcp实验&lt;/h1&gt;
+&lt;h2 id=&#34;1-实验准备&#34;&gt;1 实验准备&lt;/h2&gt;
+&lt;h3 id=&#34;11-虚拟机&#34;&gt;1.1 虚拟机&lt;/h3&gt;
+&lt;p&gt;使用 VMware 创建两台本地隔离虚拟机，系统为 &lt;code&gt;Ubuntu 20.04 LTS&lt;/code&gt;。以下私有地址只作为本地实验示例，与图中的地址一致：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;tcp-server: 192.168.77.131&lt;/li&gt;
+&lt;li&gt;tcp-client: 192.168.77.132&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;111-虚拟机相关信息&#34;&gt;1.1.1 虚拟机相关信息&lt;/h4&gt;
+&lt;p&gt;系统相关信息&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;内核版本&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tc qdesc&lt;/code&gt;信息&lt;/li&gt;
+&lt;li&gt;系统内核相关参数&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-server:~# uname -a
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Linux tcp-server 5.4.0-149-generic #166-Ubuntu SMP Tue Apr 18 16:51:45 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-server:~# tc qdisc show dev ens33
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;qdisc fq_codel 0: root refcnt 2 limit 10240p flows 1024 quantum 1514 target 5.0ms interval 100.0ms memory_limit 32Mb ecn 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-server:~# sudo sysctl -a | egrep &amp;#34;rmem|wmem|tcp_mem|adv_win|moderate&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.core.rmem_default = 212992
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.core.rmem_max = 212992
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.core.wmem_default = 212992
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.core.wmem_max = 212992
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_adv_win_scale = 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_mem = 44544        59392   89088
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_moderate_rcvbuf = 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_rmem = 4096        131072  6291456
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_wmem = 4096        16384   4194304
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.udp_rmem_min = 4096
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.udp_wmem_min = 4096
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;vm.lowmem_reserve_ratio = 256   256     32      0       0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Tips: 可以给虚拟机挂载本地文件目录，可以免去拷贝tcpdump file到本地，直接使用&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;12-大文件&#34;&gt;1.2 大文件&lt;/h3&gt;
+&lt;h4 id=&#34;121-dd生成大文件&#34;&gt;1.2.1 &lt;code&gt;dd&lt;/code&gt;生成大文件&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;dd if=/dev/zero of=large_file bs=1G count=2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;13-服务器&#34;&gt;1.3 服务器&lt;/h3&gt;
+&lt;h4 id=&#34;131-ubuntu安装nginx&#34;&gt;1.3.1 ubuntu安装&lt;code&gt;nginx&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;最早使用 Python HTTP 服务器，多次实验结果不够稳定。为减少应用服务器差异，本组实验改用 Nginx。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nx&#34;&gt;root&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;tcp&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;~#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;apt&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;install&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nx&#34;&gt;Reading&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;lists&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nx&#34;&gt;Building&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;dependency&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;tree&lt;/span&gt;       
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nx&#34;&gt;Reading&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;state&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;information&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;is&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;already&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;the&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;newest&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;version&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;1.18.0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ubuntu1&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;.4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;upgraded&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;newly&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;installed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;to&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;remove&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;19&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;upgraded&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nx&#34;&gt;root&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;tcp&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;~#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;systemctl&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;start&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nx&#34;&gt;root&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;tcp&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;~#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;systemctl&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;status&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;●&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;service&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;A&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;high&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;performance&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;web&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;server&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reverse&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;proxy&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     &lt;span class=&#34;nx&#34;&gt;Loaded&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;loaded&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;lib&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;systemd&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;system&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;service&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;enabled&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;vendor&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;enabled&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     &lt;span class=&#34;nx&#34;&gt;Active&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;active&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;running&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;since&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Mon&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2023&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;05&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;29&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;09&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;35&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;UTC&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;23&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;h&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;ago&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;       &lt;span class=&#34;nx&#34;&gt;Docs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;man&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   &lt;span class=&#34;nx&#34;&gt;Main&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;PID&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2154&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;      &lt;span class=&#34;nx&#34;&gt;Tasks&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;limit&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4573&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     &lt;span class=&#34;nx&#34;&gt;Memory&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;515.4&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;M&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     &lt;span class=&#34;nx&#34;&gt;CGroup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;system&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;slice&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;             &lt;span class=&#34;err&#34;&gt;├─&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2154&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;master&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;usr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;sbin&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;g&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;daemon&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;on&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;master_process&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;on&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;             &lt;span class=&#34;err&#34;&gt;├─&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2155&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;worker&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;             &lt;span class=&#34;err&#34;&gt;└─&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2156&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;worker&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nx&#34;&gt;May&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;29&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;09&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;35&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;tcp&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;server&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;systemd&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]:&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Starting&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;A&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;high&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;performance&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;web&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;server&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reverse&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;proxy&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nx&#34;&gt;May&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;29&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;09&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;35&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;tcp&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;server&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;systemd&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]:&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Started&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;A&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;high&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;performance&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;web&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;server&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;reverse&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;proxy&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;132-配置nginx&#34;&gt;1.3.2 配置&lt;code&gt;nginx&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;修改nginx配置文件，能通过&lt;code&gt;http://ip/path&lt;/code&gt;访问到文件。具体操作如下。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;nginx&lt;/code&gt;默认配置文件启动了80端口，配置文件为&lt;code&gt;/etc/nginx/sites-enabled/default&lt;/code&gt;，查看配置文件发现默认&lt;code&gt;nginx&lt;/code&gt;的&lt;code&gt;html&lt;/code&gt;路径为&lt;code&gt;/var/www/html&lt;/code&gt;。
+将刚刚生成的大文件&lt;code&gt;large_file&lt;/code&gt;移动到&lt;code&gt;/var/www/html&lt;/code&gt;。&lt;/p&gt;
+&lt;h4 id=&#34;133-测试nginx服务器配置&#34;&gt;1.3.3 测试&lt;code&gt;nginx&lt;/code&gt;服务器配置&lt;/h4&gt;
+&lt;p&gt;在&lt;code&gt;tcp-client&lt;/code&gt;机器上访问文件&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# curl -O http://192.168.77.131/large_file
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                                 Dload  Upload   Total   Spent    Left  Speed
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;100 2048M  100 2048M    0     0  32.4M      0  0:01:03  0:01:03 --:--:-- 30.9M
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# ping 192.168.77.131
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;PING 192.168.77.131 (192.168.77.131) 56(84) bytes of data.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;64 bytes from 192.168.77.131: icmp_seq=1 ttl=64 time=0.480 ms
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;64 bytes from 192.168.77.131: icmp_seq=2 ttl=64 time=0.716 ms
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;64 bytes from 192.168.77.131: icmp_seq=3 ttl=64 time=0.671 ms
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;64 bytes from 192.168.77.131: icmp_seq=4 ttl=64 time=0.602 ms
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;^C
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;--- 192.168.77.131 ping statistics ---
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;4 packets transmitted, 4 received, 0% packet loss, time 3064ms
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;rtt min/avg/max/mdev = 0.480/0.617/0.716/0.089 ms
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;不调整网络测试下载速度/时间，看看抓包分析rtt，tcptrace图&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;客户端机器上抓包&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tcpdump -i ens33 &amp;#34;host 192.168.77.131&amp;#34; -w tcpdump-clinet-none.cap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;tcpdump: listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;^C155254 packets captured
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;155254 packets received by filter
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0 packets dropped by kernel
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;服务端上抓包&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-server:~# tcpdump -i ens33 -s 120 &amp;#34;host 192.168.77.132&amp;#34; -w tcpdump-server-none.cap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;tcpdump: listening on ens33, link-type EN10MB (Ethernet), capture size 120 bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;^C133195 packets captured
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;133195 packets received by filter
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0 packets dropped by kernel
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;抓包命令解释:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可以不指定 &lt;code&gt;-s&lt;/code&gt;，抓全量，这样可以看出更多信息，但也会导致文件下载很大。&lt;/li&gt;
+&lt;li&gt;分析tcp图表，rtt(Round Trip Time)一个tcp包往返的时间，一般使用&lt;code&gt;ping&lt;/code&gt;命令也能发现，但不能完全代替，因为会有内核数据处理损耗等导致误差。&lt;/li&gt;
+&lt;li&gt;分析sequence(tcptrace)图标，详细到50ms内，看网络延迟，&lt;code&gt;ack&lt;/code&gt;响应时间。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;服务端抓包rtt图，rtt变化比较大&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/tcpdump-server-none-rtt.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-server-none-rtt&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;客户端端抓包rtt图，rtt时间大概在10以内&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/tcpdump-client-none-rtt.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump&amp;ndash;none-rtt&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;2-实验1增加rt验证-tc-延迟&#34;&gt;2 实验1:增加rt，验证 tc 延迟&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;clinet&lt;/code&gt;使用&lt;code&gt;tc&lt;/code&gt;模拟延迟&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;root netem&lt;/code&gt; 作用于所配置网卡的出站流量。本实验在 client 端配置，因此其发往 server 的请求和 ACK 会受到延迟影响；若在 server 端配置，则延迟作用于 server 发出的数据。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tc qdisc add dev ens33 root netem delay 100ms
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tc qdisc show dev ens33
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;qdisc netem 8002: root refcnt 2 limit 1000 delay 100.0ms
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# curl -O http://192.168.77.131/large_file
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                                 Dload  Upload   Total   Spent    Left  Speed
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;100 2048M  100 2048M    0     0  13.9M      0  0:02:27  0:02:27 --:--:-- 23.8M
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;服务端抓包，有几段很明显的ack响应延迟，平均下载速度也小了，13.9M&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/tcpdump-server-tc-delay100-tcptrace.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-server-tc-delay100-tcptrace&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;客户端抓包，rtt图延迟直接在100以上，与预期一致；对比没有延迟的rtt图，几乎是所有数据点上浮100ms&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/tcpdump-client-tc-delay100-rtt.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-client-tc-delay100-rtt&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;3-实验2写死-server-wmem&#34;&gt;3 实验2:写死 server wmem&lt;/h2&gt;
+&lt;p&gt;删除之前增加的延迟配置&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tc qdisc del dev ens33 root
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tc qdisc show dev ens33
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;qdisc fq_codel 0: root refcnt 2 limit 10240p flows 1024 quantum 1514 target 5.0ms interval 100.0ms memory_limit 32Mb ecn 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;调整内核参数&lt;/p&gt;
+&lt;p&gt;内核参数说明&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo sysctl -a &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; egrep &lt;span class=&#34;s2&#34;&gt;&amp;#34;rmem|wmem|tcp_mem|adv_win|moderate&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_rmem &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;131072&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;6291456&lt;/span&gt; // 最小值、默认值、最大值
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_wmem &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;16384&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;4194304&lt;/span&gt; // 最小值、默认值、最大值
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;sysctl：可以查看和修改内核参数
+rmem：套接字接收缓冲区大小
+wmem：套接字发送缓冲区大小&lt;/p&gt;
+&lt;p&gt;下面的实现会调整 rmem 和 wmem 的大小做相关的实验。&lt;/p&gt;
+&lt;p&gt;修改前参数&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# sysctl -a | egrep &amp;#34;rmem|wmem|tcp_mem|adv_win|moderate&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.core.rmem_default = 212992
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.core.rmem_max = 212992
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.core.wmem_default = 212992
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.core.wmem_max = 212992
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_adv_win_scale = 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_mem = 44544        59392   89088
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_moderate_rcvbuf = 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_rmem = 4096        131072  6291456
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_wmem = 4096        16384   4194304
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.udp_rmem_min = 4096
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.udp_wmem_min = 4096
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;vm.lowmem_reserve_ratio = 256   256     32      0       0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;31-不调整-rt仅调整server的wmem参数&#34;&gt;3.1 不调整 RT，仅调整server的wmem参数&lt;/h3&gt;
+&lt;p&gt;修改，限死 &lt;code&gt;wmem&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-server:~# sysctl -w net.ipv4.tcp_wmem=&amp;#34;4096 4096 4096&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;net.ipv4.tcp_wmem = 4096 4096 4096
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;查看curl命令使用时间结果，下载速度很快，平均速度甚至大约不限制的情况&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# curl -O http://192.168.77.131/large_file
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                                 Dload  Upload   Total   Spent    Left  Speed
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;100 2048M  100 2048M    0     0  48.4M      0  0:00:42  0:00:42 --:--:-- 43.5M
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;平均下载速度Average Dload: 48.4M&lt;/p&gt;
+&lt;p&gt;server抓包&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-server:~# tcpdump -i ens33 -s 120 &amp;#34;host 192.168.77.132&amp;#34; -w tcpdump-server-wmem4096.cap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;tcpdump: listening on ens33, link-type EN10MB (Ethernet), capture size 120 bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;^C55406 packets captured
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;55406 packets received by filter
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0 packets dropped by kernel
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;client抓包&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tcpdump -i ens33 &amp;#34;host 192.168.77.131&amp;#34; -w tcpdump-clinet-wmem4096.cap
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;tcpdump: listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;^C72485 packets captured
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;72485 packets received by filter
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0 packets dropped by kernel
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;看stevens概览图，很平滑
+&lt;img src=&#34;https://sona201.github.io/images/tcpdump-client-wmem4096-stevens-overview.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-client-wmem4096-stevens-overview&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;放大看stevens图，也没有很明显的延迟，两个包之间的ack时间也很短
+&lt;img src=&#34;https://sona201.github.io/images/tcpdump-client-wmem4096-stevens-detail.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-client-wmem4096-stevens-detail&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;看看server的window窗口图，暂时也没看出啥特别的
+&lt;img src=&#34;https://sona201.github.io/images/tcpdump-server-wmem4096-window-scaling.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-server-wmem4096-window-scaling&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;32-接下来对-client-端调整-rt-为-100ms看下整个下载情况&#34;&gt;3.2 接下来对 client 端调整 rt 为 100ms，看下整个下载情况。&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tc qdisc add dev ens33 root netem delay 100ms
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# curl -O http://192.168.77.131/large_file
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                                 Dload  Upload   Total   Spent    Left  Speed
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;100 2048M  100 2048M    0     0  2497k      0  0:13:59  0:13:59 --:--:-- 11.4M
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;平均下载速度Average Dload: 2497k&lt;/p&gt;
+&lt;p&gt;很明显速度下降很多，最后的下载速度只有11.4M&lt;/p&gt;
+&lt;p&gt;从stevens图里看结果，斜度比较平，中途还有很大的曲折&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/tcpdump-clinet-wmem4096-delay100-stevens-overview.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-clinet-wmem4096-delay100-stevens-overview&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;另一个角度看ack响应时间
+&lt;img src=&#34;https://sona201.github.io/images/tcpdump-clinet-wmem4096-delay100-stevens.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-clinet-wmem4096-delay100-stevens&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;窗口明显上不去
+&lt;img src=&#34;https://sona201.github.io/images/tcpdump-clinet-wmem4096-delay100-window-scaling.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-clinet-wmem4096-delay100-window-scaling&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;rtt时间也是很明显100以上
+&lt;img src=&#34;https://sona201.github.io/images/tcpdump-clinet-wmem4096-delay100-rtt.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-clinet-wmem4096-delay100-rtt&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;33-调整-client-端调整-rt-为-10ms看下整个下载情况&#34;&gt;3.3 调整 client 端调整 rt 为 10ms，看下整个下载情况。&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tc qdisc del dev ens33 root
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tc qdisc add dev ens33 root netem delay 10ms
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# curl -O http://192.168.77.131/large_file
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                                 Dload  Upload   Total   Spent    Left  Speed
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;100 2048M  100 2048M    0     0   9.9M      0  0:03:25  0:03:25 --:--:-- 8479k
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;平均下载速度Average Dload: 9.9M&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/tcpdump-clinet-wmem4096-delay10-stevens-overview.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-clinet-wmem4096-delay10-stevens-overview&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/tcpdump-clinet-wmem4096-delay10-stevens.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-clinet-wmem4096-delay10-stevens&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;窗口明显上不去
+&lt;img src=&#34;https://sona201.github.io/images/tcpdump-clinet-wmem4096-delay10-window-scaling.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-clinet-wmem4096-delay10-window-scaling&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;rtt时间也是很明显10以上
+&lt;img src=&#34;https://sona201.github.io/images/tcpdump-clinet-wmem4096-delay10-rtt.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump-clinet-wmem4096-delay10-rtt&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;与上述100ms对比，发现同样的&lt;code&gt;wmem 4096&lt;/code&gt;参数下, rt越大，速度越慢&lt;/p&gt;
+&lt;h3 id=&#34;34-调整-client-端调整-rt-为-200ms看下整个下载情况&#34;&gt;3.4 调整 client 端调整 rt 为 200ms，看下整个下载情况。&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tc qdisc del dev ens33 root
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tc qdisc add dev ens33 root netem delay 200ms
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# tc qdisc show dev ens33
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;qdisc netem 8005: root refcnt 2 limit 1000 delay 200.0ms
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;root@tcp-client:~# curl -O http://192.168.77.131/large_file
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                                 Dload  Upload   Total   Spent    Left  Speed
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;100 2048M  100 2048M    0     0  2069k      0  0:16:53  0:16:53 --:--:-- 6733k
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;rt延迟时间200ms，平均下载速度Average Dload: 2069k&lt;/p&gt;
 </description>
         </item>
         <item>

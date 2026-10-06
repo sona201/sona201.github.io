@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='原文摘自stackoverflow 参考连接1 参考连接2 前提摘要 现在苹果的电脑都是arm架构的芯片，功耗是大大减小了，续航得到了很大的提高，但'>
+<title>在 Mac M1 上安装 x86 Python 3.6</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/m1-x86-python36/'>
+
+<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='在 Mac M1 上安装 x86 Python 3.6'>
+<meta property='og:description' content='原文摘自stackoverflow 参考连接1 参考连接2 前提摘要 现在苹果的电脑都是arm架构的芯片，功耗是大大减小了，续航得到了很大的提高，但'>
+<meta property='og:url' content='https://sona201.github.io/posts/m1-x86-python36/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-11-23T00:50:09&#43;08:00'/><meta property='article:modified_time' content='2024-11-23T00:50:09&#43;08:00'/>
+<meta name="twitter:title" content="在 Mac M1 上安装 x86 Python 3.6">
+<meta name="twitter:description" content="原文摘自stackoverflow 参考连接1 参考连接2 前提摘要 现在苹果的电脑都是arm架构的芯片，功耗是大大减小了，续航得到了很大的提高，但">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">在 Mac M1 上安装 x86 Python 3.6</h1>
+        
+        
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/python/">python</a>
+                </span>
+            
+            
+                <time datetime="2024-11-23">2024-11-23</time>
+            
+            <span>阅读时长: 2 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p><a class="link" href="https://stackoverflow.com/questions/71862398/install-python-3-6-on-mac-m1"  target="_blank" rel="noopener"
+    >原文摘自stackoverflow</a>
+<a class="link" href="https://tocandraw.com/coding/python/1703/"  target="_blank" rel="noopener"
+    >参考连接1</a>
+<a class="link" href="https://notemi.cn/installing-python-on-mac-m1-pyenv.html"  target="_blank" rel="noopener"
+    >参考连接2</a></p>
+<h3 id="前提摘要">前提摘要</h3>
+<blockquote>
+<p>现在苹果的电脑都是arm架构的芯片，功耗是大大减小了，续航得到了很大的提高，但芯片的架构导致程序不支持就很蛋疼，现实里就是需要接手一个python老项目，就是用的老框架，一些旧依赖库甚至需要降版本才能安装运行，很巧我就遇到了，不然也不会有这篇文章。</p>
+</blockquote>
+<h3 id="背景">背景</h3>
+<p>公司的一个老项目，本来跑的好好的，但用的不顺手，想改动下，拉下代码，怎么都跑不起来。我按照我以前的经验来安装遇到一堆问题，各种搜索，一直没有彻底解决，请教了同事，他跟我说arm芯片的两种比较好的解决方案就是安装x86的解释器，或者搞个容器（linux）环境，远程部署。
+容器部署确实一劳永逸，但同事给我演示的时候发现<code>vscode</code>没有python3.6版本，于是我决定尝试下安装x86的python解释器</p>
+<h3 id="相关介绍">相关介绍</h3>
+<p>总的来说，arm的芯片可以安装arm架构的二进制文件（废话），还可以通过 rosetta 来安装x86的二进制文件，但是他们的路径不一样，这里同样包括<code>homebrew</code>，有<code>arm</code>和<code>x86</code>两个版本，对应的路径分别是</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/usr/local/bin/brew  # x86
+</span></span><span class="line"><span class="cl">/opt/homebrew/bin/brew  # arm
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>目前支持rosetta的终端是iterm，可以直接勾选</p>
+<h4 id="安装homebrew">安装Homebrew</h4>
+<h4 id="安装pyenv">安装pyenv</h4>
+<h4 id="安装python36">安装python3.6</h4>
+<p>确认python3.6是x86版本</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Python 3.6.15 (default, Oct 30 2024, 01:16:00) 
+</span></span><span class="line"><span class="cl">[GCC Apple LLVM 15.0.0 (clang-1500.3.9.4)] on darwin
+</span></span><span class="line"><span class="cl">Type &#34;help&#34;, &#34;copyright&#34;, &#34;credits&#34; or &#34;license&#34; for more information.
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; import platform
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; print(platform.machine()) 
+</span></span><span class="line"><span class="cl">x86_64
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="遇到的问题">遇到的问题</h4>
+<blockquote>
+<h1 id="error-in-anyjson-setup-command-use_2to3-is-invalidhttpsstackoverflowcomquestions72414481error-in-anyjson-setup-command-use-2to3-is-invalid"><a class="link" href="https://stackoverflow.com/questions/72414481/error-in-anyjson-setup-command-use-2to3-is-invalid"  target="_blank" rel="noopener"
+    >Error in anyjson setup command: use_2to3 is invalid</a></h1>
+</blockquote>
+<p>在安装python依赖库，一个很老的库<code>django-celery</code>报错，暂时不想替换别的库，发现需要降级<code>setuptools</code></p>
+<ol>
+<li>第一步</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">pip</span> <span class="n">install</span> <span class="s2">&#34;setuptools&lt;58.0.0&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>第二步</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">pip</span> <span class="n">install</span> <span class="n">django</span><span class="o">-</span><span class="n">celery</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>就是因为这个库，才需要降级到python3.6，因为这个库里有用到了一个关键字<code>async</code>，在python3.7之后<code>async</code>已经变成python官方关键字，所以这个库不能在3.6以上的python里跑</p>
+<p>后面对应的依赖库还是能尽量升级就升级，不然迁移两行泪</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#Install Rosetta</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">softwareupdate</span> <span class="o">--</span><span class="n">install</span><span class="o">-</span><span class="n">rosetta</span> <span class="o">--</span><span class="n">agree</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">license</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Install x86_64 brew</span>
+</span></span><span class="line"><span class="cl"><span class="n">arch</span> <span class="o">-</span><span class="n">x86_64</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">bash</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&#34;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Set up x86_64 homebrew and pyenv and temporarily set aliases</span>
+</span></span><span class="line"><span class="cl"><span class="n">alias</span> <span class="n">brew86</span><span class="o">=</span><span class="s2">&#34;arch -x86_64 /usr/local/bin/brew&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">alias</span> <span class="n">pyenv86</span><span class="o">=</span><span class="s2">&#34;arch -x86_64 pyenv&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Install required packages and flags for building this particular python version through emulation</span>
+</span></span><span class="line"><span class="cl"><span class="n">brew86</span> <span class="n">install</span> <span class="n">pyenv</span> <span class="n">gcc</span> <span class="n">libffi</span> <span class="n">gettext</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># -------------- change to openssl@1.1 here and others as well ----------+</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#                                                                        ↓</span>
+</span></span><span class="line"><span class="cl"><span class="n">export</span> <span class="n">CPPFLAGS</span><span class="o">=</span><span class="s2">&#34;-I$(brew86 --prefix libffi)/include -I$(brew86 --prefix openssl@1.1)/include -I$(brew86 --prefix readline)/lib&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">export</span> <span class="n">CFLAGS</span><span class="o">=</span><span class="s2">&#34;-I$(brew86 --prefix openssl@1.1)/include -I$(brew86 --prefix bzip2)/include -I$(brew86 --prefix readline)/include -I$(xcrun --show-sdk-path)/usr/include -Wno-implicit-function-declaration&#34;</span> 
+</span></span><span class="line"><span class="cl"><span class="n">export</span> <span class="n">LDFLAGS</span><span class="o">=</span><span class="s2">&#34;-L$(brew86 --prefix openssl@1.1)/lib -L$(brew86 --prefix readline)/lib -L$(brew86 --prefix zlib)/lib -L$(brew86 --prefix bzip2)/lib -L$(brew86 --prefix gettext)/lib -L$(brew86 --prefix libffi)/lib&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Providing an incorrect openssl version forces a proper openssl version to be downloaded and linked during the build</span>
+</span></span><span class="line"><span class="cl"><span class="n">export</span> <span class="n">PYTHON_BUILD_HOMEBREW_OPENSSL_FORMULA</span><span class="o">=</span><span class="n">openssl</span><span class="o">@</span><span class="mf">1.1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Install Python 3.6</span>
+</span></span><span class="line"><span class="cl"><span class="n">pyenv86</span> <span class="n">install</span> <span class="o">--</span><span class="n">patch</span> <span class="mf">3.6.15</span> <span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">curl</span> <span class="o">-</span><span class="n">sSL</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pyenv</span><span class="o">/</span><span class="n">pyenv</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">plugins</span><span class="o">/</span><span class="n">python</span><span class="o">-</span><span class="n">build</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">python</span><span class="o">-</span><span class="n">build</span><span class="o">/</span><span class="n">patches</span><span class="o">/</span><span class="mf">3.6.15</span><span class="o">/</span><span class="n">Python</span><span class="o">-</span><span class="mf">3.6.15</span><span class="o">/</span><span class="mi">0008</span><span class="o">-</span><span class="n">bpo</span><span class="o">-</span><span class="mi">45405</span><span class="o">-</span><span class="n">Prevent</span><span class="o">-</span><span class="n">internal</span><span class="o">-</span><span class="n">configure</span><span class="o">-</span><span class="n">error</span><span class="o">-</span><span class="n">when</span><span class="o">-</span><span class="n">runn</span><span class="o">.</span><span class="n">patch</span>\<span class="err">?</span><span class="n">full_index</span>\<span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/python-logging-%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90%E5%8F%8A%E4%BD%BF%E7%94%A8/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Python logging 模块分析及使用</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/celery-django-configuration/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Celery 与 Django 配置笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/argparse-subcommands/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Argparse 子命令示例</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/where-are-your-python-packages-installed/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">python包都安装到哪里去了</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/python2-apache-cgi-notes/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Python 2 与 Apache CGI 实验</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>142</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>124</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#前提摘要">前提摘要</a></li>
+        <li><a href="#背景">背景</a></li>
+        <li><a href="#相关介绍">相关介绍</a>
+          <ol>
+            <li><a href="#安装homebrew">安装Homebrew</a></li>
+            <li><a href="#安装pyenv">安装pyenv</a></li>
+            <li><a href="#安装python36">安装python3.6</a></li>
+            <li><a href="#遇到的问题">遇到的问题</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+
+    </body>
+</html>

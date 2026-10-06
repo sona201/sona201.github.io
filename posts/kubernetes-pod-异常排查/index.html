@@ -6,14 +6,14 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/kubernetes-pod-%E5%BC%82%E5%B8%B8%E6%8E%92%E6%9F%A5/'>
 
-<link rel="stylesheet" href="/scss/style.min.2a8a8b5925063991a20d80fb86183b19905b741ac47e8c0a373818c059a9ae7c.css"><meta property='og:title' content='Kubernetes Pod 异常排查'>
+<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Kubernetes Pod 异常排查'>
 <meta property='og:description' content='从个人笔记仓库整理迁移'>
 <meta property='og:url' content='https://sona201.github.io/posts/kubernetes-pod-%E5%BC%82%E5%B8%B8%E6%8E%92%E6%9F%A5/'>
 <meta property='og:site_name' content='Ricardo'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='kubernetes' /><meta property='article:tag' content='pod' /><meta property='article:tag' content='troubleshooting' /><meta property='article:published_time' content='2026-10-03T22:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-10-03T22:00:00&#43;08:00'/>
 <meta name="twitter:title" content="Kubernetes Pod 异常排查">
 <meta name="twitter:description" content="从个人笔记仓库整理迁移">
-    <link rel="shortcut icon" href="/image/favicon.ico" />
+    <link rel="shortcut icon" href="/images/favicon.ico" />
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
 <script>
@@ -27,79 +27,8 @@ if (!doNotTrack) {
 </script>
 
     </head>
-    <body class="
-    article-page
-    "><header class="top-navigation">
-    <div class="top-navigation__inner">
-        <a class="top-navigation__brand" href="/">Ricardo</a>
-
-        <nav class="top-navigation__menu" aria-label="Main navigation">
-            
-            
-                
-                <a href="/"
-                   
-                   >
-                    主页
-                </a>
-            
-                
-                <a href="/%E5%85%B3%E4%BA%8E/"
-                   
-                   >
-                    关于
-                </a>
-            
-                
-                <a href="/archives/"
-                   
-                   >
-                    归档
-                </a>
-            
-                
-                <a href="/%E5%8F%8B%E9%93%BE/"
-                   
-                   >
-                    友链
-                </a>
-            
-                
-                <a href="/tags"
-                   
-                   target="_blank" rel="noopener">
-                    Tags
-                </a>
-            
-        </nav>
-
-        
-            <button class="top-navigation__theme" id="top-dark-mode-toggle" type="button" aria-label="暗色模式">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="8" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-            </button>
-        
-    </div>
-</header>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    var topToggle = document.getElementById('top-dark-mode-toggle');
-    var originalToggle = document.getElementById('dark-mode-toggle');
-    if (topToggle && originalToggle) {
-        topToggle.addEventListener('click', function () {
-            originalToggle.click();
-        });
-    }
-});
-</script>
-
+    <body class="site-shell 
+    article-page">
     <script>
         (function() {
             const colorSchemeKey = 'StackColorScheme';
@@ -122,53 +51,66 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     })();
 </script>
-<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
-    <header>
-        
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
             
-            <figure class="site-avatar">
-                <a href="/">
+            
                 
-                    
-                    
-                        
-                        <img src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_300x0_resize_box_3.png" width="300"
-                            height="297" class="site-logo" loading="lazy" alt="Avatar">
-                    
                 
+                <a href="/"
+                   
+                   >
+                    主页
                 </a>
-            </figure>
             
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
         
-
-        <div class="site-meta">
-            <h1 class="site-name"><a href="/">Ricardo</a></h1>
-            <h2 class="site-description">人到中年，专业捧哏</h2>
-        </div>
-    </header><ol class="social-menu">
-            
-                <li>
-                    <a href="https://github.com/sona201/"
-                       target="_blank"
-                       title="GitHub"
-                       rel="me">
-                        
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
-</svg>
-
-
-
-                    </a>
-                </li>
-            
-        </ol>
-    <ol class="menu sidebar-controls">
-        <div class="menu-bottom-section">
-            
-                <li id="dark-mode-toggle">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
   <circle cx="8" cy="12" r="2" />
   <rect x="2" y="6" width="20" height="12" rx="6" />
@@ -176,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
   <circle cx="16" cy="12" r="2" />
   <rect x="2" y="6" width="20" height="12" rx="6" />
@@ -184,223 +126,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-                    <span>暗色模式</span>
-                </li>
-            
-        </div>
-    </ol>
-</aside>
-
-    <aside class="sidebar right-sidebar sticky">
+            </button>
         
-            
-                
-    <section class="widget archives">
-        <div class="widget-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <line x1="5" y1="9" x2="19" y2="9" />
-  <line x1="5" y1="15" x2="19" y2="15" />
-  <line x1="11" y1="4" x2="7" y2="20" />
-  <line x1="17" y1="4" x2="13" y2="20" />
-</svg>
-
-
-
-        </div>
-        <h2 class="widget-title section-title">目录</h2>
-        
-        <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#本文目录">本文目录</a></li>
-    <li><a href="#诊断流程">诊断流程</a></li>
-    <li><a href="#常见的pod异常状态及处理方式">常见的Pod异常状态及处理方式</a></li>
-    <li><a href="#常见排查方法">常见排查方法</a>
-      <ol>
-        <li><a href="#检查pod的状态">检查Pod的状态</a></li>
-        <li><a href="#检查pod的详情">检查Pod的详情</a></li>
-        <li><a href="#检查pod的配置">检查Pod的配置</a></li>
-        <li><a href="#检查pod的事件">检查Pod的事件</a></li>
-        <li><a href="#检查pod的日志">检查Pod的日志</a></li>
-        <li><a href="#检查pod的监控">检查Pod的监控</a></li>
-        <li><a href="#使用终端进入容器">使用终端进入容器</a></li>
-        <li><a href="#pod故障诊断">Pod故障诊断</a></li>
-        <li><a href="#pod状态为pending">Pod状态为Pending</a>
-          <ol>
-            <li><a href="#问题原因">问题原因</a></li>
-            <li><a href="#问题现象">问题现象</a></li>
-            <li><a href="#解决方案">解决方案</a></li>
-            <li><a href="#资源依赖">资源依赖</a></li>
-            <li><a href="#资源不足">资源不足</a></li>
-            <li><a href="#该pod使用了hostport">该Pod使用了hostPort</a></li>
-            <li><a href="#污点和容忍">污点和容忍</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#pod状态为initnminiterror和initcrashloopbackoff">Pod状态为Init:N/M（Init:Error和Init:CrashLoopBackOff）</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#问题原因-1">问题原因</a></li>
-            <li><a href="#问题现象-1">问题现象</a></li>
-          </ol>
-        </li>
-        <li><a href="#解决方案-1">解决方案</a></li>
-      </ol>
-    </li>
-    <li><a href="#pod状态为imagepullbackoff">Pod状态为ImagePullBackOff</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#问题原因-2">问题原因</a></li>
-            <li><a href="#问题现象-2">问题现象</a></li>
-            <li><a href="#解决方案-2">解决方案</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#pod状态为crashloopbackoff">Pod状态为CrashLoopBackOff</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#问题原因-3">问题原因</a></li>
-            <li><a href="#问题现象-3">问题现象</a></li>
-            <li><a href="#解决方案-3">解决方案</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#pod状态为completed">Pod状态为Completed</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#问题原因-4">问题原因</a></li>
-            <li><a href="#问题现象-4">问题现象</a></li>
-            <li><a href="#解决方案-4">解决方案</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#pod状态为running但没正常工作">Pod状态为Running但没正常工作</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#问题原因-5">问题原因</a></li>
-            <li><a href="#问题现象-5">问题现象</a></li>
-            <li><a href="#解决方案-5">解决方案</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#pod状态为terminating">Pod状态为Terminating</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#问题原因-6">问题原因</a></li>
-            <li><a href="#问题现象-6">问题现象</a></li>
-            <li><a href="#解决方案-6">解决方案</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#pod状态为evicted">Pod状态为Evicted</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#问题原因-7">问题原因</a></li>
-            <li><a href="#问题现象-7">问题现象</a></li>
-            <li><a href="#解决方案-7">解决方案</a></li>
-            <li><a href="#以下汇总如何避免pod被驱逐的方法">以下汇总如何避免Pod被驱逐的方法：</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#pod-oom异常问题处理">Pod OOM异常问题处理</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#问题原因-8">问题原因</a></li>
-            <li><a href="#问题现象-8">问题现象</a></li>
-            <li><a href="#解决方案-8">解决方案</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-  </ol>
-</nav>
-        </div>
-    </section>
-
-            
-        
-    </aside>
-
-
-            <main class="main full-width">
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
     <article class="main-article">
     <header class="article-header">
 
     <div class="article-details">
-    
-    <header class="article-category">
-        
-            <a href="/categories/kubernetes/" >
-                Kubernetes
-            </a>
-        
-    </header>
-    
-
     <div class="article-title-wrapper">
-        <h2 class="article-title">
-            <a href="/posts/kubernetes-pod-%E5%BC%82%E5%B8%B8%E6%8E%92%E6%9F%A5/">Kubernetes Pod 异常排查</a>
-        </h2>
-    
         
-        <h3 class="article-subtitle">
-            从个人笔记仓库整理迁移
-        </h3>
+            <h1 class="article-title">Kubernetes Pod 异常排查</h1>
         
+        <p class="article-subtitle">从个人笔记仓库整理迁移</p>
     </div>
 
     
     
-    
-    
-    <footer class="article-time">
-        
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
-  <circle cx="18" cy="18" r="4" />
-  <path d="M15 3v4" />
-  <path d="M7 3v4" />
-  <path d="M3 11h16" />
-  <path d="M18 16.496v1.504l1 1" />
-</svg>
-                <time class="article-time--published">2026-10-03</time>
-            </div>
-        
-
-        
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="12" cy="12" r="9" />
-  <polyline points="12 7 12 12 15 15" />
-</svg>
-
-
-
-                <time class="article-time--reading">
-                    阅读时长: 13 分钟
-                </time>
-            </div>
-        
-    </footer>
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/kubernetes/">Kubernetes</a>
+                </span>
+            
+            
+                <time datetime="2026-10-03">2026-10-03</time>
+            
+            <span>阅读时长: 13 分钟</span>
+        </div>
     
 
     
@@ -978,7 +733,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     
 
-     
+
     
         
     <div class="disqus-container">
@@ -1122,6 +877,157 @@ document.addEventListener('DOMContentLoaded', function () {
             >
 
             </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>142</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>124</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#本文目录">本文目录</a></li>
+    <li><a href="#诊断流程">诊断流程</a></li>
+    <li><a href="#常见的pod异常状态及处理方式">常见的Pod异常状态及处理方式</a></li>
+    <li><a href="#常见排查方法">常见排查方法</a>
+      <ol>
+        <li><a href="#检查pod的状态">检查Pod的状态</a></li>
+        <li><a href="#检查pod的详情">检查Pod的详情</a></li>
+        <li><a href="#检查pod的配置">检查Pod的配置</a></li>
+        <li><a href="#检查pod的事件">检查Pod的事件</a></li>
+        <li><a href="#检查pod的日志">检查Pod的日志</a></li>
+        <li><a href="#检查pod的监控">检查Pod的监控</a></li>
+        <li><a href="#使用终端进入容器">使用终端进入容器</a></li>
+        <li><a href="#pod故障诊断">Pod故障诊断</a></li>
+        <li><a href="#pod状态为pending">Pod状态为Pending</a>
+          <ol>
+            <li><a href="#问题原因">问题原因</a></li>
+            <li><a href="#问题现象">问题现象</a></li>
+            <li><a href="#解决方案">解决方案</a></li>
+            <li><a href="#资源依赖">资源依赖</a></li>
+            <li><a href="#资源不足">资源不足</a></li>
+            <li><a href="#该pod使用了hostport">该Pod使用了hostPort</a></li>
+            <li><a href="#污点和容忍">污点和容忍</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为initnminiterror和initcrashloopbackoff">Pod状态为Init:N/M（Init:Error和Init:CrashLoopBackOff）</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-1">问题原因</a></li>
+            <li><a href="#问题现象-1">问题现象</a></li>
+          </ol>
+        </li>
+        <li><a href="#解决方案-1">解决方案</a></li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为imagepullbackoff">Pod状态为ImagePullBackOff</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-2">问题原因</a></li>
+            <li><a href="#问题现象-2">问题现象</a></li>
+            <li><a href="#解决方案-2">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为crashloopbackoff">Pod状态为CrashLoopBackOff</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-3">问题原因</a></li>
+            <li><a href="#问题现象-3">问题现象</a></li>
+            <li><a href="#解决方案-3">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为completed">Pod状态为Completed</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-4">问题原因</a></li>
+            <li><a href="#问题现象-4">问题现象</a></li>
+            <li><a href="#解决方案-4">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为running但没正常工作">Pod状态为Running但没正常工作</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-5">问题原因</a></li>
+            <li><a href="#问题现象-5">问题现象</a></li>
+            <li><a href="#解决方案-5">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为terminating">Pod状态为Terminating</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-6">问题原因</a></li>
+            <li><a href="#问题现象-6">问题现象</a></li>
+            <li><a href="#解决方案-6">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod状态为evicted">Pod状态为Evicted</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-7">问题原因</a></li>
+            <li><a href="#问题现象-7">问题现象</a></li>
+            <li><a href="#解决方案-7">解决方案</a></li>
+            <li><a href="#以下汇总如何避免pod被驱逐的方法">以下汇总如何避免Pod被驱逐的方法：</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pod-oom异常问题处理">Pod OOM异常问题处理</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#问题原因-8">问题原因</a></li>
+            <li><a href="#问题现象-8">问题现象</a></li>
+            <li><a href="#解决方案-8">解决方案</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
         </div>
         <script 
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
@@ -1130,9 +1036,6 @@ document.addEventListener('DOMContentLoaded', function () {
             </script><script type="text/javascript" src="/ts/main.js" defer></script>
 
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@300&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
 
     </body>
 </html>

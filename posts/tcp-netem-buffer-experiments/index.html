@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='tcp实验 1 实验准备 1.1 虚拟机 使用 VMware 创建两台本地隔离虚拟机，系统为 Ubuntu 20.04 LTS。以下私有地址只作为本地实验示例，与图中的地址一致： tcp-server: 192.168.77.131 tcp-client: 192.168.77.132 1.1.1 虚拟'>
+<title>用 Netem 和 TCP 缓冲区观察下载速度</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/tcp-netem-buffer-experiments/'>
+
+<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='用 Netem 和 TCP 缓冲区观察下载速度'>
+<meta property='og:description' content='tcp实验 1 实验准备 1.1 虚拟机 使用 VMware 创建两台本地隔离虚拟机，系统为 Ubuntu 20.04 LTS。以下私有地址只作为本地实验示例，与图中的地址一致： tcp-server: 192.168.77.131 tcp-client: 192.168.77.132 1.1.1 虚拟'>
+<meta property='og:url' content='https://sona201.github.io/posts/tcp-netem-buffer-experiments/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2023-05-15T00:56:03&#43;08:00'/><meta property='article:modified_time' content='2023-05-15T00:56:03&#43;08:00'/>
+<meta name="twitter:title" content="用 Netem 和 TCP 缓冲区观察下载速度">
+<meta name="twitter:description" content="tcp实验 1 实验准备 1.1 虚拟机 使用 VMware 创建两台本地隔离虚拟机，系统为 Ubuntu 20.04 LTS。以下私有地址只作为本地实验示例，与图中的地址一致： tcp-server: 192.168.77.131 tcp-client: 192.168.77.132 1.1.1 虚拟">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">用 Netem 和 TCP 缓冲区观察下载速度</h1>
+        
+        
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/tcp/">tcp</a>
+                </span>
+            
+            
+                <time datetime="2023-05-15">2023-05-15</time>
+            
+            <span>阅读时长: 5 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="tcp实验">tcp实验</h1>
+<h2 id="1-实验准备">1 实验准备</h2>
+<h3 id="11-虚拟机">1.1 虚拟机</h3>
+<p>使用 VMware 创建两台本地隔离虚拟机，系统为 <code>Ubuntu 20.04 LTS</code>。以下私有地址只作为本地实验示例，与图中的地址一致：</p>
+<ul>
+<li>tcp-server: 192.168.77.131</li>
+<li>tcp-client: 192.168.77.132</li>
+</ul>
+<h4 id="111-虚拟机相关信息">1.1.1 虚拟机相关信息</h4>
+<p>系统相关信息</p>
+<ol>
+<li>内核版本</li>
+<li><code>tc qdesc</code>信息</li>
+<li>系统内核相关参数</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-server:~# uname -a
+</span></span><span class="line"><span class="cl">Linux tcp-server 5.4.0-149-generic #166-Ubuntu SMP Tue Apr 18 16:51:45 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
+</span></span><span class="line"><span class="cl">root@tcp-server:~# tc qdisc show dev ens33
+</span></span><span class="line"><span class="cl">qdisc fq_codel 0: root refcnt 2 limit 10240p flows 1024 quantum 1514 target 5.0ms interval 100.0ms memory_limit 32Mb ecn 
+</span></span><span class="line"><span class="cl">root@tcp-server:~# sudo sysctl -a | egrep &#34;rmem|wmem|tcp_mem|adv_win|moderate&#34;
+</span></span><span class="line"><span class="cl">net.core.rmem_default = 212992
+</span></span><span class="line"><span class="cl">net.core.rmem_max = 212992
+</span></span><span class="line"><span class="cl">net.core.wmem_default = 212992
+</span></span><span class="line"><span class="cl">net.core.wmem_max = 212992
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_adv_win_scale = 1
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_mem = 44544        59392   89088
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_moderate_rcvbuf = 1
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_rmem = 4096        131072  6291456
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_wmem = 4096        16384   4194304
+</span></span><span class="line"><span class="cl">net.ipv4.udp_rmem_min = 4096
+</span></span><span class="line"><span class="cl">net.ipv4.udp_wmem_min = 4096
+</span></span><span class="line"><span class="cl">vm.lowmem_reserve_ratio = 256   256     32      0       0
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Tips: 可以给虚拟机挂载本地文件目录，可以免去拷贝tcpdump file到本地，直接使用</p>
+</blockquote>
+<h3 id="12-大文件">1.2 大文件</h3>
+<h4 id="121-dd生成大文件">1.2.1 <code>dd</code>生成大文件</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">dd if=/dev/zero of=large_file bs=1G count=2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="13-服务器">1.3 服务器</h3>
+<h4 id="131-ubuntu安装nginx">1.3.1 ubuntu安装<code>nginx</code></h4>
+<p>最早使用 Python HTTP 服务器，多次实验结果不够稳定。为减少应用服务器差异，本组实验改用 Nginx。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">root</span><span class="err">@</span><span class="nx">tcp</span><span class="o">-</span><span class="nx">server</span><span class="p">:</span><span class="err">~#</span> <span class="nx">apt</span> <span class="nx">install</span> <span class="o">-</span><span class="nx">y</span> <span class="nx">nginx</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Reading</span> <span class="kn">package</span> <span class="nx">lists</span><span class="o">...</span> <span class="nx">Done</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Building</span> <span class="nx">dependency</span> <span class="nx">tree</span>       
+</span></span><span class="line"><span class="cl"><span class="nx">Reading</span> <span class="nx">state</span> <span class="nx">information</span><span class="o">...</span> <span class="nx">Done</span>
+</span></span><span class="line"><span class="cl"><span class="nx">nginx</span> <span class="nx">is</span> <span class="nx">already</span> <span class="nx">the</span> <span class="nx">newest</span> <span class="nf">version</span> <span class="p">(</span><span class="mf">1.18.0</span><span class="o">-</span><span class="mi">0</span><span class="nx">ubuntu1</span><span class="mf">.4</span><span class="p">).</span>
+</span></span><span class="line"><span class="cl"><span class="mi">0</span> <span class="nx">upgraded</span><span class="p">,</span> <span class="mi">0</span> <span class="nx">newly</span> <span class="nx">installed</span><span class="p">,</span> <span class="mi">0</span> <span class="nx">to</span> <span class="nx">remove</span> <span class="nx">and</span> <span class="mi">19</span> <span class="nx">not</span> <span class="nx">upgraded</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nx">root</span><span class="err">@</span><span class="nx">tcp</span><span class="o">-</span><span class="nx">server</span><span class="p">:</span><span class="err">~#</span> <span class="nx">systemctl</span> <span class="nx">start</span> <span class="nx">nginx</span>
+</span></span><span class="line"><span class="cl"><span class="nx">root</span><span class="err">@</span><span class="nx">tcp</span><span class="o">-</span><span class="nx">server</span><span class="p">:</span><span class="err">~#</span> <span class="nx">systemctl</span> <span class="nx">status</span> <span class="nx">nginx</span>
+</span></span><span class="line"><span class="cl"><span class="err">●</span> <span class="nx">nginx</span><span class="p">.</span><span class="nx">service</span> <span class="o">-</span> <span class="nx">A</span> <span class="nx">high</span> <span class="nx">performance</span> <span class="nx">web</span> <span class="nx">server</span> <span class="nx">and</span> <span class="nx">a</span> <span class="nx">reverse</span> <span class="nx">proxy</span> <span class="nx">server</span>
+</span></span><span class="line"><span class="cl">     <span class="nx">Loaded</span><span class="p">:</span> <span class="nf">loaded</span> <span class="p">(</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">systemd</span><span class="o">/</span><span class="nx">system</span><span class="o">/</span><span class="nx">nginx</span><span class="p">.</span><span class="nx">service</span><span class="p">;</span> <span class="nx">enabled</span><span class="p">;</span> <span class="nx">vendor</span> <span class="nx">preset</span><span class="p">:</span> <span class="nx">enabled</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     <span class="nx">Active</span><span class="p">:</span> <span class="nf">active</span> <span class="p">(</span><span class="nx">running</span><span class="p">)</span> <span class="nx">since</span> <span class="nx">Mon</span> <span class="mi">2023</span><span class="o">-</span><span class="mo">05</span><span class="o">-</span><span class="mi">29</span> <span class="mi">15</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="nx">UTC</span><span class="p">;</span> <span class="mi">23</span><span class="nx">h</span> <span class="nx">ago</span>
+</span></span><span class="line"><span class="cl">       <span class="nx">Docs</span><span class="p">:</span> <span class="nx">man</span><span class="p">:</span><span class="nf">nginx</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">Main</span> <span class="nx">PID</span><span class="p">:</span> <span class="mi">2154</span> <span class="p">(</span><span class="nx">nginx</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">Tasks</span><span class="p">:</span> <span class="mi">3</span> <span class="p">(</span><span class="nx">limit</span><span class="p">:</span> <span class="mi">4573</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     <span class="nx">Memory</span><span class="p">:</span> <span class="mf">515.4</span><span class="nx">M</span>
+</span></span><span class="line"><span class="cl">     <span class="nx">CGroup</span><span class="p">:</span> <span class="o">/</span><span class="nx">system</span><span class="p">.</span><span class="nx">slice</span><span class="o">/</span><span class="nx">nginx</span><span class="p">.</span><span class="nx">service</span>
+</span></span><span class="line"><span class="cl">             <span class="err">├─</span><span class="mi">2154</span> <span class="nx">nginx</span><span class="p">:</span> <span class="nx">master</span> <span class="nx">process</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">sbin</span><span class="o">/</span><span class="nx">nginx</span> <span class="o">-</span><span class="nx">g</span> <span class="nx">daemon</span> <span class="nx">on</span><span class="p">;</span> <span class="nx">master_process</span> <span class="nx">on</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">             <span class="err">├─</span><span class="mi">2155</span> <span class="nx">nginx</span><span class="p">:</span> <span class="nx">worker</span> <span class="nx">process</span>
+</span></span><span class="line"><span class="cl">             <span class="err">└─</span><span class="mi">2156</span> <span class="nx">nginx</span><span class="p">:</span> <span class="nx">worker</span> <span class="nx">process</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">May</span> <span class="mi">29</span> <span class="mi">15</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="nx">tcp</span><span class="o">-</span><span class="nx">server</span> <span class="nx">systemd</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="nx">Starting</span> <span class="nx">A</span> <span class="nx">high</span> <span class="nx">performance</span> <span class="nx">web</span> <span class="nx">server</span> <span class="nx">and</span> <span class="nx">a</span> <span class="nx">reverse</span> <span class="nx">proxy</span> <span class="nx">server</span><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="nx">May</span> <span class="mi">29</span> <span class="mi">15</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="nx">tcp</span><span class="o">-</span><span class="nx">server</span> <span class="nx">systemd</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="nx">Started</span> <span class="nx">A</span> <span class="nx">high</span> <span class="nx">performance</span> <span class="nx">web</span> <span class="nx">server</span> <span class="nx">and</span> <span class="nx">a</span> <span class="nx">reverse</span> <span class="nx">proxy</span> <span class="nx">server</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="132-配置nginx">1.3.2 配置<code>nginx</code></h4>
+<p>修改nginx配置文件，能通过<code>http://ip/path</code>访问到文件。具体操作如下。</p>
+<p><code>nginx</code>默认配置文件启动了80端口，配置文件为<code>/etc/nginx/sites-enabled/default</code>，查看配置文件发现默认<code>nginx</code>的<code>html</code>路径为<code>/var/www/html</code>。
+将刚刚生成的大文件<code>large_file</code>移动到<code>/var/www/html</code>。</p>
+<h4 id="133-测试nginx服务器配置">1.3.3 测试<code>nginx</code>服务器配置</h4>
+<p>在<code>tcp-client</code>机器上访问文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
+</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
+</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  32.4M      0  0:01:03  0:01:03 --:--:-- 30.9M
+</span></span><span class="line"><span class="cl">root@tcp-client:~# ping 192.168.77.131
+</span></span><span class="line"><span class="cl">PING 192.168.77.131 (192.168.77.131) 56(84) bytes of data.
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.77.131: icmp_seq=1 ttl=64 time=0.480 ms
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.77.131: icmp_seq=2 ttl=64 time=0.716 ms
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.77.131: icmp_seq=3 ttl=64 time=0.671 ms
+</span></span><span class="line"><span class="cl">64 bytes from 192.168.77.131: icmp_seq=4 ttl=64 time=0.602 ms
+</span></span><span class="line"><span class="cl">^C
+</span></span><span class="line"><span class="cl">--- 192.168.77.131 ping statistics ---
+</span></span><span class="line"><span class="cl">4 packets transmitted, 4 received, 0% packet loss, time 3064ms
+</span></span><span class="line"><span class="cl">rtt min/avg/max/mdev = 0.480/0.617/0.716/0.089 ms
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>不调整网络测试下载速度/时间，看看抓包分析rtt，tcptrace图</p>
+<ul>
+<li>客户端机器上抓包</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# tcpdump -i ens33 &#34;host 192.168.77.131&#34; -w tcpdump-clinet-none.cap
+</span></span><span class="line"><span class="cl">tcpdump: listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+</span></span><span class="line"><span class="cl">^C155254 packets captured
+</span></span><span class="line"><span class="cl">155254 packets received by filter
+</span></span><span class="line"><span class="cl">0 packets dropped by kernel
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>服务端上抓包</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-server:~# tcpdump -i ens33 -s 120 &#34;host 192.168.77.132&#34; -w tcpdump-server-none.cap
+</span></span><span class="line"><span class="cl">tcpdump: listening on ens33, link-type EN10MB (Ethernet), capture size 120 bytes
+</span></span><span class="line"><span class="cl">^C133195 packets captured
+</span></span><span class="line"><span class="cl">133195 packets received by filter
+</span></span><span class="line"><span class="cl">0 packets dropped by kernel
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>抓包命令解释:</p>
+<ul>
+<li>可以不指定 <code>-s</code>，抓全量，这样可以看出更多信息，但也会导致文件下载很大。</li>
+<li>分析tcp图表，rtt(Round Trip Time)一个tcp包往返的时间，一般使用<code>ping</code>命令也能发现，但不能完全代替，因为会有内核数据处理损耗等导致误差。</li>
+<li>分析sequence(tcptrace)图标，详细到50ms内，看网络延迟，<code>ack</code>响应时间。</li>
+</ul>
+<p>服务端抓包rtt图，rtt变化比较大</p>
+<p><img src="/images/tcpdump-server-none-rtt.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-server-none-rtt"
+	
+	
+></p>
+<p>客户端端抓包rtt图，rtt时间大概在10以内</p>
+<p><img src="/images/tcpdump-client-none-rtt.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump&ndash;none-rtt"
+	
+	
+></p>
+<h2 id="2-实验1增加rt验证-tc-延迟">2 实验1:增加rt，验证 tc 延迟</h2>
+<p><code>clinet</code>使用<code>tc</code>模拟延迟</p>
+<p><code>root netem</code> 作用于所配置网卡的出站流量。本实验在 client 端配置，因此其发往 server 的请求和 ACK 会受到延迟影响；若在 server 端配置，则延迟作用于 server 发出的数据。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# tc qdisc add dev ens33 root netem delay 100ms
+</span></span><span class="line"><span class="cl">root@tcp-client:~# tc qdisc show dev ens33
+</span></span><span class="line"><span class="cl">qdisc netem 8002: root refcnt 2 limit 1000 delay 100.0ms
+</span></span><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
+</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
+</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  13.9M      0  0:02:27  0:02:27 --:--:-- 23.8M
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>服务端抓包，有几段很明显的ack响应延迟，平均下载速度也小了，13.9M</p>
+<p><img src="/images/tcpdump-server-tc-delay100-tcptrace.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-server-tc-delay100-tcptrace"
+	
+	
+></p>
+<p>客户端抓包，rtt图延迟直接在100以上，与预期一致；对比没有延迟的rtt图，几乎是所有数据点上浮100ms</p>
+<p><img src="/images/tcpdump-client-tc-delay100-rtt.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-client-tc-delay100-rtt"
+	
+	
+></p>
+<h2 id="3-实验2写死-server-wmem">3 实验2:写死 server wmem</h2>
+<p>删除之前增加的延迟配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# tc qdisc del dev ens33 root
+</span></span><span class="line"><span class="cl">root@tcp-client:~# tc qdisc show dev ens33
+</span></span><span class="line"><span class="cl">qdisc fq_codel 0: root refcnt 2 limit 10240p flows 1024 quantum 1514 target 5.0ms interval 100.0ms memory_limit 32Mb ecn 
+</span></span><span class="line"><span class="cl">root@tcp-client:~# 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>调整内核参数</p>
+<p>内核参数说明</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo sysctl -a <span class="p">|</span> egrep <span class="s2">&#34;rmem|wmem|tcp_mem|adv_win|moderate&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_rmem <span class="o">=</span> <span class="m">4096</span> <span class="m">131072</span> <span class="m">6291456</span> // 最小值、默认值、最大值
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_wmem <span class="o">=</span> <span class="m">4096</span> <span class="m">16384</span> <span class="m">4194304</span> // 最小值、默认值、最大值
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>sysctl：可以查看和修改内核参数
+rmem：套接字接收缓冲区大小
+wmem：套接字发送缓冲区大小</p>
+<p>下面的实现会调整 rmem 和 wmem 的大小做相关的实验。</p>
+<p>修改前参数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# sysctl -a | egrep &#34;rmem|wmem|tcp_mem|adv_win|moderate&#34;
+</span></span><span class="line"><span class="cl">net.core.rmem_default = 212992
+</span></span><span class="line"><span class="cl">net.core.rmem_max = 212992
+</span></span><span class="line"><span class="cl">net.core.wmem_default = 212992
+</span></span><span class="line"><span class="cl">net.core.wmem_max = 212992
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_adv_win_scale = 1
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_mem = 44544        59392   89088
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_moderate_rcvbuf = 1
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_rmem = 4096        131072  6291456
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_wmem = 4096        16384   4194304
+</span></span><span class="line"><span class="cl">net.ipv4.udp_rmem_min = 4096
+</span></span><span class="line"><span class="cl">net.ipv4.udp_wmem_min = 4096
+</span></span><span class="line"><span class="cl">vm.lowmem_reserve_ratio = 256   256     32      0       0
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="31-不调整-rt仅调整server的wmem参数">3.1 不调整 RT，仅调整server的wmem参数</h3>
+<p>修改，限死 <code>wmem</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-server:~# sysctl -w net.ipv4.tcp_wmem=&#34;4096 4096 4096&#34;
+</span></span><span class="line"><span class="cl">net.ipv4.tcp_wmem = 4096 4096 4096
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看curl命令使用时间结果，下载速度很快，平均速度甚至大约不限制的情况</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
+</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
+</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  48.4M      0  0:00:42  0:00:42 --:--:-- 43.5M
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>平均下载速度Average Dload: 48.4M</p>
+<p>server抓包</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-server:~# tcpdump -i ens33 -s 120 &#34;host 192.168.77.132&#34; -w tcpdump-server-wmem4096.cap
+</span></span><span class="line"><span class="cl">tcpdump: listening on ens33, link-type EN10MB (Ethernet), capture size 120 bytes
+</span></span><span class="line"><span class="cl">^C55406 packets captured
+</span></span><span class="line"><span class="cl">55406 packets received by filter
+</span></span><span class="line"><span class="cl">0 packets dropped by kernel
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>client抓包</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# tcpdump -i ens33 &#34;host 192.168.77.131&#34; -w tcpdump-clinet-wmem4096.cap
+</span></span><span class="line"><span class="cl">tcpdump: listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+</span></span><span class="line"><span class="cl">^C72485 packets captured
+</span></span><span class="line"><span class="cl">72485 packets received by filter
+</span></span><span class="line"><span class="cl">0 packets dropped by kernel
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>看stevens概览图，很平滑
+<img src="/images/tcpdump-client-wmem4096-stevens-overview.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-client-wmem4096-stevens-overview"
+	
+	
+></p>
+<p>放大看stevens图，也没有很明显的延迟，两个包之间的ack时间也很短
+<img src="/images/tcpdump-client-wmem4096-stevens-detail.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-client-wmem4096-stevens-detail"
+	
+	
+></p>
+<p>看看server的window窗口图，暂时也没看出啥特别的
+<img src="/images/tcpdump-server-wmem4096-window-scaling.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-server-wmem4096-window-scaling"
+	
+	
+></p>
+<h3 id="32-接下来对-client-端调整-rt-为-100ms看下整个下载情况">3.2 接下来对 client 端调整 rt 为 100ms，看下整个下载情况。</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# tc qdisc add dev ens33 root netem delay 100ms
+</span></span><span class="line"><span class="cl">root@tcp-client:~# 
+</span></span><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
+</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
+</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  2497k      0  0:13:59  0:13:59 --:--:-- 11.4M
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>平均下载速度Average Dload: 2497k</p>
+<p>很明显速度下降很多，最后的下载速度只有11.4M</p>
+<p>从stevens图里看结果，斜度比较平，中途还有很大的曲折</p>
+<p><img src="/images/tcpdump-clinet-wmem4096-delay100-stevens-overview.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-clinet-wmem4096-delay100-stevens-overview"
+	
+	
+></p>
+<p>另一个角度看ack响应时间
+<img src="/images/tcpdump-clinet-wmem4096-delay100-stevens.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-clinet-wmem4096-delay100-stevens"
+	
+	
+></p>
+<p>窗口明显上不去
+<img src="/images/tcpdump-clinet-wmem4096-delay100-window-scaling.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-clinet-wmem4096-delay100-window-scaling"
+	
+	
+></p>
+<p>rtt时间也是很明显100以上
+<img src="/images/tcpdump-clinet-wmem4096-delay100-rtt.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-clinet-wmem4096-delay100-rtt"
+	
+	
+></p>
+<h3 id="33-调整-client-端调整-rt-为-10ms看下整个下载情况">3.3 调整 client 端调整 rt 为 10ms，看下整个下载情况。</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# tc qdisc del dev ens33 root
+</span></span><span class="line"><span class="cl">root@tcp-client:~# tc qdisc add dev ens33 root netem delay 10ms
+</span></span><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
+</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
+</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0   9.9M      0  0:03:25  0:03:25 --:--:-- 8479k
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>平均下载速度Average Dload: 9.9M</p>
+<p><img src="/images/tcpdump-clinet-wmem4096-delay10-stevens-overview.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-clinet-wmem4096-delay10-stevens-overview"
+	
+	
+></p>
+<p><img src="/images/tcpdump-clinet-wmem4096-delay10-stevens.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-clinet-wmem4096-delay10-stevens"
+	
+	
+></p>
+<p>窗口明显上不去
+<img src="/images/tcpdump-clinet-wmem4096-delay10-window-scaling.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-clinet-wmem4096-delay10-window-scaling"
+	
+	
+></p>
+<p>rtt时间也是很明显10以上
+<img src="/images/tcpdump-clinet-wmem4096-delay10-rtt.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="tcpdump-clinet-wmem4096-delay10-rtt"
+	
+	
+></p>
+<p>与上述100ms对比，发现同样的<code>wmem 4096</code>参数下, rt越大，速度越慢</p>
+<h3 id="34-调整-client-端调整-rt-为-200ms看下整个下载情况">3.4 调整 client 端调整 rt 为 200ms，看下整个下载情况。</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# tc qdisc del dev ens33 root
+</span></span><span class="line"><span class="cl">root@tcp-client:~# tc qdisc add dev ens33 root netem delay 200ms
+</span></span><span class="line"><span class="cl">root@tcp-client:~# tc qdisc show dev ens33
+</span></span><span class="line"><span class="cl">qdisc netem 8005: root refcnt 2 limit 1000 delay 200.0ms
+</span></span><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
+</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
+</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  2069k      0  0:16:53  0:16:53 --:--:-- 6733k
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>rt延迟时间200ms，平均下载速度Average Dload: 2069k</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/wireshark-common-function-notes/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Wireshark常用功能笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/nginx-upload-zero-window-troubleshooting/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">文件上传卡住时排查 TCP Zero Window 与 Nginx 缓冲</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Wireshark技巧</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/tc_%E5%AE%9E%E9%AA%8C/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tc_实验</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Wireshark本地劫持https</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>142</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>124</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-实验准备">1 实验准备</a>
+      <ol>
+        <li><a href="#11-虚拟机">1.1 虚拟机</a>
+          <ol>
+            <li><a href="#111-虚拟机相关信息">1.1.1 虚拟机相关信息</a></li>
+          </ol>
+        </li>
+        <li><a href="#12-大文件">1.2 大文件</a>
+          <ol>
+            <li><a href="#121-dd生成大文件">1.2.1 <code>dd</code>生成大文件</a></li>
+          </ol>
+        </li>
+        <li><a href="#13-服务器">1.3 服务器</a>
+          <ol>
+            <li><a href="#131-ubuntu安装nginx">1.3.1 ubuntu安装<code>nginx</code></a></li>
+            <li><a href="#132-配置nginx">1.3.2 配置<code>nginx</code></a></li>
+            <li><a href="#133-测试nginx服务器配置">1.3.3 测试<code>nginx</code>服务器配置</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#2-实验1增加rt验证-tc-延迟">2 实验1:增加rt，验证 tc 延迟</a></li>
+    <li><a href="#3-实验2写死-server-wmem">3 实验2:写死 server wmem</a>
+      <ol>
+        <li><a href="#31-不调整-rt仅调整server的wmem参数">3.1 不调整 RT，仅调整server的wmem参数</a></li>
+        <li><a href="#32-接下来对-client-端调整-rt-为-100ms看下整个下载情况">3.2 接下来对 client 端调整 rt 为 100ms，看下整个下载情况。</a></li>
+        <li><a href="#33-调整-client-端调整-rt-为-10ms看下整个下载情况">3.3 调整 client 端调整 rt 为 10ms，看下整个下载情况。</a></li>
+        <li><a href="#34-调整-client-端调整-rt-为-200ms看下整个下载情况">3.4 调整 client 端调整 rt 为 200ms，看下整个下载情况。</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+
+    </body>
+</html>

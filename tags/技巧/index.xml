@@ -13,7 +13,11 @@
         
         <guid>https://sona201.github.io/posts/wireshark%E6%8A%80%E5%B7%A7/</guid>
         <description>&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://developer.aliyun.com/article/100476&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;相关文章&lt;/a&gt;&lt;/p&gt;
+    &gt;相关文章&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://www.ilikejobs.com/posts/wireshark/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;wireshark 常用功能笔记&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://www.kawabangga.com/posts/4794&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;用 Wireshark 分析 TCP 吞吐瓶颈&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;wireshark你一定会喜欢的技巧摘要&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;修改seq的为绝对值 relative
@@ -44,8 +48,27 @@
     &gt;分析图&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;wireshark https 抓包 tls contains &amp;ldquo;baidu.com&amp;rdquo;&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;wireshark 没有权限
-&lt;img src=&#34;https://sona201.github.io/images/permission_denied.png&#34;
+&lt;p&gt;wireshark 没有权限&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;You do not have permission to capture on device &amp;#34;utun7&amp;#34;.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;((cannot open BPF device) /dev/bpf0: Permission denied)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Please check to make sure you have sufficient permissions.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;If you installed Wireshark using the package from wireshark.org, close this dialog and click on the &amp;#34;installing ChmodBPF&amp;#34; link in &amp;#34;You can fix this by installing ChmodBPF.&amp;#34; on the main screen, and then complete the installation procedure.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/permission_denied.png&#34;
 	
 	
 	
@@ -55,7 +78,6 @@
 	
 	
 &gt;&lt;/p&gt;
-&lt;/blockquote&gt;
 &lt;p&gt;或者下图&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/permission_denied_wireshark.png&#34;
 	
@@ -404,7 +426,7 @@
 &gt;&lt;/p&gt;
 &lt;p&gt;要说过滤的作用与技巧，就算专门写一本小册子都不为过。篇幅所限，本文只能&amp;quot;过滤&amp;quot;出最适合初学者的部分。&lt;/p&gt;
 &lt;p&gt;1．如果已知某个协议发生问题，可以用协议名称过滤一下。以Windows Domain的身份验证问题为例，如果已知该域的验证协议是Kerberos，那么就在Filter框输入Kerberos作为关键字过滤。除了纯粹的Kerberos包，你还将得到Session Setup之类包含Kerberos的包。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/wireshark_filter_Kerberos.jpeg&#34;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/wireshark_filter_kerberos.jpeg&#34;
 	
 	
 	

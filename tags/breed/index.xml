@@ -250,7 +250,19 @@
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;openwrt-24.10.8-ramips-mt7620-phicomm_k2-v22.4-squashfs-sysupgrade.bin
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;上传以后 OpenWrt 会再次显示文件大小和 SHA256。&lt;/p&gt;
+&lt;/div&gt;&lt;p&gt;下面是这次刷机时的实际截图：当前仍处于 recovery/initramfs 模式，选择的是 K2 v22.4 的 sysupgrade 固件，文件大小为 6.25 MiB。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/phicomm-k2-sysupgrade-upload.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;LuCI 在 recovery 模式下选择 K2 v22.4 的 sysupgrade 固件，大小为 6.25 MiB&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;点击 Upload 后还会进入校验确认页面，此时尚未开始正式写入 Flash。&lt;/p&gt;
+&lt;p&gt;上传以后 OpenWrt 会再次显示文件大小和 SHA256。&lt;/p&gt;
 &lt;p&gt;实际看到：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;

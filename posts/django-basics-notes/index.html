@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Django基础 一、Django 基础操作 创建Django项目 1 2 # 命令行方式创建项目 django-admin startproject devops Django项目目录结构介绍 1 2 3 4 5 6 |-- manage.py `-- devops |--'>
+<title>Django 基础操作与请求响应对象笔记</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/django-basics-notes/'>
+
+<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Django 基础操作与请求响应对象笔记'>
+<meta property='og:description' content='Django基础 一、Django 基础操作 创建Django项目 1 2 # 命令行方式创建项目 django-admin startproject devops Django项目目录结构介绍 1 2 3 4 5 6 |-- manage.py `-- devops |--'>
+<meta property='og:url' content='https://sona201.github.io/posts/django-basics-notes/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-11-28T17:16:52&#43;08:00'/><meta property='article:modified_time' content='2020-11-28T17:16:52&#43;08:00'/>
+<meta name="twitter:title" content="Django 基础操作与请求响应对象笔记">
+<meta name="twitter:description" content="Django基础 一、Django 基础操作 创建Django项目 1 2 # 命令行方式创建项目 django-admin startproject devops Django项目目录结构介绍 1 2 3 4 5 6 |-- manage.py `-- devops |--">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">Django 基础操作与请求响应对象笔记</h1>
+        
+        
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/django/">django</a>
+                </span>
+            
+            
+                <time datetime="2020-11-28">2020-11-28</time>
+            
+            <span>阅读时长: 4 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="django基础">Django基础</h2>
+<h3 id="一django-基础操作">一、Django 基础操作</h3>
+<h4 id="创建django项目">创建Django项目</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 命令行方式创建项目</span>
+</span></span><span class="line"><span class="cl">django-admin startproject devops
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="django项目目录结构介绍">Django项目目录结构介绍</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"> |-- manage.py
+</span></span><span class="line"><span class="cl">  `-- devops
+</span></span><span class="line"><span class="cl">      |-- __init__.py 
+</span></span><span class="line"><span class="cl">      |-- settings.py
+</span></span><span class="line"><span class="cl">      |-- urls.py
+</span></span><span class="line"><span class="cl">      `-- wsgi.py
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>最外层的devops/目录只是你项目的一个容器</li>
+<li><code>manage.py</code> 一个实用的命令行工具，可让你以各种方式与该 <code>Django</code> 项目进行交互</li>
+<li>内层 <code>devops/</code> 目录是你项目中的实际Python包。通过它你可以导入它里面的任何东西</li>
+<li><code>devops/__init__.py</code>: 一个空文件，告诉<code>Python</code>该目录是一个<code>Python</code>包</li>
+<li><code>devops/settings.py</code>: 该<code>Django</code>项目的配置文件</li>
+<li><code>devops/urls.py</code>: 该<code>Django</code>项目的 <code>URL</code> 声明</li>
+<li><code>devops/wsgi.py</code>: 一个<code>WSGI</code>兼容的<code>Web</code>服务器的入口</li>
+</ul>
+<h4 id="启动运行项目">启动(运行)项目</h4>
+<ul>
+<li>起动服务</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">cd</span> devops
+</span></span><span class="line"><span class="cl">python manage.py runserver
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以直接通过<code>python3 manage.py</code>查看命令</p>
+<ul>
+<li>指定端口起动服务</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python manage.py runserver <span class="m">8000</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>指定ip与端口起动服务</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python manage.py runserver 0.0.0.0:8000
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="新建django-app">新建Django app</h4>
+<ol>
+<li>新建一个名为dashboard的app</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python manage.py startapp dashboard
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>配置url</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
+</span></span><span class="line"><span class="cl"><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^dashboard/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&#34;dashboard.urls&#34;</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>激活app</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;dashboard&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="hello-world">Hello world</h4>
+<h5 id="step-1-编写视图">step 1: 编写视图</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&#34;Hello world !!!&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="step-2-配置url">step 2: 配置url</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">views</span>
+</span></span><span class="line"><span class="cl"><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^$&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="django-之模板">Django 之模板</h4>
+<blockquote>
+<p>加载模版</p>
+</blockquote>
+<p><code>django.template.loader</code> 这个模块提供了两种方法加载模板</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">get_template</span><span class="p">(</span><span class="n">template_name</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>加载指定模板并返回Template对象</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">select_template</span><span class="p">(</span><span class="n">template_name_list</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>它与get_template类似，它尝试每个名称并返回第一个存在的模板</p>
+<blockquote>
+<p>从文件加载内容</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">loader</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s2">&#34;test.html&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;hello reboot !!!&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">request</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>快捷方式：render()</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&#34;reboot&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;test.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="二django-配置">二、<code>Django</code> 配置</h3>
+<h4 id="配置静态文件">配置静态文件</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s1">&#39;/static/&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">STATICFILES_DIRS</span> <span class="o">=</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s2">&#34;static&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="配置时区">配置时区</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">TIME_ZONE</span> <span class="o">=</span> <span class="err">’</span><span class="n">Asia</span><span class="o">/</span><span class="n">Shanghai</span><span class="err">’</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="配置数据库">配置数据库</h4>
+<p><code>opsweb/settings.py</code>是一个普通的<code>python</code>模块，每项配置都是一对<code>key/value</code></p>
+<p>数据库的配置是以dict的形式存放在这个模块中，key名为：DATABASES</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django.db.backends.mysql&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="s1">&#39;django&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;USER&#39;</span><span class="p">:</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MYSQL_PASSWORD&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;HOST&#39;</span><span class="p">:</span> <span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;PORT&#39;</span><span class="p">:</span> <span class="mi">3306</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="日志配置">日志配置</h4>
+<p>待续&hellip;</p>
+<h3 id="三django-http相关-对象">三、Django Http相关 对象</h3>
+<p>Django的对象流程，先获取url，创建wsgi对象，request</p>
+<h4 id="a-httprequest对象">a. HttpRequest对象</h4>
+<p>由django创建</p>
+<blockquote>
+<p>属性：</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">scheme</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">body</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">path</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">method</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">encoding</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">GET</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">POST</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">META</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>方法：</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">get_host</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">get_port</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">get_full_path</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">is_secure</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpRequest</span><span class="o">.</span><span class="n">is_ajax</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="b-httpresponse对象">b. HttpResponse对象</h4>
+<blockquote>
+<p>传递一个字符串作为页面的内容到 HttpResponse 构造函数</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&#34;Here&#39;s the text of the Web page.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&#34;Text only, please.&#34;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&#34;text/plain&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>属性：</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">HttpResponse</span><span class="o">.</span><span class="n">content</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpResponse</span><span class="o">.</span><span class="n">charset</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpResponse</span><span class="o">.</span><span class="n">status_code</span>
+</span></span><span class="line"><span class="cl"><span class="n">HttpResponse</span><span class="o">.</span><span class="n">reason_phrase</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>方法：</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">HttpResponse</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="err">”</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="c-jsonresponse-对象">c. JsonResponse 对象</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">JsonResponse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">encoder</span><span class="o">=</span><span class="n">DjangoJSONEncoder</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">json_dumps_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">JsonResponse</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;foo&#39;</span><span class="p">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span>
+</span></span><span class="line"><span class="cl"><span class="sa">b</span><span class="s1">&#39;{&#34;foo&#34;: &#34;bar&#34;}&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">JsonResponse</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">safe</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>GET与POST请求</p>
+</blockquote>
+<ul>
+<li>GET请求与传参</li>
+<li>POST请求与数据提交</li>
+</ul>
+<h4 id="querydict对象">QueryDIct对象</h4>
+<ul>
+<li>在HttpRequest 对象中，GET 和POST 属性是django.http.QueryDict 的实例，它是一个自定义的类似字典的类，用来处理同一个键带有多个值。这个类的需求来自某些HTML 表单元素传递多个值给同一个键</li>
+<li>request.POST 和request.GET 的QueryDict 在一个正常的请求/响应循环中是不可变的。若要获得可变的版本，需要使用.copy()。</li>
+</ul>
+<p>实例化QueryDict</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">query_string</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mutable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>示例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">QueryDict</span><span class="p">(</span><span class="s1">&#39;a=1&amp;a=2&amp;c=3&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">QueryDict</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;3&#39;</span><span class="p">]}</span><span class="o">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>通过fromkeys实例化QueryDict</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">classmethod</span> <span class="n">QueryDict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="err">”</span><span class="p">,</span> <span class="n">mutable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>示例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">QueryDict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;val&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">QueryDict</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">,</span> <span class="s1">&#39;val&#39;</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">]}</span><span class="o">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>QueryDict方法：</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="n">source</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">other_dict</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">setlist</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">list_</span><span class="p">)[</span><span class="n">source</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">appendlist</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">setlistdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default_list</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">lists</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">QueryDict</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">safe</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="四django用户配置使用">四、<code>Django</code>用户配置使用</h3>
+<ol>
+<li>配置<code>django</code>数据库</li>
+<li>同步数据</li>
+<li><code>Django API</code> 创建用户</li>
+<li>执行用户登录</li>
+<li>深入解析用户登录过程</li>
+</ol>
+<h4 id="同步数据">同步数据</h4>
+<p>使用django的命令行工具同步数据库</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python manage.py migrate
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="创建用户">创建用户</h4>
+<p>使用django shell 创建普通用户：创建users最直接的方法是使用create_user()辅助函数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s1">&#39;demo_user&#39;</span><span class="p">,</span> <span class="s1">&#39;demo@example.com&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;set-your-own-password&gt;&#39;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="创建管理员">创建管理员</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python manage.py createsuperuser --username<span class="o">=</span>user1 --email<span class="o">=</span>user@example.com
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="修改密码">修改密码</h4>
+<p>Django不会在user模型上存储原始的（明文）密码，而只是一个哈希。因为这个原因，不要尝试直接操作user的password属性。这也是为什么创建一个user时要使用辅助函数。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;user1&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">u</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="s1">&#39;&lt;set-your-own-password&gt;&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">u</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="用户登陆">用户登陆</h4>
+<ul>
+<li>执行用户登陆</li>
+<li>用户登陆过程详解</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/django-as_view-%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Django as_view 方法实现分析</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/drf-total-pagination/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DRF 返回全部数据并保留 count 字段</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/drf-exception-handler-notes/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DRF 异常处理与自定义渲染笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/drf-response-rendering/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DRF finalize_response 与渲染器配置</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/drf-allowed-methods-source-notes/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Django 与 DRF allowed_methods 源码笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>142</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>124</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#django基础">Django基础</a>
+      <ol>
+        <li><a href="#一django-基础操作">一、Django 基础操作</a>
+          <ol>
+            <li><a href="#创建django项目">创建Django项目</a></li>
+            <li><a href="#django项目目录结构介绍">Django项目目录结构介绍</a></li>
+            <li><a href="#启动运行项目">启动(运行)项目</a></li>
+            <li><a href="#新建django-app">新建Django app</a></li>
+            <li><a href="#hello-world">Hello world</a></li>
+            <li><a href="#django-之模板">Django 之模板</a></li>
+          </ol>
+        </li>
+        <li><a href="#二django-配置">二、<code>Django</code> 配置</a>
+          <ol>
+            <li><a href="#配置静态文件">配置静态文件</a></li>
+            <li><a href="#配置时区">配置时区</a></li>
+            <li><a href="#配置数据库">配置数据库</a></li>
+            <li><a href="#日志配置">日志配置</a></li>
+          </ol>
+        </li>
+        <li><a href="#三django-http相关-对象">三、Django Http相关 对象</a>
+          <ol>
+            <li><a href="#a-httprequest对象">a. HttpRequest对象</a></li>
+            <li><a href="#b-httpresponse对象">b. HttpResponse对象</a></li>
+            <li><a href="#c-jsonresponse-对象">c. JsonResponse 对象</a></li>
+            <li><a href="#querydict对象">QueryDIct对象</a></li>
+          </ol>
+        </li>
+        <li><a href="#四django用户配置使用">四、<code>Django</code>用户配置使用</a>
+          <ol>
+            <li><a href="#同步数据">同步数据</a></li>
+            <li><a href="#创建用户">创建用户</a></li>
+            <li><a href="#创建管理员">创建管理员</a></li>
+            <li><a href="#修改密码">修改密码</a></li>
+            <li><a href="#用户登陆">用户登陆</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+
+    </body>
+</html>

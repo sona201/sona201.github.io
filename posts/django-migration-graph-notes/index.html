@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Django4.0源码分析-1.10 关于MigrationGraph类的解读与实战 为了迁移文件之间的校验，然后有这个类。 也不清楚这个类是干嘛'>
+<title>Django MigrationGraph 交互实验</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/django-migration-graph-notes/'>
+
+<link rel="stylesheet" href="/scss/style.min.ae36f51af98ba223c14ded481fba31b6c3df97a70a194ff363ee16eb32e91030.css"><meta property='og:title' content='Django MigrationGraph 交互实验'>
+<meta property='og:description' content='Django4.0源码分析-1.10 关于MigrationGraph类的解读与实战 为了迁移文件之间的校验，然后有这个类。 也不清楚这个类是干嘛'>
+<meta property='og:url' content='https://sona201.github.io/posts/django-migration-graph-notes/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2023-02-08T01:06:45&#43;08:00'/><meta property='article:modified_time' content='2023-02-08T01:06:45&#43;08:00'/>
+<meta name="twitter:title" content="Django MigrationGraph 交互实验">
+<meta name="twitter:description" content="Django4.0源码分析-1.10 关于MigrationGraph类的解读与实战 为了迁移文件之间的校验，然后有这个类。 也不清楚这个类是干嘛">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">Django MigrationGraph 交互实验</h1>
+        
+        
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/django/">django</a>
+                </span>
+            
+            
+                <time datetime="2023-02-08">2023-02-08</time>
+            
+            <span>阅读时长: 1 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>Django4.0源码分析-1.10 关于MigrationGraph类的解读与实战</p>
+<p>为了迁移文件之间的校验，然后有这个类。 <br>
+也不清楚这个类是干嘛的，好像是画图的，但涉及算法深度优先，链表</p>
+<p>弹幕有说，这段代码是在makemigrations后，生成migrations文件，盲猜是分析那些文件关系用的。。。</p>
+<p>跟着操作下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">(venv) clin:firstDjango/ $ python3 manage.py shell
+</span></span><span class="line"><span class="cl">Python 3.10.5 (main, Jul 22 2022, 15:13:07) [Clang 12.0.5 (clang-1205.0.22.11)] on darwin
+</span></span><span class="line"><span class="cl">Type &#34;help&#34;, &#34;copyright&#34;, &#34;credits&#34; or &#34;license&#34; for more information.
+</span></span><span class="line"><span class="cl">(InteractiveConsole)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; from django.db.migrations.graph import Node,DummyNode, MigrationGraph
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph = MigrationGraph()
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_node(&#39;k1&#39;, &#39;m1&#39;)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_node(&#39;k2&#39;, &#39;m2&#39;)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_node(&#39;k3&#39;, &#39;m3&#39;)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_node(&#39;k4&#39;, &#39;m4&#39;)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_node(&#39;k5&#39;, &#39;m5&#39;)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_node(&#39;k6&#39;, &#39;m6&#39;)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_dependency(&#39;m1&#39;, &#39;k1&#39;, &#39;k2&#39;)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_dependency(&#39;m2&#39;, &#39;k2&#39;, &#39;k3&#39;)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_dependency(&#39;m3&#39;, &#39;k3&#39;, &#39;k4&#39;)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_dependency(&#39;m5&#39;, &#39;k5&#39;, &#39;k6&#39;)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; k1 -&gt; k2 -&gt; k3 -&gt; k4  k5 -&gt; k6
+</span></span><span class="line"><span class="cl">KeyboardInterrupt
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.validate_consistency()
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.forwards_plan(&#39;k3&#39;)
+</span></span><span class="line"><span class="cl">[&#39;k4&#39;, &#39;k3&#39;]
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.forwards_plan(&#39;k1&#39;)
+</span></span><span class="line"><span class="cl">[&#39;k4&#39;, &#39;k3&#39;, &#39;k2&#39;, &#39;k1&#39;]
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.forwards_plan(&#39;k5&#39;)
+</span></span><span class="line"><span class="cl">[&#39;k6&#39;, &#39;k5&#39;]
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.backwards_plan(&#39;k5&#39;)
+</span></span><span class="line"><span class="cl">[&#39;k5&#39;]
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.backwards_plan(&#39;k6&#39;)
+</span></span><span class="line"><span class="cl">[&#39;k5&#39;, &#39;k6&#39;]
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.backwards_plan(&#39;k3&#39;)
+</span></span><span class="line"><span class="cl">[&#39;k1&#39;, &#39;k2&#39;, &#39;k3&#39;]
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_dependency(&#39;m3&#39;, &#39;k3&#39;, k6&#39;)
+</span></span><span class="line"><span class="cl">  File &#34;&lt;console&gt;&#34;, line 1
+</span></span><span class="line"><span class="cl">    graph.add_dependency(&#39;m3&#39;, &#39;k3&#39;, k6&#39;)
+</span></span><span class="line"><span class="cl">                                       ^
+</span></span><span class="line"><span class="cl">SyntaxError: unterminated string literal (detected at line 1)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.add_dependency(&#39;m3&#39;, &#39;k3&#39;, &#39;k6&#39;)
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.backwards_plan(&#39;k3&#39;)
+</span></span><span class="line"><span class="cl">[&#39;k1&#39;, &#39;k2&#39;, &#39;k3&#39;]
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.forwards_plan(&#39;k3&#39;)
+</span></span><span class="line"><span class="cl">[&#39;k6&#39;, &#39;k4&#39;, &#39;k3&#39;]
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.node_map[&#39;k6&#39;].chilren
+</span></span><span class="line"><span class="cl">Traceback (most recent call last):
+</span></span><span class="line"><span class="cl">  File &#34;&lt;console&gt;&#34;, line 1, in &lt;module&gt;
+</span></span><span class="line"><span class="cl">AttributeError: &#39;Node&#39; object has no attribute &#39;chilren&#39;
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.node_map[&#39;k6&#39;].children
+</span></span><span class="line"><span class="cl">{&lt;Node: (&#39;k&#39;, &#39;5&#39;)&gt;, &lt;Node: (&#39;k&#39;, &#39;3&#39;)&gt;}
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.node_map[&#39;k3&#39;].parent
+</span></span><span class="line"><span class="cl">Traceback (most recent call last):
+</span></span><span class="line"><span class="cl">  File &#34;&lt;console&gt;&#34;, line 1, in &lt;module&gt;
+</span></span><span class="line"><span class="cl">AttributeError: &#39;Node&#39; object has no attribute &#39;parent&#39;
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.node_map[&#39;k3&#39;].parents
+</span></span><span class="line"><span class="cl">{&lt;Node: (&#39;k&#39;, &#39;4&#39;)&gt;, &lt;Node: (&#39;k&#39;, &#39;6&#39;)&gt;}
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.ensure_not_cyclic()
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.remove_replaced_nodes(&#39;k1&#39;, [&#39;k6&#39;])
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.node_map[&#39;k1&#39;].parents
+</span></span><span class="line"><span class="cl">{&lt;Node: (&#39;k&#39;, &#39;2&#39;)&gt;}
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.node_map[&#39;k1&#39;].children
+</span></span><span class="line"><span class="cl">{&lt;Node: (&#39;k&#39;, &#39;5&#39;)&gt;, &lt;Node: (&#39;k&#39;, &#39;3&#39;)&gt;}
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; graph.ensure_not_cyclic()
+</span></span><span class="line"><span class="cl">Traceback (most recent call last):
+</span></span><span class="line"><span class="cl">  File &#34;&lt;console&gt;&#34;, line 1, in &lt;module&gt;
+</span></span><span class="line"><span class="cl">  File &#34;/Users/example/File/Project/firstDjango/venv/lib/python3.10/site-packages/django/db/migrations/graph.py&#34;, line 285, in ensure_not_cyclic
+</span></span><span class="line"><span class="cl">    &#34;, &#34;.join(&#34;%s.%s&#34; % n for n in cycle)
+</span></span><span class="line"><span class="cl">  File &#34;/Users/example/File/Project/firstDjango/venv/lib/python3.10/site-packages/django/db/migrations/graph.py&#34;, line 285, in &lt;genexpr&gt;
+</span></span><span class="line"><span class="cl">    &#34;, &#34;.join(&#34;%s.%s&#34; % n for n in cycle)
+</span></span><span class="line"><span class="cl">TypeError: not enough arguments for format string
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/django-as_view-%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Django as_view 方法实现分析</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/drf-total-pagination/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DRF 返回全部数据并保留 count 字段</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/drf-exception-handler-notes/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DRF 异常处理与自定义渲染笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/drf-allowed-methods-source-notes/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Django 与 DRF allowed_methods 源码笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/drf-response-rendering/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DRF finalize_response 与渲染器配置</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>142</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>124</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section></aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+
+
+
+    </body>
+</html>
