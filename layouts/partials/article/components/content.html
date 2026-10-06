@@ -1,0 +1,7 @@
+{{- if in (default (slice "post") .Site.Params.mainSections) .Type -}}
+    {{ partial "article/components/reading-tools.html" . }}
+{{- end -}}
+<section class="article-content">
+    {{- $wrappedTable := printf "<div class=\"table-wrapper\">${1}</div>" -}}
+    {{ .Content | replaceRE "(<table>(?:.|\n)+?</table>)" $wrappedTable | safeHTML }}
+</section>

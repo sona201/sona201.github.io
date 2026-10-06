@@ -69,9 +69,7 @@ draft: false
 
 工具是 Agent 的“手脚”。每个工具必须包含 `description`，因为**模型是靠这段描述来判断何时使用该工具的**。
 
-Python
-
-```
+```python
 from crewai.tools import BaseTool
 
 class MySQLQueryTool(BaseTool):
@@ -85,9 +83,7 @@ class MySQLQueryTool(BaseTool):
 
 ### Step 2: 配置 Agent 与 Task
 
-Python
-
-```
+```python
 from crewai import Agent, Task, Crew
 
 # 1. 定义 Agent

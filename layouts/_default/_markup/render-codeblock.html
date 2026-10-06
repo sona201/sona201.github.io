@@ -1,0 +1,8 @@
+{{- $language := lower .Type -}}
+{{- $labels := dict "python" "Python" "py" "Python" "bash" "Bash" "sh" "Shell" "shell" "Shell" "console" "Terminal" "sql" "SQL" "mysql" "SQL" "javascript" "JavaScript" "js" "JavaScript" "typescript" "TypeScript" "ts" "TypeScript" "json" "JSON" "yaml" "YAML" "yml" "YAML" "html" "HTML" "css" "CSS" "go" "Go" "golang" "Go" "dockerfile" "Dockerfile" "text" "文本" "plaintext" "文本" -}}
+{{- $label := default "代码" $language -}}
+{{- with index $labels $language -}}{{- $label = . -}}{{- end -}}
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">{{ $label }}</span></div>
+    {{ highlight (printf "%s\n" .Inner) .Type .Options }}
+</div>
