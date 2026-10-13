@@ -6,10 +6,10 @@
         <description>Recent content in Tags on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Sat, 03 Oct 2026 22:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 14 Oct 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Agent</title>
         <link>https://sona201.github.io/tags/agent/</link>
-        <pubDate>Sat, 03 Oct 2026 22:00:00 +0800</pubDate>
+        <pubDate>Wed, 14 Oct 2026 00:00:00 +0800</pubDate>
         
         <guid>https://sona201.github.io/tags/agent/</guid>
         <description></description>
@@ -17,9 +17,41 @@
         <item>
         <title>AI</title>
         <link>https://sona201.github.io/tags/ai/</link>
-        <pubDate>Sat, 03 Oct 2026 22:00:00 +0800</pubDate>
+        <pubDate>Wed, 14 Oct 2026 00:00:00 +0800</pubDate>
         
         <guid>https://sona201.github.io/tags/ai/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Claude Code</title>
+        <link>https://sona201.github.io/tags/claude-code/</link>
+        <pubDate>Wed, 14 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/tags/claude-code/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Magpie</title>
+        <link>https://sona201.github.io/tags/magpie/</link>
+        <pubDate>Wed, 14 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/tags/magpie/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>软件工程</title>
+        <link>https://sona201.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/</link>
+        <pubDate>Wed, 14 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>自动化</title>
+        <link>https://sona201.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/</link>
+        <pubDate>Wed, 14 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/</guid>
         <description></description>
         </item>
         <item>

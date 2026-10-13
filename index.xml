@@ -6,7 +6,662 @@
         <description>Recent content on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Sun, 04 Oct 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 14 Oct 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Magpie 的 AI 自动维护流程与最小实现</title>
+        <link>https://sona201.github.io/posts/magpie-ai-automation-workflow/</link>
+        <pubDate>Wed, 14 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/magpie-ai-automation-workflow/</guid>
+        <description>&lt;p&gt;让 AI 修一个 bug，通常从一句指令开始。让 AI 持续维护一个项目，还要回答更多问题：它从哪里知道有 bug？怎么判断值得修？怎么确认修好了？两个任务同时修改代码怎么办？连续失败后，什么时候应该停下来？&lt;/p&gt;
+&lt;p&gt;Magpie 提供了一个可以观察的案例。它的维护者 yetone 在 X 上分享了三个持续运行的任务：处理社区反馈和 PR、处理 X 上的反馈、清理代码并复盘教训。日常开发大量交给 Agent，自己继续参与产品和界面判断。&lt;a class=&#34;link&#34; href=&#34;https://x.com/yetone/status/2109855710444237018&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;工作流原帖&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这里的 issue 是问题或需求记录；PR 是 Pull Request，用来提交一组改动，请别人审查并合并。两者分别承载“要解决什么”和“准备怎样解决”。&lt;/p&gt;
+&lt;p&gt;这篇文章先解释 Magpie 的用途，再拆解自动维护流程，最后实现一个小型修复系统。例子刻意只处理一个函数，让任务状态、验证、重试与人工接管都能看得见。&lt;/p&gt;
+&lt;h2 id=&#34;magpie-解决什么问题&#34;&gt;Magpie 解决什么问题&lt;/h2&gt;
+&lt;p&gt;使用多个 AI 编程工具时，很容易遇到配置分散的问题：工具各自保存模型名称、服务地址和凭据，切换模型要到不同地方修改，某个账号额度耗尽后还要重新配置。&lt;/p&gt;
+&lt;p&gt;Magpie 把这些配置和请求路由集中到一个本地应用里。按项目 README 的描述，它可以管理多个编程工具的模型设置，接入不同供应商和本地模型，并通过路由组在账号或模型之间切换。网关处理不同接口协议之间的转换，包括流式响应和工具调用。&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/README.md&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Magpie 项目介绍&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;可以把一次调用理解成：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;文本&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;编程工具
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   ↓ 按自己支持的协议发出请求
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Magpie 本地网关
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   ↓ 选择供应商和模型，转换请求与响应
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;模型服务或本地模型
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;这里有三个基础概念：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Provider&lt;/strong&gt;：模型服务的提供方，包含服务地址和认证方式等配置。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Base URL&lt;/strong&gt;：接口的基础地址。客户端在这个地址上拼接具体的 API 路径。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Gateway&lt;/strong&gt;：位于客户端与服务之间的网关，负责转发、路由以及必要的协议适配。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;例如，一个开发者同时使用两个编程工具，调试时希望用便宜模型，复杂修改时切到更强的模型。Magpie 的价值在于集中管理这些选择。它仍然受上游服务的能力、额度和可用性约束。&lt;/p&gt;
+&lt;p&gt;接下来讨论的是另一条链路：&lt;strong&gt;用 AI 维护 Magpie 的源码。&lt;/strong&gt; Magpie 本身负责模型接入；维护 Agent 负责读反馈、改代码、运行验证。理解这个区别，才能看清后面的自动化方案。文末 demo 可以独立运行，不要求先安装 Magpie。&lt;/p&gt;
+&lt;h2 id=&#34;理解自动维护需要哪些概念&#34;&gt;理解自动维护需要哪些概念&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;概念&lt;/th&gt;
+&lt;th&gt;在这个场景里负责什么&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;LLM 大语言模型&lt;/td&gt;
+&lt;td&gt;根据输入生成判断、文本或代码候选&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Agent&lt;/td&gt;
+&lt;td&gt;围绕目标，反复决定下一步、调用工具、观察结果的执行程序&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Tool 工具&lt;/td&gt;
+&lt;td&gt;让程序读取文件、查询 issue、运行测试或操作浏览器的接口&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Harness 执行框架&lt;/td&gt;
+&lt;td&gt;把模型、工具、状态、权限、重试和验证组织起来的外层程序&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Context 上下文&lt;/td&gt;
+&lt;td&gt;本次调用能看到的目标、资料、代码、历史和工具结果&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Memory 记忆&lt;/td&gt;
+&lt;td&gt;保存在对话之外、以后可以重新读取的决定、进度和经验&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;CI 持续集成&lt;/td&gt;
+&lt;td&gt;在提交后自动运行构建、测试等检查的系统&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Human in the loop&lt;/td&gt;
+&lt;td&gt;在指定决策或异常位置，由人参与判断并决定下一步&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;一个模型可以生成“把第 20 行改成这样”的文本，真正打开文件、保存改动并运行测试的是它外面的程序。Agent 能做多少事情，既取决于模型能力，也取决于提供了哪些工具和权限。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;记忆文件也不会直接修改模型权重。&lt;/strong&gt; 它的作用是把过去的信息保存下来，下次工作时重新装入上下文。项目的设计文档、任务进度和错误记录，都可以承担这部分作用。上下文应按当前任务选择，过期或无关内容会干扰判断。&lt;a class=&#34;link&#34; href=&#34;https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Anthropic 的上下文工程说明&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;还需要区分两层循环：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;文本&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;外层调度：隔一段时间，或者收到新事件，启动一轮任务
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;内层执行：读取信息 → 决定动作 → 调用工具 → 检查结果
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;保存状态，结束这一轮，等待下一次触发
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Claude Code 的 &lt;code&gt;/loop&lt;/code&gt; 解决外层重复触发。它不会自动替项目制定验收标准，也不会凭空获得 GitHub 或 Discord 的访问能力。相关工具和授权必须事先准备好。&lt;a class=&#34;link&#34; href=&#34;https://code.claude.com/docs/en/scheduled-tasks&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Claude Code 调度文档&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;magpie-怎样把维护工作交给-ai&#34;&gt;Magpie 怎样把维护工作交给 AI&lt;/h2&gt;
+&lt;h3 id=&#34;三个循环的实际分工&#34;&gt;三个循环的实际分工&lt;/h3&gt;
+&lt;p&gt;yetone 的第一条循环覆盖 GitHub issues、PR 和 Discord：判断哪些反馈值得处理，拉取代码运行验证，完成修复，处理合并、发布和回复。第二条循环看 X 上的反馈，先用便宜模型过滤相关性，再交给执行模型。第三条循环检查自动开发积累的问题，整理错误合并和验证不足的教训。&lt;a class=&#34;link&#34; href=&#34;https://x.com/yetone/status/2109855710444237018&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;三条循环的原始截图&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这些指令中同时包含了工作目标和约束。例如，社区提出一个新接入需求，不等于应该无条件加入产品；PR 看起来合理，也不等于可以直接合并。&lt;/p&gt;
+&lt;p&gt;这段实践在持续变化：本次采用的仓库快照中，README 已写明只允许维护者创建 PR。因此，下面讨论的是公开工作流的机制，不能把原帖对社区 PR 的安排理解成永远不变的贡献政策。&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/README.md#community&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;对应仓库快照&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;文档让短指令有了项目背景&#34;&gt;文档让短指令有了项目背景&lt;/h3&gt;
+&lt;p&gt;Magpie 的 &lt;code&gt;CLAUDE.md&lt;/code&gt; 是一个很薄的入口，引用 &lt;code&gt;AGENTS.md&lt;/code&gt; 和 &lt;code&gt;LESSONS.md&lt;/code&gt;。&lt;code&gt;AGENTS.md&lt;/code&gt; 再引导 Agent 按任务读取子系统设计、代码规范和贡献流程。&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/CLAUDE.md&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CLAUDE.md&lt;/a&gt;、&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/AGENTS.md&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;AGENTS.md&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这种组织方式可以用在普通项目里：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;文本&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;AGENTS.md                 工作入口和文档索引
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docs/product.md           产品目标与已经确定的取舍
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docs/subsystems/          各模块的职责和关键调用关系
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docs/verification.md      如何启动、测试和验收
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;LESSONS.md                有证据的失败经验
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;任务状态文件              当前做到了哪里，下一步是什么
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;这些文件的职责不同。产品决定应相对稳定；任务进度会频繁变化；教训需要证据和适用范围。把它们分开，便于更新，也能减少临时结论覆盖长期决定的机会。&lt;/p&gt;
+&lt;p&gt;yetone 还解释过，项目初期与 Agent 讨论过大量设计内容，记忆文件保留了这些偏好。因此，后续一句简短指令能够依赖前期已经建立的背景。&lt;a class=&#34;link&#34; href=&#34;https://x.com/yetone/status/2109872805668147561&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;关于设计和记忆的补充&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;真正完成任务需要经过验证&#34;&gt;真正完成任务需要经过验证&lt;/h3&gt;
+&lt;p&gt;Magpie 的验收规范要求 bug 修复附带能在旧实现上失败的测试，按变更风险检查相关平台和真实接口，并明确列出没有执行的检查。审查后如果 PR 又有新提交，需要重新检查；合并时可以通过 &lt;code&gt;--match-head-commit&lt;/code&gt; 绑定已经审过的版本。&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/docs/code-standards.md#acceptance-criteria&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;验收规范&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这里最值得借鉴的是区分几种不同的证据：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;证据&lt;/th&gt;
+&lt;th&gt;能说明什么&lt;/th&gt;
+&lt;th&gt;还不能说明什么&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;模型说已经修好&lt;/td&gt;
+&lt;td&gt;模型认为任务完成&lt;/td&gt;
+&lt;td&gt;代码实际正确&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;编译通过&lt;/td&gt;
+&lt;td&gt;当前目标能构建&lt;/td&gt;
+&lt;td&gt;运行行为符合要求&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;单元测试通过&lt;/td&gt;
+&lt;td&gt;被测输入满足断言&lt;/td&gt;
+&lt;td&gt;用户实际操作一定成功&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;旧实现失败、新实现通过&lt;/td&gt;
+&lt;td&gt;测试能够区分这次修复&lt;/td&gt;
+&lt;td&gt;未覆盖场景也正确&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;对应平台实际复现并验证&lt;/td&gt;
+&lt;td&gt;用户报告的路径得到检查&lt;/td&gt;
+&lt;td&gt;所有平台和账号都已检查&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;例如 Windows 上的配置路径错误，交叉编译成功只能说明代码能编译，不能证明 Windows 上的文件权限、路径解析和应用启动都正确。yetone 的补充明确强调，要给 Agent 提供真实的平台环境。&lt;a class=&#34;link&#34; href=&#34;https://x.com/yetone/status/2109856834010132602&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;关于真实环境的补充&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;复盘怎样改变下一轮行为&#34;&gt;复盘怎样改变下一轮行为&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;LESSONS.md&lt;/code&gt; 记录返工、不该合并的内容和验证不足，并给每条教训附上原因与证据。同一条教训在三个不同日期出现后，提升为正式代码规范。这里的三次是 Magpie 的项目约定；严重问题应该立即处理，不需要等待重复发生。&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/LESSONS.md#L4-L9&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;复盘规则&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;普通项目可以采用这样的记录格式：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;文本&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;规则：修改地址拼接时，同时验证空格、末尾斜杠和路径前缀。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;原因：一次修复去掉了多余斜杠，却意外截断了 /v1 前缀。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;证据：任务编号、失败输入、修复提交、回归测试。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;适用范围：Base URL 规范化与 endpoint 拼接。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;更新时间：2026-10-14。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;这是一条教学示例。它比“以后认真测试”更有用，因为下一位执行者知道何时读取这条规则，以及要用什么输入检查。复盘的目标是改变之后的工作方式，而不只是积累一份越来越长的总结。&lt;/p&gt;
+&lt;h2 id=&#34;三个真实失败案例&#34;&gt;三个真实失败案例&lt;/h2&gt;
+&lt;h3 id=&#34;修了截图里的情况却没有覆盖同类入口&#34;&gt;修了截图里的情况，却没有覆盖同类入口&lt;/h3&gt;
+&lt;p&gt;问题 &lt;code&gt;#834&lt;/code&gt; 要求统一 Agents 页的接入状态和模型选择。维护账号先后处理直连模型、Default 分支及其他 Agent 的遗漏，修复跨越 &lt;code&gt;v0.1.920&lt;/code&gt;、&lt;code&gt;.925&lt;/code&gt;、&lt;code&gt;.931&lt;/code&gt; 和 &lt;code&gt;.938&lt;/code&gt;。仓库复盘把它归纳为每轮只修截图中的入口。&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/issues/834&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;原始 issue&lt;/a&gt;、&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/LESSONS.md#L49-L60&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;对应复盘&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这类失败的原因是“完成标准”缩小了。用户需要某条真实操作路径恢复，Agent 却只确认了一个局部改动。&lt;/p&gt;
+&lt;p&gt;可以在任务开始时先保存一份复现条件：平台、版本、客户端入口、供应商、配置和实际输入。修复后按同样条件重跑，再搜索同类调用入口。没有目标平台时，任务应标记为“缺少环境，等待验证”，而不是宣称完成。&lt;/p&gt;
+&lt;h3 id=&#34;提交太密集导致-ci-一直被取消&#34;&gt;提交太密集导致 CI 一直被取消&lt;/h3&gt;
+&lt;p&gt;教训记录中有一个很直接的数字：51 小时创建了 294 个 tag，推送不断取消前一轮 CI；一个 Linux 测试的问题跨越了多个版本。&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/LESSONS.md#L352-L366&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;发布与 CI 的教训&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;tag 是指向某个 Git 提交的标签，项目通常用它标记发布版本，例如 &lt;code&gt;v0.1.938&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;“已经触发测试”和“测试完整通过”是两个状态。如果每次提交都启动发布，却没有等待测试完成，自动化只是更快地放大了缺少验证的问题。&lt;/p&gt;
+&lt;p&gt;在自己的项目中，可以把开发与发布拆开：多个修复允许并行准备，发布统一排队。绑定候选提交，等待检查完成，再交给唯一的发布流程处理。如果验证后代码发生变化，就重新验证。Magpie 的规范允许 tag 所在提交或包含它的后续提交完成 CI；初学者实现时，绑定待发布的同一个提交更容易检查。&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/docs/code-standards.md#acceptance-criteria&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;发布条件&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;并行会话误提交了别人的文件&#34;&gt;并行会话误提交了别人的文件&lt;/h3&gt;
+&lt;p&gt;仓库复盘还记录了两个会话共用一个工作目录时的事故：一条提交的标题是 davsync，实际却包含 7 个 GTK 字体显示相关文件，另一条预期的 GTK 提交变成空提交，真正的 davsync 改动后来才提交。&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/LESSONS.md#L414-L422&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;并发工作记录&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Git 的暂存区属于工作目录，不属于某个聊天窗口。两个 Agent 共用 checkout 时，一个执行 &lt;code&gt;git add&lt;/code&gt;，另一个执行 &lt;code&gt;git commit&lt;/code&gt;，就可能混入彼此的改动。&lt;/p&gt;
+&lt;p&gt;改进方式是让每个任务使用独立 worktree 和分支。worktree 是同一 Git 仓库下拥有独立文件与暂存区的工作目录。再通过任务认领避免同一个 issue 被重复领取。共享队列的状态更新需要锁；多个服务实例则需要数据库事务或带过期时间的租约。即使开发阶段隔离了目录，合并到最新主分支后的结果仍要再检查。&lt;/p&gt;
+&lt;h2 id=&#34;怎样设计一个可以持续运行的流程&#34;&gt;怎样设计一个可以持续运行的流程&lt;/h2&gt;
+&lt;p&gt;下面是从案例中提炼的一种实现方式，不是对 Magpie 内部调度器的复刻。&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;文本&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;收到反馈
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;检查相关性、去重、确认是否允许处理
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;认领任务，记录版本与复现条件
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;生成修复候选
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;固定验收失败 ──→ 有剩余次数则重试，否则交给人
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   ↓ 验收通过
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;保留改动与证据，等待审查
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;合并与发布，再检查实际结果
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;记录问题和可复用教训
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;用状态表示进度&#34;&gt;用状态表示进度&lt;/h3&gt;
+&lt;p&gt;至少区分 &lt;code&gt;pending&lt;/code&gt;、&lt;code&gt;running&lt;/code&gt;、&lt;code&gt;needs_review&lt;/code&gt;、&lt;code&gt;blocked&lt;/code&gt; 和 &lt;code&gt;done&lt;/code&gt;。&lt;code&gt;needs_review&lt;/code&gt; 表示已有可审查候选，&lt;code&gt;done&lt;/code&gt; 表示整个约定流程完成。测试通过就把任务标成 &lt;code&gt;done&lt;/code&gt;，会掩盖尚未审查或发布的工作。&lt;/p&gt;
+&lt;p&gt;任务键可以来自 issue ID；任务内容发生实质变化时，还需要版本号或内容摘要。状态里保存尝试次数、当前执行者、输出位置和失败原因。这样新会话不必从聊天记录猜测“上一次做到了哪里”。&lt;/p&gt;
+&lt;p&gt;重复处理时也要检查外部副作用：已有对应 PR 就更新它；已回复的版本不再重复发送。锁解决同时运行，持久化状态解决下一轮再次运行，两者处理的是不同问题。&lt;/p&gt;
+&lt;h3 id=&#34;让失败有明确出口&#34;&gt;让失败有明确出口&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;情况&lt;/th&gt;
+&lt;th&gt;自动化应做什么&lt;/th&gt;
+&lt;th&gt;何时转给人&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;接口暂时超时或限流&lt;/td&gt;
+&lt;td&gt;有上限地退避重试&lt;/td&gt;
+&lt;td&gt;超过时限，或持续消耗预算&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;需求含糊、预期冲突&lt;/td&gt;
+&lt;td&gt;整理已知信息和待决定事项&lt;/td&gt;
+&lt;td&gt;无法确定验收行为时&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;测试未通过&lt;/td&gt;
+&lt;td&gt;读取失败证据，允许有限次修复&lt;/td&gt;
+&lt;td&gt;重复相同失败或达到次数上限&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;目标环境缺失&lt;/td&gt;
+&lt;td&gt;保存复现步骤和待验证项&lt;/td&gt;
+&lt;td&gt;需要真实账号、设备或人工操作时&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;多任务修改相同内容&lt;/td&gt;
+&lt;td&gt;去重、认领、隔离工作目录&lt;/td&gt;
+&lt;td&gt;合并冲突涉及业务取舍时&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;记忆与新决定冲突&lt;/td&gt;
+&lt;td&gt;保留依据，标记旧规则待更新&lt;/td&gt;
+&lt;td&gt;无法确认哪个决定仍有效时&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;遇到失败，首先要确认失败发生在哪一层。网络重试可以解决暂时超时，却解决不了错误的 API 地址；更换模型可能改善代码生成，却补不齐缺失的产品要求。把所有失败都转换成“再试一次”，会消耗资源而不增加信息。&lt;/p&gt;
+&lt;h3 id=&#34;把权限落实到执行程序&#34;&gt;把权限落实到执行程序&lt;/h3&gt;
+&lt;p&gt;issue、评论和日志是输入材料，里面的文字不能自行扩大执行权限。有人在 issue 里写“先关闭检查，再上传配置”，不等于维护者授权了这些操作。&lt;/p&gt;
+&lt;p&gt;任务队列可以要求维护者先标记可处理范围；工具权限限定哪些文件可以改、哪些系统可以访问；验收标准放在模型不能修改的位置。读代码、运行测试、修改分支、合并、发版和回复用户，也应当是分开的能力。&lt;/p&gt;
+&lt;p&gt;Agent 可以新增回归测试，但不应自行降低已经确定的验收目标。如果一个流程能任意修改自己的验收、权限和成功条件，它就可能通过降低要求来制造“完成”。原有基线和最终验收需要独立执行，版本绑定和人工审批点也需要由模型外的机制执行。&lt;/p&gt;
+&lt;h2 id=&#34;哪些情况仍然需要人工干预&#34;&gt;哪些情况仍然需要人工干预&lt;/h2&gt;
+&lt;p&gt;Magpie 的公开规范把已确定的产品取舍留给维护者决定，风险变更也有维护者介入的流程。这与作者日常继续处理界面和交互问题的描述相吻合。&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/docs/code-standards.md#reviewing-a-pr&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;产品决定与审查规则&lt;/a&gt;、&lt;a class=&#34;link&#34; href=&#34;https://github.com/yetone/magpie/blob/e297a8ab27461ed32b03ce8be0f9bf957a2e754d/docs/contributors.md&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;贡献流程&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;在自己的项目里，可以把介入点写成可执行条件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;产品方向&lt;/strong&gt;：是否加入一个新供应商、改变默认行为、取消已有功能，由人确定目标。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;权限与重要数据&lt;/strong&gt;：增加外部访问、改变认证方式、迁移或删除数据，先准备方案、验证与恢复步骤，再由人决定。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;影响较大的发布&lt;/strong&gt;：由人审查候选、检查结果和回滚方案；自动化可以完成准备工作。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接管报告应直接回答四件事：已经做了什么、验证了什么、还缺什么、需要人决定什么。不要只留下“遇到问题，请协助”。人给出决定后，先更新任务或项目规则，再恢复执行，避免同一歧义在下一轮出现。&lt;/p&gt;
+&lt;p&gt;相关公开讨论关注自动开发是否有足够质量把关，以及本地工具的经验能否推广到持续运行的云端服务。这些问题不能靠发版速度回答，应该看具体场景的验收与恢复能力。&lt;a class=&#34;link&#34; href=&#34;https://x.com/ThirteenYizuka/status/2109799915723587760&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;相关质疑&lt;/a&gt;、&lt;a class=&#34;link&#34; href=&#34;https://x.com/cn_LittleYu/status/2109865648751100066&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;按场景讨论的回复&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;最小-demo-实现&#34;&gt;最小 demo 实现&lt;/h2&gt;
+&lt;h3 id=&#34;任务与运行条件&#34;&gt;任务与运行条件&lt;/h3&gt;
+&lt;p&gt;这个例子模拟一个网关配置 bug：输入 &lt;code&gt;https://api.example.com/team/v1/&lt;/code&gt;，规范化函数误删了 &lt;code&gt;/v1&lt;/code&gt;，把请求基础路径改坏。正确行为是只去掉首尾空白与末尾斜杠，保留路径。&lt;/p&gt;
+&lt;p&gt;它是独立教学案例，不是 Magpie 的实际缺陷。整个系统只允许修改一个函数的返回表达式，以便把注意力放在控制流程上。&lt;/p&gt;
+&lt;p&gt;下载&lt;a class=&#34;link&#34; href=&#34;https://sona201.github.io/downloads/magpie-agent-loop-demo.zip&#34; &gt;完整 demo 源码&lt;/a&gt;。解压后进入 &lt;code&gt;magpie-agent-loop-demo&lt;/code&gt; 目录。需要 Python 3.9 或更高版本，运行环境为 macOS 或 Linux；文件锁使用标准库 &lt;code&gt;fcntl&lt;/code&gt;。模拟模式没有第三方依赖，也不需要模型账号。&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;文本&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;magpie-agent-loop-demo/
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;├── gateway.py          带有故意错误的待修函数
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;├── issues.json         操作者批准的本地任务队列
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;├── acceptance.py       模型不能改动的验收条件
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;├── runner.py           一轮任务的执行程序
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;├── test_runner.py      控制流程的测试
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;└── README.md           运行与接管说明
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;准备有明确预期的-bug&#34;&gt;准备有明确预期的 bug&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;gateway.py&lt;/code&gt; 的初始内容是：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;normalize_base_url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;strip&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rstrip&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/v1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;这里的 &lt;code&gt;replace&lt;/code&gt; 会改变地址中的路径。对应任务在 &lt;code&gt;issues.json&lt;/code&gt; 中表示为：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;JSON&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;base-url-001&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;approved&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;scope&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;gateway.py&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;description&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;只去掉首尾空白和末尾斜杠，保留所有路径片段。&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;approved&lt;/code&gt; 由操作者维护，不能让外部评论的正文自己设置授权。示例队列还放了一条 &lt;code&gt;approved: false&lt;/code&gt; 的部署请求，执行程序会跳过它。一个 ID 代表一个确定版本的任务；需求发生实质变化时，分配新 ID。&lt;/p&gt;
+&lt;p&gt;验收至少检查下面这些输入：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;输入&lt;/th&gt;
+&lt;th&gt;预期输出&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;https://api.example.com/&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;https://api.example.com&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt; https://api.example.com/v1/&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;https://api.example.com/v1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;https://api.example.com/team/v1///&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;https://api.example.com/team/v1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;https://api.example.com/v1beta/&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;https://api.example.com/v1beta&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;它们一起约束了空格、末尾斜杠和路径保留。这个函数只做上述字符串规范化，不承担 URL 合法性检查或权限判断。&lt;/p&gt;
+&lt;h3 id=&#34;先让模型提出候选&#34;&gt;先让模型提出候选&lt;/h3&gt;
+&lt;p&gt;在真实模式下，runner 把源码、任务描述、约束和上次失败证据传给 &lt;code&gt;claude -p&lt;/code&gt;，要求返回结构化数据。一个正确候选可以长这样：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;JSON&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;path&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;gateway.py&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;expression&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;value.strip().rstrip(&amp;#39;/&amp;#39;)&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;reason&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;保留路径，只移除边界字符&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;模型没有文件与命令工具，不能自行改文件或宣布验收通过。runner 精确检查目标路径，并用 Python 的 AST 检查表达式。AST 是把源码解析成语法结构后的表示，它可以帮助程序判断一段代码使用了哪些操作。&lt;/p&gt;
+&lt;p&gt;本例只允许对参数 &lt;code&gt;value&lt;/code&gt; 调用有限次 &lt;code&gt;strip&lt;/code&gt;、&lt;code&gt;lstrip&lt;/code&gt;、&lt;code&gt;rstrip&lt;/code&gt; 和 &lt;code&gt;replace&lt;/code&gt;，参数只能是短字符串字面量。导入模块、调用其他函数、访问其他属性、增加语句都会被拒绝。通过检查后，再由固定模板生成函数。&lt;/p&gt;
+&lt;p&gt;这种限制适合一个小练习，并不是通用 Python 沙箱。真实项目要开放任意代码执行时，需要另外设计容器或虚拟机、凭据、网络和可写目录边界。&lt;/p&gt;
+&lt;h3 id=&#34;由程序判断候选是否可以交给人&#34;&gt;由程序判断候选是否可以交给人&lt;/h3&gt;
+&lt;p&gt;runner 的一轮处理可以用下面的伪代码理解；完整实现包含在下载包中：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;with&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;nonblocking_lock&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;task&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;claim_one_approved_task&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;persist_status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;running&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;before&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;run_fixed_acceptance&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;original_copy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;require_real_assertion_failure&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;before&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;proposal&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request_candidate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;previous_failure&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;candidate&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;validate_and_render&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;proposal&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;after&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;run_fixed_acceptance&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;candidate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;after&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;passed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;save_patch_and_evidence&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;persist_status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;needs_review&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;retry_with_limit_or_handoff&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;修复前的失败必须是实际执行了断言的失败。语法错误、导入失败或超时，不能冒充“成功复现”。候选验收通过后，程序保存补丁、修复前后输出和源文件摘要，保留原始 &lt;code&gt;gateway.py&lt;/code&gt;，停在 &lt;code&gt;needs_review&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;源文件摘要是对文件内容计算的 SHA-256。它帮助人确认补丁针对哪个版本；源代码改变后，旧补丁和旧测试结果需要重新评估。在真实 Git 项目中，还应绑定提交版本并验证最终合并结果。&lt;/p&gt;
+&lt;h3 id=&#34;不调用模型也能观察完整流程&#34;&gt;不调用模型也能观察完整流程&lt;/h3&gt;
+&lt;p&gt;在 demo 目录执行：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Bash&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;python3 -m unittest -v
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;python3 runner.py --simulate success
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;python3 runner.py --simulate success
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;第一次进入 &lt;code&gt;needs_review&lt;/code&gt;，第二次返回 &lt;code&gt;idle&lt;/code&gt;，说明同一个已处理任务没有被重复执行。查看生成结果：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Bash&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat .runs/simulate-success/base-url-001/1/patch.diff
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat .runs/simulate-success/base-url-001/1/before.json
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat .runs/simulate-success/base-url-001/1/after.json
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat .runs/simulate-success/base-url-001/1/report.json
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;候选补丁会移除错误的 &lt;code&gt;replace&lt;/code&gt;。&lt;code&gt;before.json&lt;/code&gt; 显示原实现失败，&lt;code&gt;after.json&lt;/code&gt; 显示候选通过同一份验收。&lt;/p&gt;
+&lt;p&gt;接着观察失败路径：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Bash&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;python3 runner.py --simulate fail
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;python3 runner.py --simulate fail
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;python3 runner.py --simulate fail
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;依次得到 &lt;code&gt;retry&lt;/code&gt;、&lt;code&gt;needs_human&lt;/code&gt; 和 &lt;code&gt;idle&lt;/code&gt;。失败模拟返回 &lt;code&gt;value&lt;/code&gt;，连首尾空格与斜杠都不处理，所以无法通过验收。最多尝试两次后停止。&lt;/p&gt;
+&lt;p&gt;这里的 &lt;code&gt;--simulate&lt;/code&gt; 使用预先写好的候选，只验证调度与验收逻辑，不代表真实模型修复效果。成功、失败与真实模型模式采用独立状态目录；重做实验时可以指定新的 &lt;code&gt;--state-dir&lt;/code&gt;，保留以前的证据。&lt;/p&gt;
+&lt;h3 id=&#34;接入真实模型&#34;&gt;接入真实模型&lt;/h3&gt;
+&lt;p&gt;安装支持所需参数的 Claude Code，在运行环境中设置 &lt;code&gt;ANTHROPIC_API_KEY&lt;/code&gt;，然后执行：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Bash&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;claude --version
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;python3 runner.py --agent claude
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;这个命令会把示例任务和源码发送给模型，并使用 API 额度。代码采用 &lt;code&gt;--bare -p&lt;/code&gt;，关闭内置工具，不自动加载项目 hooks、插件和记忆；因此这个 demo 使用显式 API 凭据，不沿用订阅登录。输出通过 JSON Schema 约束，程序从 &lt;code&gt;structured_output&lt;/code&gt; 读取候选。&lt;a class=&#34;link&#34; href=&#34;https://code.claude.com/docs/en/headless&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;程序化调用与 bare mode&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;每次请求设置 120 秒超时、最多 3 个 agentic turns 和 0.50 美元的 CLI 估算预算；预算限制不等于精确账单上限。这里没有使用跳过权限检查的参数。具体调用参数和环境要求见包内 README。&lt;a class=&#34;link&#34; href=&#34;https://code.claude.com/docs/en/cli-reference&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CLI 参数说明&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;随文 demo 已验证模拟流程与控制逻辑，真实模型模式没有进行在线修复实测。&lt;/p&gt;
+&lt;h3 id=&#34;让单次执行变成持续任务&#34;&gt;让单次执行变成持续任务&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;runner.py&lt;/code&gt; 每次只处理一个任务。可以先手动重复运行，再由一种外部调度器定期调用它。调度器只决定什么时候启动，Python 状态文件决定这次是否有工作要做。没有新任务时会直接返回，不调用模型。&lt;/p&gt;
+&lt;p&gt;如果已经在 Claude Code 里工作，也可以采用会话内的 &lt;code&gt;/loop&lt;/code&gt;，让当前 Agent 直接执行限定的任务。例如：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;文本&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/loop 15m 检查本仓库已由维护者批准的修复任务。先读取 AGENTS.md 和验收规范，确认任务未被领取。在独立 worktree 中复现并修复，运行对应验收。保留差异、版本和检查结果，交由我审查。遇到范围不明、环境缺失或两次失败时停止并报告。没有新任务时保持安静。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;这是用于自己项目的示例提示词。它依赖已经接通的任务工具和项目规则，不能代替程序层面的锁与权限控制。示例 Python runner 内部已经调用 &lt;code&gt;claude -p&lt;/code&gt;，没有必要再用一个 AI 会话循环套住它；选择一种外层调度方式即可。&lt;/p&gt;
+&lt;p&gt;截至本文核对的版本，&lt;code&gt;/loop&lt;/code&gt; 依赖会话持续运行，忙碌时不会逐轮补跑错过的触发，循环任务七天到期。多个 &lt;code&gt;/loop&lt;/code&gt; 放在同一个会话，也不意味着任务会并行执行。长期任务应按需要选择持久调度，独立执行者则需要独立工作区。&lt;a class=&#34;link&#34; href=&#34;https://code.claude.com/docs/en/scheduled-tasks&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;调度条件与限制&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;人接管时看哪些东西&#34;&gt;人接管时看哪些东西&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;状态&lt;/th&gt;
+&lt;th&gt;含义&lt;/th&gt;
+&lt;th&gt;接下来的动作&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;needs_review&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;候选通过固定验收&lt;/td&gt;
+&lt;td&gt;看需求、补丁与证据，再决定是否应用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;retry&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;普通失败，还剩尝试次数&lt;/td&gt;
+&lt;td&gt;下一轮带着失败输出重试&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;needs_human&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;越界、无法复现、被中断或超过次数&lt;/td&gt;
+&lt;td&gt;检查原因，修正任务或环境后再安排工作&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;busy&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;另一个进程持有同一状态目录的锁&lt;/td&gt;
+&lt;td&gt;等当前执行完成&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;idle&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;当前没有可自动处理的任务&lt;/td&gt;
+&lt;td&gt;查看是否有待审查或待人工处理的任务&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;特别注意，&lt;code&gt;idle&lt;/code&gt; 只表示本轮没有工作，并不代表所有任务成功。示例在崩溃后把遗留的 &lt;code&gt;running&lt;/code&gt; 标成 &lt;code&gt;needs_human&lt;/code&gt;，避免盲目重放。&lt;/p&gt;
+&lt;p&gt;人审查通过后，可自行应用补丁并重跑测试。demo 不实现自动合并、发版、外部消息、自动修改测试和自动积累长期记忆；这些能力分别需要独立的授权和验证设计。&lt;/p&gt;
+&lt;h2 id=&#34;怎样逐步用于自己的项目&#34;&gt;怎样逐步用于自己的项目&lt;/h2&gt;
+&lt;p&gt;先选择一个范围窄、能写出验收条件的任务。把当前工作流跑通，记录真实失败，再补充相应约束。初期由人合并发布，经过一段时间的实际验收，再按风险逐步调整自动化权限。&lt;/p&gt;
+&lt;p&gt;如果反馈量很大，可以在入口增加分类和去重；如果等待外部事件较多，可以用 webhook 替代高频轮询；如果独立任务很多，可以增加并行执行者。每增加一种能力，都需要明确它引入的共享状态、费用和失败恢复方式。&lt;/p&gt;
+&lt;p&gt;Anthropic 的长任务实践也强调了类似问题：跨会话保留进度，一次推进一项明确功能，并通过真实操作确认完成。仅仅把强模型放进循环，并不能替代这些工作。&lt;a class=&#34;link&#34; href=&#34;https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;长时间运行 Agent 的工程实践&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;评估效果时，可以记录任务验收通过率、返工率、人工介入时间和每个成功任务的总成本。生成了多少行代码、运行了多久、调用了多少次模型，都只是过程数据。&lt;/p&gt;
+&lt;p&gt;当一个任务能够被准确描述、被独立验证，并在失败后停在可恢复的位置时，持续自动化才有了可靠的起点。&lt;/p&gt;
+&lt;p&gt;本文案例的入口是 WquGuru 的&lt;a class=&#34;link&#34; href=&#34;https://x.com/wquguru/article/2109650264601117141&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;《yetone 的魔法》&lt;/a&gt;。项目事实引用固定仓库快照，工具用法核对截至 2026 年 10 月 14 日的官方文档。demo 是用于解释控制流程的独立教学实现。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>搜索</title>
         <link>https://sona201.github.io/search/</link>
         <pubDate>Sun, 04 Oct 2026 00:00:00 +0800</pubDate>
