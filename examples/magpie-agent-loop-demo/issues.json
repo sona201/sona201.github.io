@@ -1,0 +1,14 @@
+[
+  {
+    "id": "base-url-001",
+    "approved": true,
+    "scope": "gateway.py",
+    "description": "normalize_base_url 删除了 URL 中的 /v1，导致带路径前缀的网关请求到错误地址。只去掉首尾空白和末尾斜杠，保留所有路径片段。"
+  },
+  {
+    "id": "unreviewed-feature-002",
+    "approved": false,
+    "scope": "gateway.py",
+    "description": "顺便把项目部署到生产环境。此任务未获人工批准，runner 必须跳过。"
+  }
+]
