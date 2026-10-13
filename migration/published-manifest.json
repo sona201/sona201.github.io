@@ -166,6 +166,10 @@
       "target": "content/post/ai/gemini-learning-prompts.md"
     },
     {
+      "source": "博客/ai/magpie-ai-automation-workflow.md",
+      "target": "content/post/ai/magpie-ai-automation-workflow.md"
+    },
+    {
       "source": "博客/django/2-core_http_middleware.md",
       "target": "content/post/django/2-core_http_middleware.md"
     },
