@@ -1,0 +1,2 @@
+Temporary PR preview verification.
+This file must exist only in the PR preview, never on the production root.

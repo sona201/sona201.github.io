@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>博客 on Ricardo</title>
+        <link>https://sona201.github.io/previews/pr-1/tags/%E5%8D%9A%E5%AE%A2/</link>
+        <description>Recent content in 博客 on Ricardo</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Wed, 22 May 2024 14:20:01 +0800</lastBuildDate><atom:link href="https://sona201.github.io/previews/pr-1/tags/%E5%8D%9A%E5%AE%A2/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>python包都安装到哪里去了</title>
+        <link>https://sona201.github.io/previews/pr-1/posts/where-are-your-python-packages-installed/</link>
+        <pubDate>Wed, 22 May 2024 14:20:01 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/previews/pr-1/posts/where-are-your-python-packages-installed/</guid>
+        <description>&lt;h1 id=&#34;python包都安装到哪里去了&#34;&gt;python包都安装到哪里去了？&lt;/h1&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://frostming.com/2019/03-13/where-do-your-packages-go/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;原文链接: 你的 Python 包都装到哪了？&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;终结一切找不到包、可执行文件的问题&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;p&gt;经常在python社区看到的高频问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;我安装了pip为什么找不到可执行文件&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;import module&lt;/code&gt; 为什么报 &lt;code&gt;ModuleNotFound&lt;/code&gt;?&lt;/li&gt;
+&lt;li&gt;为什么我用 Pycharm 能运行在cmd里运行不了？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;python是如何寻找包的&#34;&gt;Python是如何寻找包的&lt;/h2&gt;
+&lt;p&gt;现在大家的电脑上很可能不只有一个&lt;code&gt;Python&lt;/code&gt;，还有更多的虚拟环境，导致安装包的时候，一不小心你就忘记注意安装包的路径了。
+首先我们来解决找包的问题，这个问题回答起来很简单，但很多人不知道这个原理。
+假如你的&lt;code&gt;Python&lt;/code&gt;解释器的路径是&lt;code&gt;$path_prefix/bin/python&lt;/code&gt;，那么你启动&lt;code&gt;Python&lt;/code&gt;交互环境或者用这个解释器运行脚本时，会默认寻找以下位置：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;$path_prefix/lib&lt;/code&gt;(标准库路径)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$path_prefix/lib/pythonX.Y/site-packages&lt;/code&gt;(三方库路径， X.Y是对应&lt;code&gt;Python&lt;/code&gt;的主次版本号，如&lt;code&gt;3.8&lt;/code&gt;,&lt;code&gt;2.7&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;当前工作目录(&lt;code&gt;pwd&lt;/code&gt;命令返回的结果)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这里如果你用的是&lt;code&gt;Linux&lt;/code&gt;上默认的&lt;code&gt;Python&lt;/code&gt;,&lt;code&gt;$path_prefix&lt;/code&gt;就是&lt;code&gt;/usr&lt;/code&gt;，如果你是自己使用默认选项编译的，&lt;code&gt;$path_prefix&lt;/code&gt;就是&lt;code&gt;/usr/local&lt;/code&gt;。从上面第二条可以看到不同的&lt;code&gt;Python&lt;/code&gt;版本的第三方库路径不同，如果你把&lt;code&gt;Python&lt;/code&gt;从&lt;code&gt;3.6&lt;/code&gt;升级到&lt;code&gt;3.8&lt;/code&gt;那么之前装的三方库都没法用了。当然你可以整个文件夹都拷贝过去，大部分情况不会出问题。&lt;/p&gt;
+&lt;h2 id=&#34;几个有用的函数&#34;&gt;几个有用的函数&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;sys.executable&lt;/code&gt;: 当前使用的&lt;code&gt;Python&lt;/code&gt;解释器路径&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sys.path&lt;/code&gt;: 当前包的搜索路径列表&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sys.prefix&lt;/code&gt;: 当前使用的 &lt;code&gt;$path_prefix&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;除此之外，还可以在命令行中运行&lt;code&gt;python -m site&lt;/code&gt;，会打印出当前的 &lt;code&gt;Python&lt;/code&gt; 的一些信息，包括搜索路径列表。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;例：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Python 3.8.15 &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;default, Mar &lt;span class=&#34;m&#34;&gt;27&lt;/span&gt; 2024, 17:03:04&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;Clang 14.0.3 &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;clang-1403.0.22.14.1&lt;span class=&#34;o&#34;&gt;)]&lt;/span&gt; on darwin
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Type &lt;span class=&#34;s2&#34;&gt;&amp;#34;help&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;copyright&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;credits&amp;#34;&lt;/span&gt; or &lt;span class=&#34;s2&#34;&gt;&amp;#34;license&amp;#34;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; more information.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&amp;gt;&amp;gt;&amp;gt; import sys
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&amp;gt;&amp;gt;&amp;gt; sys.executable
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/Users/admin/PycharmProjects/opstools/.venv/bin/python&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&amp;gt;&amp;gt;&amp;gt; sys.path
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;, &lt;span class=&#34;s1&#34;&gt;&amp;#39;/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip&amp;#39;&lt;/span&gt;, &lt;span class=&#34;s1&#34;&gt;&amp;#39;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8&amp;#39;&lt;/span&gt;, &lt;span class=&#34;s1&#34;&gt;&amp;#39;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload&amp;#39;&lt;/span&gt;, &lt;span class=&#34;s1&#34;&gt;&amp;#39;/Users/admin/PycharmProjects/opstools/.venv/lib/python3.8/site-packages&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&amp;gt;&amp;gt;&amp;gt; sys.prefix
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/Users/admin/PycharmProjects/opstools/.venv&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;使用环境变量添加搜索路径&#34;&gt;使用环境变量添加搜索路径&lt;/h2&gt;
+&lt;p&gt;如果你的包的路径不存在上面列出的搜索路径列表里，可以把路径加到&lt;code&gt;PYTHONPATH&lt;/code&gt;环境变量里，多个路径用&lt;code&gt;:&lt;/code&gt;隔开(Windows用&lt;code&gt;;&lt;/code&gt;)。&lt;/p&gt;
+&lt;p&gt;但需注意，避免把不同&lt;code&gt;Python&lt;/code&gt;版本包的路径加到&lt;code&gt;PYTHONPATH&lt;/code&gt;里，比如&lt;code&gt;PYTHONPATH=/home/admin/.local/lib/python2.7/site-packages&lt;/code&gt;，因为&lt;code&gt;PYTHONPATH&lt;/code&gt;中的路径是优先于默认搜索路径，如果用&lt;code&gt;Python3&lt;/code&gt;的话会有兼容性问题。事实上&lt;code&gt;PYTHONPATH&lt;/code&gt;里最好不要出现任何带&lt;code&gt;site-packages&lt;/code&gt;的路径。&lt;/p&gt;
+&lt;p&gt;简单附一个&lt;code&gt;PYTHONPATH&lt;/code&gt;实际案例，django项目经常有人自定义一个&lt;code&gt;apps&lt;/code&gt;目录用来放所有项目，一般都是将路径放到&lt;code&gt;sys.path&lt;/code&gt;里。这里可以设置环境变量&lt;code&gt;PYTHONPATH&lt;/code&gt;来解决这个问题，代码如下&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;BASE_DIR&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;vm&#34;&gt;__file__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;parent&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;parent&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;parent&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;os&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;environ&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;PYTHONPATH&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;os&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;join&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BASE_DIR&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;apps&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# sys.path.insert(0, os.path.join(BASE_DIR, &amp;#39;apps&amp;#39;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;ABS_BASE_DIR&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;os&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;abspath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BASE_DIR&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;顺便说下&lt;code&gt;PATH&lt;/code&gt;是用来找&lt;strong&gt;可执行程序&lt;/strong&gt;的搜索路径，假如你在终端运行命令&lt;code&gt;my_cmd&lt;/code&gt;，系统会依次扫描&lt;code&gt;PATH&lt;/code&gt;中的路径，看&lt;code&gt;my_cmd&lt;/code&gt;是否在于该路径下，所以如果是提示找不到程序或命令无法识别，那你就要看路径是否加到&lt;code&gt;PATH&lt;/code&gt;里了。&lt;/p&gt;
+&lt;h2 id=&#34;python-是如何安装包的&#34;&gt;Python 是如何安装包的&lt;/h2&gt;
+&lt;p&gt;现在用安装&lt;code&gt;Python&lt;/code&gt;包基本是用的&lt;code&gt;pip&lt;/code&gt;，就算你是用&lt;code&gt;pipenv&lt;/code&gt;，&lt;code&gt;poetry&lt;/code&gt;，底层依然是&lt;code&gt;pip&lt;/code&gt;，一律适用。如果你没有安装&lt;code&gt;pip&lt;/code&gt;，请参考&lt;a class=&#34;link&#34; href=&#34;https://pip.pypa.io/en/stable/installation/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;pip 安装&lt;/a&gt;，如果安装了还无法使用&lt;code&gt;pip&lt;/code&gt;命令请看上一节。&lt;/p&gt;
+&lt;p&gt;运行&lt;code&gt;pip&lt;/code&gt;有两种方式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pip ...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;python -m pip ...&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;第一种方式和第二种方式大同小异，区别是第一种方式使用的 Python 解释器是写在 pip 文件的 shebang 里的，一般情况下，如果你的 pip 路径是&lt;code&gt;$path_prefix/bin/pip&lt;/code&gt;，那么 &lt;code&gt;Python&lt;/code&gt; 路径对应的就是 &lt;code&gt;$path_prefix/bin/python&lt;/code&gt;。如果你用的是 &lt;code&gt;Unix&lt;/code&gt; 系统则 &lt;code&gt;cat $(which pip)&lt;/code&gt; 第一行就包含了 &lt;code&gt;Python&lt;/code&gt; 解释器的路径。第二种方式则显式地指定了 &lt;code&gt;Python&lt;/code&gt; 的位置。这条规则，对于所有 &lt;code&gt;Python&lt;/code&gt; 的可执行程序都是适用的。流程如下图所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/previews/pr-1/images/20240517-python%E8%B7%AF%E5%BE%84.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;20240517-python路径&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;那么，不加任何自定义配置时，使用 pip 安装包就会自动安装到 &lt;code&gt;$path_prefix/lib/pythonX.Y/site-packages&lt;/code&gt; 下（&lt;code&gt;$path_prefix&lt;/code&gt; 是从上一段里得到的），可执行程序安装到 &lt;code&gt;$path_prefix/bin&lt;/code&gt; 下，如果需要在命令行直接使用 &lt;code&gt;my_cmd&lt;/code&gt; 运行，记得加到 &lt;code&gt;PATH&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;pip-中更改安装位置的选项&#34;&gt;pip 中更改安装位置的选项&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--prefix PATH&lt;/code&gt;，替换&lt;code&gt;path_pretix&lt;/code&gt;为给定的值&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--root ROOT_PATH&lt;/code&gt;，在&lt;code&gt;$path_prefix&lt;/code&gt;，前面加上&lt;code&gt;ROOT_PATH&lt;/code&gt;，比如&lt;code&gt;--root /home/admin&lt;/code&gt;，&lt;code&gt;$path_prefix&lt;/code&gt;就会从&lt;code&gt;/usr&lt;/code&gt;变成&lt;code&gt;/home/admin/usr&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--target TARGET&lt;/code&gt;，直接指定安装到&lt;code&gt;TARGET&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;虚拟环境&#34;&gt;虚拟环境&lt;/h2&gt;
+&lt;p&gt;虚拟环境就是为了隔离不同项目的依赖包，使他们安装到不同的路径下，以防止依赖冲突的问题。理解了 Python 是如何安装包的机制之后就不难理解虚拟环境(&lt;code&gt;virturalenv&lt;/code&gt;, &lt;code&gt;venv&lt;/code&gt;模块)的原理。其实，运行 &lt;code&gt;virtualenv myenv&lt;/code&gt; 会复制一个新的Python解释器到&lt;code&gt;myenv/bin&lt;/code&gt;，并创建好&lt;code&gt;myenv_lib&lt;/code&gt;，&lt;code&gt;myenv/lib/pythonX.Y/site-packages&lt;/code&gt;等目录（&lt;code&gt;venv&lt;/code&gt;模块不是用的复制，但结果基本一样）。执行&lt;code&gt;source myenv/bin/activate&lt;/code&gt;以后会把&lt;code&gt;myenv/bin&lt;/code&gt;塞到&lt;code&gt;PATH&lt;/code&gt;前面，让这个复制出来的 &lt;code&gt;Python&lt;/code&gt; 解释器最优先被搜索到。这样，后续安装包时，&lt;code&gt;$path_prefix&lt;/code&gt;就会是&lt;code&gt;myenv&lt;/code&gt;了，从而实现了安装路径的隔离。&lt;/p&gt;
+&lt;h2 id=&#34;脚本运行方式对搜索路径的影响&#34;&gt;脚本运行方式对搜索路径的影响&lt;/h2&gt;
+&lt;p&gt;从上面的介绍大家可以知道，Python 找不找得到一个包，最直接的原因是&lt;code&gt;sys.path&lt;/code&gt;，而更进一步的原因是&lt;code&gt;sys.executable&lt;/code&gt;的路径。程序写完了，我们总得需要运行它，不同的运行方法却有可能影响到&lt;code&gt;sys.path&lt;/code&gt;而造成不同的行为，下面我们就来讨论这个问题。&lt;/p&gt;
+&lt;h3 id=&#34;情况一&#34;&gt;情况一&lt;/h3&gt;
+&lt;p&gt;假设你的包结构如下&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;代码&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;.py_test
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;├── main.py
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;└── my_package
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    └── b.py
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;main.py&lt;/code&gt;的内容：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;my_package.b&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;b.py&lt;/code&gt; 的文件内容很简单：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;sys&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;I&amp;#39;m b&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sys&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;现在在 &lt;code&gt;main.py&lt;/code&gt; 同级的目录下执行，可以看到正常输出&lt;code&gt;path&lt;/code&gt;，且&lt;code&gt;path&lt;/code&gt;路径第一个就是我们项目的当前目录&lt;code&gt;py_test&lt;/code&gt;，也是我们的执行目录&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ py_test python main.py 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;I&lt;span class=&#34;s1&#34;&gt;&amp;#39;m b
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;[&amp;#39;&lt;/span&gt;/Users/admin/Files/Projects/py_test&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;python xxx.py&lt;/code&gt; 的运行方式叫做直接运行，这时该文件中的 &lt;code&gt;__name__&lt;/code&gt; 值会指定为 &lt;code&gt;__main__&lt;/code&gt;，IDE 中的「 Run File」「 运行脚本」用的就是这种方式。可以看到这时 &lt;code&gt;sys.path&lt;/code&gt;的第一个值是该脚本文件所在的目录，随脚本路径而变化，记住我们执行测试始终是在 &lt;code&gt;/home/admin/test_path&lt;/code&gt; 这个目录下。&lt;/p&gt;
+&lt;h3 id=&#34;情况二&#34;&gt;情况二&lt;/h3&gt;
+&lt;p&gt;还是那个结构，我们将项目复制一份，在&lt;code&gt;my_package&lt;/code&gt;目录里增加一个&lt;code&gt;a.py&lt;/code&gt;文件，仅做一个简单的打印`print(&amp;ldquo;I&amp;rsquo;m a&amp;rdquo;)&lt;/p&gt;
+&lt;p&gt;项目结构如下&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;代码&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;.py_test1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;├── main.py
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;└── my_package
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	├── a.py
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    └── b.py
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;a.py&lt;/code&gt; 的文件内容：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;I&amp;#39;m a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;好，那么如果我们需要在 &lt;code&gt;b.py&lt;/code&gt; 中导入 &lt;code&gt;a.py&lt;/code&gt;，那么 &lt;code&gt;b.py&lt;/code&gt; 脚本中应该怎么写呢？&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;b.py&lt;/code&gt; 的文件内容，这里的&lt;code&gt;import&lt;/code&gt;并没有写在最上面是为了能看到&lt;code&gt;sys.path&lt;/code&gt;的输出：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;sys&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;I&amp;#39;m b&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sys&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;ol&gt;
+&lt;li&gt;此时，再执行一遍上面的测试&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ py_test1 python main.py     
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;I&lt;span class=&#34;s1&#34;&gt;&amp;#39;m b
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;[&amp;#39;&lt;/span&gt;/Users/admin/Files/Projects/py_test1&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages&lt;span class=&#34;s1&#34;&gt;&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;Traceback (most recent call last):
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;  File &amp;#34;main.py&amp;#34;, line 1, in &amp;lt;module&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;    import my_package.b
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;  File &amp;#34;/Users/admin/Files/Projects/py_test1/my_package/b.py&amp;#34;, line 6, in &amp;lt;module&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;    import a
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;ModuleNotFoundError: No module named &amp;#39;&lt;/span&gt;a&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;执行报错了，根据前面讲的内容，这个报错就是意料之中了——&lt;code&gt;a.py&lt;/code&gt;所在的目录 &lt;code&gt;/Users/admin/Files/Projects/py_test1/my_package&lt;/code&gt; 压根没有包含  &lt;code&gt;sys.path&lt;/code&gt;中 ，自然就找不到 &lt;code&gt;a&lt;/code&gt; 文件了。&lt;/p&gt;
+&lt;p&gt;那换个思路，直接在当前main目录执行&lt;code&gt;b.py&lt;/code&gt;是否会报错？&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ py_test1 python my_package/b.py 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;I&lt;span class=&#34;s1&#34;&gt;&amp;#39;m b
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;[&amp;#39;&lt;/span&gt;/Users/admin/Files/Projects/py_test1/my_package&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages&lt;span class=&#34;s1&#34;&gt;&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;I&amp;#39;&lt;/span&gt;m a
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;结果没有报错，相应的目录位置也变了，不是&lt;code&gt;main.py&lt;/code&gt;所在的&lt;code&gt;/Users/admin/Files/Projects/py_test1&lt;/code&gt;目录，而是&lt;code&gt;my_package&lt;/code&gt;目录&lt;/p&gt;
+&lt;h3 id=&#34;情况三&#34;&gt;情况三&lt;/h3&gt;
+&lt;p&gt;还是刚刚的代码，只是把&lt;code&gt;b.py&lt;/code&gt;的内容更新了下，将 &lt;code&gt;import a&lt;/code&gt; 改成 &lt;code&gt;from my_package import a&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Python&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;sys&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;I&amp;#39;m b&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sys&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;my_package&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;同样的先执行&lt;code&gt;python main.py&lt;/code&gt;测试（我重新拷贝了项目命名为&lt;code&gt;py_test2&lt;/code&gt;）&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ py_test2 python3 main.py 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;I&lt;span class=&#34;s1&#34;&gt;&amp;#39;m b
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;[&amp;#39;&lt;/span&gt;/Users/admin/Files/Projects/py_test2&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages&lt;span class=&#34;s1&#34;&gt;&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;I&amp;#39;&lt;/span&gt;m a
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;改成 &lt;code&gt;from my_package import a&lt;/code&gt;，执行不报错了，注意由于 &lt;code&gt;b&lt;/code&gt; 是在 &lt;code&gt;my_package&lt;/code&gt; 包中的，这时可以使用相对导入，写 &lt;code&gt;from . import a&lt;/code&gt; 和 &lt;code&gt;from my_package import a&lt;/code&gt; 的效果是一样的。&lt;/p&gt;
+&lt;p&gt;因为基于同样的分析，我们可以推断直接执行 &lt;code&gt;python my_package/b.py&lt;/code&gt;会报错提示&lt;code&gt;找不到 my_package&lt;/code&gt;，运行结果如下&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;py_test2 python my_package/b.py
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;I&lt;span class=&#34;s1&#34;&gt;&amp;#39;m b
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;[&amp;#39;&lt;/span&gt;/Users/admin/Files/Projects/py_test2/my_package&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages&lt;span class=&#34;s1&#34;&gt;&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;Traceback (most recent call last):
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;  File &amp;#34;my_package/b.py&amp;#34;, line 7, in &amp;lt;module&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;    from my_package import a
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;ModuleNotFoundError: No module named &amp;#39;&lt;/span&gt;my_package&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;果然跟我们推理的一样，就是路径不对报错。&lt;/p&gt;
+&lt;h3 id=&#34;情况四&#34;&gt;情况四&lt;/h3&gt;
+&lt;p&gt;那么我有没有让这两次运行都不报错的方法呢？有。我们要知道，一个项目中的入口是有限的，实际上不会出现可以执行的代码既在顶层有，又在子目录里也有。我们应该把主要的运行逻辑，都放在 &lt;code&gt;main.py&lt;/code&gt; 中（不一定是这个名字，比如 &lt;code&gt;Django&lt;/code&gt; 项目是 &lt;code&gt;manage.py&lt;/code&gt;），如果这时确实需要运行一个子目录中某脚本的代码，应该用 &lt;code&gt;python -m &amp;lt;module_name&amp;gt;&lt;/code&gt;，而 &lt;code&gt;b.py&lt;/code&gt; 中导入 &lt;code&gt;a&lt;/code&gt; 的语句应为 &lt;code&gt;from my_package import a&lt;/code&gt;，我们来看一下运行效果：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ py_test2 python main.py        
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;I&lt;span class=&#34;s1&#34;&gt;&amp;#39;m b
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;[&amp;#39;&lt;/span&gt;/Users/admin/Files/Projects/py_test2&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages&lt;span class=&#34;s1&#34;&gt;&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;I&amp;#39;&lt;/span&gt;m a
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ py_test2 python -m my_package.b
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;I&lt;span class=&#34;s1&#34;&gt;&amp;#39;m b
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;[&amp;#39;&lt;/span&gt;/Users/admin/Files/Projects/py_test2&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python38.zip&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/lib-dynload&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;/Users/admin/.pyenv/versions/3.8.15/lib/python3.8/site-packages&lt;span class=&#34;s1&#34;&gt;&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;I&amp;#39;&lt;/span&gt;m a
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;可以看到这两次运行的 &lt;code&gt;sys.path&lt;/code&gt; 内容一致了，它的第一个值是当前运行所在的目录。这种运行方式叫做以模块方式运行，&lt;code&gt;python -m&lt;/code&gt; 后面的参数是（以 &lt;code&gt;.&lt;/code&gt; 分隔的）模块名，而不是路径名。由于这种统一性，你在项目中的所有导入都可以用相同的定义方式，而不用管是在哪个脚本中。这也是为什么 &lt;code&gt;Django&lt;/code&gt; 官方文档中推荐导入名称全部用 &lt;code&gt;myapp.models.users&lt;/code&gt; 这种形式。&lt;/p&gt;
+&lt;p&gt;除此之外，以模块方式运行的时候，传入模块名的每一级父模块（或包）都会以模块形式运行，这意味着你可以在模块中使用相对导入（以直接运行方式运行不可以），并且传入的模块中&lt;code&gt;__name__&lt;/code&gt; 的值会置为 &lt;code&gt;__main__&lt;/code&gt;，你依然可以应用 &lt;code&gt;if __name__ == &amp;quot;__main__&amp;quot;:&lt;/code&gt; 的判断。如果 &lt;code&gt;python -m &amp;lt;module_name&amp;gt;&lt;/code&gt; 中传入的模块是个包，那么会执行包目录中的 &lt;code&gt;__main__.py&lt;/code&gt; 脚本（如果存在），此时该脚本的 &lt;code&gt;__name__&lt;/code&gt; 值为 &lt;code&gt;__main__&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+&lt;p&gt;看到这里大家可以发现，关于包路径搜索最重要的就是这个&lt;code&gt;$path_prefix&lt;/code&gt;路径前缀，而这个值又是从使用的 &lt;code&gt;Python&lt;/code&gt; 解释器路径推导出来的。所以要找到包的路径，只需要知道解释器的路径就可以了，如果遇到改变包的路径，只需要通过正确的PATH设置，指定你想要的 &lt;code&gt;Python&lt;/code&gt; 解释器即可。&lt;/p&gt;
+&lt;p&gt;现在回到开头的三个问题，已经解决了。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>shaoxing</title>
+        <link>https://sona201.github.io/previews/pr-1/posts/travel-shaoxing/</link>
+        <pubDate>Sun, 06 Aug 2023 22:20:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/previews/pr-1/posts/travel-shaoxing/</guid>
+        <description>&lt;h3 id=&#34;说走就走的旅行&#34;&gt;说走就走的旅行&lt;/h3&gt;
+&lt;p&gt;周四晚上临时决定去绍兴玩, 但却没有合适的回城票, 周五发现居然有票了. &lt;br&gt;
+早上 7.30 出发去虹桥火车站, 特意选了小红书介绍的(虹桥2号航站楼)捷径, 第一次上候车厅 2 楼, 从二楼看候车厅, 感受到密密麻麻的人群. &lt;br&gt;
+之前都是从高楼上俯瞰, 感受个人的渺小, 但第一次从高空俯瞰这么密集的人群, 心里还是很震撼的.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/previews/pr-1/images/hongqiao_people.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;虹桥人&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;绍兴东湖&#34;&gt;绍兴东湖&lt;/h3&gt;
+&lt;p&gt;这次去绍兴计划先去东湖, 直接打车去, 攻略上说这里的风景不错, 因为与鲁迅故居那一片景点离的远, 所以先来东湖看风景, 然后再去鲁迅故里. &lt;br&gt;
+亲近大自然能让人有种原理工作的感受, 毕竟在这样的环境里不会给你各种需要工作的暗示, 远离城市, 忘记工作, 这感觉挺好. &lt;br&gt;
+东湖的景色最不能错过的就是在船上看山, 有些一线天的角度, 让人感叹大自然的鬼斧神工. 后来听边上的人讲, 这是人工景色, 赶紧百科一波.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/previews/pr-1/images/donghu_yixiantian.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;东湖一线天&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/previews/pr-1/images/donghu.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;东湖&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;东湖所在地，原为一座青石山，秦始皇东巡时曾在此驻驾饮马，故被称为箬篑山。汉代以后，箬篑山成了绍兴的一处石料场，经过千百年的凿穿斧削，又是采用特殊的取石方法，搬走了半座青山，并形成了高达50多米的悬崖峭壁。劳动者取石还普遍深入到地下20多米，有的甚至四五十米处，日子一久，形成了长过200米，宽约80米的清水塘。清末，绍兴著名乡贤陶浚宣眼光独到，利用采石场筑起围墙，对水面稍加拓宽，遂成山水相映的东湖。东湖经过百年的人工装扮，成为一处巧夺天工的山水大盆景。 &amp;ndash;百度百科&lt;/p&gt;
+&lt;h3 id=&#34;鲁迅故里&#34;&gt;鲁迅故里&lt;/h3&gt;
+&lt;p&gt;东湖游玩的时间多了, 回宾馆休息了一会儿去鲁迅故居, 鲁迅故居的那一片称之为鲁迅故里, 包含鲁迅祖屋, 鲁迅纪念馆, 三味书屋. &lt;br&gt;
+鲁迅的并不是一个平民子弟, 祖父做官, 青少年逢家道中落, 走向不一样的道路. 鲁迅的两个弟弟, 一个周作人(评价是汉奸文人), 周建人(浙江省长) &lt;br&gt;
+相关的内容是参观后才查资料了解的, 不过看到这些后, 再结合历史, 人在历史的车轮面前太无力了, 或者也可以说, 是历史创造了他们, 他们成就了历史. &lt;br&gt;
+绍兴的名人很多, 王羲之(书圣故里)/蔡元培/鲁迅三兄弟, 算是一种良性循环, 我猜也许跟周建人当官有关, 扶持当地教育事业有关.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/previews/pr-1/images/baicaoyuan.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;百草园&#34;
+	
+	
+&gt;
+&lt;img src=&#34;https://sona201.github.io/previews/pr-1/images/sanweishuwu.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;三味书屋&#34;
+	
+	
+&gt;
+&lt;img src=&#34;https://sona201.github.io/previews/pr-1/images/luxun_zuowei.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;鲁迅座位&#34;
+	
+	
+&gt;
+&lt;img src=&#34;https://sona201.github.io/previews/pr-1/images/caiyuanpei_guju.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;蔡元培故居&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;美食&#34;&gt;美食&lt;/h3&gt;
+&lt;p&gt;绍兴的特产其实就是黄酒, 应该是与时俱进, 产生了一些新奇的玩意儿. 黄酒奶茶, 黄酒冰棍; 这两个至少原来是没有的, 应该是后来某个商人开发的.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/previews/pr-1/images/shaoxing_naicha.jpg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;绍兴黄酒奶茶&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;晚上在肯德基吹着空调思考去哪里吃, 原计划要找一家饭店好好吃一顿, 最后想直接去仓桥直街(商业街)逛逛, 看看有没有好吃的. &lt;br&gt;
+最后被一家心心念的醉蟹的小店吸引了, 点了几个特色菜, 醉蟹/醉虾/绍三鲜, 终于感觉这次旅游圆满了, 当时只顾吃忘记拍照了(饿死鬼附身).&lt;/p&gt;
+&lt;h3 id=&#34;思考&#34;&gt;思考&lt;/h3&gt;
+&lt;p&gt;这段是刚刚想到加上的, 跟媳妇儿聊到旅游的时候发现鲁迅的祖宅没有周作人的相关简介信息. 在听到鲁迅是三兄弟, 但在祖宅里只介绍了周树人/周建人, 没有周作人的信息. &lt;br&gt;
+当时参观的时候认为周作人可能比较平平无奇, 只是一个普通人罢了, 后来查百科才知道并不是.&lt;/p&gt;
+&lt;p&gt;俗话总说: 历史总是赢家写的. 这个只能概括战争史, 我想说: 历史书上只给你想让你看见的.&lt;/p&gt;
+&lt;p&gt;了解周作人的相关生平: 他的文学造诣甚至比鲁迅更高, 但他似乎不在乎站队, 对这点不知道怎么评价, 有得有失吧.&lt;/p&gt;
+&lt;h5 id=&#34;百度百科相关介绍&#34;&gt;百度百科相关介绍&lt;/h5&gt;
+&lt;blockquote&gt;
+&lt;p&gt;全国性抗战时期曾任伪华北政务委员会教育总署督办。抗战结束后被捕入狱，1949年释放，晚年主要从事翻译工作。著有《自己的园地》《雨天的书》《谈龙集》《鲁迅的故家》 《鲁迅小说中的人物》 《知堂文集》《知堂回想录》等，译有《日本狂言选》《伊索寓言》《路吉阿诺斯对话集》等&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;听说他是个&amp;quot;反派&amp;quot;的时候, 有种想抓住他一切把柄, 认为他就是亲日, 甚至取日本人做老婆. 但后来发现, 周建人也是取的日本人, 周作人/周建人 他两的老婆还是姐妹, 只能说我太天真, 有些东西真的没法评价.&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>blog-theme</title>
+        <link>https://sona201.github.io/previews/pr-1/posts/blog-theme/</link>
+        <pubDate>Wed, 19 Jul 2023 23:19:42 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/previews/pr-1/posts/blog-theme/</guid>
+        <description>&lt;h2 id=&#34;博客折腾&#34;&gt;博客折腾&lt;/h2&gt;
+&lt;p&gt;这两天折腾博客，总是遇到困难就想放弃。想法无非就是博客的主题哪哪不好看，不满意。人生呐，很难满足(就是想安慰自己不努力)。
+不过早就明白了，博客的本质还是要内容好，而不是花里胡哨的样子。但都想有点虚荣心。&lt;/p&gt;
+&lt;p&gt;这两天还是看见了一个基本满意的主题，但作者是外国人，估计对中文支持有点问题。其次是主题本地测试跑不起来，感觉是自愿获取被墙拦截了。
+好像代码也有bug，本着偷懒原则，暂停折腾。这两天折腾的结果只有心累，还是跟原来一样，想速成，一点耐心都没有，硬生生找了两个主题跟着敲了一遍代码。
+有点样子了，但又嫌弃太慢，不能立马写出我想要的主题，又开始改动原来的主题。于是想了想，开个主题，给自己挖个坑，慢慢填吧。&lt;/p&gt;
+&lt;h2 id=&#34;折腾记录&#34;&gt;折腾记录&lt;/h2&gt;
+&lt;h3 id=&#34;跟着简书上的文章写&#34;&gt;跟着简书上的文章写&lt;/h3&gt;
+&lt;p&gt;最初的想法是，类似于学习demo一样，找个中文版本，跟着手敲一遍，想想大概就能搞定了。抱着这个想法，我打开了第一个收藏链接&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.jianshu.com/p/0b9aecff290c&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;如何创建自己的hugo主题&lt;/a&gt;，天真的我，看内容写的非常详细，还贴了很多代码。
+我想，只要我跟着后面做，铁定就会了。事实是，跟着后面做，根本跑不起来，只记录了大概得过程，最后的截图更像是hugo的 bootstrip 主题替换的结果。
+不知道是我跟着写的步骤不对，还是被欺骗了。代码也没有贴上，大概理清楚了 hugo 的架构&lt;/p&gt;
+&lt;h3 id=&#34;疯狂搜索一目十行&#34;&gt;疯狂搜索，一目十行&lt;/h3&gt;
+&lt;p&gt;疯狂谷歌 &amp;ldquo;hugo 主题开发&amp;rdquo; , 找到两个比较靠谱的方案，都是有经验的，而且把博客主题代码放在 github 上。&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://io-oi.me/tech/developing-a-hugo-theme/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://io-oi.me/tech/developing-a-hugo-theme/&lt;/a&gt; &lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://blog.gimo.me/posts/creating-a-hugo-theme/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://blog.gimo.me/posts/creating-a-hugo-theme/&lt;/a&gt; &lt;br&gt;
+我想，这总能行了吧，大家对 hugo 主题开发的基本功要求不一样，或者我的基础太差。实在是跟不上，半天想搞起来确实费劲。但经验确实值得参考。&lt;/p&gt;
+&lt;p&gt;后面也看了 &lt;a class=&#34;link&#34; href=&#34;https://qwqaq.com/2022/04/migrate-to-hugo/#%E5%88%B6%E4%BD%9C%E4%B8%BB%E9%A2%98&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;转向 Hugo：主题制作指北&lt;/a&gt;
+确实很详细，但不是我想要的一步一步带着我写好，其实他已经提醒了很多，给了官网的链接，已经想跟着官网写，最后还是放弃了。官网写的感觉并不友好。
+最后发现问题是我对 golang 不熟悉，其实这 hugo 可以当成一个 python 的 jinja2 模板来理解。可能本质就是一样。&lt;/p&gt;
+&lt;h3 id=&#34;找一个已经写出来的博客跟着做&#34;&gt;找一个已经写出来的博客跟着做&lt;/h3&gt;
+&lt;p&gt;跟着一个靠谱的写一个主题，最后的效果还是有点问题，熟悉了架构
+主要是自己不想从零开始写主题，更多的是想修改一个现有主题&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这个博客的代码其实也有一点点的问题，比如链接失效，最新版本不一致，但幸好都找到替代方案。最后代码成功的运行起来了。
+结果这才发现是我想要的功能，大概怎么实现，距离实现的目标还差多少。&lt;/p&gt;
+&lt;p&gt;给自己挖了个坑，虽然跟着这个做出了一个完全不能用的主题，但还是勇敢的把这行代码加在现在的主题上。我一直想做成上下布局的结构。
+想修改当前主题，一直不知道怎么下手，慌忙之间把一些基础知识都搞忘记了，最后发现居然就是加了一行 html ,本质上还是有很多坑。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/previews/pr-1/images/hugo_theme_header.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;hugo_theme_header&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;回归最初的目的&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;我在友链的文章里写了好几个主题是我喜欢的风格，但作者都没有开源，想到我最初的目标就是把博客搭建起来，然后修改成自己喜欢的样子。
+增加一些想要的功能，仅此而已，对现有主题的不满没有那么夸张，只是在看到别人折腾主题的过程，发现更多的细节，自己也先要，或者也要踩坑。
+由此慢慢偏离最初的目的，现在功能基本都满足自己，只剩一些样式的问题，干脆开个坑，慢慢积累，反正我也不是那种一鼓作气搞定一切的人。
+或许，慢慢来，比较快。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
