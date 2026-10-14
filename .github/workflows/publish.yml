@@ -1,0 +1,108 @@
+name: Blog publish
+
+on:
+  workflow_run:
+    workflows: [Blog checks]
+    types: [completed]
+  pull_request_target:
+    branches: [main]
+    types: [closed, unlabeled]
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  publish:
+    if: github.event_name == 'pull_request_target' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: blog-pages-publish
+      queue: max
+      cancel-in-progress: false
+    steps:
+      # Only trusted main scripts run here; never execute PR code or artifacts.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+      - name: Check current source and preview authorization
+        id: context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 source/scripts/workflow_context.py prepare --output "$RUNNER_TEMP/publish-context.json"
+      - name: Download the exact upstream artifact without extracting
+        if: steps.context.outputs.action == 'production' || steps.context.outputs.action == 'preview'
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: ${{ steps.context.outputs.artifact_name }}
+          run-id: ${{ steps.context.outputs.run_id }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/blog-download
+          skip-decompress: true
+          digest-mismatch: error
+      - name: Validate and extract static files
+        if: steps.context.outputs.action == 'production' || steps.context.outputs.action == 'preview'
+        run: python3 source/scripts/workflow_context.py unpack --download "$RUNNER_TEMP/blog-download" --site "$RUNNER_TEMP/blog-site"
+      - name: Checkout publication history
+        if: steps.context.outputs.action != 'skip'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: sona201/sona201.github.io
+          ref: master
+          path: pages
+          fetch-depth: 0
+          token: ${{ secrets.PERSONAL_TOKEN }}
+      - name: Recheck immediately before changing the website
+        if: steps.context.outputs.action != 'skip'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 source/scripts/workflow_context.py recheck --context "$RUNNER_TEMP/publish-context.json"
+      - name: Publish verified files or remove closed preview
+        if: steps.context.outputs.action != 'skip'
+        id: publish
+        env:
+          PUBLISH_KIND: ${{ steps.context.outputs.action }}
+          PR_NUMBER: ${{ steps.context.outputs.pr_number }}
+          SOURCE_SHA: ${{ steps.context.outputs.source_sha }}
+          UPSTREAM_BUILD_ID: ${{ steps.context.outputs.build_id }}
+          BASE_URL: ${{ steps.context.outputs.base_url }}
+        run: |
+          if [[ "$PUBLISH_KIND" == cleanup ]]; then
+            python3 source/scripts/publish_site.py cleanup --repo-dir pages --pr-number "$PR_NUMBER" --output "$RUNNER_TEMP/deployment.json"
+          else
+            args=()
+            if [[ "$PUBLISH_KIND" == preview ]]; then args+=(--pr-number "$PR_NUMBER"); fi
+            python3 source/scripts/publish_site.py deploy --repo-dir pages --site "$RUNNER_TEMP/blog-site" \
+              --kind "$PUBLISH_KIND" --source-sha "$SOURCE_SHA" --run-id "$UPSTREAM_BUILD_ID" \
+              --base-url "$BASE_URL" --output "$RUNNER_TEMP/deployment.json" "${args[@]}"
+          fi
+      - name: Verify the deployed version and representative resources
+        if: steps.context.outputs.action == 'production' || steps.context.outputs.action == 'preview'
+        id: verify
+        timeout-minutes: 6
+        continue-on-error: true
+        env:
+          BASE_URL: ${{ steps.context.outputs.base_url }}
+        run: python3 source/scripts/site_checks.py verify --site "$RUNNER_TEMP/blog-site" --base-url "$BASE_URL" --attempts 30 --interval 10
+      - name: Restore previous production if verification failed
+        if: steps.context.outputs.action == 'production' && steps.verify.outcome == 'failure'
+        timeout-minutes: 8
+        run: python3 source/scripts/recover_site.py --repo-dir pages --deployment "$RUNNER_TEMP/deployment.json" --output "$RUNNER_TEMP/recovery.json"
+      - name: Publication summary
+        if: always() && steps.context.outputs.action != 'skip'
+        env:
+          BASE_URL: ${{ steps.context.outputs.base_url }}
+          VERIFY_RESULT: ${{ steps.verify.outcome }}
+        run: |
+          python3 source/scripts/deployment_summary.py --deployment "$RUNNER_TEMP/deployment.json" \
+            --recovery "$RUNNER_TEMP/recovery.json" --url "$BASE_URL" --verification "$VERIFY_RESULT"
+      - name: Report failed verification even if recovery succeeded
+        if: steps.verify.outcome == 'failure'
+        run: exit 1
