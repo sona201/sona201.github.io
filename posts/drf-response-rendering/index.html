@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='drf渲染模块源码分析 原文链接 搜了好多源码文章，都只是简单介绍 drf 的 rest_framework.response.Response 方法，这块的源码虽然没有完全读懂，但是也看了大概，感觉没有讲到点子上 都没'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='drf渲染模块源码分析 原文链接 搜了好多源码文章，都只是简单介绍 drf 的 rest_framework.response.Response 方法，这块的源码虽然没有完全读懂，但是也看了大概，感觉没有讲到点子上 都没'>
 <title>DRF finalize_response 与渲染器配置</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/drf-response-rendering/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="drf渲染模块源码分析 原文链接 搜了好多源码文章，都只是简单介绍 drf 的 rest_framework.response.Response 方法，这块的源码虽然没有完全读懂，但是也看了大概，感觉没有讲到点子上 都没">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/django/">django</a>
+                    <a href="/categories/django/">Django</a>
                 </span>
             
             
@@ -475,7 +485,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

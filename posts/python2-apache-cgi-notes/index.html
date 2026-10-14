@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='web选型 web服务器首选nginx，但nginx不支持cgi，因为太古老了 所以选用apache 主要为理解cgi的模式流程 理解header的'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='web选型 web服务器首选nginx，但nginx不支持cgi，因为太古老了 所以选用apache 主要为理解cgi的模式流程 理解header的'>
 <title>Python 2 与 Apache CGI 实验</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/python2-apache-cgi-notes/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="web选型 web服务器首选nginx，但nginx不支持cgi，因为太古老了 所以选用apache 主要为理解cgi的模式流程 理解header的">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/python/">python</a>
+                    <a href="/categories/python/">Python</a>
                 </span>
             
             
@@ -208,18 +218,18 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">将目录替换
-</span></span><span class="line"><span class="cl">&lt;Directory /&gt;
-</span></span><span class="line"><span class="cl">  AllowOverride none
-</span></span><span class="line"><span class="cl">  Require all denied
-</span></span><span class="line"><span class="cl">&lt;/Directory&gt;
-</span></span><span class="line"><span class="cl">为：
-</span></span><span class="line"><span class="cl">&lt;Directory &#34;/var/www/cgi-bin&#34;&gt;
-</span></span><span class="line"><span class="cl">  AllowOverride None
-</span></span><span class="line"><span class="cl">  Options +ExecCGI
-</span></span><span class="line"><span class="cl">  Order allow,deny
-</span></span><span class="line"><span class="cl">  Allow from all
-</span></span><span class="line"><span class="cl">&lt;/Directory&gt;
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="err">将目录替换</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="ne">Directory</span> <span class="o">/&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">AllowOverride</span> <span class="n">none</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Require</span> <span class="n">all</span> <span class="n">denied</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="ne">Directory</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="err">为：</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="ne">Directory</span> <span class="s2">&#34;/var/www/cgi-bin&#34;</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">AllowOverride</span> <span class="n">None</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Options</span> <span class="o">+</span><span class="n">ExecCGI</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Order</span> <span class="n">allow</span><span class="p">,</span><span class="n">deny</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Allow</span> <span class="n">from</span> <span class="n">all</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="ne">Directory</span><span class="o">&gt;</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -288,29 +298,29 @@ if (!doNotTrack) {
 </span><span class="lnt">23
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@gitlab-test ~]# systemctl status httpd.service
-</span></span><span class="line"><span class="cl">● httpd.service - The Apache HTTP Server
-</span></span><span class="line"><span class="cl">   Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; vendor preset: disabled)
-</span></span><span class="line"><span class="cl">   Active: active (running) since Wed 2020-02-12 12:07:30 CST; 12s ago
-</span></span><span class="line"><span class="cl">     Docs: man:httpd(8)
-</span></span><span class="line"><span class="cl">           man:apachectl(8)
-</span></span><span class="line"><span class="cl"> Main PID: 58363 (httpd)
-</span></span><span class="line"><span class="cl">   Status: &#34;Total requests: 0; Current requests/sec: 0; Current traffic:   0 B/sec&#34;
-</span></span><span class="line"><span class="cl">    Tasks: 7
-</span></span><span class="line"><span class="cl">   Memory: 3.2M
-</span></span><span class="line"><span class="cl">   CGroup: /system.slice/httpd.service
-</span></span><span class="line"><span class="cl">           ├─58363 /usr/sbin/httpd -DFOREGROUND
-</span></span><span class="line"><span class="cl">           ├─58365 /usr/sbin/httpd -DFOREGROUND
-</span></span><span class="line"><span class="cl">           ├─58366 /usr/sbin/httpd -DFOREGROUND
-</span></span><span class="line"><span class="cl">           ├─58367 /usr/sbin/httpd -DFOREGROUND
-</span></span><span class="line"><span class="cl">           ├─58368 /usr/sbin/httpd -DFOREGROUND
-</span></span><span class="line"><span class="cl">           ├─58369 /usr/sbin/httpd -DFOREGROUND
-</span></span><span class="line"><span class="cl">           └─58370 /usr/sbin/httpd -DFOREGROUND
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="n">gitlab</span><span class="o">-</span><span class="n">test</span> <span class="o">~</span><span class="p">]</span><span class="c1"># systemctl status httpd.service</span>
+</span></span><span class="line"><span class="cl"><span class="err">●</span> <span class="n">httpd</span><span class="o">.</span><span class="n">service</span> <span class="o">-</span> <span class="n">The</span> <span class="n">Apache</span> <span class="n">HTTP</span> <span class="n">Server</span>
+</span></span><span class="line"><span class="cl">   <span class="n">Loaded</span><span class="p">:</span> <span class="n">loaded</span> <span class="p">(</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">system</span><span class="o">/</span><span class="n">httpd</span><span class="o">.</span><span class="n">service</span><span class="p">;</span> <span class="n">disabled</span><span class="p">;</span> <span class="n">vendor</span> <span class="n">preset</span><span class="p">:</span> <span class="n">disabled</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="n">Active</span><span class="p">:</span> <span class="n">active</span> <span class="p">(</span><span class="n">running</span><span class="p">)</span> <span class="n">since</span> <span class="n">Wed</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">12</span> <span class="mi">12</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">30</span> <span class="n">CST</span><span class="p">;</span> <span class="mi">12</span><span class="n">s</span> <span class="n">ago</span>
+</span></span><span class="line"><span class="cl">     <span class="n">Docs</span><span class="p">:</span> <span class="n">man</span><span class="p">:</span><span class="n">httpd</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">           <span class="n">man</span><span class="p">:</span><span class="n">apachectl</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> <span class="n">Main</span> <span class="n">PID</span><span class="p">:</span> <span class="mi">58363</span> <span class="p">(</span><span class="n">httpd</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="n">Status</span><span class="p">:</span> <span class="s2">&#34;Total requests: 0; Current requests/sec: 0; Current traffic:   0 B/sec&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Tasks</span><span class="p">:</span> <span class="mi">7</span>
+</span></span><span class="line"><span class="cl">   <span class="n">Memory</span><span class="p">:</span> <span class="mf">3.2</span><span class="n">M</span>
+</span></span><span class="line"><span class="cl">   <span class="n">CGroup</span><span class="p">:</span> <span class="o">/</span><span class="n">system</span><span class="o">.</span><span class="n">slice</span><span class="o">/</span><span class="n">httpd</span><span class="o">.</span><span class="n">service</span>
+</span></span><span class="line"><span class="cl">           <span class="err">├─</span><span class="mi">58363</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">httpd</span> <span class="o">-</span><span class="n">DFOREGROUND</span>
+</span></span><span class="line"><span class="cl">           <span class="err">├─</span><span class="mi">58365</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">httpd</span> <span class="o">-</span><span class="n">DFOREGROUND</span>
+</span></span><span class="line"><span class="cl">           <span class="err">├─</span><span class="mi">58366</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">httpd</span> <span class="o">-</span><span class="n">DFOREGROUND</span>
+</span></span><span class="line"><span class="cl">           <span class="err">├─</span><span class="mi">58367</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">httpd</span> <span class="o">-</span><span class="n">DFOREGROUND</span>
+</span></span><span class="line"><span class="cl">           <span class="err">├─</span><span class="mi">58368</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">httpd</span> <span class="o">-</span><span class="n">DFOREGROUND</span>
+</span></span><span class="line"><span class="cl">           <span class="err">├─</span><span class="mi">58369</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">httpd</span> <span class="o">-</span><span class="n">DFOREGROUND</span>
+</span></span><span class="line"><span class="cl">           <span class="err">└─</span><span class="mi">58370</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">httpd</span> <span class="o">-</span><span class="n">DFOREGROUND</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Feb 12 12:07:30 gitlab-test systemd[1]: Starting The Apache HTTP Server...
-</span></span><span class="line"><span class="cl">Feb 12 12:07:30 example-host httpd[58363]: AH00558: Set the &#39;ServerName&#39; directive to suppress this message
-</span></span><span class="line"><span class="cl">Feb 12 12:07:30 gitlab-test systemd[1]: Started The Apache HTTP Server.
-</span></span><span class="line"><span class="cl">Hint: Some lines were ellipsized, use -l to show in full.
+</span></span><span class="line"><span class="cl"><span class="n">Feb</span> <span class="mi">12</span> <span class="mi">12</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">30</span> <span class="n">gitlab</span><span class="o">-</span><span class="n">test</span> <span class="n">systemd</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">Starting</span> <span class="n">The</span> <span class="n">Apache</span> <span class="n">HTTP</span> <span class="n">Server</span><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">Feb</span> <span class="mi">12</span> <span class="mi">12</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">30</span> <span class="n">example</span><span class="o">-</span><span class="n">host</span> <span class="n">httpd</span><span class="p">[</span><span class="mi">58363</span><span class="p">]:</span> <span class="n">AH00558</span><span class="p">:</span> <span class="n">Set</span> <span class="n">the</span> <span class="s1">&#39;ServerName&#39;</span> <span class="n">directive</span> <span class="n">to</span> <span class="n">suppress</span> <span class="n">this</span> <span class="n">message</span>
+</span></span><span class="line"><span class="cl"><span class="n">Feb</span> <span class="mi">12</span> <span class="mi">12</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">30</span> <span class="n">gitlab</span><span class="o">-</span><span class="n">test</span> <span class="n">systemd</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">Started</span> <span class="n">The</span> <span class="n">Apache</span> <span class="n">HTTP</span> <span class="n">Server</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">Hint</span><span class="p">:</span> <span class="n">Some</span> <span class="n">lines</span> <span class="n">were</span> <span class="n">ellipsized</span><span class="p">,</span> <span class="n">use</span> <span class="o">-</span><span class="n">l</span> <span class="n">to</span> <span class="n">show</span> <span class="ow">in</span> <span class="n">full</span><span class="o">.</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -483,7 +493,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

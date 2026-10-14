@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='问题django启动异常 提示跟包 cffi 有关，甚至还和 arm 芯片有关 代码 1 2 3 4 5 6 7 8 这里是相关的关键字 mach-o file, but is an incompatible architecture (have &amp;#39;x86_64&amp;#39;, need &amp;#39;arm64&amp;#39;) from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions pyo3_runtime.PanicException: Python API call failed'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='问题django启动异常 提示跟包 cffi 有关，甚至还和 arm 芯片有关 代码 1 2 3 4 5 6 7 8 这里是相关的关键字 mach-o file, but is an incompatible architecture (have &amp;#39;x86_64&amp;#39;, need &amp;#39;arm64&amp;#39;) from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions pyo3_runtime.PanicException: Python API call failed'>
 <title>Apple Silicon cffi 架构错误排查记录</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/cffi-apple-silicon-error-notes/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="问题django启动异常 提示跟包 cffi 有关，甚至还和 arm 芯片有关 代码 1 2 3 4 5 6 7 8 这里是相关的关键字 mach-o file, but is an incompatible architecture (have &amp;#39;x86_64&amp;#39;, need &amp;#39;arm64&amp;#39;) from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions pyo3_runtime.PanicException: Python API call failed">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/python/">python</a>
+                    <a href="/categories/python/">Python</a>
                 </span>
             
             
@@ -188,14 +198,14 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-v" data-lang="v"><span class="line"><span class="cl"><span class="nv">这里是相关的关键字</span>
-</span></span><span class="line"><span class="cl"><span class="nv">mach</span><span class="o">-</span><span class="nv">o</span> <span class="nv">file</span><span class="p">,</span> <span class="nv">but</span> <span class="k">is</span> <span class="nv">an</span> <span class="nv">incompatible</span> <span class="nv">architecture</span> <span class="p">(</span><span class="nv">have</span> <span class="s1">&#39;x86_64&#39;</span><span class="p">,</span> <span class="nv">need</span> <span class="s1">&#39;arm64&#39;</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">这里是相关的关键字
+</span></span><span class="line"><span class="cl">mach-o file, but is an incompatible architecture (have &#39;x86_64&#39;, need &#39;arm64&#39;)
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">from</span> <span class="nv">cryptography</span><span class="p">.</span><span class="nv">hazmat</span><span class="p">.</span><span class="nv">bindings</span><span class="p">.</span><span class="nv">_rust</span> <span class="kn">import</span> <span class="nv">exceptions</span> <span class="k">as</span> <span class="nv">rust_exceptions</span> <span class="nv">pyo3_runtime</span><span class="p">.</span><span class="nc">PanicException</span><span class="p">:</span> <span class="nc">Python</span> <span class="nc">API</span> <span class="nv">call</span> <span class="nv">failed</span>
+</span></span><span class="line"><span class="cl">from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions pyo3_runtime.PanicException: Python API call failed
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">pyo3</span><span class="o">-</span><span class="mf">0.18.3</span><span class="o">/</span><span class="nv">src</span><span class="o">/</span><span class="nv">err</span><span class="o">/</span><span class="nv">mod</span><span class="p">.</span><span class="nv">rs</span><span class="p">:</span><span class="mi">790</span><span class="p">:</span><span class="mi">5</span>
+</span></span><span class="line"><span class="cl">pyo3-0.18.3/src/err/mod.rs:790:5
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nc">No</span> <span class="kn">module</span> <span class="nv">named</span> <span class="nv">_cffi_backend</span>
+</span></span><span class="line"><span class="cl">No module named _cffi_backend
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -323,7 +333,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

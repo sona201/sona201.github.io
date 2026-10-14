@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='#python #celery celery 简介 celery 是一个分布式任务队列 代码 1 2 3 4 5 6 7 Celery is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system. It’s a task queue with focus on real-time processing, while also supporting task scheduling. Celery'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='#python #celery celery 简介 celery 是一个分布式任务队列 代码 1 2 3 4 5 6 7 Celery is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system. It’s a task queue with focus on real-time processing, while also supporting task scheduling. Celery'>
 <title>Celery 与 Django 配置笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/celery-django-configuration/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="#python #celery celery 简介 celery 是一个分布式任务队列 代码 1 2 3 4 5 6 7 Celery is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system. It’s a task queue with focus on real-time processing, while also supporting task scheduling. Celery">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/python/">python</a>
+                    <a href="/categories/python/">Python</a>
                 </span>
             
             
@@ -188,13 +198,13 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Celery is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system.
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">Celery</span> <span class="n">is</span> <span class="n">a</span> <span class="n">simple</span><span class="p">,</span> <span class="n">flexible</span><span class="p">,</span> <span class="ow">and</span> <span class="n">reliable</span> <span class="n">distributed</span> <span class="n">system</span> <span class="n">to</span> <span class="n">process</span> <span class="n">vast</span> <span class="n">amounts</span> <span class="n">of</span> <span class="n">messages</span><span class="p">,</span> <span class="k">while</span> <span class="n">providing</span> <span class="n">operations</span> <span class="n">with</span> <span class="n">the</span> <span class="n">tools</span> <span class="n">required</span> <span class="n">to</span> <span class="n">maintain</span> <span class="n">such</span> <span class="n">a</span> <span class="n">system</span><span class="o">.</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">It’s a task queue with focus on real-time processing, while also supporting task scheduling.
+</span></span><span class="line"><span class="cl"><span class="n">It</span><span class="err">’</span><span class="n">s</span> <span class="n">a</span> <span class="n">task</span> <span class="n">queue</span> <span class="n">with</span> <span class="n">focus</span> <span class="n">on</span> <span class="n">real</span><span class="o">-</span><span class="n">time</span> <span class="n">processing</span><span class="p">,</span> <span class="k">while</span> <span class="n">also</span> <span class="n">supporting</span> <span class="n">task</span> <span class="n">scheduling</span><span class="o">.</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Celery has a large and diverse community of users and contributors, don’t hesitate to ask questions or [get involved](https://docs.celeryq.dev/en/stable/getting-started/resources.html#getting-help).
+</span></span><span class="line"><span class="cl"><span class="n">Celery</span> <span class="n">has</span> <span class="n">a</span> <span class="n">large</span> <span class="ow">and</span> <span class="n">diverse</span> <span class="n">community</span> <span class="n">of</span> <span class="n">users</span> <span class="ow">and</span> <span class="n">contributors</span><span class="p">,</span> <span class="n">don</span><span class="err">’</span><span class="n">t</span> <span class="n">hesitate</span> <span class="n">to</span> <span class="n">ask</span> <span class="n">questions</span> <span class="ow">or</span> <span class="p">[</span><span class="n">get</span> <span class="n">involved</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">docs</span><span class="o">.</span><span class="n">celeryq</span><span class="o">.</span><span class="n">dev</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">stable</span><span class="o">/</span><span class="n">getting</span><span class="o">-</span><span class="n">started</span><span class="o">/</span><span class="n">resources</span><span class="o">.</span><span class="n">html</span><span class="c1">#getting-help).</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Celery is Open Source and licensed under the [BSD License](http://www.opensource.org/licenses/BSD-3-Clause).
+</span></span><span class="line"><span class="cl"><span class="n">Celery</span> <span class="n">is</span> <span class="n">Open</span> <span class="n">Source</span> <span class="ow">and</span> <span class="n">licensed</span> <span class="n">under</span> <span class="n">the</span> <span class="p">[</span><span class="n">BSD</span> <span class="n">License</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">opensource</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">licenses</span><span class="o">/</span><span class="n">BSD</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">Clause</span><span class="p">)</span><span class="o">.</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -410,7 +420,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

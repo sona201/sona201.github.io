@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='1.根据访问IP统计UV Bash 1 awk &amp;#39;{print $1}&amp;#39; access.log | sort | uniq -c | wc -l 2.统计访问URL统计PV Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | wc -l 3.查询访问最频繁的URL Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | sort |'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='1.根据访问IP统计UV Bash 1 awk &amp;#39;{print $1}&amp;#39; access.log | sort | uniq -c | wc -l 2.统计访问URL统计PV Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | wc -l 3.查询访问最频繁的URL Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | sort |'>
 <title>Access Log 常用统计命令</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/access-log-statistics/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="1.根据访问IP统计UV Bash 1 awk &amp;#39;{print $1}&amp;#39; access.log | sort | uniq -c | wc -l 2.统计访问URL统计PV Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | wc -l 3.查询访问最频繁的URL Bash 1 awk &amp;#39;{print $7}&amp;#39; access.log | sort |">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -312,12 +322,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Nmap 端口扫描笔记</h2>
+            <h2 class="article-title">Linux iptables 使用笔记</h2>
         </div>
     </a>
 </article>
@@ -325,12 +335,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Linux iptables 使用笔记</h2>
+            <h2 class="article-title">Nmap 端口扫描笔记</h2>
         </div>
     </a>
 </article>
@@ -384,7 +394,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

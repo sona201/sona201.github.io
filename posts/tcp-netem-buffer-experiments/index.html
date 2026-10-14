@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='tcp实验 1 实验准备 1.1 虚拟机 使用 VMware 创建两台本地隔离虚拟机，系统为 Ubuntu 20.04 LTS。以下私有地址只作为本地实验示例，与图中的地址一致： tcp-server: 192.168.77.131 tcp-client: 192.168.77.132 1.1.1 虚拟'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='tcp实验 1 实验准备 1.1 虚拟机 使用 VMware 创建两台本地隔离虚拟机，系统为 Ubuntu 20.04 LTS。以下私有地址只作为本地实验示例，与图中的地址一致： tcp-server: 192.168.77.131 tcp-client: 192.168.77.132 1.1.1 虚拟'>
 <title>用 Netem 和 TCP 缓冲区观察下载速度</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/tcp-netem-buffer-experiments/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="tcp实验 1 实验准备 1.1 虚拟机 使用 VMware 创建两台本地隔离虚拟机，系统为 Ubuntu 20.04 LTS。以下私有地址只作为本地实验示例，与图中的地址一致： tcp-server: 192.168.77.131 tcp-client: 192.168.77.132 1.1.1 虚拟">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/tcp/">tcp</a>
+                    <a href="/categories/tcp/">Tcp</a>
                 </span>
             
             
@@ -279,28 +289,28 @@ if (!doNotTrack) {
 </span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">root</span><span class="err">@</span><span class="nx">tcp</span><span class="o">-</span><span class="nx">server</span><span class="p">:</span><span class="err">~#</span> <span class="nx">apt</span> <span class="nx">install</span> <span class="o">-</span><span class="nx">y</span> <span class="nx">nginx</span>
-</span></span><span class="line"><span class="cl"><span class="nx">Reading</span> <span class="kn">package</span> <span class="nx">lists</span><span class="o">...</span> <span class="nx">Done</span>
-</span></span><span class="line"><span class="cl"><span class="nx">Building</span> <span class="nx">dependency</span> <span class="nx">tree</span>       
-</span></span><span class="line"><span class="cl"><span class="nx">Reading</span> <span class="nx">state</span> <span class="nx">information</span><span class="o">...</span> <span class="nx">Done</span>
-</span></span><span class="line"><span class="cl"><span class="nx">nginx</span> <span class="nx">is</span> <span class="nx">already</span> <span class="nx">the</span> <span class="nx">newest</span> <span class="nf">version</span> <span class="p">(</span><span class="mf">1.18.0</span><span class="o">-</span><span class="mi">0</span><span class="nx">ubuntu1</span><span class="mf">.4</span><span class="p">).</span>
-</span></span><span class="line"><span class="cl"><span class="mi">0</span> <span class="nx">upgraded</span><span class="p">,</span> <span class="mi">0</span> <span class="nx">newly</span> <span class="nx">installed</span><span class="p">,</span> <span class="mi">0</span> <span class="nx">to</span> <span class="nx">remove</span> <span class="nx">and</span> <span class="mi">19</span> <span class="nx">not</span> <span class="nx">upgraded</span><span class="p">.</span>
-</span></span><span class="line"><span class="cl"><span class="nx">root</span><span class="err">@</span><span class="nx">tcp</span><span class="o">-</span><span class="nx">server</span><span class="p">:</span><span class="err">~#</span> <span class="nx">systemctl</span> <span class="nx">start</span> <span class="nx">nginx</span>
-</span></span><span class="line"><span class="cl"><span class="nx">root</span><span class="err">@</span><span class="nx">tcp</span><span class="o">-</span><span class="nx">server</span><span class="p">:</span><span class="err">~#</span> <span class="nx">systemctl</span> <span class="nx">status</span> <span class="nx">nginx</span>
-</span></span><span class="line"><span class="cl"><span class="err">●</span> <span class="nx">nginx</span><span class="p">.</span><span class="nx">service</span> <span class="o">-</span> <span class="nx">A</span> <span class="nx">high</span> <span class="nx">performance</span> <span class="nx">web</span> <span class="nx">server</span> <span class="nx">and</span> <span class="nx">a</span> <span class="nx">reverse</span> <span class="nx">proxy</span> <span class="nx">server</span>
-</span></span><span class="line"><span class="cl">     <span class="nx">Loaded</span><span class="p">:</span> <span class="nf">loaded</span> <span class="p">(</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">systemd</span><span class="o">/</span><span class="nx">system</span><span class="o">/</span><span class="nx">nginx</span><span class="p">.</span><span class="nx">service</span><span class="p">;</span> <span class="nx">enabled</span><span class="p">;</span> <span class="nx">vendor</span> <span class="nx">preset</span><span class="p">:</span> <span class="nx">enabled</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">     <span class="nx">Active</span><span class="p">:</span> <span class="nf">active</span> <span class="p">(</span><span class="nx">running</span><span class="p">)</span> <span class="nx">since</span> <span class="nx">Mon</span> <span class="mi">2023</span><span class="o">-</span><span class="mo">05</span><span class="o">-</span><span class="mi">29</span> <span class="mi">15</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="nx">UTC</span><span class="p">;</span> <span class="mi">23</span><span class="nx">h</span> <span class="nx">ago</span>
-</span></span><span class="line"><span class="cl">       <span class="nx">Docs</span><span class="p">:</span> <span class="nx">man</span><span class="p">:</span><span class="nf">nginx</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">   <span class="nx">Main</span> <span class="nx">PID</span><span class="p">:</span> <span class="mi">2154</span> <span class="p">(</span><span class="nx">nginx</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">      <span class="nx">Tasks</span><span class="p">:</span> <span class="mi">3</span> <span class="p">(</span><span class="nx">limit</span><span class="p">:</span> <span class="mi">4573</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">     <span class="nx">Memory</span><span class="p">:</span> <span class="mf">515.4</span><span class="nx">M</span>
-</span></span><span class="line"><span class="cl">     <span class="nx">CGroup</span><span class="p">:</span> <span class="o">/</span><span class="nx">system</span><span class="p">.</span><span class="nx">slice</span><span class="o">/</span><span class="nx">nginx</span><span class="p">.</span><span class="nx">service</span>
-</span></span><span class="line"><span class="cl">             <span class="err">├─</span><span class="mi">2154</span> <span class="nx">nginx</span><span class="p">:</span> <span class="nx">master</span> <span class="nx">process</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">sbin</span><span class="o">/</span><span class="nx">nginx</span> <span class="o">-</span><span class="nx">g</span> <span class="nx">daemon</span> <span class="nx">on</span><span class="p">;</span> <span class="nx">master_process</span> <span class="nx">on</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">             <span class="err">├─</span><span class="mi">2155</span> <span class="nx">nginx</span><span class="p">:</span> <span class="nx">worker</span> <span class="nx">process</span>
-</span></span><span class="line"><span class="cl">             <span class="err">└─</span><span class="mi">2156</span> <span class="nx">nginx</span><span class="p">:</span> <span class="nx">worker</span> <span class="nx">process</span>
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">server</span><span class="p">:</span><span class="o">~</span><span class="c1"># apt install -y nginx</span>
+</span></span><span class="line"><span class="cl"><span class="n">Reading</span> <span class="n">package</span> <span class="n">lists</span><span class="o">...</span> <span class="n">Done</span>
+</span></span><span class="line"><span class="cl"><span class="n">Building</span> <span class="n">dependency</span> <span class="n">tree</span>       
+</span></span><span class="line"><span class="cl"><span class="n">Reading</span> <span class="n">state</span> <span class="n">information</span><span class="o">...</span> <span class="n">Done</span>
+</span></span><span class="line"><span class="cl"><span class="n">nginx</span> <span class="n">is</span> <span class="n">already</span> <span class="n">the</span> <span class="n">newest</span> <span class="n">version</span> <span class="p">(</span><span class="mf">1.18</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="mi">0</span><span class="n">ubuntu1</span><span class="o">.</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="mi">0</span> <span class="n">upgraded</span><span class="p">,</span> <span class="mi">0</span> <span class="n">newly</span> <span class="n">installed</span><span class="p">,</span> <span class="mi">0</span> <span class="n">to</span> <span class="n">remove</span> <span class="ow">and</span> <span class="mi">19</span> <span class="ow">not</span> <span class="n">upgraded</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">server</span><span class="p">:</span><span class="o">~</span><span class="c1"># systemctl start nginx</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">server</span><span class="p">:</span><span class="o">~</span><span class="c1"># systemctl status nginx</span>
+</span></span><span class="line"><span class="cl"><span class="err">●</span> <span class="n">nginx</span><span class="o">.</span><span class="n">service</span> <span class="o">-</span> <span class="n">A</span> <span class="n">high</span> <span class="n">performance</span> <span class="n">web</span> <span class="n">server</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">reverse</span> <span class="n">proxy</span> <span class="n">server</span>
+</span></span><span class="line"><span class="cl">     <span class="n">Loaded</span><span class="p">:</span> <span class="n">loaded</span> <span class="p">(</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">system</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">service</span><span class="p">;</span> <span class="n">enabled</span><span class="p">;</span> <span class="n">vendor</span> <span class="n">preset</span><span class="p">:</span> <span class="n">enabled</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     <span class="n">Active</span><span class="p">:</span> <span class="n">active</span> <span class="p">(</span><span class="n">running</span><span class="p">)</span> <span class="n">since</span> <span class="n">Mon</span> <span class="mi">2023</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">29</span> <span class="mi">15</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="n">UTC</span><span class="p">;</span> <span class="mi">23</span><span class="n">h</span> <span class="n">ago</span>
+</span></span><span class="line"><span class="cl">       <span class="n">Docs</span><span class="p">:</span> <span class="n">man</span><span class="p">:</span><span class="n">nginx</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="n">Main</span> <span class="n">PID</span><span class="p">:</span> <span class="mi">2154</span> <span class="p">(</span><span class="n">nginx</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Tasks</span><span class="p">:</span> <span class="mi">3</span> <span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="mi">4573</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     <span class="n">Memory</span><span class="p">:</span> <span class="mf">515.4</span><span class="n">M</span>
+</span></span><span class="line"><span class="cl">     <span class="n">CGroup</span><span class="p">:</span> <span class="o">/</span><span class="n">system</span><span class="o">.</span><span class="n">slice</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">service</span>
+</span></span><span class="line"><span class="cl">             <span class="err">├─</span><span class="mi">2154</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">master</span> <span class="n">process</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">nginx</span> <span class="o">-</span><span class="n">g</span> <span class="n">daemon</span> <span class="n">on</span><span class="p">;</span> <span class="n">master_process</span> <span class="n">on</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">             <span class="err">├─</span><span class="mi">2155</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">worker</span> <span class="n">process</span>
+</span></span><span class="line"><span class="cl">             <span class="err">└─</span><span class="mi">2156</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">worker</span> <span class="n">process</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nx">May</span> <span class="mi">29</span> <span class="mi">15</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="nx">tcp</span><span class="o">-</span><span class="nx">server</span> <span class="nx">systemd</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="nx">Starting</span> <span class="nx">A</span> <span class="nx">high</span> <span class="nx">performance</span> <span class="nx">web</span> <span class="nx">server</span> <span class="nx">and</span> <span class="nx">a</span> <span class="nx">reverse</span> <span class="nx">proxy</span> <span class="nx">server</span><span class="o">...</span>
-</span></span><span class="line"><span class="cl"><span class="nx">May</span> <span class="mi">29</span> <span class="mi">15</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="nx">tcp</span><span class="o">-</span><span class="nx">server</span> <span class="nx">systemd</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="nx">Started</span> <span class="nx">A</span> <span class="nx">high</span> <span class="nx">performance</span> <span class="nx">web</span> <span class="nx">server</span> <span class="nx">and</span> <span class="nx">a</span> <span class="nx">reverse</span> <span class="nx">proxy</span> <span class="nx">server</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">May</span> <span class="mi">29</span> <span class="mi">15</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="n">tcp</span><span class="o">-</span><span class="n">server</span> <span class="n">systemd</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">Starting</span> <span class="n">A</span> <span class="n">high</span> <span class="n">performance</span> <span class="n">web</span> <span class="n">server</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">reverse</span> <span class="n">proxy</span> <span class="n">server</span><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">May</span> <span class="mi">29</span> <span class="mi">15</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="n">tcp</span><span class="o">-</span><span class="n">server</span> <span class="n">systemd</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">Started</span> <span class="n">A</span> <span class="n">high</span> <span class="n">performance</span> <span class="n">web</span> <span class="n">server</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">reverse</span> <span class="n">proxy</span> <span class="n">server</span><span class="o">.</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -331,20 +341,20 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  32.4M      0  0:01:03  0:01:03 --:--:-- 30.9M
-</span></span><span class="line"><span class="cl">root@tcp-client:~# ping 192.168.77.131
-</span></span><span class="line"><span class="cl">PING 192.168.77.131 (192.168.77.131) 56(84) bytes of data.
-</span></span><span class="line"><span class="cl">64 bytes from 192.168.77.131: icmp_seq=1 ttl=64 time=0.480 ms
-</span></span><span class="line"><span class="cl">64 bytes from 192.168.77.131: icmp_seq=2 ttl=64 time=0.716 ms
-</span></span><span class="line"><span class="cl">64 bytes from 192.168.77.131: icmp_seq=3 ttl=64 time=0.671 ms
-</span></span><span class="line"><span class="cl">64 bytes from 192.168.77.131: icmp_seq=4 ttl=64 time=0.602 ms
-</span></span><span class="line"><span class="cl">^C
-</span></span><span class="line"><span class="cl">--- 192.168.77.131 ping statistics ---
-</span></span><span class="line"><span class="cl">4 packets transmitted, 4 received, 0% packet loss, time 3064ms
-</span></span><span class="line"><span class="cl">rtt min/avg/max/mdev = 0.480/0.617/0.716/0.089 ms
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># curl -O http://192.168.77.131/large_file</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>  <span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mf">32.4</span><span class="n">M</span>      <span class="mi">0</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">03</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">03</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mf">30.9</span><span class="n">M</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># ping 192.168.77.131</span>
+</span></span><span class="line"><span class="cl"><span class="n">PING</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">77.131</span> <span class="p">(</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">77.131</span><span class="p">)</span> <span class="mi">56</span><span class="p">(</span><span class="mi">84</span><span class="p">)</span> <span class="n">bytes</span> <span class="n">of</span> <span class="n">data</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="mi">64</span> <span class="n">bytes</span> <span class="n">from</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">77.131</span><span class="p">:</span> <span class="n">icmp_seq</span><span class="o">=</span><span class="mi">1</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">64</span> <span class="n">time</span><span class="o">=</span><span class="mf">0.480</span> <span class="n">ms</span>
+</span></span><span class="line"><span class="cl"><span class="mi">64</span> <span class="n">bytes</span> <span class="n">from</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">77.131</span><span class="p">:</span> <span class="n">icmp_seq</span><span class="o">=</span><span class="mi">2</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">64</span> <span class="n">time</span><span class="o">=</span><span class="mf">0.716</span> <span class="n">ms</span>
+</span></span><span class="line"><span class="cl"><span class="mi">64</span> <span class="n">bytes</span> <span class="n">from</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">77.131</span><span class="p">:</span> <span class="n">icmp_seq</span><span class="o">=</span><span class="mi">3</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">64</span> <span class="n">time</span><span class="o">=</span><span class="mf">0.671</span> <span class="n">ms</span>
+</span></span><span class="line"><span class="cl"><span class="mi">64</span> <span class="n">bytes</span> <span class="n">from</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">77.131</span><span class="p">:</span> <span class="n">icmp_seq</span><span class="o">=</span><span class="mi">4</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">64</span> <span class="n">time</span><span class="o">=</span><span class="mf">0.602</span> <span class="n">ms</span>
+</span></span><span class="line"><span class="cl"><span class="o">^</span><span class="n">C</span>
+</span></span><span class="line"><span class="cl"><span class="o">---</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">77.131</span> <span class="n">ping</span> <span class="n">statistics</span> <span class="o">---</span>
+</span></span><span class="line"><span class="cl"><span class="mi">4</span> <span class="n">packets</span> <span class="n">transmitted</span><span class="p">,</span> <span class="mi">4</span> <span class="n">received</span><span class="p">,</span> <span class="mi">0</span><span class="o">%</span> <span class="n">packet</span> <span class="n">loss</span><span class="p">,</span> <span class="n">time</span> <span class="mi">3064</span><span class="n">ms</span>
+</span></span><span class="line"><span class="cl"><span class="n">rtt</span> <span class="nb">min</span><span class="o">/</span><span class="n">avg</span><span class="o">/</span><span class="nb">max</span><span class="o">/</span><span class="n">mdev</span> <span class="o">=</span> <span class="mf">0.480</span><span class="o">/</span><span class="mf">0.617</span><span class="o">/</span><span class="mf">0.716</span><span class="o">/</span><span class="mf">0.089</span> <span class="n">ms</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -440,13 +450,13 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# tc qdisc add dev ens33 root netem delay 100ms
-</span></span><span class="line"><span class="cl">root@tcp-client:~# tc qdisc show dev ens33
-</span></span><span class="line"><span class="cl">qdisc netem 8002: root refcnt 2 limit 1000 delay 100.0ms
-</span></span><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  13.9M      0  0:02:27  0:02:27 --:--:-- 23.8M
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># tc qdisc add dev ens33 root netem delay 100ms</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># tc qdisc show dev ens33</span>
+</span></span><span class="line"><span class="cl"><span class="n">qdisc</span> <span class="n">netem</span> <span class="mi">8002</span><span class="p">:</span> <span class="n">root</span> <span class="n">refcnt</span> <span class="mi">2</span> <span class="n">limit</span> <span class="mi">1000</span> <span class="n">delay</span> <span class="mf">100.0</span><span class="n">ms</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># curl -O http://192.168.77.131/large_file</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>  <span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mf">13.9</span><span class="n">M</span>      <span class="mi">0</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mi">27</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mi">27</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mf">23.8</span><span class="n">M</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -581,10 +591,10 @@ wmem：套接字发送缓冲区大小</p>
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  48.4M      0  0:00:42  0:00:42 --:--:-- 43.5M
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># curl -O http://192.168.77.131/large_file</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>  <span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mf">48.4</span><span class="n">M</span>      <span class="mi">0</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">42</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">42</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mf">43.5</span><span class="n">M</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -678,12 +688,12 @@ wmem：套接字发送缓冲区大小</p>
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# tc qdisc add dev ens33 root netem delay 100ms
-</span></span><span class="line"><span class="cl">root@tcp-client:~# 
-</span></span><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  2497k      0  0:13:59  0:13:59 --:--:-- 11.4M
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># tc qdisc add dev ens33 root netem delay 100ms</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># </span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># curl -O http://192.168.77.131/large_file</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>  <span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mi">2497</span><span class="n">k</span>      <span class="mi">0</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">13</span><span class="p">:</span><span class="mi">59</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">13</span><span class="p">:</span><span class="mi">59</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mf">11.4</span><span class="n">M</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -747,12 +757,12 @@ wmem：套接字发送缓冲区大小</p>
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# tc qdisc del dev ens33 root
-</span></span><span class="line"><span class="cl">root@tcp-client:~# tc qdisc add dev ens33 root netem delay 10ms
-</span></span><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0   9.9M      0  0:03:25  0:03:25 --:--:-- 8479k
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># tc qdisc del dev ens33 root</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># tc qdisc add dev ens33 root netem delay 10ms</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># curl -O http://192.168.77.131/large_file</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>  <span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>    <span class="mi">0</span>     <span class="mi">0</span>   <span class="mf">9.9</span><span class="n">M</span>      <span class="mi">0</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">03</span><span class="p">:</span><span class="mi">25</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">03</span><span class="p">:</span><span class="mi">25</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mi">8479</span><span class="n">k</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -816,14 +826,14 @@ wmem：套接字发送缓冲区大小</p>
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@tcp-client:~# tc qdisc del dev ens33 root
-</span></span><span class="line"><span class="cl">root@tcp-client:~# tc qdisc add dev ens33 root netem delay 200ms
-</span></span><span class="line"><span class="cl">root@tcp-client:~# tc qdisc show dev ens33
-</span></span><span class="line"><span class="cl">qdisc netem 8005: root refcnt 2 limit 1000 delay 200.0ms
-</span></span><span class="line"><span class="cl">root@tcp-client:~# curl -O http://192.168.77.131/large_file
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100 2048M  100 2048M    0     0  2069k      0  0:16:53  0:16:53 --:--:-- 6733k
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># tc qdisc del dev ens33 root</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># tc qdisc add dev ens33 root netem delay 200ms</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># tc qdisc show dev ens33</span>
+</span></span><span class="line"><span class="cl"><span class="n">qdisc</span> <span class="n">netem</span> <span class="mi">8005</span><span class="p">:</span> <span class="n">root</span> <span class="n">refcnt</span> <span class="mi">2</span> <span class="n">limit</span> <span class="mi">1000</span> <span class="n">delay</span> <span class="mf">200.0</span><span class="n">ms</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">tcp</span><span class="o">-</span><span class="n">client</span><span class="p">:</span><span class="o">~</span><span class="c1"># curl -O http://192.168.77.131/large_file</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>  <span class="mi">100</span> <span class="mi">2048</span><span class="n">M</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mi">2069</span><span class="n">k</span>      <span class="mi">0</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">53</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">53</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mi">6733</span><span class="n">k</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -904,12 +914,12 @@ wmem：套接字发送缓冲区大小</p>
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
+    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark本地劫持https</h2>
+            <h2 class="article-title">Wireshark技巧</h2>
         </div>
     </a>
 </article>
@@ -917,12 +927,12 @@ wmem：套接字发送缓冲区大小</p>
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
+    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark技巧</h2>
+            <h2 class="article-title">Wireshark本地劫持https</h2>
         </div>
     </a>
 </article>
@@ -937,7 +947,7 @@ wmem：套接字发送缓冲区大小</p>
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

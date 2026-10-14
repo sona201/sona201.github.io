@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='基于推文让 Gemini 设计 prompt，一共给出了两个 prompt 原推文 自学可能陷入一种困境，不知道 roadmap，没有 benchmark，没有 feedback'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='基于推文让 Gemini 设计 prompt，一共给出了两个 prompt 原推文 自学可能陷入一种困境，不知道 roadmap，没有 benchmark，没有 feedback'>
 <title>用 Gemini 设计自学 Prompt</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/gemini-learning-prompts/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="基于推文让 Gemini 设计 prompt，一共给出了两个 prompt 原推文 自学可能陷入一种困境，不知道 roadmap，没有 benchmark，没有 feedback">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -430,7 +440,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

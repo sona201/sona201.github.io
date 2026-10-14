@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>tool on Ricardo</title>
+        <title>Tool on Ricardo</title>
         <link>https://sona201.github.io/tags/tool/</link>
-        <description>Recent content in tool on Ricardo</description>
+        <description>Recent content in Tool on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zh-CN</language>
+        <language>zh-cn</language>
         <lastBuildDate>Sat, 13 Jul 2024 16:33:55 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/tool/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>obsidian-sync-v1</title>
         <link>https://sona201.github.io/posts/obsidian-tool-v1/</link>

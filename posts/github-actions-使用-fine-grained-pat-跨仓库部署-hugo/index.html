@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='记录 GitHub Actions 从 Hugo 源码仓库向 GitHub Pages 仓库发布时，创建 Fine-grained Personal Access Token、最小权限配置和 Actions Secret 的完整过程。'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='记录 GitHub Actions 从 Hugo 源码仓库向 GitHub Pages 仓库发布时，创建 Fine-grained Personal Access Token、最小权限配置和 Actions Secret 的完整过程。'>
 <title>GitHub Actions 使用 Fine-grained PAT 跨仓库部署 Hugo</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/github-actions-%E4%BD%BF%E7%94%A8-fine-grained-pat-%E8%B7%A8%E4%BB%93%E5%BA%93%E9%83%A8%E7%BD%B2-hugo/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="记录 GitHub Actions 从 Hugo 源码仓库向 GitHub Pages 仓库发布时，创建 Fine-grained Personal Access Token、最小权限配置和 Actions Secret 的完整过程。">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -855,11 +865,11 @@ if (!doNotTrack) {
         
             <a href="/tags/github-actions/">GitHub Actions</a>
         
-            <a href="/tags/fine-grained-pat/">Fine-grained PAT</a>
+            <a href="/tags/fine-grained-pat/">Fine-Grained PAT</a>
         
-            <a href="/tags/hugo/">hugo</a>
+            <a href="/tags/hugo/">Hugo</a>
         
-            <a href="/tags/github-pages/">github-pages</a>
+            <a href="/tags/github-pages/">GitHub Pages</a>
         
             <a href="/tags/token/">Token</a>
         
@@ -893,7 +903,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

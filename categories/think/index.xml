@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>think on Ricardo</title>
+        <title>Think on Ricardo</title>
         <link>https://sona201.github.io/categories/think/</link>
-        <description>Recent content in think on Ricardo</description>
+        <description>Recent content in Think on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zh-CN</language>
+        <language>zh-cn</language>
         <lastBuildDate>Fri, 31 Oct 2025 00:59:26 +0800</lastBuildDate><atom:link href="https://sona201.github.io/categories/think/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>somethingtosay</title>
         <link>https://sona201.github.io/posts/somethingtosay/</link>

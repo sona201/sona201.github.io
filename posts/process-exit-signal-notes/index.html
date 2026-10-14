@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='k8s kill restart exit status 137 128&#43;信号值 exit 130 命令行输入 sleep 100000 然后执行 查看命令状态 echo $? 结果输出: 130(128&#43;2) exit 137 终端1:命令行输入: sleep 100000 终端2:kill sleep 终端1:查看命'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='k8s kill restart exit status 137 128&#43;信号值 exit 130 命令行输入 sleep 100000 然后执行 查看命令状态 echo $? 结果输出: 130(128&#43;2) exit 137 终端1:命令行输入: sleep 100000 终端2:kill sleep 终端1:查看命'>
 <title>进程退出码 130、137、143 与信号</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/process-exit-signal-notes/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="k8s kill restart exit status 137 128&#43;信号值 exit 130 命令行输入 sleep 100000 然后执行 查看命令状态 echo $? 结果输出: 130(128&#43;2) exit 137 终端1:命令行输入: sleep 100000 终端2:kill sleep 终端1:查看命">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -272,7 +282,7 @@ kill -15 <!-- raw HTML omitted --></p>
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

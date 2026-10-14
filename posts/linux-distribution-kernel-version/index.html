@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='查看 Linux 发行版名称和版本号有很多种方法 参考原文 偶尔需要查看系统的版本，安装对应的包，整理的一些方法，依次列举 1. /proc/version 文件 这个是系统生成的虚拟文件，'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='查看 Linux 发行版名称和版本号有很多种方法 参考原文 偶尔需要查看系统的版本，安装对应的包，整理的一些方法，依次列举 1. /proc/version 文件 这个是系统生成的虚拟文件，'>
 <title>查看 Linux 发行版与内核版本</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/linux-distribution-kernel-version/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="查看 Linux 发行版名称和版本号有很多种方法 参考原文 偶尔需要查看系统的版本，安装对应的包，整理的一些方法，依次列举 1. /proc/version 文件 这个是系统生成的虚拟文件，">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -432,12 +442,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Nmap 端口扫描笔记</h2>
+            <h2 class="article-title">Linux iptables 使用笔记</h2>
         </div>
     </a>
 </article>
@@ -445,12 +455,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Linux iptables 使用笔记</h2>
+            <h2 class="article-title">Nmap 端口扫描笔记</h2>
         </div>
     </a>
 </article>
@@ -504,7 +514,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

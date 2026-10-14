@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='#linux #localtime #zone #Shanghai #Asia linux 修改时区 代码 1 2 3 4 5 6 [root@example-host ~]$ ll /etc/localtime lrwxrwxrwx 1 root root 29 Aug 7 02:30 /etc/localtime -&amp;gt; /usr/share/zoneinfo/Etc/GMT&#43;8 [root@example-host ~]$ rm -f /etc/localtime [root@example-host ~]$ ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime [root@example-host ~]$ date -R Mon, 04 Nov 2024 15:08:29 &#43;0800 crontab时间和系统时间不一'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='#linux #localtime #zone #Shanghai #Asia linux 修改时区 代码 1 2 3 4 5 6 [root@example-host ~]$ ll /etc/localtime lrwxrwxrwx 1 root root 29 Aug 7 02:30 /etc/localtime -&amp;gt; /usr/share/zoneinfo/Etc/GMT&#43;8 [root@example-host ~]$ rm -f /etc/localtime [root@example-host ~]$ ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime [root@example-host ~]$ date -R Mon, 04 Nov 2024 15:08:29 &#43;0800 crontab时间和系统时间不一'>
 <title>Linux 修改时区与 crontab 时间排查</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/linux-timezone-update/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="#linux #localtime #zone #Shanghai #Asia linux 修改时区 代码 1 2 3 4 5 6 [root@example-host ~]$ ll /etc/localtime lrwxrwxrwx 1 root root 29 Aug 7 02:30 /etc/localtime -&amp;gt; /usr/share/zoneinfo/Etc/GMT&#43;8 [root@example-host ~]$ rm -f /etc/localtime [root@example-host ~]$ ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime [root@example-host ~]$ date -R Mon, 04 Nov 2024 15:08:29 &#43;0800 crontab时间和系统时间不一">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -240,12 +250,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Nmap 端口扫描笔记</h2>
+            <h2 class="article-title">Linux iptables 使用笔记</h2>
         </div>
     </a>
 </article>
@@ -253,12 +263,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/linux-iptables-%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+    <a href="/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Linux iptables 使用笔记</h2>
+            <h2 class="article-title">Nmap 端口扫描笔记</h2>
         </div>
     </a>
 </article>
@@ -312,7 +322,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

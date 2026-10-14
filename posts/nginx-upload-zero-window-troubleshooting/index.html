@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='文件上传卡住时的 TCP 与 Nginx 排查 一、背景 我写了一个python服务，里面有个文件上传的功能，直接把本地文件上传到服务器 我的服务：入口是nginx，'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='文件上传卡住时的 TCP 与 Nginx 排查 一、背景 我写了一个python服务，里面有个文件上传的功能，直接把本地文件上传到服务器 我的服务：入口是nginx，'>
 <title>文件上传卡住时排查 TCP Zero Window 与 Nginx 缓冲</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/nginx-upload-zero-window-troubleshooting/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="文件上传卡住时的 TCP 与 Nginx 排查 一、背景 我写了一个python服务，里面有个文件上传的功能，直接把本地文件上传到服务器 我的服务：入口是nginx，">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/tcp/">tcp</a>
+                    <a href="/categories/tcp/">Tcp</a>
                 </span>
             
             
@@ -373,19 +383,6 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Wireshark本地劫持https</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="">
     <a href="/posts/tc_%E5%AE%9E%E9%AA%8C/">
         
         
@@ -405,6 +402,19 @@ if (!doNotTrack) {
 
         <div class="article-details">
             <h2 class="article-title">Wireshark技巧</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Wireshark本地劫持https</h2>
         </div>
     </a>
 </article>
@@ -432,7 +442,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

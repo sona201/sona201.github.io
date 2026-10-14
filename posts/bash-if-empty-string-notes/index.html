@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='老生常谈的if判断字符串加x的问题 代码 1 2 3 4 5 6 7 8 9 10 if [ &amp;#34;$3&amp;#34;x = &amp;#34;r&amp;#34;x ] string=&amp;#39;My string&amp;#39;; if [ $string = &amp;#34;My&amp;#34; ]; then echo &amp;#34;It&amp;#39;s there!&amp;#34;; else echo &amp;#34;xxxx&amp;#34;; fi 主要是双括号与单括号的情况区分 双括号的'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='老生常谈的if判断字符串加x的问题 代码 1 2 3 4 5 6 7 8 9 10 if [ &amp;#34;$3&amp;#34;x = &amp;#34;r&amp;#34;x ] string=&amp;#39;My string&amp;#39;; if [ $string = &amp;#34;My&amp;#34; ]; then echo &amp;#34;It&amp;#39;s there!&amp;#34;; else echo &amp;#34;xxxx&amp;#34;; fi 主要是双括号与单括号的情况区分 双括号的'>
 <title>Bash if 判断空字符串笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/bash-if-empty-string-notes/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="老生常谈的if判断字符串加x的问题 代码 1 2 3 4 5 6 7 8 9 10 if [ &amp;#34;$3&amp;#34;x = &amp;#34;r&amp;#34;x ] string=&amp;#39;My string&amp;#39;; if [ $string = &amp;#34;My&amp;#34; ]; then echo &amp;#34;It&amp;#39;s there!&amp;#34;; else echo &amp;#34;xxxx&amp;#34;; fi 主要是双括号与单括号的情况区分 双括号的">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -353,7 +363,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
