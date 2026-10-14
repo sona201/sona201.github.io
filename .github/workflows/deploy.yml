@@ -1,47 +1,95 @@
-name: deploy hugo
+name: Blog checks
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: deploy-hugo
+  group: blog-checks-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
           submodules: true
-          fetch-depth: 0
-
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v3
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          hugo-version: '0.101.0'
+          python-version: '3.13'
+      - name: Resolve build identity
+        id: build
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          echo "hugo=$(cat .hugo-version)" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          if [[ -n "$PR_NUMBER" ]]; then
+            echo "kind=preview" >> "$GITHUB_OUTPUT"
+            echo "url=https://sona201.github.io/previews/pr-${PR_NUMBER}/" >> "$GITHUB_OUTPUT"
+          else
+            echo "kind=production" >> "$GITHUB_OUTPUT"
+            echo "url=https://sona201.github.io/" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: peaceiris/actions-hugo@2752ce1d29631191ea3f27c23495fa06139a5b78 # v3.2.1
+        with:
+          hugo-version: ${{ steps.build.outputs.hugo }}
           extended: true
-
-      - name: Check public content
-        run: python3 scripts/sync_obsidian_blog.py --audit-public
-
-      - name: Build Web
-        run: hugo --cleanDestinationDir
-
-      - name: Deploy Web
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Test publishing tools and article demo
+        run: |
+          python3 -m unittest discover -s tests -v
+          python3 -m unittest discover -s examples/magpie-agent-loop-demo -v
+      - name: Validate workflow syntax with pinned actionlint
+        run: |
+          curl -fsSL https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz -o "$RUNNER_TEMP/actionlint.tar.gz"
+          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  $RUNNER_TEMP/actionlint.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
+          # GitHub supports queue:max; actionlint 1.7.12 has not added that key yet.
+          "$RUNNER_TEMP/actionlint" -shellcheck= -ignore 'unexpected key "queue" for "concurrency" section' .github/workflows/*.yml
+      - name: Check reviewed publication scope
+        run: |
+          python3 scripts/sync_obsidian_blog.py --audit-public
+          python3 scripts/check_public_manifest.py
+      - name: Build and check static site
+        env:
+          BUILD_KIND: ${{ steps.build.outputs.kind }}
+          BUILD_URL: ${{ steps.build.outputs.url }}
+          BUILD_SHA: ${{ steps.build.outputs.sha }}
+        run: |
+          config=config.yaml
+          if [[ "$BUILD_KIND" == preview ]]; then config=config.yaml,config/preview.yaml; fi
+          hugo --config "$config" --baseURL "$BUILD_URL" --cleanDestinationDir
+          python3 scripts/site_checks.py stamp --site public --base-url "$BUILD_URL" \
+            --source-sha "$BUILD_SHA" --run-id "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --kind "$BUILD_KIND"
+      - name: Save the exact verified site
+        id: artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          external_repository: sona201/sona201.github.io
-          publish_branch: master
-          publish_dir: ./public
-          commit_message: ${{ github.event.head_commit.message || 'manual deploy' }}
+          name: blog-site-${{ github.run_id }}-${{ github.run_attempt }}
+          path: public/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+      - name: Explain preview access
+        env:
+          ARTIFACT_URL: ${{ steps.artifact.outputs.artifact-url }}
+          BUILD_SHA: ${{ steps.build.outputs.sha }}
+        run: |
+          {
+            echo '## Blog checks passed'
+            echo "Source commit: $BUILD_SHA"
+            echo "[Download the verified site]($ARTIFACT_URL)"
+            echo 'Same-repository PRs with the preview label are published by Blog publish. Fork PRs receive the downloadable artifact only.'
+          } >> "$GITHUB_STEP_SUMMARY"
