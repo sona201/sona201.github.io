@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name="robots" content="noindex, nofollow"><meta name='description' content='从个人笔记仓库整理迁移'>
+<title>mysqldump 常用操作</title>
+
+<link rel='canonical' href='https://sona201.github.io/previews/pr-1/posts/mysqldump-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/'>
+
+<link rel="stylesheet" href="/previews/pr-1/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='mysqldump 常用操作'>
+<meta property='og:description' content='从个人笔记仓库整理迁移'>
+<meta property='og:url' content='https://sona201.github.io/previews/pr-1/posts/mysqldump-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='mysql' /><meta property='article:tag' content='mysqldump' /><meta property='article:tag' content='backup' /><meta property='article:published_time' content='2026-10-03T22:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-10-03T22:00:00&#43;08:00'/>
+<meta name="twitter:title" content="mysqldump 常用操作">
+<meta name="twitter:description" content="从个人笔记仓库整理迁移">
+    <link rel="shortcut icon" href="/previews/pr-1/images/favicon.ico" />
+
+  
+
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/previews/pr-1">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/previews/pr-1/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/previews/pr-1/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/previews/pr-1/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/previews/pr-1/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/previews/pr-1/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/previews/pr-1/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">mysqldump 常用操作</h1>
+        
+        <p class="article-subtitle">从个人笔记仓库整理迁移</p>
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/previews/pr-1/categories/mysql/">Mysql</a>
+                </span>
+            
+            
+                <time datetime="2026-10-03">2026-10-03</time>
+            
+            <span>阅读时长: 3 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>#mysql #sql #mysqldump</p>
+<h2 id="mysqldump">mysqldump</h2>
+<h3 id="mysqldump-57">mysqldump 5.7</h3>
+<h4 id="1-mysql-导出表结构和表数据-mysqldump用法命令行下具体用法如下">1. mysql 导出表结构和表数据 mysqldump用法，命令行下具体用法如下:</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -u用戶名 -p密码 -d 数据库名 表名 &gt; 脚本名;
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h4 id="2-导出整个数据库结构和数据">2. 导出整个数据库结构和数据</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -h localhost -uroot -p123456 database &gt; dump.sql
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h4 id="3-导出单个数据表结构和数据">3. 导出单个数据表结构和数据</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -h localhost -uroot -p123456  database table &gt; dump.sql
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h4 id="4导出整个数据库结构不包含数据">4.导出整个数据库结构（不包含数据）</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -h localhost -uroot -p123456  -d database &gt; dump.sql
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h4 id="5导出单个数据表结构不包含数据">5.导出单个数据表结构（不包含数据）</h4>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -h localhost -uroot -p123456  -d database table &gt; dump.sql
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h4 id="6mysqldump-备份导出数据排除某张表">6.mysqldump 备份导出数据排除某张表</h4>
+<p>就用 <code>--ignore-table=dbname.tablename</code> 参数就行了。</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump -uusername -ppassword -h192.168.0.1 -P3306 dbname --ignore-table=dbname.dbtanles &gt; dump.sql
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h3 id="mysqldump-80">mysqldump 8.0</h3>
+<p>mysqldump8.0 需要设置<code>--column-statistics=0</code>参数</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">  --column-statistics Add an ANALYZE TABLE statement to regenerate any existing
+</span></span><span class="line"><span class="cl">                      column statistics.
+</span></span><span class="line"><span class="cl">                      (Defaults to on; use --skip-column-statistics to disable.)
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysqldump --column-statistics=0 -uusername -ppassword -hhostname -P3306 cmdb_appops --ignore-table=cmdb_appops.appops_application \
+</span></span><span class="line"><span class="cl">--ignore-table=cmdb_appops.techops_aliyun_daily_billing_item_bill \
+</span></span><span class="line"><span class="cl">--ignore-table=cmdb_appops.techops_split_bill \
+</span></span><span class="line"><span class="cl">--ignore-table=cmdb_appops.techops_split_bill_instance \
+</span></span><span class="line"><span class="cl">--ignore-table=cmdb_appops.wfh_comment &gt; dump.sql
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>建议使用参数</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/usr/bin/mysqldump -u moba -pmoba2016 -h 10.162.84.200 --events --set-gtid-purged=OFF --single-transaction --databases db_log_zone_96005 &gt; /data/db_backup_mysqldump/db_backup_db_log/db_log_zone_96005.sql
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p><code>--databases</code> 使用此参数导出数据时，会生成对应的创建数据库sql，免去要手动创建数据的麻烦</p>
+<p>生成的文件样例如下</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">SQL</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- MySQL dump 10.13  Distrib 5.7.24-26, for Linux (x86_64)
+</span></span></span><span class="line"><span class="cl"><span class="c1">--
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- Host: 10.162.84.200    Database: db_log_zone_96005
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- ------------------------------------------------------
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- Server version       5.7.23-log
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!40101 SET NAMES utf8 */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!40103 SET TIME_ZONE=&#39;+00:00&#39; */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE=&#39;NO_AUTO_VALUE_ON_ZERO&#39; */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!50717 SELECT COUNT(*) INTO @rocksdb_has_p_s_session_variables FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = &#39;performance_schema&#39; AND TABLE_NAME = &#39;session_variables&#39; */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!50717 SET @rocksdb_get_is_supported = IF (@rocksdb_has_p_s_session_variables, &#39;SELECT COUNT(*) INTO @rocksdb_is_supported FROM performance_schema.session_variables WHERE VARIABLE_NAME=\&#39;rocksdb_bulk_load\&#39;&#39;, &#39;SELECT 0&#39;) */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!50717 PREPARE s FROM @rocksdb_get_is_supported */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!50717 EXECUTE s */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!50717 DEALLOCATE PREPARE s */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!50717 SET @rocksdb_enable_bulk_load = IF (@rocksdb_is_supported, &#39;SET SESSION rocksdb_bulk_load = 1&#39;, &#39;SET @rocksdb_dummy_bulk_load = 0&#39;) */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!50717 PREPARE s FROM @rocksdb_enable_bulk_load */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!50717 EXECUTE s */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/*!50717 DEALLOCATE PREPARE s */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">--
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- Current Database: `db_log_zone_96005`
+</span></span></span><span class="line"><span class="cl"><span class="c1">--
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="cm">/*!32312 IF NOT EXISTS*/</span><span class="w"> </span><span class="o">`</span><span class="n">db_log_zone_96005</span><span class="o">`</span><span class="w"> </span><span class="cm">/*!40100 DEFAULT CHARACTER SET latin1 */</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">USE</span><span class="w"> </span><span class="o">`</span><span class="n">db_log_zone_96005</span><span class="o">`</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">--
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- Table structure for table `161activity_plugin_check`
+</span></span></span><span class="line"><span class="cl"><span class="c1">--
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="o">`</span><span class="mi">161</span><span class="n">activity_plugin_check</span><span class="o">`</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<blockquote>
+<p>CREATE DATABASE /<em>!32312 IF NOT EXISTS</em>/ <code>db_log_zone_96005</code> /*!40100 DEFAULT CHARACTER SET latin1 */;
+这句 sql ai的解释如下</p>
+</blockquote>
+<ul>
+<li><code>CREATE DATABASE</code>: 这是一个SQL命令，用于创建一个新的数据库。</li>
+<li><code>/*!32312 IF NOT EXISTS*/</code>: 这部分是一个条件注释。MySQL会解析并执行这些注释中的内容，只要MySQL的版本高于或等于注释中指定的版本号（在这里是3.23.12）。这是一种确保向后兼容性的方法，允许在旧版本的MySQL中运行SQL脚本，而不会因为不支持的语法而出错。在这个例子中，<code>IF NOT EXISTS</code>子句会被MySQL 3.23.12或更高版本执行，它确保只有在数据库<code>db_log_zone_96005</code>不存在时才会创建它。</li>
+<li><code>db_log_zone_96005</code>: 这是要创建的数据库的名称。</li>
+<li><code>/*!40100 DEFAULT CHARACTER SET latin1 */</code>: 这又是一个条件注释，它指定了数据库的默认字符集为<code>latin1</code>。这个注释中的内容会被MySQL 4.1.0或更高版本执行。字符集<code>latin1</code>是西欧语言的字符集，也称为ISO 8859-1。</li>
+</ul>
+<p>综上所述，这条SQL语句的作用是：在MySQL版本3.23.12或更高的环境中，如果数据库<code>db_log_zone_96005</code>不存在，则创建它，并在MySQL版本4.1.0或更高的环境中将其默认字符集设置为<code>latin1</code>。如果数据库已经存在，这条命令将不会执行任何操作。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/previews/pr-1/tags/mysql/">Mysql</a>
+        
+            <a href="/previews/pr-1/tags/mysqldump/">Mysqldump</a>
+        
+            <a href="/previews/pr-1/tags/backup/">Backup</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/previews/pr-1/posts/mysql-sql-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL SQL 常用命令</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/previews/pr-1/posts/mysqlclient-%E5%AE%89%E8%A3%85%E8%AE%B0%E5%BD%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">mysqlclient 安装记录</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/previews/pr-1/posts/sql-statement-categories/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">SQL 语句分类学习笔记</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/previews/pr-1/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>143</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>128</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#mysqldump">mysqldump</a>
+      <ol>
+        <li><a href="#mysqldump-57">mysqldump 5.7</a>
+          <ol>
+            <li><a href="#1-mysql-导出表结构和表数据-mysqldump用法命令行下具体用法如下">1. mysql 导出表结构和表数据 mysqldump用法，命令行下具体用法如下:</a></li>
+            <li><a href="#2-导出整个数据库结构和数据">2. 导出整个数据库结构和数据</a></li>
+            <li><a href="#3-导出单个数据表结构和数据">3. 导出单个数据表结构和数据</a></li>
+            <li><a href="#4导出整个数据库结构不包含数据">4.导出整个数据库结构（不包含数据）</a></li>
+            <li><a href="#5导出单个数据表结构不包含数据">5.导出单个数据表结构（不包含数据）</a></li>
+            <li><a href="#6mysqldump-备份导出数据排除某张表">6.mysqldump 备份导出数据排除某张表</a></li>
+          </ol>
+        </li>
+        <li><a href="#mysqldump-80">mysqldump 8.0</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/previews/pr-1/ts/main.js" defer></script><script type="text/javascript" src="/previews/pr-1/ts/custom.js" defer></script>
+
+
+
+    </body>
+</html>
