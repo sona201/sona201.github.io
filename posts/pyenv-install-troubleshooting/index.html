@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='pyenv install 官方文档 pyenv office doc https://github.com/pyenv/pyenv 默认简单方式 brew install pyenv 代码 1 2 3 4 5 6 # Github # curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash # recommand curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash # simple curl https://pyenv.run | bash 查看当前版本 代码 1 pyenv versions 查看当前可安装版本 代码'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='pyenv install 官方文档 pyenv office doc https://github.com/pyenv/pyenv 默认简单方式 brew install pyenv 代码 1 2 3 4 5 6 # Github # curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash # recommand curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash # simple curl https://pyenv.run | bash 查看当前版本 代码 1 pyenv versions 查看当前可安装版本 代码'>
 <title>pyenv 安装与 Apple Silicon 故障排查</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/pyenv-install-troubleshooting/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="pyenv install 官方文档 pyenv office doc https://github.com/pyenv/pyenv 默认简单方式 brew install pyenv 代码 1 2 3 4 5 6 # Github # curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash # recommand curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash # simple curl https://pyenv.run | bash 查看当前版本 代码 1 pyenv versions 查看当前可安装版本 代码">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/python/">python</a>
+                    <a href="/categories/python/">Python</a>
                 </span>
             
             
@@ -251,8 +261,8 @@ if (!doNotTrack) {
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">export ARCHFLAGS=&#34;-arch arm64&#34;; pyenv install 3.10.6
-</span></span><span class="line"><span class="cl">export ARCHFLAGS=&#34;-arch arm64&#34;;arch --arm64 pyenv install 3.7.15
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="k">export</span> <span class="n">ARCHFLAGS</span><span class="o">=</span><span class="s2">&#34;-arch arm64&#34;</span><span class="p">;</span> <span class="n">pyenv</span> <span class="n">install</span> <span class="mf">3.10</span><span class="o">.</span><span class="mi">6</span>
+</span></span><span class="line"><span class="cl"><span class="k">export</span> <span class="n">ARCHFLAGS</span><span class="o">=</span><span class="s2">&#34;-arch arm64&#34;</span><span class="p">;</span><span class="n">arch</span> <span class="o">--</span><span class="n">arm64</span> <span class="n">pyenv</span> <span class="n">install</span> <span class="mf">3.7</span><span class="o">.</span><span class="mi">15</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -269,8 +279,8 @@ if (!doNotTrack) {
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">echo $(pyenv root)
-</span></span><span class="line"><span class="cl">/usr/local/var/pyenv/versions/
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">echo</span> <span class="o">$</span><span class="p">(</span><span class="n">pyenv</span> <span class="n">root</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">pyenv</span><span class="o">/</span><span class="n">versions</span><span class="o">/</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -386,32 +396,32 @@ if (!doNotTrack) {
 </span><span class="lnt">26
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-v" data-lang="v"><span class="line"><span class="cl"><span class="nv">admin</span><span class="o">@</span><span class="nv">admins</span><span class="o">-</span><span class="nc">MacBook</span><span class="o">-</span><span class="nc">Pro</span> <span class="o">~</span> <span class="o">%</span> <span class="nv">export</span> <span class="nc">ARCHFLAGS</span><span class="o">=</span><span class="s2">&#34;-arch arm64&#34;</span><span class="p">;</span><span class="nv">arch</span> <span class="o">--</span><span class="nv">arm64</span> <span class="nv">pyenv</span> <span class="nv">install</span> <span class="mf">3.7.15</span>
-</span></span><span class="line"><span class="cl"><span class="nv">pyenv</span><span class="p">:</span> <span class="o">/</span><span class="nc">Users</span><span class="o">/</span><span class="nv">example</span><span class="o">/</span><span class="p">.</span><span class="nv">pyenv</span><span class="o">/</span><span class="nv">versions</span><span class="o">/</span><span class="mf">3.7.15</span> <span class="nv">already</span> <span class="nv">exists</span>
-</span></span><span class="line"><span class="cl"><span class="k">continue</span> <span class="nl">with</span> <span class="nv">installation</span><span class="kd">?</span> <span class="p">(</span><span class="nv">y</span><span class="o">/</span><span class="nc">N</span><span class="p">)</span> <span class="nv">y</span>
-</span></span><span class="line"><span class="cl"><span class="nv">python</span><span class="o">-</span><span class="nv">build</span><span class="p">:</span> <span class="nv">use</span> <span class="nv">openssl</span> <span class="nv">from</span> <span class="nv">homebrew</span>
-</span></span><span class="line"><span class="cl"><span class="nv">python</span><span class="o">-</span><span class="nv">build</span><span class="p">:</span> <span class="nv">use</span> <span class="nv">readline</span> <span class="nv">from</span> <span class="nv">homebrew</span>
-</span></span><span class="line"><span class="cl"><span class="nc">Downloading</span> <span class="nc">Python</span><span class="o">-</span><span class="mf">3.7.15</span><span class="p">.</span><span class="nv">tar</span><span class="p">.</span><span class="nv">xz</span><span class="o">...</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="p">&gt;</span> <span class="nv">https</span><span class="p">:</span><span class="c1">//www.python.org/ftp/python/3.7.15/Python-3.7.15.tar.xz
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nc">Installing</span> <span class="nc">Python</span><span class="o">-</span><span class="mf">3.7.15</span><span class="o">...</span>
-</span></span><span class="line"><span class="cl"><span class="nv">patching</span> <span class="nv">file</span> <span class="s1">&#39;Doc/library/ctypes.rst&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="nv">patching</span> <span class="nv">file</span> <span class="s1">&#39;Lib/test/test_unicode.py&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="nv">patching</span> <span class="nv">file</span> <span class="s1">&#39;Modules/_ctypes/_ctypes.c&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="nv">patching</span> <span class="nv">file</span> <span class="s1">&#39;Modules/_ctypes/callproc.c&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="nv">patching</span> <span class="nv">file</span> <span class="s1">&#39;Modules/_ctypes/ctypes.h&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="nv">patching</span> <span class="nv">file</span> <span class="nv">setup</span><span class="p">.</span><span class="nv">py</span>
-</span></span><span class="line"><span class="cl"><span class="nv">patching</span> <span class="nv">file</span> <span class="s1">&#39;Misc/NEWS.d/next/Core and Builtins/2020-06-30-04-44-29.bpo-41100.PJwA6F.rst&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="nv">patching</span> <span class="nv">file</span> <span class="s1">&#39;Modules/_decimal/libmpdec/mpdecimal.h&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="nv">patching</span> <span class="nv">file</span> <span class="nv">setup</span><span class="p">.</span><span class="nv">py</span>
-</span></span><span class="line"><span class="cl"><span class="nv">python</span><span class="o">-</span><span class="nv">build</span><span class="p">:</span> <span class="nv">use</span> <span class="nv">readline</span> <span class="nv">from</span> <span class="nv">homebrew</span>
-</span></span><span class="line"><span class="cl"><span class="nv">python</span><span class="o">-</span><span class="nv">build</span><span class="p">:</span> <span class="nv">use</span> <span class="nv">zlib</span> <span class="nv">from</span> <span class="nv">xcode</span> <span class="nv">sdk</span>
-</span></span><span class="line"><span class="cl"><span class="nc">Traceback</span> <span class="p">(</span><span class="nv">most</span> <span class="nv">recent</span> <span class="nv">call</span> <span class="nv">last</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">  <span class="nc">File</span> <span class="s2">&#34;&lt;string&gt;&#34;</span><span class="p">,</span> <span class="nv">line</span> <span class="mi">1</span><span class="p">,</span> <span class="k">in</span> <span class="p">&lt;</span><span class="kn">module</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">  <span class="nc">File</span> <span class="s2">&#34;/Users/example/.pyenv/versions/3.7.15/lib/python3.7/lzma.py&#34;</span><span class="p">,</span> <span class="nv">line</span> <span class="mi">27</span><span class="p">,</span> <span class="k">in</span> <span class="p">&lt;</span><span class="kn">module</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">from</span> <span class="nv">_lzma</span> <span class="kn">import</span> <span class="o">*</span>
-</span></span><span class="line"><span class="cl"><span class="nc">ModuleNotFoundError</span><span class="p">:</span> <span class="nc">No</span> <span class="kn">module</span> <span class="nv">named</span> <span class="s1">&#39;_lzma&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="nc">WARNING</span><span class="p">:</span> <span class="nc">The</span> <span class="nc">Python</span> <span class="nv">lzma</span> <span class="nv">extension</span> <span class="nv">was</span> <span class="nv">not</span> <span class="nv">compiled</span><span class="p">.</span> <span class="nc">Missing</span> <span class="nv">the</span> <span class="nv">lzma</span> <span class="nv">lib</span><span class="kd">?</span>
-</span></span><span class="line"><span class="cl"><span class="nc">Installed</span> <span class="nc">Python</span><span class="o">-</span><span class="mf">3.7.15</span> <span class="nv">to</span> <span class="o">/</span><span class="nc">Users</span><span class="o">/</span><span class="nv">example</span><span class="o">/</span><span class="p">.</span><span class="nv">pyenv</span><span class="o">/</span><span class="nv">versions</span><span class="o">/</span><span class="mf">3.7.15</span>
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">admin</span><span class="err">@</span><span class="n">admins</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span> <span class="o">~</span> <span class="o">%</span> <span class="k">export</span> <span class="n">ARCHFLAGS</span><span class="o">=</span><span class="s2">&#34;-arch arm64&#34;</span><span class="p">;</span><span class="n">arch</span> <span class="o">--</span><span class="n">arm64</span> <span class="n">pyenv</span> <span class="n">install</span> <span class="mf">3.7</span><span class="o">.</span><span class="mi">15</span>
+</span></span><span class="line"><span class="cl"><span class="n">pyenv</span><span class="p">:</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">example</span><span class="o">/.</span><span class="n">pyenv</span><span class="o">/</span><span class="n">versions</span><span class="o">/</span><span class="mf">3.7</span><span class="o">.</span><span class="mi">15</span> <span class="n">already</span> <span class="n">exists</span>
+</span></span><span class="line"><span class="cl"><span class="k">continue</span> <span class="n">with</span> <span class="n">installation</span><span class="err">?</span> <span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">N</span><span class="p">)</span> <span class="n">y</span>
+</span></span><span class="line"><span class="cl"><span class="n">python</span><span class="o">-</span><span class="n">build</span><span class="p">:</span> <span class="n">use</span> <span class="n">openssl</span> <span class="n">from</span> <span class="n">homebrew</span>
+</span></span><span class="line"><span class="cl"><span class="n">python</span><span class="o">-</span><span class="n">build</span><span class="p">:</span> <span class="n">use</span> <span class="n">readline</span> <span class="n">from</span> <span class="n">homebrew</span>
+</span></span><span class="line"><span class="cl"><span class="n">Downloading</span> <span class="n">Python</span><span class="o">-</span><span class="mf">3.7</span><span class="o">.</span><span class="mf">15.</span><span class="n">tar</span><span class="o">.</span><span class="n">xz</span><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="o">-&gt;</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">python</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">ftp</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="mf">3.7</span><span class="o">.</span><span class="mi">15</span><span class="o">/</span><span class="n">Python</span><span class="o">-</span><span class="mf">3.7</span><span class="o">.</span><span class="mf">15.</span><span class="n">tar</span><span class="o">.</span><span class="n">xz</span>
+</span></span><span class="line"><span class="cl"><span class="n">Installing</span> <span class="n">Python</span><span class="o">-</span><span class="mf">3.7</span><span class="o">.</span><span class="mf">15.</span><span class="o">..</span>
+</span></span><span class="line"><span class="cl"><span class="n">patching</span> <span class="n">file</span> <span class="s1">&#39;Doc/library/ctypes.rst&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">patching</span> <span class="n">file</span> <span class="s1">&#39;Lib/test/test_unicode.py&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">patching</span> <span class="n">file</span> <span class="s1">&#39;Modules/_ctypes/_ctypes.c&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">patching</span> <span class="n">file</span> <span class="s1">&#39;Modules/_ctypes/callproc.c&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">patching</span> <span class="n">file</span> <span class="s1">&#39;Modules/_ctypes/ctypes.h&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">patching</span> <span class="n">file</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span>
+</span></span><span class="line"><span class="cl"><span class="n">patching</span> <span class="n">file</span> <span class="s1">&#39;Misc/NEWS.d/next/Core and Builtins/2020-06-30-04-44-29.bpo-41100.PJwA6F.rst&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">patching</span> <span class="n">file</span> <span class="s1">&#39;Modules/_decimal/libmpdec/mpdecimal.h&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">patching</span> <span class="n">file</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span>
+</span></span><span class="line"><span class="cl"><span class="n">python</span><span class="o">-</span><span class="n">build</span><span class="p">:</span> <span class="n">use</span> <span class="n">readline</span> <span class="n">from</span> <span class="n">homebrew</span>
+</span></span><span class="line"><span class="cl"><span class="n">python</span><span class="o">-</span><span class="n">build</span><span class="p">:</span> <span class="n">use</span> <span class="n">zlib</span> <span class="n">from</span> <span class="n">xcode</span> <span class="n">sdk</span>
+</span></span><span class="line"><span class="cl"><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="ne">File</span> <span class="s2">&#34;&lt;string&gt;&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="ne">File</span> <span class="s2">&#34;/Users/example/.pyenv/versions/3.7.15/lib/python3.7/lzma.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">27</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">from</span> <span class="n">_lzma</span> <span class="n">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="n">ModuleNotFoundError</span><span class="p">:</span> <span class="n">No</span> <span class="n">module</span> <span class="n">named</span> <span class="s1">&#39;_lzma&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">WARNING</span><span class="p">:</span> <span class="n">The</span> <span class="n">Python</span> <span class="n">lzma</span> <span class="n">extension</span> <span class="n">was</span> <span class="ow">not</span> <span class="n">compiled</span><span class="o">.</span> <span class="n">Missing</span> <span class="n">the</span> <span class="n">lzma</span> <span class="n">lib</span><span class="err">?</span>
+</span></span><span class="line"><span class="cl"><span class="n">Installed</span> <span class="n">Python</span><span class="o">-</span><span class="mf">3.7</span><span class="o">.</span><span class="mi">15</span> <span class="n">to</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">example</span><span class="o">/.</span><span class="n">pyenv</span><span class="o">/</span><span class="n">versions</span><span class="o">/</span><span class="mf">3.7</span><span class="o">.</span><span class="mi">15</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -484,52 +494,52 @@ if (!doNotTrack) {
 </span><span class="lnt">46
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">clin:Project/ $ pyenv install 3.9.15 --verbose
-</span></span><span class="line"><span class="cl">python-build: use openssl@1.1 from homebrew
-</span></span><span class="line"><span class="cl">/var/folders/y7/s2k99dl93dz6gwl73yxjtn2c0000gn/T/python-build.20240124165710.23936 ~/File/Project
-</span></span><span class="line"><span class="cl">Downloading readline-8.1.tar.gz...
-</span></span><span class="line"><span class="cl">HTTP/1.1 200 Connection established
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">clin</span><span class="p">:</span><span class="n">Project</span><span class="o">/</span> <span class="o">$</span> <span class="n">pyenv</span> <span class="n">install</span> <span class="mf">3.9</span><span class="o">.</span><span class="mi">15</span> <span class="o">--</span><span class="n">verbose</span>
+</span></span><span class="line"><span class="cl"><span class="n">python</span><span class="o">-</span><span class="n">build</span><span class="p">:</span> <span class="n">use</span> <span class="n">openssl</span><span class="err">@</span><span class="mf">1.1</span> <span class="n">from</span> <span class="n">homebrew</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="n">y7</span><span class="o">/</span><span class="n">s2k99dl93dz6gwl73yxjtn2c0000gn</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">python</span><span class="o">-</span><span class="n">build</span><span class="o">.</span><span class="mf">20240124165710.23936</span> <span class="o">~/</span><span class="ne">File</span><span class="o">/</span><span class="n">Project</span>
+</span></span><span class="line"><span class="cl"><span class="n">Downloading</span> <span class="n">readline</span><span class="o">-</span><span class="mf">8.1</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="n">Connection</span> <span class="n">established</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">HTTP/2 404
-</span></span><span class="line"><span class="cl">server: GitHub.com
-</span></span><span class="line"><span class="cl">content-type: text/html; charset=utf-8
-</span></span><span class="line"><span class="cl">permissions-policy: interest-cohort=()
-</span></span><span class="line"><span class="cl">access-control-allow-origin: *
-</span></span><span class="line"><span class="cl">etag: &#34;64d39a40-24a3&#34;
-</span></span><span class="line"><span class="cl">content-security-policy: default-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; connect-src &#39;self&#39;
-</span></span><span class="line"><span class="cl">x-proxy-cache: MISS
-</span></span><span class="line"><span class="cl">x-github-request-id: 6004:22C29E:99AB1:AFE1F:65B0CC14
-</span></span><span class="line"><span class="cl">accept-ranges: bytes
-</span></span><span class="line"><span class="cl">date: Wed, 24 Jan 2024 08:57:11 GMT
-</span></span><span class="line"><span class="cl">via: 1.1 varnish
-</span></span><span class="line"><span class="cl">age: 1235
-</span></span><span class="line"><span class="cl">x-served-by: cache-qpg1234-QPG
-</span></span><span class="line"><span class="cl">x-cache: HIT
-</span></span><span class="line"><span class="cl">x-cache-hits: 1
-</span></span><span class="line"><span class="cl">x-timer: S1706086632.903138,VS0,VE2
-</span></span><span class="line"><span class="cl">vary: Accept-Encoding
-</span></span><span class="line"><span class="cl">x-fastly-request-id: aac04c88e0b4189654405bc0e51408bad9c54033
-</span></span><span class="line"><span class="cl">content-length: 9379
+</span></span><span class="line"><span class="cl"><span class="n">HTTP</span><span class="o">/</span><span class="mi">2</span> <span class="mi">404</span>
+</span></span><span class="line"><span class="cl"><span class="n">server</span><span class="p">:</span> <span class="n">GitHub</span><span class="o">.</span><span class="n">com</span>
+</span></span><span class="line"><span class="cl"><span class="n">content</span><span class="o">-</span><span class="n">type</span><span class="p">:</span> <span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">;</span> <span class="n">charset</span><span class="o">=</span><span class="n">utf</span><span class="o">-</span><span class="mi">8</span>
+</span></span><span class="line"><span class="cl"><span class="n">permissions</span><span class="o">-</span><span class="n">policy</span><span class="p">:</span> <span class="n">interest</span><span class="o">-</span><span class="n">cohort</span><span class="o">=</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">access</span><span class="o">-</span><span class="n">control</span><span class="o">-</span><span class="n">allow</span><span class="o">-</span><span class="n">origin</span><span class="p">:</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="n">etag</span><span class="p">:</span> <span class="s2">&#34;64d39a40-24a3&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">content</span><span class="o">-</span><span class="n">security</span><span class="o">-</span><span class="n">policy</span><span class="p">:</span> <span class="n">default</span><span class="o">-</span><span class="n">src</span> <span class="s1">&#39;none&#39;</span><span class="p">;</span> <span class="n">style</span><span class="o">-</span><span class="n">src</span> <span class="s1">&#39;unsafe-inline&#39;</span><span class="p">;</span> <span class="n">img</span><span class="o">-</span><span class="n">src</span> <span class="n">data</span><span class="p">:;</span> <span class="n">connect</span><span class="o">-</span><span class="n">src</span> <span class="s1">&#39;self&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">proxy</span><span class="o">-</span><span class="n">cache</span><span class="p">:</span> <span class="n">MISS</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">github</span><span class="o">-</span><span class="n">request</span><span class="o">-</span><span class="n">id</span><span class="p">:</span> <span class="mi">6004</span><span class="p">:</span><span class="mi">22</span><span class="n">C29E</span><span class="p">:</span><span class="mi">99</span><span class="n">AB1</span><span class="p">:</span><span class="n">AFE1F</span><span class="p">:</span><span class="mi">65</span><span class="n">B0CC14</span>
+</span></span><span class="line"><span class="cl"><span class="n">accept</span><span class="o">-</span><span class="n">ranges</span><span class="p">:</span> <span class="n">bytes</span>
+</span></span><span class="line"><span class="cl"><span class="n">date</span><span class="p">:</span> <span class="n">Wed</span><span class="p">,</span> <span class="mi">24</span> <span class="n">Jan</span> <span class="mi">2024</span> <span class="mi">08</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">11</span> <span class="n">GMT</span>
+</span></span><span class="line"><span class="cl"><span class="n">via</span><span class="p">:</span> <span class="mf">1.1</span> <span class="n">varnish</span>
+</span></span><span class="line"><span class="cl"><span class="n">age</span><span class="p">:</span> <span class="mi">1235</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">served</span><span class="o">-</span><span class="n">by</span><span class="p">:</span> <span class="n">cache</span><span class="o">-</span><span class="n">qpg1234</span><span class="o">-</span><span class="n">QPG</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">cache</span><span class="p">:</span> <span class="n">HIT</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">cache</span><span class="o">-</span><span class="n">hits</span><span class="p">:</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">timer</span><span class="p">:</span> <span class="n">S1706086632</span><span class="o">.</span><span class="mi">903138</span><span class="p">,</span><span class="n">VS0</span><span class="p">,</span><span class="n">VE2</span>
+</span></span><span class="line"><span class="cl"><span class="n">vary</span><span class="p">:</span> <span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">fastly</span><span class="o">-</span><span class="n">request</span><span class="o">-</span><span class="n">id</span><span class="p">:</span> <span class="n">aac04c88e0b4189654405bc0e51408bad9c54033</span>
+</span></span><span class="line"><span class="cl"><span class="n">content</span><span class="o">-</span><span class="n">length</span><span class="p">:</span> <span class="mi">9379</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">-&gt; https://ftpmirror.gnu.org/readline/readline-8.1.tar.gz
-</span></span><span class="line"><span class="cl">curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to mirror.ossplanet.net:443
-</span></span><span class="line"><span class="cl">error: failed to download readline-8.1.tar.gz
+</span></span><span class="line"><span class="cl"><span class="o">-&gt;</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">ftpmirror</span><span class="o">.</span><span class="n">gnu</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">readline</span><span class="o">/</span><span class="n">readline</span><span class="o">-</span><span class="mf">8.1</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</span></span><span class="line"><span class="cl"><span class="n">curl</span><span class="p">:</span> <span class="p">(</span><span class="mi">35</span><span class="p">)</span> <span class="n">LibreSSL</span> <span class="n">SSL_connect</span><span class="p">:</span> <span class="n">SSL_ERROR_SYSCALL</span> <span class="ow">in</span> <span class="n">connection</span> <span class="n">to</span> <span class="n">mirror</span><span class="o">.</span><span class="n">ossplanet</span><span class="o">.</span><span class="n">net</span><span class="p">:</span><span class="mi">443</span>
+</span></span><span class="line"><span class="cl"><span class="n">error</span><span class="p">:</span> <span class="n">failed</span> <span class="n">to</span> <span class="n">download</span> <span class="n">readline</span><span class="o">-</span><span class="mf">8.1</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">BUILD FAILED (OS X 14.2.1 using python-build 20180424)
+</span></span><span class="line"><span class="cl"><span class="n">BUILD</span> <span class="n">FAILED</span> <span class="p">(</span><span class="ne">OS</span> <span class="n">X</span> <span class="mf">14.2</span><span class="o">.</span><span class="mi">1</span> <span class="n">using</span> <span class="n">python</span><span class="o">-</span><span class="n">build</span> <span class="mi">20180424</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Results logged to /var/folders/y7/s2k99dl93dz6gwl73yxjtn2c0000gn/T/python-build.20240124165710.23936.log
+</span></span><span class="line"><span class="cl"><span class="n">Results</span> <span class="n">logged</span> <span class="n">to</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="n">y7</span><span class="o">/</span><span class="n">s2k99dl93dz6gwl73yxjtn2c0000gn</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">python</span><span class="o">-</span><span class="n">build</span><span class="o">.</span><span class="mf">20240124165710.23936</span><span class="o">.</span><span class="n">log</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Last 10 log lines:
-</span></span><span class="line"><span class="cl">age: 1235
-</span></span><span class="line"><span class="cl">x-served-by: cache-qpg1234-QPG
-</span></span><span class="line"><span class="cl">x-cache: HIT
-</span></span><span class="line"><span class="cl">x-cache-hits: 1
-</span></span><span class="line"><span class="cl">x-timer: S1706086632.903138,VS0,VE2
-</span></span><span class="line"><span class="cl">vary: Accept-Encoding
-</span></span><span class="line"><span class="cl">x-fastly-request-id: aac04c88e0b4189654405bc0e51408bad9c54033
-</span></span><span class="line"><span class="cl">content-length: 9379
+</span></span><span class="line"><span class="cl"><span class="n">Last</span> <span class="mi">10</span> <span class="nb">log</span> <span class="n">lines</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="n">age</span><span class="p">:</span> <span class="mi">1235</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">served</span><span class="o">-</span><span class="n">by</span><span class="p">:</span> <span class="n">cache</span><span class="o">-</span><span class="n">qpg1234</span><span class="o">-</span><span class="n">QPG</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">cache</span><span class="p">:</span> <span class="n">HIT</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">cache</span><span class="o">-</span><span class="n">hits</span><span class="p">:</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">timer</span><span class="p">:</span> <span class="n">S1706086632</span><span class="o">.</span><span class="mi">903138</span><span class="p">,</span><span class="n">VS0</span><span class="p">,</span><span class="n">VE2</span>
+</span></span><span class="line"><span class="cl"><span class="n">vary</span><span class="p">:</span> <span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="o">-</span><span class="n">fastly</span><span class="o">-</span><span class="n">request</span><span class="o">-</span><span class="n">id</span><span class="p">:</span> <span class="n">aac04c88e0b4189654405bc0e51408bad9c54033</span>
+</span></span><span class="line"><span class="cl"><span class="n">content</span><span class="o">-</span><span class="n">length</span><span class="p">:</span> <span class="mi">9379</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to mirror.ossplanet.net:443
+</span></span><span class="line"><span class="cl"><span class="n">curl</span><span class="p">:</span> <span class="p">(</span><span class="mi">35</span><span class="p">)</span> <span class="n">LibreSSL</span> <span class="n">SSL_connect</span><span class="p">:</span> <span class="n">SSL_ERROR_SYSCALL</span> <span class="ow">in</span> <span class="n">connection</span> <span class="n">to</span> <span class="n">mirror</span><span class="o">.</span><span class="n">ossplanet</span><span class="o">.</span><span class="n">net</span><span class="p">:</span><span class="mi">443</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -767,7 +777,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

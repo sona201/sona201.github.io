@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='tcp的tc实验记录'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='tcp的tc实验记录'>
 <title>Tc_实验</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/tc_%E5%AE%9E%E9%AA%8C/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="tcp的tc实验记录">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/tcp/">tcp</a>
+                    <a href="/categories/tcp/">Tcp</a>
                 </span>
             
             
@@ -199,14 +209,14 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@172.19.9.147 ~]# curl -O http://172.19.5.43/404.html
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100  3650  100  3650    0     0  2313k      0 --:--:-- --:--:-- --:--:-- 3564k
-</span></span><span class="line"><span class="cl">[root@172.19.9.147 ~]# curl -O http://172.19.5.43/zookeeper.out
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100 1880M  100 1880M    0     0   396M      0  0:00:04  0:00:04 --:--:--  396M
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span> <span class="o">~</span><span class="p">]</span><span class="c1"># curl -O http://172.19.5.43/404.html</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span>  <span class="mi">3650</span>  <span class="mi">100</span>  <span class="mi">3650</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mi">2313</span><span class="n">k</span>      <span class="mi">0</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mi">3564</span><span class="n">k</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span> <span class="o">~</span><span class="p">]</span><span class="c1"># curl -O http://172.19.5.43/zookeeper.out</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span> <span class="mi">1880</span><span class="n">M</span>  <span class="mi">100</span> <span class="mi">1880</span><span class="n">M</span>    <span class="mi">0</span>     <span class="mi">0</span>   <span class="mi">396</span><span class="n">M</span>      <span class="mi">0</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">04</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">04</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span>  <span class="mi">396</span><span class="n">M</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -281,10 +291,10 @@ if (!doNotTrack) {
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@172.19.9.147 ~]# curl -O http://172.19.5.43/zookeeper.out
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">  0     0    0     0    0     0      0      0 --:--:--  0:00:13 --:--:--     0
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span> <span class="o">~</span><span class="p">]</span><span class="c1"># curl -O http://172.19.5.43/zookeeper.out</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl">  <span class="mi">0</span>     <span class="mi">0</span>    <span class="mi">0</span>     <span class="mi">0</span>    <span class="mi">0</span>     <span class="mi">0</span>      <span class="mi">0</span>      <span class="mi">0</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">13</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span>     <span class="mi">0</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -308,18 +318,18 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@172.19.9.147 ~]# curl -O http://172.19.5.43/404.html
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100  3650  100  3650    0     0  2676k      0 --:--:-- --:--:-- --:--:-- 3564k
-</span></span><span class="line"><span class="cl">[root@172.19.9.147 ~]# curl -O http://172.19.5.43/zookeeper.out
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">  0     0    0     0    0     0      0      0 --:--:--  0:01:00 --:--:--     0^C
-</span></span><span class="line"><span class="cl">[root@172.19.9.147 ~]# curl -O http://172.19.5.43/404.html
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100  3650  100  3650    0     0  2664k      0 --:--:-- --:--:-- --:--:-- 3564k
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span> <span class="o">~</span><span class="p">]</span><span class="c1"># curl -O http://172.19.5.43/404.html</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span>  <span class="mi">3650</span>  <span class="mi">100</span>  <span class="mi">3650</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mi">2676</span><span class="n">k</span>      <span class="mi">0</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mi">3564</span><span class="n">k</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span> <span class="o">~</span><span class="p">]</span><span class="c1"># curl -O http://172.19.5.43/zookeeper.out</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl">  <span class="mi">0</span>     <span class="mi">0</span>    <span class="mi">0</span>     <span class="mi">0</span>    <span class="mi">0</span>     <span class="mi">0</span>      <span class="mi">0</span>      <span class="mi">0</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">00</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span>     <span class="mi">0</span><span class="o">^</span><span class="n">C</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span> <span class="o">~</span><span class="p">]</span><span class="c1"># curl -O http://172.19.5.43/404.html</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span>  <span class="mi">3650</span>  <span class="mi">100</span>  <span class="mi">3650</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mi">2664</span><span class="n">k</span>      <span class="mi">0</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mi">3564</span><span class="n">k</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -374,10 +384,10 @@ if (!doNotTrack) {
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@172.19.9.147 ~]# curl -O http://172.19.5.43/large_file
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">  0     0    0     0    0     0      0      0 --:--:--  0:00:04 --:--:--     0
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span> <span class="o">~</span><span class="p">]</span><span class="c1"># curl -O http://172.19.5.43/large_file</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl">  <span class="mi">0</span>     <span class="mi">0</span>    <span class="mi">0</span>     <span class="mi">0</span>    <span class="mi">0</span>     <span class="mi">0</span>      <span class="mi">0</span>      <span class="mi">0</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">04</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span>     <span class="mi">0</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -393,10 +403,10 @@ if (!doNotTrack) {
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@172.19.9.147 ~]# curl -O http://172.19.5.43/404.html
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100  3650  100  3650    0     0  2905k      0 --:--:-- --:--:-- --:--:-- 3564k
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span> <span class="o">~</span><span class="p">]</span><span class="c1"># curl -O http://172.19.5.43/404.html</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span>  <span class="mi">3650</span>  <span class="mi">100</span>  <span class="mi">3650</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mi">2905</span><span class="n">k</span>      <span class="mi">0</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mi">3564</span><span class="n">k</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -430,9 +440,9 @@ if (!doNotTrack) {
     
     <section class="article-tags">
         
-            <a href="/tags/wmem/">wmem</a>
+            <a href="/tags/wmem/">Wmem</a>
         
-            <a href="/tags/tc/">tc</a>
+            <a href="/tags/tc/">Tc</a>
         
             <a href="/tags/%E5%AE%9E%E9%AA%8C/">实验</a>
         
@@ -519,12 +529,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
+    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark本地劫持https</h2>
+            <h2 class="article-title">Wireshark技巧</h2>
         </div>
     </a>
 </article>
@@ -532,12 +542,12 @@ if (!doNotTrack) {
             
                 
 <article class="">
-    <a href="/posts/wireshark%E6%8A%80%E5%B7%A7/">
+    <a href="/posts/wireshark%E6%9C%AC%E5%9C%B0%E5%8A%AB%E6%8C%81https/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Wireshark技巧</h2>
+            <h2 class="article-title">Wireshark本地劫持https</h2>
         </div>
     </a>
 </article>
@@ -552,7 +562,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

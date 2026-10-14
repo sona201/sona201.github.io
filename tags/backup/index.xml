@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>backup on Ricardo</title>
+        <title>Backup on Ricardo</title>
         <link>https://sona201.github.io/tags/backup/</link>
-        <description>Recent content in backup on Ricardo</description>
+        <description>Recent content in Backup on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zh-CN</language>
+        <language>zh-cn</language>
         <lastBuildDate>Sat, 03 Oct 2026 22:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/backup/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>mysqldump 常用操作</title>
         <link>https://sona201.github.io/posts/mysqldump-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</link>

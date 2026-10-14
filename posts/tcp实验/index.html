@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='tcp实验记录'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='tcp实验记录'>
 <title>tcp实验</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/tcp%E5%AE%9E%E9%AA%8C/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="tcp实验记录">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/tcp/">tcp</a>
+                    <a href="/categories/tcp/">Tcp</a>
                 </span>
             
             
@@ -225,23 +235,23 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">client:172.19.9.147
-</span></span><span class="line"><span class="cl">tcpdump -i eth0 tcp port 8089 and host 172.19.5.43 -w tcpdump-$(date +%Y-%m-%d-%H-%M-%S).cap
-</span></span><span class="line"><span class="cl">[root@172.19.9.147 ~]# wget http://172.19.5.43:8089/zookeeper.out
-</span></span><span class="line"><span class="cl">--2023-03-26 00:49:47--  http://172.19.5.43:8089/zookeeper.out
-</span></span><span class="line"><span class="cl">Connecting to 172.19.5.43:8089... connected.
-</span></span><span class="line"><span class="cl">HTTP request sent, awaiting response... 200 OK
-</span></span><span class="line"><span class="cl">Length: 1972256747 (1.8G) [application/octet-stream]
-</span></span><span class="line"><span class="cl">Saving to: ‘zookeeper.out’
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">client</span><span class="p">:</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span>
+</span></span><span class="line"><span class="cl"><span class="n">tcpdump</span> <span class="o">-</span><span class="n">i</span> <span class="n">eth0</span> <span class="n">tcp</span> <span class="n">port</span> <span class="mi">8089</span> <span class="ow">and</span> <span class="n">host</span> <span class="mf">172.19</span><span class="o">.</span><span class="mf">5.43</span> <span class="o">-</span><span class="n">w</span> <span class="n">tcpdump</span><span class="o">-$</span><span class="p">(</span><span class="n">date</span> <span class="o">+%</span><span class="n">Y</span><span class="o">-%</span><span class="n">m</span><span class="o">-%</span><span class="n">d</span><span class="o">-%</span><span class="n">H</span><span class="o">-%</span><span class="n">M</span><span class="o">-%</span><span class="n">S</span><span class="p">)</span><span class="o">.</span><span class="n">cap</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span> <span class="o">~</span><span class="p">]</span><span class="c1"># wget http://172.19.5.43:8089/zookeeper.out</span>
+</span></span><span class="line"><span class="cl"><span class="o">--</span><span class="mi">2023</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">26</span> <span class="mi">00</span><span class="p">:</span><span class="mi">49</span><span class="p">:</span><span class="mi">47</span><span class="o">--</span>  <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">5.43</span><span class="p">:</span><span class="mi">8089</span><span class="o">/</span><span class="n">zookeeper</span><span class="o">.</span><span class="n">out</span>
+</span></span><span class="line"><span class="cl"><span class="n">Connecting</span> <span class="n">to</span> <span class="mf">172.19</span><span class="o">.</span><span class="mf">5.43</span><span class="p">:</span><span class="mf">8089.</span><span class="o">..</span> <span class="n">connected</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">HTTP</span> <span class="n">request</span> <span class="n">sent</span><span class="p">,</span> <span class="n">awaiting</span> <span class="n">response</span><span class="o">...</span> <span class="mi">200</span> <span class="n">OK</span>
+</span></span><span class="line"><span class="cl"><span class="n">Length</span><span class="p">:</span> <span class="mi">1972256747</span> <span class="p">(</span><span class="mf">1.8</span><span class="n">G</span><span class="p">)</span> <span class="p">[</span><span class="n">application</span><span class="o">/</span><span class="n">octet</span><span class="o">-</span><span class="n">stream</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">Saving</span> <span class="n">to</span><span class="p">:</span> <span class="err">‘</span><span class="n">zookeeper</span><span class="o">.</span><span class="n">out</span><span class="err">’</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">100%[==========================================================================================================================================&gt;] 1,972,256,747 53.2MB/s   in 25s    
+</span></span><span class="line"><span class="cl"><span class="mi">100</span><span class="o">%</span><span class="p">[</span><span class="o">==========================================================================================================================================&gt;</span><span class="p">]</span> <span class="mi">1</span><span class="p">,</span><span class="mi">972</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">747</span> <span class="mf">53.2</span><span class="n">MB</span><span class="o">/</span><span class="n">s</span>   <span class="ow">in</span> <span class="mi">25</span><span class="n">s</span>    
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">2023-03-26 00:50:11 (76.3 MB/s) - ‘zookeeper.out’ saved [1972256747/1972256747]
+</span></span><span class="line"><span class="cl"><span class="mi">2023</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">26</span> <span class="mi">00</span><span class="p">:</span><span class="mi">50</span><span class="p">:</span><span class="mi">11</span> <span class="p">(</span><span class="mf">76.3</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="err">‘</span><span class="n">zookeeper</span><span class="o">.</span><span class="n">out</span><span class="err">’</span> <span class="n">saved</span> <span class="p">[</span><span class="mi">1972256747</span><span class="o">/</span><span class="mi">1972256747</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">[root@172.19.9.147 ~]# curl http://172.19.5.43:8089/zookeeper.out --output zookeeper.out.file
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl">100 1880M  100 1880M    0     0  77.0M      0  0:00:24  0:00:24 --:--:-- 54.3M
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span> <span class="o">~</span><span class="p">]</span><span class="c1"># curl http://172.19.5.43:8089/zookeeper.out --output zookeeper.out.file</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100</span> <span class="mi">1880</span><span class="n">M</span>  <span class="mi">100</span> <span class="mi">1880</span><span class="n">M</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mf">77.0</span><span class="n">M</span>      <span class="mi">0</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">24</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">24</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mf">54.3</span><span class="n">M</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -257,10 +267,10 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@172.19.9.147 ~]# curl http://172.19.5.43:8089/zookeeper.out --output zookeeper.out.file --limit-rate 1M
-</span></span><span class="line"><span class="cl">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span></span><span class="line"><span class="cl">                                 Dload  Upload   Total   Spent    Left  Speed
-</span></span><span class="line"><span class="cl"> 33 1880M   33  625M    0     0  1023k      0  0:31:21  0:10:25  0:20:56  996k
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mf">172.19</span><span class="o">.</span><span class="mf">9.147</span> <span class="o">~</span><span class="p">]</span><span class="c1"># curl http://172.19.5.43:8089/zookeeper.out --output zookeeper.out.file --limit-rate 1M</span>
+</span></span><span class="line"><span class="cl">  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+</span></span><span class="line"><span class="cl"> <span class="mi">33</span> <span class="mi">1880</span><span class="n">M</span>   <span class="mi">33</span>  <span class="mi">625</span><span class="n">M</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mi">1023</span><span class="n">k</span>      <span class="mi">0</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mi">21</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span><span class="mi">25</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">56</span>  <span class="mi">996</span><span class="n">k</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -332,9 +342,9 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
     
     <section class="article-tags">
         
-            <a href="/tags/tcp/">tcp</a>
+            <a href="/tags/tcp/">Tcp</a>
         
-            <a href="/tags/wireshark/">wireshark</a>
+            <a href="/tags/wireshark/">Wireshark</a>
         
             <a href="/tags/%E5%AE%9E%E9%AA%8C/">实验</a>
         
@@ -454,7 +464,7 @@ rt，丢包率，curl速度怎么查看？使用&ndash;help，需要谷歌协助
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

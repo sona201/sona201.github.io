@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>network on Ricardo</title>
+        <title>Network on Ricardo</title>
         <link>https://sona201.github.io/tags/network/</link>
-        <description>Recent content in network on Ricardo</description>
+        <description>Recent content in Network on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zh-CN</language>
+        <language>zh-cn</language>
         <lastBuildDate>Sat, 03 Oct 2026 22:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/network/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Nmap 端口扫描笔记</title>
         <link>https://sona201.github.io/posts/nmap-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%AC%94%E8%AE%B0/</link>

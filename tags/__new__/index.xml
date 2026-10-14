@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>__new__ on Ricardo</title>
+        <title>__New__ on Ricardo</title>
         <link>https://sona201.github.io/tags/__new__/</link>
-        <description>Recent content in __new__ on Ricardo</description>
+        <description>Recent content in __New__ on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zh-CN</language>
+        <language>zh-cn</language>
         <lastBuildDate>Tue, 14 Feb 2023 01:12:26 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/__new__/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>python __new__</title>
         <link>https://sona201.github.io/posts/python-new-construction-notes/</link>

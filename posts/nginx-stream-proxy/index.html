@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='nginx 4层代理(初级版) Nginx从1.9.0版本开始，新增加了一个stream模块，用来实现四层协议的转发、代理或者负载均衡 本笔记使用的 Nginx 1.16.1 软'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='nginx 4层代理(初级版) Nginx从1.9.0版本开始，新增加了一个stream模块，用来实现四层协议的转发、代理或者负载均衡 本笔记使用的 Nginx 1.16.1 软'>
 <title>Nginx Stream 四层代理配置笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/nginx-stream-proxy/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="nginx 4层代理(初级版) Nginx从1.9.0版本开始，新增加了一个stream模块，用来实现四层协议的转发、代理或者负载均衡 本笔记使用的 Nginx 1.16.1 软">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/nginx/">nginx</a>
+                    <a href="/categories/nginx/">Nginx</a>
                 </span>
             
             
@@ -220,35 +230,35 @@ if (!doNotTrack) {
 </span><span class="lnt">29
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-v" data-lang="v"><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nv">configure</span><span class="p">:</span> <span class="kt">error</span><span class="p">:</span> <span class="nv">the</span> <span class="nc">HTTP</span> <span class="nc">XSLT</span> <span class="kn">module</span> <span class="nv">requires</span> <span class="nv">the</span> <span class="nv">libxml2</span><span class="o">/</span><span class="nv">libxslt</span>
-</span></span><span class="line"><span class="cl"><span class="nv">yum</span> <span class="nv">install</span> <span class="nv">libxslt</span><span class="o">-</span><span class="nv">devel</span> <span class="o">-</span><span class="nv">y</span>
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">./</span><span class="n">configure</span><span class="p">:</span> <span class="n">error</span><span class="p">:</span> <span class="n">the</span> <span class="n">HTTP</span> <span class="n">XSLT</span> <span class="n">module</span> <span class="n">requires</span> <span class="n">the</span> <span class="n">libxml2</span><span class="o">/</span><span class="n">libxslt</span>
+</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="n">install</span> <span class="n">libxslt</span><span class="o">-</span><span class="n">devel</span> <span class="o">-</span><span class="n">y</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nv">configure</span><span class="p">:</span> <span class="kt">error</span><span class="p">:</span> <span class="nv">the</span> <span class="nc">HTTP</span> <span class="nv">image</span> <span class="nv">filter</span> <span class="kn">module</span> <span class="nv">requires</span> <span class="nv">the</span> <span class="nc">GD</span> <span class="nv">library</span><span class="p">.</span>
-</span></span><span class="line"><span class="cl"> <span class="nv">yum</span> <span class="nv">install</span> <span class="nv">gd</span><span class="o">-</span><span class="nv">devel</span> <span class="o">-</span><span class="nv">y</span>
+</span></span><span class="line"><span class="cl"><span class="o">./</span><span class="n">configure</span><span class="p">:</span> <span class="n">error</span><span class="p">:</span> <span class="n">the</span> <span class="n">HTTP</span> <span class="n">image</span> <span class="n">filter</span> <span class="n">module</span> <span class="n">requires</span> <span class="n">the</span> <span class="n">GD</span> <span class="n">library</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"> <span class="n">yum</span> <span class="n">install</span> <span class="n">gd</span><span class="o">-</span><span class="n">devel</span> <span class="o">-</span><span class="n">y</span>
 </span></span><span class="line"><span class="cl"> 
-</span></span><span class="line"><span class="cl"> <span class="p">.</span><span class="o">/</span><span class="nv">configure</span><span class="p">:</span> <span class="kt">error</span><span class="p">:</span> <span class="nv">perl</span> <span class="kn">module</span> <span class="nc">ExtUtils</span><span class="p">::</span><span class="nc">Embed</span> <span class="k">is</span> <span class="nv">required</span>
-</span></span><span class="line"><span class="cl"> <span class="nv">yum</span> <span class="o">-</span><span class="nv">y</span> <span class="nv">install</span> <span class="nv">perl</span><span class="o">-</span><span class="nv">devel</span> <span class="nv">perl</span><span class="o">-</span><span class="nc">ExtUtils</span><span class="o">-</span><span class="nc">Embed</span>
+</span></span><span class="line"><span class="cl"> <span class="o">./</span><span class="n">configure</span><span class="p">:</span> <span class="n">error</span><span class="p">:</span> <span class="n">perl</span> <span class="n">module</span> <span class="n">ExtUtils</span><span class="p">::</span><span class="n">Embed</span> <span class="n">is</span> <span class="n">required</span>
+</span></span><span class="line"><span class="cl"> <span class="n">yum</span> <span class="o">-</span><span class="n">y</span> <span class="n">install</span> <span class="n">perl</span><span class="o">-</span><span class="n">devel</span> <span class="n">perl</span><span class="o">-</span><span class="n">ExtUtils</span><span class="o">-</span><span class="n">Embed</span>
 </span></span><span class="line"><span class="cl"> 
-</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nv">configure</span><span class="p">:</span> <span class="kt">error</span><span class="p">:</span> <span class="nv">the</span> <span class="nc">GeoIP</span> <span class="kn">module</span> <span class="nv">requires</span> <span class="nv">the</span> <span class="nc">GeoIP</span> <span class="nv">library</span><span class="p">.</span>
-</span></span><span class="line"><span class="cl"> <span class="nv">yum</span> <span class="o">-</span><span class="nv">y</span> <span class="nv">install</span> <span class="nc">GeoIP</span> <span class="nc">GeoIP</span><span class="o">-</span><span class="nv">devel</span> <span class="nc">GeoIP</span><span class="o">-</span><span class="nv">data</span>
+</span></span><span class="line"><span class="cl"><span class="o">./</span><span class="n">configure</span><span class="p">:</span> <span class="n">error</span><span class="p">:</span> <span class="n">the</span> <span class="n">GeoIP</span> <span class="n">module</span> <span class="n">requires</span> <span class="n">the</span> <span class="n">GeoIP</span> <span class="n">library</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"> <span class="n">yum</span> <span class="o">-</span><span class="n">y</span> <span class="n">install</span> <span class="n">GeoIP</span> <span class="n">GeoIP</span><span class="o">-</span><span class="n">devel</span> <span class="n">GeoIP</span><span class="o">-</span><span class="n">data</span>
 </span></span><span class="line"><span class="cl"> 
-</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nv">configure</span><span class="p">:</span> <span class="kt">error</span><span class="p">:</span> <span class="nv">the</span> <span class="nc">Google</span> <span class="nv">perftools</span> <span class="kn">module</span> <span class="nv">requires</span> <span class="nv">the</span> <span class="nc">Google</span> <span class="nv">perftools</span>
-</span></span><span class="line"><span class="cl"><span class="nv">yum</span> <span class="nv">install</span> <span class="nv">gperftools</span> <span class="o">-</span><span class="nv">y</span>
+</span></span><span class="line"><span class="cl"><span class="o">./</span><span class="n">configure</span><span class="p">:</span> <span class="n">error</span><span class="p">:</span> <span class="n">the</span> <span class="n">Google</span> <span class="n">perftools</span> <span class="n">module</span> <span class="n">requires</span> <span class="n">the</span> <span class="n">Google</span> <span class="n">perftools</span>
+</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="n">install</span> <span class="n">gperftools</span> <span class="o">-</span><span class="n">y</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nv">configure</span><span class="p">:</span> <span class="kt">error</span><span class="p">:</span> <span class="nc">SSL</span> <span class="nv">modules</span> <span class="nv">require</span> <span class="nv">the</span> <span class="nc">OpenSSL</span> <span class="nv">library</span><span class="p">.</span>
-</span></span><span class="line"><span class="cl"><span class="nv">yum</span> <span class="o">-</span><span class="nv">y</span> <span class="nv">install</span> <span class="nv">openssl</span> <span class="nv">openssl</span><span class="o">-</span><span class="nv">devel</span>
+</span></span><span class="line"><span class="cl"><span class="o">./</span><span class="n">configure</span><span class="p">:</span> <span class="n">error</span><span class="p">:</span> <span class="n">SSL</span> <span class="n">modules</span> <span class="n">require</span> <span class="n">the</span> <span class="n">OpenSSL</span> <span class="n">library</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="o">-</span><span class="n">y</span> <span class="n">install</span> <span class="n">openssl</span> <span class="n">openssl</span><span class="o">-</span><span class="n">devel</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">checking</span> <span class="k">for</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">ld</span><span class="o">-</span><span class="nv">opt</span><span class="o">=</span><span class="s2">&#34;-Wl,-z,relro -specs=/usr/lib/rpm/redhat/redhat-hardened-ld -Wl,-E&#34;</span> <span class="o">...</span> <span class="nv">not</span> <span class="nv">found</span>
-</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nv">configure</span><span class="p">:</span> <span class="kt">error</span><span class="p">:</span> <span class="nv">the</span> <span class="nv">invalid</span> <span class="nv">value</span> <span class="k">in</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">ld</span><span class="o">-</span><span class="nv">opt</span><span class="o">=</span><span class="s2">&#34;-Wl,-z,relro -specs=/usr/lib/rpm/redhat/redhat-hardened-ld -Wl,-E&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="nv">yum</span> <span class="nv">install</span> <span class="nv">redhat</span><span class="o">-</span><span class="nv">rpm</span><span class="o">-</span><span class="nv">config</span> <span class="o">-</span><span class="nv">y</span>
+</span></span><span class="line"><span class="cl"><span class="n">checking</span> <span class="k">for</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">ld</span><span class="o">-</span><span class="n">opt</span><span class="o">=</span><span class="s2">&#34;-Wl,-z,relro -specs=/usr/lib/rpm/redhat/redhat-hardened-ld -Wl,-E&#34;</span> <span class="o">...</span> <span class="ow">not</span> <span class="n">found</span>
+</span></span><span class="line"><span class="cl"><span class="o">./</span><span class="n">configure</span><span class="p">:</span> <span class="n">error</span><span class="p">:</span> <span class="n">the</span> <span class="n">invalid</span> <span class="n">value</span> <span class="ow">in</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">ld</span><span class="o">-</span><span class="n">opt</span><span class="o">=</span><span class="s2">&#34;-Wl,-z,relro -specs=/usr/lib/rpm/redhat/redhat-hardened-ld -Wl,-E&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="n">install</span> <span class="n">redhat</span><span class="o">-</span><span class="n">rpm</span><span class="o">-</span><span class="n">config</span> <span class="o">-</span><span class="n">y</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nv">configure</span><span class="p">:</span> <span class="kt">error</span><span class="p">:</span> <span class="nv">perl</span> <span class="kn">module</span> <span class="nc">ExtUtils</span><span class="p">::</span><span class="nc">Embed</span> <span class="k">is</span> <span class="nv">required</span>
-</span></span><span class="line"><span class="cl"><span class="nv">yum</span> <span class="o">-</span><span class="nv">y</span> <span class="nv">install</span> <span class="nv">perl</span><span class="o">-</span><span class="nv">devel</span> <span class="nv">perl</span><span class="o">-</span><span class="nc">ExtUtils</span><span class="o">-</span><span class="nc">Embed</span>
+</span></span><span class="line"><span class="cl"><span class="o">./</span><span class="n">configure</span><span class="p">:</span> <span class="n">error</span><span class="p">:</span> <span class="n">perl</span> <span class="n">module</span> <span class="n">ExtUtils</span><span class="p">::</span><span class="n">Embed</span> <span class="n">is</span> <span class="n">required</span>
+</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="o">-</span><span class="n">y</span> <span class="n">install</span> <span class="n">perl</span><span class="o">-</span><span class="n">devel</span> <span class="n">perl</span><span class="o">-</span><span class="n">ExtUtils</span><span class="o">-</span><span class="n">Embed</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">在执行make时候的报错</span><span class="err">：</span>
-</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="nv">root</span><span class="o">/</span><span class="nv">nginx</span><span class="o">-</span><span class="nv">auth</span><span class="o">-</span><span class="nv">ldap</span><span class="o">/</span><span class="nv">ngx_http_auth_ldap_module</span><span class="p">.</span><span class="nv">c</span><span class="p">:</span><span class="mi">33</span><span class="p">:</span><span class="mi">18</span><span class="p">:</span> <span class="nv">fatal</span> <span class="kt">error</span><span class="p">:</span> <span class="nv">ldap</span><span class="p">.</span><span class="nv">h</span><span class="p">:</span> <span class="nc">No</span> <span class="nv">such</span> <span class="nv">file</span> <span class="k">or</span> <span class="nv">directory</span>
-</span></span><span class="line"><span class="cl"> <span class="cp">#include</span> <span class="cpf">&lt;ldap.h&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="nv">yum</span> <span class="nv">install</span> <span class="o">-</span><span class="nv">y</span> <span class="nv">openldap</span><span class="o">-</span><span class="nv">devel</span>
+</span></span><span class="line"><span class="cl"><span class="err">在执行</span><span class="n">make时候的报错</span><span class="err">：</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">root</span><span class="o">/</span><span class="n">nginx</span><span class="o">-</span><span class="n">auth</span><span class="o">-</span><span class="n">ldap</span><span class="o">/</span><span class="n">ngx_http_auth_ldap_module</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">33</span><span class="p">:</span><span class="mi">18</span><span class="p">:</span> <span class="n">fatal</span> <span class="n">error</span><span class="p">:</span> <span class="n">ldap</span><span class="o">.</span><span class="n">h</span><span class="p">:</span> <span class="n">No</span> <span class="n">such</span> <span class="n">file</span> <span class="ow">or</span> <span class="n">directory</span>
+</span></span><span class="line"><span class="cl"> <span class="c1">#include &lt;ldap.h&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">openldap</span><span class="o">-</span><span class="n">devel</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -333,79 +343,79 @@ if (!doNotTrack) {
 </span><span class="lnt">73
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># For more information on configuration, see:
-</span></span><span class="line"><span class="cl">#   * Official English Documentation: http://nginx.org/en/docs/
-</span></span><span class="line"><span class="cl">#   * Official Russian Documentation: http://nginx.org/ru/docs/
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># For more information on configuration, see:</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#   * Official English Documentation: http://nginx.org/en/docs/</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#   * Official Russian Documentation: http://nginx.org/ru/docs/</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">user nginx;
-</span></span><span class="line"><span class="cl">worker_processes auto;
-</span></span><span class="line"><span class="cl">error_log /var/log/nginx/error.log;
-</span></span><span class="line"><span class="cl">pid /run/nginx.pid;
+</span></span><span class="line"><span class="cl"><span class="n">user</span> <span class="n">nginx</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">worker_processes</span> <span class="n">auto</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">error_log</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="nb">log</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">error</span><span class="o">.</span><span class="n">log</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">pid</span> <span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">pid</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.
-</span></span><span class="line"><span class="cl">include /usr/share/nginx/modules/*.conf;
+</span></span><span class="line"><span class="cl"><span class="c1"># Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.</span>
+</span></span><span class="line"><span class="cl"><span class="n">include</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">modules</span><span class="o">/*.</span><span class="n">conf</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">events {
-</span></span><span class="line"><span class="cl">    worker_connections 1024;
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl"><span class="n">events</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">worker_connections</span> <span class="mi">1024</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">stream {
-</span></span><span class="line"><span class="cl">    upstream tcp_proxy {
-</span></span><span class="line"><span class="cl">        hash $remote_addr consistent;
-</span></span><span class="line"><span class="cl">        server 192.0.2.10:30400  max_fails=3 fail_timeout=30s;
-</span></span><span class="line"><span class="cl">        #server 192.0.2.11:30400  max_fails=3 fail_timeout=30s;
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    server {
-</span></span><span class="line"><span class="cl">        listen 443;
-</span></span><span class="line"><span class="cl">        proxy_connect_timeout 1s;
-</span></span><span class="line"><span class="cl">        proxy_timeout 3s;
-</span></span><span class="line"><span class="cl">        proxy_pass tcp_proxy;
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl"><span class="n">stream</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">upstream</span> <span class="n">tcp_proxy</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">hash</span> <span class="o">$</span><span class="n">remote_addr</span> <span class="n">consistent</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">server</span> <span class="mf">192.0</span><span class="o">.</span><span class="mf">2.10</span><span class="p">:</span><span class="mi">30400</span>  <span class="n">max_fails</span><span class="o">=</span><span class="mi">3</span> <span class="n">fail_timeout</span><span class="o">=</span><span class="mi">30</span><span class="n">s</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#server 192.0.2.11:30400  max_fails=3 fail_timeout=30s;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">listen</span> <span class="mi">443</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">proxy_connect_timeout</span> <span class="mi">1</span><span class="n">s</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">proxy_timeout</span> <span class="mi">3</span><span class="n">s</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">proxy_pass</span> <span class="n">tcp_proxy</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">http {
-</span></span><span class="line"><span class="cl">    log_format  main  &#39;$remote_addr - $remote_user [$time_local] &#34;$request&#34; &#39;
-</span></span><span class="line"><span class="cl">                      &#39;$status $body_bytes_sent &#34;$http_referer&#34; &#39;
-</span></span><span class="line"><span class="cl">                      &#39;&#34;$http_user_agent&#34; &#34;$http_x_forwarded_for&#34;&#39;;
+</span></span><span class="line"><span class="cl"><span class="n">http</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">log_format</span>  <span class="n">main</span>  <span class="s1">&#39;$remote_addr - $remote_user [$time_local] &#34;$request&#34; &#39;</span>
+</span></span><span class="line"><span class="cl">                      <span class="s1">&#39;$status $body_bytes_sent &#34;$http_referer&#34; &#39;</span>
+</span></span><span class="line"><span class="cl">                      <span class="s1">&#39;&#34;$http_user_agent&#34; &#34;$http_x_forwarded_for&#34;&#39;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    access_log  /var/log/nginx/access.log  main;
+</span></span><span class="line"><span class="cl">    <span class="n">access_log</span>  <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="nb">log</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">access</span><span class="o">.</span><span class="n">log</span>  <span class="n">main</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    sendfile            on;
-</span></span><span class="line"><span class="cl">    tcp_nopush          on;
-</span></span><span class="line"><span class="cl">    tcp_nodelay         on;
-</span></span><span class="line"><span class="cl">    keepalive_timeout   65;
-</span></span><span class="line"><span class="cl">    types_hash_max_size 2048;
+</span></span><span class="line"><span class="cl">    <span class="n">sendfile</span>            <span class="n">on</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tcp_nopush</span>          <span class="n">on</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tcp_nodelay</span>         <span class="n">on</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">keepalive_timeout</span>   <span class="mi">65</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">types_hash_max_size</span> <span class="mi">2048</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    include             /etc/nginx/mime.types;
-</span></span><span class="line"><span class="cl">    default_type        application/octet-stream;
+</span></span><span class="line"><span class="cl">    <span class="n">include</span>             <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">mime</span><span class="o">.</span><span class="n">types</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">default_type</span>        <span class="n">application</span><span class="o">/</span><span class="n">octet</span><span class="o">-</span><span class="n">stream</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    # Load modular configuration files from the /etc/nginx/conf.d directory.
-</span></span><span class="line"><span class="cl">    # See http://nginx.org/en/docs/ngx_core_module.html#include
-</span></span><span class="line"><span class="cl">    # for more information.
-</span></span><span class="line"><span class="cl">    include /etc/nginx/conf.d/*.conf;
+</span></span><span class="line"><span class="cl">    <span class="c1"># Load modular configuration files from the /etc/nginx/conf.d directory.</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># See http://nginx.org/en/docs/ngx_core_module.html#include</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># for more information.</span>
+</span></span><span class="line"><span class="cl">    <span class="n">include</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">conf</span><span class="o">.</span><span class="n">d</span><span class="o">/*.</span><span class="n">conf</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    server {
-</span></span><span class="line"><span class="cl">        listen       80 default_server;
-</span></span><span class="line"><span class="cl">        server_name  _;
-</span></span><span class="line"><span class="cl">        root         /usr/share/nginx/html;
+</span></span><span class="line"><span class="cl">    <span class="n">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">listen</span>       <span class="mi">80</span> <span class="n">default_server</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">server_name</span>  <span class="n">_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">root</span>         <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">html</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        # Load configuration files for the default server block.
-</span></span><span class="line"><span class="cl">        include /etc/nginx/default.d/*.conf;
+</span></span><span class="line"><span class="cl">        <span class="c1"># Load configuration files for the default server block.</span>
+</span></span><span class="line"><span class="cl">        <span class="n">include</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">default</span><span class="o">.</span><span class="n">d</span><span class="o">/*.</span><span class="n">conf</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        location / {
-</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        <span class="n">location</span> <span class="o">/</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        error_page 404 /404.html;
-</span></span><span class="line"><span class="cl">            location = /40x.html {
-</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        <span class="n">error_page</span> <span class="mi">404</span> <span class="o">/</span><span class="mf">404.</span><span class="n">html</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">location</span> <span class="o">=</span> <span class="o">/</span><span class="mi">40</span><span class="n">x</span><span class="o">.</span><span class="n">html</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        error_page 500 502 503 504 /50x.html;
-</span></span><span class="line"><span class="cl">            location = /50x.html {
-</span></span><span class="line"><span class="cl">        }
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">        <span class="n">error_page</span> <span class="mi">500</span> <span class="mi">502</span> <span class="mi">503</span> <span class="mi">504</span> <span class="o">/</span><span class="mi">50</span><span class="n">x</span><span class="o">.</span><span class="n">html</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">location</span> <span class="o">=</span> <span class="o">/</span><span class="mi">50</span><span class="n">x</span><span class="o">.</span><span class="n">html</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -492,7 +502,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

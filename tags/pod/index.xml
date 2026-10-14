@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>pod on Ricardo</title>
+        <title>Pod on Ricardo</title>
         <link>https://sona201.github.io/tags/pod/</link>
-        <description>Recent content in pod on Ricardo</description>
+        <description>Recent content in Pod on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zh-CN</language>
+        <language>zh-cn</language>
         <lastBuildDate>Sat, 03 Oct 2026 22:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/pod/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Kubernetes Pod 异常排查</title>
         <link>https://sona201.github.io/posts/kubernetes-pod-%E5%BC%82%E5%B8%B8%E6%8E%92%E6%9F%A5/</link>

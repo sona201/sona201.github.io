@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='vue-element-admin集成Keycloak实现统一身份验证、权限控制 vue-element-admin集成Keycloak实现统'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='vue-element-admin集成Keycloak实现统一身份验证、权限控制 vue-element-admin集成Keycloak实现统'>
 <title>vue-element-admin 接入 Keycloak 的学习记录</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/vue-element-admin-keycloak-notes/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="vue-element-admin集成Keycloak实现统一身份验证、权限控制 vue-element-admin集成Keycloak实现统">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/tools/">tools</a>
+                    <a href="/categories/tools/">Tools</a>
                 </span>
             
             
@@ -366,70 +376,70 @@ if (!doNotTrack) {
 </span><span class="lnt">63
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-zed" data-lang="zed"><span class="line"><span class="cl"><span class="o">-</span><span class="n">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">getToken</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="err">&#39;@</span><span class="o">/</span><span class="nn">utils/</span><span class="n">auth</span><span class="err">&#39;</span><span class="w"> </span><span class="c1">// get token from cookie
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">+</span><span class="c1">// get token from cookie
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">+</span><span class="n">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">getToken</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="err">&#39;@</span><span class="o">/</span><span class="nn">utils/</span><span class="n">auth</span><span class="err">&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="n">import</span><span class="w"> </span><span class="n">getPageTitle</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="err">&#39;@</span><span class="o">/</span><span class="nn">utils/</span><span class="n">get</span><span class="o">-</span><span class="n">page</span><span class="o">-</span><span class="n">title</span><span class="err">&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="n">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Message</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="err">&#39;</span><span class="n">element</span><span class="o">-</span><span class="n">ui</span><span class="err">&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="n">import</span><span class="w"> </span><span class="n">NProgress</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="err">&#39;</span><span class="n">nprogress</span><span class="err">&#39;</span><span class="w"> </span><span class="c1">// progress bar
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">-</span><span class="n">import</span><span class="w"> </span><span class="err">&#39;</span><span class="nn">nprogress/</span><span class="n">nprogress</span><span class="p">.</span><span class="n">css</span><span class="err">&#39;</span><span class="w"> </span><span class="c1">// progress bar style
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">+</span><span class="n">import</span><span class="w"> </span><span class="n">Keycloak</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="err">&#39;</span><span class="n">keycloak</span><span class="o">-</span><span class="n">js</span><span class="err">&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="c1">// progress bar
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">+</span><span class="n">import</span><span class="w"> </span><span class="n">NProgress</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="err">&#39;</span><span class="n">nprogress</span><span class="err">&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="c1">// progress bar style
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">+</span><span class="n">import</span><span class="w"> </span><span class="err">&#39;</span><span class="nn">nprogress/</span><span class="n">nprogress</span><span class="p">.</span><span class="n">css</span><span class="err">&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="n">import</span><span class="w"> </span><span class="n">router</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="err">&#39;</span><span class="p">.</span><span class="o">/</span><span class="n">router</span><span class="err">&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="n">import</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="err">&#39;</span><span class="p">.</span><span class="o">/</span><span class="n">store</span><span class="err">&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">...</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">const</span><span class="w"> </span><span class="n">whiteList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="err">&#39;</span><span class="o">/</span><span class="n">login</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="o">/</span><span class="n">auth</span><span class="o">-</span><span class="n">redirect</span><span class="err">&#39;</span><span class="p">]</span><span class="w"> </span><span class="c1">// no redirect whitelist
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w"> 
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="n">const</span><span class="w"> </span><span class="n">initOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">  </span><span class="n">url</span><span class="o">:</span><span class="w"> </span><span class="n">process</span><span class="p">.</span><span class="n">env</span><span class="p">.</span><span class="n">VUE_APP_KEYCLOAK_OPTIONS_URL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">  </span><span class="n">realm</span><span class="o">:</span><span class="w"> </span><span class="n">process</span><span class="p">.</span><span class="n">env</span><span class="p">.</span><span class="n">VUE_APP_KEYCLOAK_OPTIONS_REALM</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">  </span><span class="n">clientId</span><span class="o">:</span><span class="w"> </span><span class="n">process</span><span class="p">.</span><span class="n">env</span><span class="p">.</span><span class="n">VUE_APP_KEYCLOAK_OPTIONS_CLIENTID</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">  </span><span class="n">onLoad</span><span class="o">:</span><span class="w"> </span><span class="n">process</span><span class="p">.</span><span class="n">env</span><span class="p">.</span><span class="n">VUE_APP_KEYCLOAK_OPTIONS_ONLOAD</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="n">const</span><span class="w"> </span><span class="n">keycloak</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">Keycloak</span><span class="p">(</span><span class="n">initOptions</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="n">router</span><span class="p">.</span><span class="n">beforeEach</span><span class="p">(</span><span class="n">async</span><span class="p">(</span><span class="n">to</span><span class="p">,</span><span class="w"> </span><span class="n">from</span><span class="p">,</span><span class="w"> </span><span class="n">next</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="c1">// start progress bar
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">   </span><span class="n">NProgress</span><span class="p">.</span><span class="n">start</span><span class="p">()</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">           </span><span class="c1">// remove token and go to login page to re-login
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">           </span><span class="n">await</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="n">dispatch</span><span class="p">(</span><span class="err">&#39;</span><span class="nn">user/</span><span class="n">resetToken</span><span class="err">&#39;</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">           </span><span class="n">Message</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="n">error</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="err">&#39;</span><span class="n">Has</span><span class="w"> </span><span class="n">Error</span><span class="err">&#39;</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w">          </span><span class="n">next</span><span class="p">(</span><span class="err">`</span><span class="o">/</span><span class="n">login</span><span class="o">?</span><span class="n">redirect</span><span class="o">=</span><span class="err">$</span><span class="p">{</span><span class="n">to</span><span class="p">.</span><span class="n">path</span><span class="p">}</span><span class="err">`</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">          </span><span class="c1">// next(`/login?redirect=${to.path}`)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">+</span><span class="w">          </span><span class="n">next</span><span class="p">(</span><span class="err">`</span><span class="o">/?</span><span class="n">redirect</span><span class="o">=</span><span class="err">$</span><span class="p">{</span><span class="n">to</span><span class="p">.</span><span class="n">path</span><span class="p">}</span><span class="err">`</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">           </span><span class="n">NProgress</span><span class="p">.</span><span class="n">done</span><span class="p">()</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="n">next</span><span class="p">()</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">     </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="c1">// other pages that do not have permission to access are redirected to the login page.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">-</span><span class="w">      </span><span class="n">next</span><span class="p">(</span><span class="err">`</span><span class="o">/</span><span class="n">login</span><span class="o">?</span><span class="n">redirect</span><span class="o">=</span><span class="err">$</span><span class="p">{</span><span class="n">to</span><span class="p">.</span><span class="n">path</span><span class="p">}</span><span class="err">`</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="w">      </span><span class="n">NProgress</span><span class="p">.</span><span class="n">done</span><span class="p">()</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">      </span><span class="n">keycloak</span><span class="p">.</span><span class="n">init</span><span class="p">({</span><span class="w"> </span><span class="n">onLoad</span><span class="o">:</span><span class="w"> </span><span class="n">initOptions</span><span class="p">.</span><span class="n">onLoad</span><span class="p">,</span><span class="w"> </span><span class="n">checkLoginIframe</span><span class="o">:</span><span class="w"> </span><span class="n">false</span><span class="w"> </span><span class="p">}).</span><span class="n">then</span><span class="p">(</span><span class="n">async</span><span class="w"> </span><span class="n">authenticated</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">        </span><span class="n">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">authenticated</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">          </span><span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="err">&#39;</span><span class="n">not</span><span class="w"> </span><span class="n">auth</span><span class="err">&#39;</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">          </span><span class="n">window</span><span class="p">.</span><span class="n">location</span><span class="p">.</span><span class="n">reload</span><span class="p">()</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">          </span><span class="n">return</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">          </span><span class="c1">// await store.dispatch(&#39;user/keycloakLogin&#39;, keycloak.idToken)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">+</span><span class="w">          </span><span class="n">await</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="n">dispatch</span><span class="p">(</span><span class="err">&#39;</span><span class="nn">user/</span><span class="n">keycloakLogin</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">keycloak</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">          </span><span class="n">next</span><span class="p">(</span><span class="err">`</span><span class="o">/?</span><span class="n">redirect</span><span class="o">=</span><span class="err">$</span><span class="p">{</span><span class="n">to</span><span class="p">.</span><span class="n">path</span><span class="p">}</span><span class="err">`</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">          </span><span class="n">NProgress</span><span class="p">.</span><span class="n">done</span><span class="p">()</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">        </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">      </span><span class="p">}).</span><span class="n">catch</span><span class="p">(</span><span class="n">error</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">        </span><span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Authenticated</span><span class="w"> </span><span class="n">Failed</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">error</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">      </span><span class="p">})</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">+</span><span class="w">      </span><span class="c1">// next(`/login?redirect=${to.path}`)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">+</span><span class="w">      </span><span class="c1">// NProgress.done()
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">     </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="p">})</span><span class="w">
-</span></span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">-</span><span class="n">import</span> <span class="p">{</span> <span class="n">getToken</span> <span class="p">}</span> <span class="n">from</span> <span class="s1">&#39;@/utils/auth&#39;</span> <span class="o">//</span> <span class="n">get</span> <span class="n">token</span> <span class="n">from</span> <span class="n">cookie</span>
+</span></span><span class="line"><span class="cl"><span class="o">+//</span> <span class="n">get</span> <span class="n">token</span> <span class="n">from</span> <span class="n">cookie</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span><span class="n">import</span> <span class="p">{</span> <span class="n">getToken</span> <span class="p">}</span> <span class="n">from</span> <span class="s1">&#39;@/utils/auth&#39;</span>
+</span></span><span class="line"><span class="cl"> <span class="n">import</span> <span class="n">getPageTitle</span> <span class="n">from</span> <span class="s1">&#39;@/utils/get-page-title&#39;</span>
+</span></span><span class="line"><span class="cl"> <span class="n">import</span> <span class="p">{</span> <span class="n">Message</span> <span class="p">}</span> <span class="n">from</span> <span class="s1">&#39;element-ui&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="n">import</span> <span class="n">NProgress</span> <span class="n">from</span> <span class="s1">&#39;nprogress&#39;</span> <span class="o">//</span> <span class="n">progress</span> <span class="n">bar</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="n">import</span> <span class="s1">&#39;nprogress/nprogress.css&#39;</span> <span class="o">//</span> <span class="n">progress</span> <span class="n">bar</span> <span class="n">style</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span><span class="n">import</span> <span class="n">Keycloak</span> <span class="n">from</span> <span class="s1">&#39;keycloak-js&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="o">+//</span> <span class="n">progress</span> <span class="n">bar</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span><span class="n">import</span> <span class="n">NProgress</span> <span class="n">from</span> <span class="s1">&#39;nprogress&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="o">+//</span> <span class="n">progress</span> <span class="n">bar</span> <span class="n">style</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span><span class="n">import</span> <span class="s1">&#39;nprogress/nprogress.css&#39;</span>
+</span></span><span class="line"><span class="cl"> <span class="n">import</span> <span class="n">router</span> <span class="n">from</span> <span class="s1">&#39;./router&#39;</span>
+</span></span><span class="line"><span class="cl"> <span class="n">import</span> <span class="n">store</span> <span class="n">from</span> <span class="s1">&#39;./store&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="n">whiteList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="s1">&#39;/auth-redirect&#39;</span><span class="p">]</span> <span class="o">//</span> <span class="n">no</span> <span class="n">redirect</span> <span class="n">whitelist</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="o">+</span><span class="k">const</span> <span class="n">initOptions</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="n">url</span><span class="p">:</span> <span class="n">process</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">VUE_APP_KEYCLOAK_OPTIONS_URL</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="n">realm</span><span class="p">:</span> <span class="n">process</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">VUE_APP_KEYCLOAK_OPTIONS_REALM</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="n">clientId</span><span class="p">:</span> <span class="n">process</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">VUE_APP_KEYCLOAK_OPTIONS_CLIENTID</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="n">onLoad</span><span class="p">:</span> <span class="n">process</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">VUE_APP_KEYCLOAK_OPTIONS_ONLOAD</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span><span class="k">const</span> <span class="n">keycloak</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Keycloak</span><span class="p">(</span><span class="n">initOptions</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>
+</span></span><span class="line"><span class="cl"> <span class="n">router</span><span class="o">.</span><span class="n">beforeEach</span><span class="p">(</span><span class="n">async</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">from</span><span class="p">,</span> <span class="n">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="o">//</span> <span class="n">start</span> <span class="n">progress</span> <span class="n">bar</span>
+</span></span><span class="line"><span class="cl">   <span class="n">NProgress</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">           <span class="o">//</span> <span class="n">remove</span> <span class="n">token</span> <span class="ow">and</span> <span class="n">go</span> <span class="n">to</span> <span class="n">login</span> <span class="n">page</span> <span class="n">to</span> <span class="n">re</span><span class="o">-</span><span class="n">login</span>
+</span></span><span class="line"><span class="cl">           <span class="n">await</span> <span class="n">store</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s1">&#39;user/resetToken&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">           <span class="n">Message</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error</span> <span class="o">||</span> <span class="s1">&#39;Has Error&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span>          <span class="n">next</span><span class="p">(</span><span class="err">`</span><span class="o">/</span><span class="n">login</span><span class="err">?</span><span class="n">redirect</span><span class="o">=$</span><span class="p">{</span><span class="n">to</span><span class="o">.</span><span class="n">path</span><span class="p">}</span><span class="err">`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>          <span class="o">//</span> <span class="n">next</span><span class="p">(</span><span class="err">`</span><span class="o">/</span><span class="n">login</span><span class="err">?</span><span class="n">redirect</span><span class="o">=$</span><span class="p">{</span><span class="n">to</span><span class="o">.</span><span class="n">path</span><span class="p">}</span><span class="err">`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>          <span class="n">next</span><span class="p">(</span><span class="err">`</span><span class="o">/</span><span class="err">?</span><span class="n">redirect</span><span class="o">=$</span><span class="p">{</span><span class="n">to</span><span class="o">.</span><span class="n">path</span><span class="p">}</span><span class="err">`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">           <span class="n">NProgress</span><span class="o">.</span><span class="n">done</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">         <span class="p">}</span>
+</span></span><span class="line"><span class="cl">       <span class="p">}</span>
+</span></span><span class="line"><span class="cl">       <span class="n">next</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">       <span class="o">//</span> <span class="n">other</span> <span class="n">pages</span> <span class="n">that</span> <span class="k">do</span> <span class="ow">not</span> <span class="n">have</span> <span class="n">permission</span> <span class="n">to</span> <span class="n">access</span> <span class="n">are</span> <span class="n">redirected</span> <span class="n">to</span> <span class="n">the</span> <span class="n">login</span> <span class="n">page</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span>      <span class="n">next</span><span class="p">(</span><span class="err">`</span><span class="o">/</span><span class="n">login</span><span class="err">?</span><span class="n">redirect</span><span class="o">=$</span><span class="p">{</span><span class="n">to</span><span class="o">.</span><span class="n">path</span><span class="p">}</span><span class="err">`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span>      <span class="n">NProgress</span><span class="o">.</span><span class="n">done</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>      <span class="n">keycloak</span><span class="o">.</span><span class="n">init</span><span class="p">({</span> <span class="n">onLoad</span><span class="p">:</span> <span class="n">initOptions</span><span class="o">.</span><span class="n">onLoad</span><span class="p">,</span> <span class="n">checkLoginIframe</span><span class="p">:</span> <span class="bp">false</span> <span class="p">})</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">async</span> <span class="n">authenticated</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">authenticated</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>          <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;not auth&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>          <span class="n">window</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">reload</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>          <span class="k">return</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>          <span class="o">//</span> <span class="n">await</span> <span class="n">store</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s1">&#39;user/keycloakLogin&#39;</span><span class="p">,</span> <span class="n">keycloak</span><span class="o">.</span><span class="n">idToken</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>          <span class="n">await</span> <span class="n">store</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s1">&#39;user/keycloakLogin&#39;</span><span class="p">,</span> <span class="n">keycloak</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>          <span class="n">next</span><span class="p">(</span><span class="err">`</span><span class="o">/</span><span class="err">?</span><span class="n">redirect</span><span class="o">=$</span><span class="p">{</span><span class="n">to</span><span class="o">.</span><span class="n">path</span><span class="p">}</span><span class="err">`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>          <span class="n">NProgress</span><span class="o">.</span><span class="n">done</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>      <span class="p">})</span><span class="o">.</span><span class="n">catch</span><span class="p">(</span><span class="n">error</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Authenticated Failed&#39;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>      <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>      <span class="o">//</span> <span class="n">next</span><span class="p">(</span><span class="err">`</span><span class="o">/</span><span class="n">login</span><span class="err">?</span><span class="n">redirect</span><span class="o">=$</span><span class="p">{</span><span class="n">to</span><span class="o">.</span><span class="n">path</span><span class="p">}</span><span class="err">`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>      <span class="o">//</span> <span class="n">NProgress</span><span class="o">.</span><span class="n">done</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">     <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> <span class="p">})</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div>
 </div>
@@ -450,14 +460,14 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">   department: state =&gt; state.user.department,
-</span></span><span class="line"><span class="cl">   roles: state =&gt; state.user.roles,
-</span></span><span class="line"><span class="cl">   permission_routes: state =&gt; state.permission.routes,
-</span></span><span class="line"><span class="cl">-  errorLogs: state =&gt; state.errorLog.logs
-</span></span><span class="line"><span class="cl">+  errorLogs: state =&gt; state.errorLog.logs,
-</span></span><span class="line"><span class="cl">+  keycloak: state =&gt; state.user.keycloak
-</span></span><span class="line"><span class="cl"> }
-</span></span><span class="line"><span class="cl"> export default getters
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl">   <span class="n">department</span><span class="p">:</span> <span class="n">state</span> <span class="o">=&gt;</span> <span class="n">state</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">department</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="n">roles</span><span class="p">:</span> <span class="n">state</span> <span class="o">=&gt;</span> <span class="n">state</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">roles</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="n">permission_routes</span><span class="p">:</span> <span class="n">state</span> <span class="o">=&gt;</span> <span class="n">state</span><span class="o">.</span><span class="n">permission</span><span class="o">.</span><span class="n">routes</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span>  <span class="n">errorLogs</span><span class="p">:</span> <span class="n">state</span> <span class="o">=&gt;</span> <span class="n">state</span><span class="o">.</span><span class="n">errorLog</span><span class="o">.</span><span class="n">logs</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="n">errorLogs</span><span class="p">:</span> <span class="n">state</span> <span class="o">=&gt;</span> <span class="n">state</span><span class="o">.</span><span class="n">errorLog</span><span class="o">.</span><span class="n">logs</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="n">keycloak</span><span class="p">:</span> <span class="n">state</span> <span class="o">=&gt;</span> <span class="n">state</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">keycloak</span>
+</span></span><span class="line"><span class="cl"> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> <span class="k">export</span> <span class="n">default</span> <span class="n">getters</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -519,54 +529,54 @@ if (!doNotTrack) {
 </span><span class="lnt">48
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">   nickname: &#39;&#39;,
-</span></span><span class="line"><span class="cl">   introduction: &#39;&#39;,
-</span></span><span class="line"><span class="cl">   department: &#39;&#39;,
-</span></span><span class="line"><span class="cl">-  roles: []
-</span></span><span class="line"><span class="cl">+  roles: [],
-</span></span><span class="line"><span class="cl">+  keycloak: null
-</span></span><span class="line"><span class="cl"> }
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl">   <span class="n">nickname</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="n">introduction</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="n">department</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span>  <span class="n">roles</span><span class="p">:</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="n">roles</span><span class="p">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="n">keycloak</span><span class="p">:</span> <span class="n">null</span>
+</span></span><span class="line"><span class="cl"> <span class="p">}</span>
 </span></span><span class="line"><span class="cl"> 
-</span></span><span class="line"><span class="cl"> const mutations = {
-</span></span><span class="line"><span class="cl">   },
-</span></span><span class="line"><span class="cl">   SET_ROLES: (state, roles) =&gt; {
-</span></span><span class="line"><span class="cl">     state.roles = roles
-</span></span><span class="line"><span class="cl">+  },
-</span></span><span class="line"><span class="cl">+  SET_KEYCLOAK: (state, keycloak) =&gt; {
-</span></span><span class="line"><span class="cl">+    state.keycloak = keycloak
-</span></span><span class="line"><span class="cl">   }
-</span></span><span class="line"><span class="cl"> }
-</span></span><span class="line"><span class="cl"> ... 
-</span></span><span class="line"><span class="cl">       })
-</span></span><span class="line"><span class="cl">     })
-</span></span><span class="line"><span class="cl">   },
-</span></span><span class="line"><span class="cl">+  // keycloak login
-</span></span><span class="line"><span class="cl">+  keycloakLogin({ commit }, keycloak) {
-</span></span><span class="line"><span class="cl">+    return new Promise((resolve, reject) =&gt; {
-</span></span><span class="line"><span class="cl">+      login({ token: keycloak.idToken.trim() }).then(response =&gt; {
-</span></span><span class="line"><span class="cl">+        const data = response.data
-</span></span><span class="line"><span class="cl">+        const { token } = data
-</span></span><span class="line"><span class="cl">+        // const userinfo = jwtDecode(token)
-</span></span><span class="line"><span class="cl">+        // const { username, roles } = userinfo
-</span></span><span class="line"><span class="cl">+        commit(&#39;SET_TOKEN&#39;, token)
-</span></span><span class="line"><span class="cl">+        setToken(token)
-</span></span><span class="line"><span class="cl">+        commit(&#39;SET_KEYCLOAK&#39;, keycloak)
-</span></span><span class="line"><span class="cl">+        resolve()
-</span></span><span class="line"><span class="cl">+      }).catch(error =&gt; {
-</span></span><span class="line"><span class="cl">+        reject(error)
-</span></span><span class="line"><span class="cl">+      })
-</span></span><span class="line"><span class="cl">+    })
-</span></span><span class="line"><span class="cl">+  },
+</span></span><span class="line"><span class="cl"> <span class="k">const</span> <span class="n">mutations</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="p">},</span>
+</span></span><span class="line"><span class="cl">   <span class="n">SET_ROLES</span><span class="p">:</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">roles</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">     <span class="n">state</span><span class="o">.</span><span class="n">roles</span> <span class="o">=</span> <span class="n">roles</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="n">SET_KEYCLOAK</span><span class="p">:</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">keycloak</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>    <span class="n">state</span><span class="o">.</span><span class="n">keycloak</span> <span class="o">=</span> <span class="n">keycloak</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> <span class="o">...</span> 
+</span></span><span class="line"><span class="cl">       <span class="p">})</span>
+</span></span><span class="line"><span class="cl">     <span class="p">})</span>
+</span></span><span class="line"><span class="cl">   <span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="o">//</span> <span class="n">keycloak</span> <span class="n">login</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="n">keycloakLogin</span><span class="p">({</span> <span class="n">commit</span> <span class="p">},</span> <span class="n">keycloak</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>    <span class="k">return</span> <span class="n">new</span> <span class="n">Promise</span><span class="p">((</span><span class="n">resolve</span><span class="p">,</span> <span class="n">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>      <span class="n">login</span><span class="p">({</span> <span class="n">token</span><span class="p">:</span> <span class="n">keycloak</span><span class="o">.</span><span class="n">idToken</span><span class="o">.</span><span class="n">trim</span><span class="p">()</span> <span class="p">})</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">response</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="k">const</span> <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="k">const</span> <span class="p">{</span> <span class="n">token</span> <span class="p">}</span> <span class="o">=</span> <span class="n">data</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="o">//</span> <span class="k">const</span> <span class="n">userinfo</span> <span class="o">=</span> <span class="n">jwtDecode</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="o">//</span> <span class="k">const</span> <span class="p">{</span> <span class="n">username</span><span class="p">,</span> <span class="n">roles</span> <span class="p">}</span> <span class="o">=</span> <span class="n">userinfo</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="n">commit</span><span class="p">(</span><span class="s1">&#39;SET_TOKEN&#39;</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="n">setToken</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="n">commit</span><span class="p">(</span><span class="s1">&#39;SET_KEYCLOAK&#39;</span><span class="p">,</span> <span class="n">keycloak</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="n">resolve</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>      <span class="p">})</span><span class="o">.</span><span class="n">catch</span><span class="p">(</span><span class="n">error</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="n">reject</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>      <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>    <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>  <span class="p">},</span>
 </span></span><span class="line"><span class="cl"> 
-</span></span><span class="line"><span class="cl">   // get user info
-</span></span><span class="line"><span class="cl">   getInfo({ commit, state }) {
-</span></span><span class="line"><span class="cl">         commit(&#39;SET_ROLES&#39;, [])
-</span></span><span class="line"><span class="cl">         removeToken()
-</span></span><span class="line"><span class="cl">         resetRouter()
-</span></span><span class="line"><span class="cl">+        state.keycloak.logout()
+</span></span><span class="line"><span class="cl">   <span class="o">//</span> <span class="n">get</span> <span class="n">user</span> <span class="n">info</span>
+</span></span><span class="line"><span class="cl">   <span class="n">getInfo</span><span class="p">({</span> <span class="n">commit</span><span class="p">,</span> <span class="n">state</span> <span class="p">})</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="n">commit</span><span class="p">(</span><span class="s1">&#39;SET_ROLES&#39;</span><span class="p">,</span> <span class="p">[])</span>
+</span></span><span class="line"><span class="cl">         <span class="n">removeToken</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">         <span class="n">resetRouter</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span>        <span class="n">state</span><span class="o">.</span><span class="n">keycloak</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"> 
-</span></span><span class="line"><span class="cl">         // reset visited views and cached views
-</span></span><span class="line"><span class="cl">         // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
+</span></span><span class="line"><span class="cl">         <span class="o">//</span> <span class="n">reset</span> <span class="n">visited</span> <span class="n">views</span> <span class="ow">and</span> <span class="n">cached</span> <span class="n">views</span>
+</span></span><span class="line"><span class="cl">         <span class="o">//</span> <span class="n">to</span> <span class="n">fixed</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">PanJiaChen</span><span class="o">/</span><span class="n">vue</span><span class="o">-</span><span class="n">element</span><span class="o">-</span><span class="n">admin</span><span class="o">/</span><span class="n">issues</span><span class="o">/</span><span class="mi">2485</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -680,7 +690,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

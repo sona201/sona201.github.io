@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='kubernetes deploy ingress-controller 会启动job，是一次性任务。主要是创建证书使用 docker 镜像使用 orbstack 当成 docker 容器会开启 docker 最新实验特性，根据芯片下载对应的版本，这也算一个坑 yaml 文件提'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='kubernetes deploy ingress-controller 会启动job，是一次性任务。主要是创建证书使用 docker 镜像使用 orbstack 当成 docker 容器会开启 docker 最新实验特性，根据芯片下载对应的版本，这也算一个坑 yaml 文件提'>
 <title>Ingress NGINX 部署与 RBAC 学习笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/ingress-nginx-deployment-notes/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="kubernetes deploy ingress-controller 会启动job，是一次性任务。主要是创建证书使用 docker 镜像使用 orbstack 当成 docker 容器会开启 docker 最新实验特性，根据芯片下载对应的版本，这也算一个坑 yaml 文件提">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -522,12 +532,12 @@ ServiceAccount(ingress-nginx-admission) &ndash;ClusterRoleBinding&ndash;&gt;  Cl
             
                 
 <article class="">
-    <a href="/posts/process-exit-signal-notes/">
+    <a href="/posts/docker-operations-notes/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">进程退出码 130、137、143 与信号</h2>
+            <h2 class="article-title">Docker 数据目录、日志与 Registry 配置笔记</h2>
         </div>
     </a>
 </article>
@@ -535,12 +545,12 @@ ServiceAccount(ingress-nginx-admission) &ndash;ClusterRoleBinding&ndash;&gt;  Cl
             
                 
 <article class="">
-    <a href="/posts/docker-operations-notes/">
+    <a href="/posts/process-exit-signal-notes/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Docker 数据目录、日志与 Registry 配置笔记</h2>
+            <h2 class="article-title">进程退出码 130、137、143 与信号</h2>
         </div>
     </a>
 </article>
@@ -555,7 +565,7 @@ ServiceAccount(ingress-nginx-admission) &ndash;ClusterRoleBinding&ndash;&gt;  Cl
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

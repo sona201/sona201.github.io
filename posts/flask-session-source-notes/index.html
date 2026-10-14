@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='设置session Python 1 2 3 4 5 6 7 8 9 10 11 12 13 14 from flask import Flask, session app = Flask(__name__) import os app.secret_key = os.environ[&amp;#39;FLASK_SECRET_KEY&amp;#39;] @app.route(&amp;#39;/x1&amp;#39;) def index(): session[&amp;#39;k1&amp;#39;] = 123 return &amp;#34;index&amp;#34; @app.route(&amp;#39;/x2&amp;#39;) def order(): print(session[&amp;#39;k1&amp;#39;]) return &amp;#34;order&amp;#34; Python 1 obj[&amp;#39;xxxx&amp;#39;] = 123 # __setitem__方法'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='设置session Python 1 2 3 4 5 6 7 8 9 10 11 12 13 14 from flask import Flask, session app = Flask(__name__) import os app.secret_key = os.environ[&amp;#39;FLASK_SECRET_KEY&amp;#39;] @app.route(&amp;#39;/x1&amp;#39;) def index(): session[&amp;#39;k1&amp;#39;] = 123 return &amp;#34;index&amp;#34; @app.route(&amp;#39;/x2&amp;#39;) def order(): print(session[&amp;#39;k1&amp;#39;]) return &amp;#34;order&amp;#34; Python 1 obj[&amp;#39;xxxx&amp;#39;] = 123 # __setitem__方法'>
 <title>Flask session 使用与源码笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/flask-session-source-notes/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="设置session Python 1 2 3 4 5 6 7 8 9 10 11 12 13 14 from flask import Flask, session app = Flask(__name__) import os app.secret_key = os.environ[&amp;#39;FLASK_SECRET_KEY&amp;#39;] @app.route(&amp;#39;/x1&amp;#39;) def index(): session[&amp;#39;k1&amp;#39;] = 123 return &amp;#34;index&amp;#34; @app.route(&amp;#39;/x2&amp;#39;) def order(): print(session[&amp;#39;k1&amp;#39;]) return &amp;#34;order&amp;#34; Python 1 obj[&amp;#39;xxxx&amp;#39;] = 123 # __setitem__方法">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/python/">python</a>
+                    <a href="/categories/python/">Python</a>
                 </span>
             
             
@@ -198,12 +208,12 @@ if (!doNotTrack) {
 </span></span><span class="line"><span class="cl"><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">os</span>
 </span></span><span class="line"><span class="cl"><span class="n">app</span><span class="o">.</span><span class="n">secret_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;FLASK_SECRET_KEY&#39;</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl"><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/x1&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/x1&#39;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
 </span></span><span class="line"><span class="cl">  <span class="n">session</span><span class="p">[</span><span class="s1">&#39;k1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">123</span>
 </span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="s2">&#34;index&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/x2&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/x2&#39;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">order</span><span class="p">():</span>
 </span></span><span class="line"><span class="cl">	<span class="nb">print</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;k1&#39;</span><span class="p">])</span>
 </span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="s2">&#34;order&#34;</span>
@@ -364,7 +374,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

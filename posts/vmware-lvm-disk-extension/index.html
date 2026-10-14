@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='vmware 给已有机器扩容 1 vmware 虚机增加磁盘空间 修改完成后，会提示硬盘已准备。需要重启虚拟机。 在 VMware 的虚拟机设置中扩大已有虚拟磁盘容量，本例将磁盘从 60 GiB 扩'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='vmware 给已有机器扩容 1 vmware 虚机增加磁盘空间 修改完成后，会提示硬盘已准备。需要重启虚拟机。 在 VMware 的虚拟机设置中扩大已有虚拟磁盘容量，本例将磁盘从 60 GiB 扩'>
 <title>VMware 虚拟机扩容与 LVM 文件系统调整</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/vmware-lvm-disk-extension/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="vmware 给已有机器扩容 1 vmware 虚机增加磁盘空间 修改完成后，会提示硬盘已准备。需要重启虚拟机。 在 VMware 的虚拟机设置中扩大已有虚拟磁盘容量，本例将磁盘从 60 GiB 扩">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -448,7 +458,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

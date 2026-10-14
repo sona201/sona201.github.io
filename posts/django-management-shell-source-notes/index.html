@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='python manage.py help shell Python 1 2 3 4 from django.core.management import ManagementUtility ManagementUtility().main_help_text() &amp;#34;\nType &amp;#39;pydevconsole.py help &amp;lt;subcommand&amp;gt;&amp;#39; for help on a specific subcommand.\n\nAvailable subcommands:\n\n[auth]\n changepassword\n createsuperuser\n\n[channels]\n runworker\n\n[contenttypes]\n remove_stale_contenttypes\n\n[django]\n check\n compilemessages\n createcachetable\n dbshell\n diffsettings\n dumpdata\n flush\n inspectdb\n loaddata\n makemessages\n makemigrations\n migrate\n sendtestemail\n shell\n showmigrations\n sqlflush\n sqlmigrate\n sqlsequencereset\n squashmigrations\n startapp\n startproject\n test\n testserver\n\n[sessions]\n clearsessions\n\n[staticfiles]\n collectstatic\n findstatic\n runserver&amp;#34; print(ManagementUtility().main_help_text()) 判断继承类有没有该方法 文本'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='python manage.py help shell Python 1 2 3 4 from django.core.management import ManagementUtility ManagementUtility().main_help_text() &amp;#34;\nType &amp;#39;pydevconsole.py help &amp;lt;subcommand&amp;gt;&amp;#39; for help on a specific subcommand.\n\nAvailable subcommands:\n\n[auth]\n changepassword\n createsuperuser\n\n[channels]\n runworker\n\n[contenttypes]\n remove_stale_contenttypes\n\n[django]\n check\n compilemessages\n createcachetable\n dbshell\n diffsettings\n dumpdata\n flush\n inspectdb\n loaddata\n makemessages\n makemigrations\n migrate\n sendtestemail\n shell\n showmigrations\n sqlflush\n sqlmigrate\n sqlsequencereset\n squashmigrations\n startapp\n startproject\n test\n testserver\n\n[sessions]\n clearsessions\n\n[staticfiles]\n collectstatic\n findstatic\n runserver&amp;#34; print(ManagementUtility().main_help_text()) 判断继承类有没有该方法 文本'>
 <title>Django 4.0 命令管理与 shell 启动流程</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/django-management-shell-source-notes/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="python manage.py help shell Python 1 2 3 4 from django.core.management import ManagementUtility ManagementUtility().main_help_text() &amp;#34;\nType &amp;#39;pydevconsole.py help &amp;lt;subcommand&amp;gt;&amp;#39; for help on a specific subcommand.\n\nAvailable subcommands:\n\n[auth]\n changepassword\n createsuperuser\n\n[channels]\n runworker\n\n[contenttypes]\n remove_stale_contenttypes\n\n[django]\n check\n compilemessages\n createcachetable\n dbshell\n diffsettings\n dumpdata\n flush\n inspectdb\n loaddata\n makemessages\n makemigrations\n migrate\n sendtestemail\n shell\n showmigrations\n sqlflush\n sqlmigrate\n sqlsequencereset\n squashmigrations\n startapp\n startproject\n test\n testserver\n\n[sessions]\n clearsessions\n\n[staticfiles]\n collectstatic\n findstatic\n runserver&amp;#34; print(ManagementUtility().main_help_text()) 判断继承类有没有该方法 文本">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/django/">django</a>
+                    <a href="/categories/django/">Django</a>
                 </span>
             
             
@@ -581,7 +591,7 @@ shells = [&lsquo;ipython&rsquo;, &lsquo;bpython&rsquo;, &lsquo;python&rsquo;] <b
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

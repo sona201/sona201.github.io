@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Django源码: 从入口到请求响应 execute_from_command_line(sys.argv) django python manage.py runserver 流程 python manage.py runserver 流程分析 版本 python27 django 1.0 搭建可运行的环境 创建python27 虚拟环境 github 下载 django-1.'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Django源码: 从入口到请求响应 execute_from_command_line(sys.argv) django python manage.py runserver 流程 python manage.py runserver 流程分析 版本 python27 django 1.0 搭建可运行的环境 创建python27 虚拟环境 github 下载 django-1.'>
 <title>Django 1.0 runserver 启动流程</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/django-1-runserver-source-notes/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="Django源码: 从入口到请求响应 execute_from_command_line(sys.argv) django python manage.py runserver 流程 python manage.py runserver 流程分析 版本 python27 django 1.0 搭建可运行的环境 创建python27 虚拟环境 github 下载 django-1.">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -148,7 +158,7 @@ if (!doNotTrack) {
         <div class="article-time">
             
                 <span class="article-meta-categories">
-                    <a href="/categories/django/">django</a>
+                    <a href="/categories/django/">Django</a>
                 </span>
             
             
@@ -487,12 +497,12 @@ github 下载 django-1.0.tar.gz（1.0 版本的django）
             
                 
 <article class="">
-    <a href="/posts/drf-allowed-methods-source-notes/">
+    <a href="/posts/drf-response-rendering/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Django 与 DRF allowed_methods 源码笔记</h2>
+            <h2 class="article-title">DRF finalize_response 与渲染器配置</h2>
         </div>
     </a>
 </article>
@@ -500,12 +510,12 @@ github 下载 django-1.0.tar.gz（1.0 版本的django）
             
                 
 <article class="">
-    <a href="/posts/drf-response-rendering/">
+    <a href="/posts/drf-allowed-methods-source-notes/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">DRF finalize_response 与渲染器配置</h2>
+            <h2 class="article-title">Django 与 DRF allowed_methods 源码笔记</h2>
         </div>
     </a>
 </article>
@@ -520,7 +530,7 @@ github 下载 django-1.0.tar.gz（1.0 版本的django）
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

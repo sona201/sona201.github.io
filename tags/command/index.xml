@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>command on Ricardo</title>
+        <title>Command on Ricardo</title>
         <link>https://sona201.github.io/tags/command/</link>
-        <description>Recent content in command on Ricardo</description>
+        <description>Recent content in Command on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>zh-CN</language>
+        <language>zh-cn</language>
         <lastBuildDate>Sat, 03 Oct 2026 22:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/command/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>MySQL SQL 常用命令</title>
         <link>https://sona201.github.io/posts/mysql-sql-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>

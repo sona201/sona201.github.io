@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='#linux #awk #command awk用法之：文本替换 awk用法之：文本替换 awk的sub/gsub函数用来替换字符串，其语法格式是： Shell 1 sub(/regexp/, replacement, target) 注意第三个参数targ'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='#linux #awk #command awk用法之：文本替换 awk用法之：文本替换 awk的sub/gsub函数用来替换字符串，其语法格式是： Shell 1 sub(/regexp/, replacement, target) 注意第三个参数targ'>
 <title>AWK 文本替换笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/awk-text-replacement/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="#linux #awk #command awk用法之：文本替换 awk用法之：文本替换 awk的sub/gsub函数用来替换字符串，其语法格式是： Shell 1 sub(/regexp/, replacement, target) 注意第三个参数targ">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -393,7 +403,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     

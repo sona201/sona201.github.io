@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='docker 迁移 Bash 1 2 3 4 5 6 7 8 9 10 systemctl enable docker systemctl start docker # 增加普通用户管理docker权限 usermod -aG docker your-user # 修改docker挂载目录 systemctl stop docker systemctl stop docker.socket mv /var/lib/docker /data/ ln -s /data/docker /var/lib/docker systemctl start docker'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='docker 迁移 Bash 1 2 3 4 5 6 7 8 9 10 systemctl enable docker systemctl start docker # 增加普通用户管理docker权限 usermod -aG docker your-user # 修改docker挂载目录 systemctl stop docker systemctl stop docker.socket mv /var/lib/docker /data/ ln -s /data/docker /var/lib/docker systemctl start docker'>
 <title>Docker 数据目录、日志与 Registry 配置笔记</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/docker-operations-notes/'>
@@ -15,16 +16,25 @@
 <meta name="twitter:description" content="docker 迁移 Bash 1 2 3 4 5 6 7 8 9 10 systemctl enable docker systemctl start docker # 增加普通用户管理docker权限 usermod -aG docker your-user # 修改docker挂载目录 systemctl stop docker systemctl stop docker.socket mv /var/lib/docker /data/ ln -s /data/docker /var/lib/docker systemctl start docker">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-3XEF98HG0J', { 'anonymize_ip': false });
-}
-</script>
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
 
     </head>
     <body class="site-shell 
@@ -442,7 +452,7 @@ if (!doNotTrack) {
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
