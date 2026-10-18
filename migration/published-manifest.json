@@ -170,6 +170,10 @@
       "target": "content/post/ai/magpie-ai-automation-workflow.md"
     },
     {
+      "source": "博客/ai/neural-network-architectures-transformer-mamba.md",
+      "target": "content/post/ai/neural-network-architectures-transformer-mamba.md"
+    },
+    {
       "source": "博客/django/2-core_http_middleware.md",
       "target": "content/post/django/2-core_http_middleware.md"
     },
