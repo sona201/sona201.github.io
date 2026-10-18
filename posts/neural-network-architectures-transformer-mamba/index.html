@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='结合 8 张架构图，从全连接、卷积、循环状态到自注意力和选择性状态空间模型，理解 Transformer 成为主流的原因，以及 Mamba 与混合架构的取舍。'>
+<title>图解神经网络架构 从 MLP 到 Transformer 与 Mamba</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/neural-network-architectures-transformer-mamba/'>
+
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='图解神经网络架构 从 MLP 到 Transformer 与 Mamba'>
+<meta property='og:description' content='结合 8 张架构图，从全连接、卷积、循环状态到自注意力和选择性状态空间模型，理解 Transformer 成为主流的原因，以及 Mamba 与混合架构的取舍。'>
+<meta property='og:url' content='https://sona201.github.io/posts/neural-network-architectures-transformer-mamba/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='神经网络' /><meta property='article:tag' content='MLP' /><meta property='article:tag' content='CNN' /><meta property='article:tag' content='RNN' /><meta property='article:tag' content='Transformer' /><meta property='article:tag' content='Mamba' /><meta property='article:published_time' content='2026-10-15T00:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-10-15T00:00:00&#43;08:00'/>
+<meta name="twitter:title" content="图解神经网络架构 从 MLP 到 Transformer 与 Mamba">
+<meta name="twitter:description" content="结合 8 张架构图，从全连接、卷积、循环状态到自注意力和选择性状态空间模型，理解 Transformer 成为主流的原因，以及 Mamba 与混合架构的取舍。">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">图解神经网络架构 从 MLP 到 Transformer 与 Mamba</h1>
+        
+        <p class="article-subtitle">结合 8 张架构图，从全连接、卷积、循环状态到自注意力和选择性状态空间模型，理解 Transformer 成为主流的原因，以及 Mamba 与混合架构的取舍。</p>
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/ai/">AI</a>
+                </span>
+            
+            
+                <time datetime="2026-10-15">2026-10-15</time>
+            
+            <span>阅读时长: 9 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>“小明把杯子放在桌上，过了一会儿，又把它拿走了。”读到“它”时，我们会自然地联系前面的“杯子”。对模型来说，这个联系需要通过具体的计算建立：前面的信息放在哪里？当前的位置怎样找到它？如果两者之间隔着几千个词，还能不能找到？</p>
+<p>MLP、CNN、RNN、Transformer 和 Mamba，给出了不同的信息处理方式。有的让相邻层全面连接，有的优先利用局部结构，有的把历史压缩成状态，还有的让不同位置直接交互。</p>
+<p><strong>Transformer 成为主流的一个关键原因，是它把灵活的长距离交互与高效的并行训练结合起来。</strong> 代价也很直接：当上下文变长，广泛的信息交互会消耗更多计算资源。Mamba 和混合架构则从历史信息的保存方式入手，寻找另一种取舍。</p>
+<p>本文沿着修饼 xiubing 的<a class="link" href="https://www.youtube.com/watch?v=-Pf7JFWwi0k"  target="_blank" rel="noopener"
+    >神经网络架构视频</a>展开，结合原论文补充关键边界。文中 8 张插图均为该视频的原始截图，每张图都附有回看时间。图中的数值、图标和连线用于解释机制，不代表真实模型的完整结构或实际测量结果。</p>
+<h2 id="从一个计算节点理解神经网络">从一个计算节点理解神经网络</h2>
+<p>文字、图片、声音进入模型以后，需要先被表示成数字。一个简单的神经网络节点，接收一组输入，将它们分别乘以权重、加上偏置，再经过非线性变换，输出新的数值。</p>
+<p>可以把这一步理解为：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">输入数字 → 加权求和与偏置 → 非线性变换 → 输出数字
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>权重决定不同输入怎样影响结果，训练负责调整这些参数。大量节点组成一层，多层继续变换信息，最后产生分类、预测或生成所需的输出。</p>
+<p>计算节点如何连接，决定了信息能从哪里来、经过哪些步骤、以什么形式保留下来。这正是理解架构的入口。</p>
+<h2 id="mlp-让相邻层全面连接">MLP 让相邻层全面连接</h2>
+<p>多层感知机 MLP 的典型结构，是把多个全连接层叠起来。下一层的每个节点，都可以读取上一层的全部输出。</p>
+<p><img src="/images/transformer-architecture/01-mlp-02m16s.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="MLP 的四层节点通过相邻层全连接传递信息"
+	
+	
+></p>
+<p><em>图 1：MLP 的全连接结构。相邻层中的节点通过带权重的连接传递信息。来源：<a class="link" href="https://www.youtube.com/watch?v=-Pf7JFWwi0k&amp;t=136s"  target="_blank" rel="noopener"
+    >修饼 xiubing，02:16</a>。</em></p>
+<p>这种结构简单、通用，但连接数量增长得很快。假设相邻两层各有 1,000 个节点，就需要 1,000 × 1,000，也就是 <strong>100 万个连接权重</strong>，还没有算偏置。</p>
+<p>面对图片时，另一个问题出现了：像素并不是任意排列的一串数字。相邻像素常常共同构成边缘、纹理和局部形状；同一种形状也可能出现在图片的不同位置。把整张图展平成向量后交给全连接网络，这些空间规律需要网络自行学会。</p>
+<p>如果直接把这些规律放进连接方式里，就可以更有针对性地处理图片。</p>
+<h2 id="cnn-把空间规律放进网络">CNN 把空间规律放进网络</h2>
+<p>卷积神经网络 CNN 的两个关键设计是<strong>局部连接</strong>和<strong>权重共享</strong>。</p>
+<h3 id="每个位置先处理附近的信息">每个位置先处理附近的信息</h3>
+<p>以一个 <code>3×3</code> 卷积窗口为例，一个输出位置先关注输入中的一小块邻域。窗口移动到别的位置，就计算那个位置的局部特征。许多局部计算共同形成整张特征图。</p>
+<p><img src="/images/transformer-architecture/02-cnn-local-03m26s.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="CNN 从图片各个局部区域计算出整张特征图"
+	
+	
+></p>
+<p><em>图 2：单个计算位置读取局部邻域，整层输出仍能覆盖整张图片。来源：<a class="link" href="https://www.youtube.com/watch?v=-Pf7JFWwi0k&amp;t=206s"  target="_blank" rel="noopener"
+    >修饼 xiubing，03:26</a>。</em></p>
+<p>识别杯子时，前面的层可以提取边缘或颜色变化，后面的层继续组合局部形状，再形成更大范围的特征。随着网络加深，一个输出能够受到更大范围输入的影响，这个范围通常称为感受野。</p>
+<p>“边缘到形状再到物体”是帮助理解的示意。真实网络的各层特征由训练形成，不需要人为指定某一层只能识别杯把，另一层只能识别杯口。</p>
+<h3 id="同一个卷积核可以用于不同位置">同一个卷积核可以用于不同位置</h3>
+<p>假如某组参数能够检测竖直边缘，那么它在左上角有用，在中间和右下角也可能有用。CNN 让同一个卷积核在不同空间位置重复使用，从而减少需要独立学习的参数。</p>
+<p><img src="/images/transformer-architecture/03-cnn-shared-04m06s.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="CNN 用同一组卷积核权重计算图片中三个不同位置的特征"
+	
+	
+></p>
+<p><em>图 3：三个位置共享权重 A，但输入不同，因此分别计算并得到各自的输出。来源：<a class="link" href="https://www.youtube.com/watch?v=-Pf7JFWwi0k&amp;t=246s"  target="_blank" rel="noopener"
+    >修饼 xiubing，04:06</a>。</em></p>
+<p>这里共享的是<strong>同一个卷积核的参数</strong>，各位置仍然需要计算。一个卷积层也可以包含多个不同的卷积核，学习不同的特征；不能把权重共享理解成整层只能使用一套参数。<a class="link" href="https://cs231n.github.io/convolutional-networks/"  target="_blank" rel="noopener"
+    >Stanford CS231n 卷积网络讲义</a></p>
+<p>CNN 把图片的局部性和空间复用规律纳入了架构。换成文本以后，另一个问题会更加突出：如何让后面的输入知道前面发生了什么？</p>
+<h2 id="rnn-用一个状态传递历史">RNN 用一个状态传递历史</h2>
+<p>回到开头的句子。模型处理“它”时，必须获得此前关于“杯子”的信息。</p>
+<p>循环神经网络 RNN 的做法，是按顺序处理输入。每一步同时接收当前输入和上一时刻的隐藏状态，计算出新的状态，再传给下一步。隐藏状态是一组数字，用来承载模型从历史输入中保留的信息。</p>
+<p><img src="/images/transformer-architecture/04-rnn-state-05m42s.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="RNN 将当前词与历史状态一起计算并把新状态向后传递"
+	
+	
+></p>
+<p><em>图 4：RNN 不断结合当前输入与历史记录，生成新的状态。来源：<a class="link" href="https://www.youtube.com/watch?v=-Pf7JFWwi0k&amp;t=342s"  target="_blank" rel="noopener"
+    >修饼 xiubing，05:42</a>。</em></p>
+<p>这个过程像一张不断改写的纸条：读入新内容，更新纸条，再带着它继续阅读。只要需要的信息保留在状态里，后面的位置就有机会使用它。</p>
+<p>困难在于，一篇很长的文章会让这张纸条经历很多次改写。第 3,000 个位置需要第 10 个位置的细节时，普通 RNN 依靠的是前面不断更新的状态，无法直接跳回原来那个位置读取表示。长距离依赖因此更难学习和保留。</p>
+<p>同时，后一步的状态依赖前一步。这限制了<strong>单条序列沿时间方向的并行计算</strong>。不同样本等维度仍然可以并行，问题主要在于这条递推链本身。<a class="link" href="https://arxiv.org/html/1706.03762v7#S1"  target="_blank" rel="noopener"
+    >Transformer 原论文 §1</a></p>
+<p>这就引出了一个想法：如果当前输入需要很远以前的信息，能否直接建立联系？</p>
+<h2 id="transformer-用注意力建立直接联系">Transformer 用注意力建立直接联系</h2>
+<p>Transformer 的核心机制之一是自注意力。它让一个位置根据当前内容，计算与其他可访问位置的关联，并把这些位置的信息按不同权重组合起来。</p>
+<p>在“它”的例子里，“杯子”可能获得更大的权重，“小明”和“桌上”的权重较小。这样，“它”的表示就能够融入相关上下文。</p>
+<p><img src="/images/transformer-architecture/05-transformer-attention-07m20s.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="自注意力对杯子小明和桌上赋予不同权重以更新它的表示"
+	
+	
+></p>
+<p><em>图 5：图中的 0.7、0.2、0.1 是教学假设，用来说明加权组合。它们不是固定的词语关系，也不是经过测量的指代概率。来源：<a class="link" href="https://www.youtube.com/watch?v=-Pf7JFWwi0k&amp;t=440s"  target="_blank" rel="noopener"
+    >修饼 xiubing，07:20</a>。</em></p>
+<p>图中按中文词语解释流程。实际文本模型通常处理 token，它可能是一个字、词的一部分或其他文本片段。</p>
+<h3 id="注意力权重会随输入改变">注意力权重会随输入改变</h3>
+<p>理解自注意力时，很容易混淆两种“权重”。</p>
+<p>一类是模型参数，例如把输入表示变换成 Query、Key、Value，也就是 Q、K、V 的投影矩阵。这些参数由训练学得。另一类是当前计算产生的注意力权重：模型比较 Q 和 K，再用得到的权重组合 V。</p>
+<p>因此，同一个词出现在不同句子里，可以关注不同的信息。这种变化发生在计算结果上，通常不意味着模型在每次回答时都重新训练了参数。<a class="link" href="https://arxiv.org/html/1706.03762v7#S3.SS2"  target="_blank" rel="noopener"
+    >Transformer 原论文 §3.2</a></p>
+<h3 id="长距离交互与并行训练可以兼得">长距离交互与并行训练可以兼得</h3>
+<p>自注意力让距离较远的位置有了直接的信息通路。给定整段训练序列后，许多位置的相关计算也能一起组织成矩阵运算，适合 GPU 大规模处理，减少了普通 RNN 在序列方向上逐步等待的限制。</p>
+<p>训练自回归语言模型时，causal mask 会限制每个位置访问未来的输入位置。<strong>并行计算所有训练位置，不代表允许模型偷看答案。</strong> 自回归生成时，新 token 仍然依赖已经生成的内容，输出通常还要逐步推进。<a class="link" href="https://arxiv.org/html/1706.03762v7#S3.SS1"  target="_blank" rel="noopener"
+    >Transformer 原论文 §3.1</a></p>
+<p>这种灵活的信息交互方式，可以在输入经过适当表示后用于文字、图像、声音等不同模态。长距离建模能力、并行训练效率，加上长期积累的训练方法与硬件实现，共同构成了 Transformer 的优势。</p>
+<h3 id="广泛的信息交互也有成本">广泛的信息交互也有成本</h3>
+<p>标准全自注意力要考虑位置之间的大量配对。当序列长度从 1,000 增长到 10,000，位置对的数量会从约 100 万增长到约 1 亿。</p>
+<p>原论文将标准自注意力每层的主要计算复杂度写为 <code>O(n²d)</code>，其中 <code>n</code> 是序列长度，<code>d</code> 是表示维度。这个式子描述特定计算部分，不能直接当作整个模型耗时，或所有注意力实现的显存公式。<a class="link" href="https://arxiv.org/html/1706.03762v7#S4"  target="_blank" rel="noopener"
+    >Transformer 原论文 §4</a></p>
+<p>长上下文让一个问题变得更有吸引力：能否用较小的状态，保留后续真正需要的信息，减少反复进行大范围注意力计算的开销？</p>
+<h2 id="mamba-让状态更新具有选择性">Mamba 让状态更新具有选择性</h2>
+<p>Mamba 属于选择性状态空间模型，也就是 selective SSM 路线。它一边处理输入，一边更新内部状态。已经处理过的信息，通过状态影响后续计算。</p>
+<p>它与 RNN 都有递推状态，但 Mamba 使用了特定的状态空间结构。关键之处在于，<strong>部分状态空间参数会随当前输入变化</strong>，从而控制信息怎样写入、保留和读出。</p>
+<p><img src="/images/transformer-architecture/06-mamba-selective-09m34s.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Mamba 根据当前输入调整历史信息的保留和写入方式"
+	
+	
+></p>
+<p><em>图 6：当前输入经过学得的变换，影响状态的保留与写入方式。图中的人物、杯子和数值是便于理解的示意。来源：<a class="link" href="https://www.youtube.com/watch?v=-Pf7JFWwi0k&amp;t=574s"  target="_blank" rel="noopener"
+    >修饼 xiubing，09:34</a>。</em></p>
+<p>可以把这种选择性理解为：不同输入以不同方式影响状态。它由训练学得，不是人为给每个词写一条“重要就保留”的判断规则。</p>
+<p>Mamba 还针对这类结构设计了硬件优化的 parallel scan，也就是并行扫描算法，用来高效计算整段序列。保留递推状态的表达方式，并不要求训练时完全按照普通 RNN 的执行方式逐个等待。<a class="link" href="https://arxiv.org/html/2312.00752v2#S3"  target="_blank" rel="noopener"
+    >Mamba 原论文 §3</a></p>
+<p>对于给定的模型结构，状态的规模不必随着已处理序列的长度持续增长。这使它能够避免标准全注意力的全部位置两两交互，提供高效处理长序列的另一条路线。</p>
+<h2 id="压缩历史与直接访问之间的取舍">压缩历史与直接访问之间的取舍</h2>
+<p>保存一份状态能够降低成本，但状态需要承载哪些细节，是模型必须解决的问题。</p>
+<p>Attention 可以从仍在可访问范围内的位置表示中获取信息；状态模型则依赖已经写入状态的内容。两者对精确检索、上下文长度、计算资源的取舍并不相同。</p>
+<p><img src="/images/transformer-architecture/07-attention-mamba-10m18s.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Attention 直接读取位置表示与 Mamba 从当前状态读取信息的对比"
+	
+	
+></p>
+<p><em>图 7：左侧直接关联保留的位置表示，右侧从压缩状态中利用历史线索。来源：<a class="link" href="https://www.youtube.com/watch?v=-Pf7JFWwi0k&amp;t=618s"  target="_blank" rel="noopener"
+    >修饼 xiubing，10:18</a>。</em></p>
+<p>这并不意味着 Mamba 必然忘记远处的信息，也不意味着 Attention 能无误找回所有细节。更有用的比较方式，是看具体任务需要什么：持续处理长数据流，还是精确关联分散在上下文里的细节？允许多少内存和计算成本？</p>
+<h2 id="混合架构把不同机制放在一起">混合架构把不同机制放在一起</h2>
+<p>一种自然的设计，是在同一个模型中组合不同模块。部分层使用状态空间结构，部分层使用注意力，再配合前馈网络处理特征。</p>
+<p><img src="/images/transformer-architecture/08-hybrid-10m33s.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="混合架构在同一模型中排列 Mamba-2 MLP 和 Attention 模块"
+	
+	
+></p>
+<p><em>图 8：Mamba-2、MLP 和 Attention 可以组成一个混合模型。图中是结构示意，不对应所有模型的固定层数或比例。来源：<a class="link" href="https://www.youtube.com/watch?v=-Pf7JFWwi0k&amp;t=633s"  target="_blank" rel="noopener"
+    >修饼 xiubing，10:33</a>。</em></p>
+<p>视频提到的 NVIDIA Nemotron-H 就是一个实例。NVIDIA 的官方介绍说明，它采用 Mamba-2、Self-Attention 和 MLP 的混合结构。这说的是模型模块的组合，并不表示每个 token 都会临时在几种架构之间切换。<a class="link" href="https://research.nvidia.com/labs/adlr/nemotronh/"  target="_blank" rel="noopener"
+    >NVIDIA Nemotron-H 官方介绍</a></p>
+<p>MLP、CNN、RNN、Transformer、Mamba 也因此不能简单排列成一条淘汰链。原始 Transformer 内部本来就包含逐位置前馈网络；不同结构可以继续在各自适合的任务或更大模型中发挥作用。<a class="link" href="https://arxiv.org/html/1706.03762v7#S3.SS3"  target="_blank" rel="noopener"
+    >Transformer 原论文 §3.3</a></p>
+<h2 id="用信息处理方式比较架构">用信息处理方式比较架构</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>架构</th>
+<th>信息怎样组织</th>
+<th>主要收益与取舍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MLP</td>
+<td>相邻层全连接</td>
+<td>通用；宽层之间的参数量容易变大</td>
+</tr>
+<tr>
+<td>CNN</td>
+<td>局部邻域计算，同一卷积核跨位置复用</td>
+<td>利用空间规律；需要逐层扩大信息覆盖范围</td>
+</tr>
+<tr>
+<td>RNN</td>
+<td>当前输入与历史状态递推</td>
+<td>适合顺序处理；长距离依赖和时间方向并行受限</td>
+</tr>
+<tr>
+<td>Transformer</td>
+<td>注意力直接关联可访问的位置</td>
+<td>交互灵活、训练易并行；标准全注意力的长序列成本高</td>
+</tr>
+<tr>
+<td>Mamba</td>
+<td>用输入相关的规则更新状态</td>
+<td>长序列处理高效；需要在有限状态中保留有用细节</td>
+</tr>
+</tbody>
+</table></div>
+<p>以后遇到一种新架构，可以先看四件事：一个位置能连接哪些信息，历史是逐位置保留还是压缩保存，调用远处信息需要经过几步，以及这些设计怎样影响计算量和并行效率。</p>
+<p>带着这些问题再读架构名称和性能指标，才容易看清它解决了什么问题，以及代价落在了哪里。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">神经网络</a>
+        
+            <a href="/tags/mlp/">MLP</a>
+        
+            <a href="/tags/cnn/">CNN</a>
+        
+            <a href="/tags/rnn/">RNN</a>
+        
+            <a href="/tags/transformer/">Transformer</a>
+        
+            <a href="/tags/mamba/">Mamba</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/magpie-ai-automation-workflow/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Magpie 的 AI 自动维护流程与最小实现</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/ai-agent-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0crewai-%E4%B8%8E-react/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent 学习笔记：CrewAI 与 ReAct</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>144</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>134</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#从一个计算节点理解神经网络">从一个计算节点理解神经网络</a></li>
+    <li><a href="#mlp-让相邻层全面连接">MLP 让相邻层全面连接</a></li>
+    <li><a href="#cnn-把空间规律放进网络">CNN 把空间规律放进网络</a>
+      <ol>
+        <li><a href="#每个位置先处理附近的信息">每个位置先处理附近的信息</a></li>
+        <li><a href="#同一个卷积核可以用于不同位置">同一个卷积核可以用于不同位置</a></li>
+      </ol>
+    </li>
+    <li><a href="#rnn-用一个状态传递历史">RNN 用一个状态传递历史</a></li>
+    <li><a href="#transformer-用注意力建立直接联系">Transformer 用注意力建立直接联系</a>
+      <ol>
+        <li><a href="#注意力权重会随输入改变">注意力权重会随输入改变</a></li>
+        <li><a href="#长距离交互与并行训练可以兼得">长距离交互与并行训练可以兼得</a></li>
+        <li><a href="#广泛的信息交互也有成本">广泛的信息交互也有成本</a></li>
+      </ol>
+    </li>
+    <li><a href="#mamba-让状态更新具有选择性">Mamba 让状态更新具有选择性</a></li>
+    <li><a href="#压缩历史与直接访问之间的取舍">压缩历史与直接访问之间的取舍</a></li>
+    <li><a href="#混合架构把不同机制放在一起">混合架构把不同机制放在一起</a></li>
+    <li><a href="#用信息处理方式比较架构">用信息处理方式比较架构</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
+
+
+
+    </body>
+</html>

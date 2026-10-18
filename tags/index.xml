@@ -6,7 +6,55 @@
         <description>Recent content in Tags on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Wed, 14 Oct 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 15 Oct 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>CNN</title>
+        <link>https://sona201.github.io/tags/cnn/</link>
+        <pubDate>Thu, 15 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/tags/cnn/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Mamba</title>
+        <link>https://sona201.github.io/tags/mamba/</link>
+        <pubDate>Thu, 15 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/tags/mamba/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>MLP</title>
+        <link>https://sona201.github.io/tags/mlp/</link>
+        <pubDate>Thu, 15 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/tags/mlp/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>RNN</title>
+        <link>https://sona201.github.io/tags/rnn/</link>
+        <pubDate>Thu, 15 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/tags/rnn/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Transformer</title>
+        <link>https://sona201.github.io/tags/transformer/</link>
+        <pubDate>Thu, 15 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/tags/transformer/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>神经网络</title>
+        <link>https://sona201.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</link>
+        <pubDate>Thu, 15 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>Agent</title>
         <link>https://sona201.github.io/tags/agent/</link>
         <pubDate>Wed, 14 Oct 2026 00:00:00 +0800</pubDate>
