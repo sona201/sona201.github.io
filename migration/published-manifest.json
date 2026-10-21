@@ -576,6 +576,10 @@
     {
       "source": "博客/week/week32.md",
       "target": "content/post/week/week32.md"
+    },
+    {
+      "source": "博客/tcp/macos-clash-vpn-split-dns.md",
+      "target": "content/post/tcp/macos-clash-vpn-split-dns.md"
     }
   ]
 }
