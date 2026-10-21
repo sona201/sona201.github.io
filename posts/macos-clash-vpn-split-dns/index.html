@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='一次从 Shadowrocket 迁移到 Clash Verge Rev 的实际记录，梳理企业 VPN、系统代理、内部 DNS 分流、订阅更新和测速排查之间的关系。'>
+<title>在 macOS 上让企业 VPN 与 Clash 共存</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/macos-clash-vpn-split-dns/'>
+
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='在 macOS 上让企业 VPN 与 Clash 共存'>
+<meta property='og:description' content='一次从 Shadowrocket 迁移到 Clash Verge Rev 的实际记录，梳理企业 VPN、系统代理、内部 DNS 分流、订阅更新和测速排查之间的关系。'>
+<meta property='og:url' content='https://sona201.github.io/posts/macos-clash-vpn-split-dns/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='macOS' /><meta property='article:tag' content='Clash Verge Rev' /><meta property='article:tag' content='Mihomo' /><meta property='article:tag' content='VPN' /><meta property='article:tag' content='DNS' /><meta property='article:published_time' content='2026-10-21T00:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-10-21T00:00:00&#43;08:00'/>
+<meta name="twitter:title" content="在 macOS 上让企业 VPN 与 Clash 共存">
+<meta name="twitter:description" content="一次从 Shadowrocket 迁移到 Clash Verge Rev 的实际记录，梳理企业 VPN、系统代理、内部 DNS 分流、订阅更新和测速排查之间的关系。">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">在 macOS 上让企业 VPN 与 Clash 共存</h1>
+        
+        <p class="article-subtitle">一次从 Shadowrocket 迁移到 Clash Verge Rev 的实际记录，梳理企业 VPN、系统代理、内部 DNS 分流、订阅更新和测速排查之间的关系。</p>
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+                </span>
+            
+            
+                <time datetime="2026-10-21">2026-10-21</time>
+            
+            <span>阅读时长: 10 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>我的 Mac 需要同时访问公司内网、国内网站和海外服务。在家要连接企业 VPN，在公司使用办公网络；个人代理原先使用 Shadowrocket。麻烦出在切换网络时：有时公司页面打不开，有时多个网站同时异常，重开两个客户端后又恢复了。</p>
+<p>排查中还遇到了另一个问题：关闭代理测速能到两百多 Mbps，代理测速页面上却曾看到约 36 Mbps。最初很容易把这些现象归到同一个原因，但实际涉及物理链路、VPN 路由、DNS、代理节点和测速方法。</p>
+<p>最后采用的组合是 <strong>企业 VPN 保持公司要求的模式，Clash 使用系统代理，TUN 关闭，并只给 Clash 内部增加 DNS 分流</strong>。公司规则保存在本地，节点订阅单独更新。本文记录这套配置的形成过程，以及每项测试能说明什么。</p>
+<p>文中的公司域名、内网地址和服务器地址均使用示例值；不包含原始配置、订阅链接或账户截图。配置行为以本次使用的 Clash Verge Rev 2.5.8 和 Mihomo v1.19.32 为准。</p>
+<h2 id="先分清系统代理和-vpn-的职责">先分清系统代理和 VPN 的职责</h2>
+<p>企业 VPN 被固定在全局模式，客户端不能切换为仅接管内网的模式。我能调整的是个人代理如何参与这条链路。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>接管方式</th>
+<th>作用范围</th>
+<th>与企业 VPN 共存时需要留意的地方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>系统代理</td>
+<td>由遵守系统代理设置的应用把请求交给本地代理端口</td>
+<td>部分终端程序和应用不会自动遵守，需要单独配置或显式指定代理</td>
+</tr>
+<tr>
+<td>TUN</td>
+<td>通过虚拟网络接口接收被路由到该接口的流量</td>
+<td>会增加路由和 DNS 接管关系，需要与企业 VPN 一起分析</td>
+</tr>
+</tbody>
+</table></div>
+<p>这次把 Clash 的系统代理设为 <code>127.0.0.1:7897</code>，保持 TUN 关闭。企业 VPN 继续负责公司的网络接入，Clash 根据规则选择直连或个人节点。系统代理、TUN 决定流量如何进入客户端，规则模式则决定进入后的流量如何出站。<a class="link" href="https://www.clashverge.dev/guide/term.html"  target="_blank" rel="noopener"
+    >Clash Verge Rev 名词解释</a></p>
+<p>这里有一个容易误解的地方：<strong>Clash 的 <code>DIRECT</code> 只表示不经过它的代理节点，连接仍然遵循 macOS 的路由。</strong> 企业 VPN 开启后，即使某个请求命中 <code>DIRECT</code>，也可能继续经过 VPN。反过来，Clash 连接个人节点的那条 TCP 连接也可能被 VPN 承载。下面的命令能查看路由表为目标选择的接口；实际连接还可能受接口绑定或 VPN 策略影响，不能只看策略组名字。</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 替换为自己的节点地址；这里使用文档示例地址</span>
+</span></span><span class="line"><span class="cl">route -n get 192.0.2.20
+</span></span><span class="line"><span class="cl">scutil --proxy
+</span></span><span class="line"><span class="cl">scutil --dns
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>选择 Clash Verge Rev，主要是为了把本地规则、节点订阅和运行配置分别管理，并通过 API 验证实际命中。已有节点能继续使用，本次没有通过购买另一个客户端解决问题。Shadowrocket 保留作备用，验证 Clash 独立工作时则将它断开，避免把备用客户端提供的 DNS 或路由误认为 Clash 自身的能力。</p>
+<h2 id="迁移时把节点和本地规则分开">迁移时把节点和本地规则分开</h2>
+<p>迁移后的配置包含一个节点订阅、19 个策略组和17 个规则集。节点通过 HTTP provider 每小时更新，规则集每天更新；公司域名和个人覆盖规则留在本地工作配置中。</p>
+<p>这样刷新节点订阅时，不需要重新编辑公司内网规则，也不会因为订阅模板更新而丢掉本地调整。实际还检查了 provider 的更新时间、更新请求结果，以及重开客户端后策略组选择是否保留。</p>
+<p>这套规则最终按下面的优先级处理流量：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>匹配对象</th>
+<th>处理方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>最前面</td>
+<td>公司域名、localhost、列出的 IPv4 私有网段</td>
+<td><code>DIRECT</code></td>
+</tr>
+<tr>
+<td>接着</td>
+<td>已单独验证的域名覆盖</td>
+<td>进入指定策略组或精确直连</td>
+</tr>
+<tr>
+<td>再往后</td>
+<td>海外服务规则集</td>
+<td>对应服务组或通用代理组</td>
+</tr>
+<tr>
+<td>后面</td>
+<td>国内域名、国内 IP、局域网规则</td>
+<td>本地直连</td>
+</tr>
+<tr>
+<td>最后</td>
+<td>未匹配流量</td>
+<td>兜底代理组</td>
+</tr>
+</tbody>
+</table></div>
+<p>Mihomo 按规则顺序匹配；域名规则提前命中后，不会再由后面的国内 IP 规则改判。<code>IP-CIDR</code> 中的 <code>no-resolve</code> 表示不要为了这一条规则主动解析域名，并不表示后面的规则也不会解析。<a class="link" href="https://wiki.metacubex.one/config/rules/"  target="_blank" rel="noopener"
+    >Mihomo 路由规则</a></p>
+<p>公司域名同时配置了系统代理绕过列表和 Clash 内部的 <code>DIRECT</code> 规则。前者服务于遵守 macOS 代理设置的应用；后者也覆盖显式把请求交给 Clash 的程序。两层各有用途。</p>
+<h3 id="只给有证据的目标增加覆盖规则">只给有证据的目标增加覆盖规则</h3>
+<p>Apple 的一个下载测速域名经过相邻对照，直连更快，因此只增加了精确规则：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">DOMAIN,mensura.cdn-apple.com,DIRECT</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>没有因此把整个 Apple 域名体系都设为直连。</p>
+<p>Claude 的情况则是域名覆盖不足。原规则集已包含 <code>anthropic.com</code> 和 <code>claude.ai</code>，后来补充了以下五个后缀，并统一交给 <code>ClaudeAI</code>：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">DOMAIN-SUFFIX,claude.com,ClaudeAI</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">DOMAIN-SUFFIX,claude.dev,ClaudeAI</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">DOMAIN-SUFFIX,claudemcpclient.com,ClaudeAI</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">DOMAIN-SUFFIX,claudemcpcontent.com,ClaudeAI</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">DOMAIN-SUFFIX,claudeusercontent.com,ClaudeAI</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>其中捕获到的 <code>bridge.claudeusercontent.com</code> 连接，从通用代理组改为命中 <code>ClaudeAI</code>。这些组当时仍使用同一个节点，因此这是归类上的修正，不能直接解释为换了出口或提升了速度。</p>
+<p>最后把“漏网之鱼”的选择从 <code>DIRECT</code> 改为代理。模式仍是规则模式，国内站点和公司域名继续优先匹配前面的规则。需要接受的取舍是：未被国内规则收录的站点，也可能落到兜底代理。</p>
+<h3 id="规则仓库和客户端如何配合">规则仓库和客户端如何配合</h3>
+<p><a class="link" href="https://github.com/blackmatrix7/ios_rule_script"  target="_blank" rel="noopener"
+    >blackmatrix7/ios_rule_script</a> 提供适配不同客户端的规则和相关脚本；本次使用的是其中的规则数据，并结合了 Loyalsoldier 的集合。<a class="link" href="https://github.com/haoel/haoel.github.io"  target="_blank" rel="noopener"
+    >haoel.github.io</a> 则提供代理部署和网络优化的思路。它们可以作为配置来源与排查参考，不能直接替代本机的 VPN、路由和 DNS 验证。</p>
+<p>服务端检查确认已有 VLESS Reality Vision、TCP 传输以及 BBR 和 fq。没有为这次问题继续叠加传输协议或多路复用：先确定慢在哪一段，再决定是否改服务端。</p>
+<h2 id="把-36-mbps-拆成可以验证的问题">把 36 Mbps 拆成可以验证的问题</h2>
+<p>首先检查本地链路。有线网络那次故障中，当前网络位置缺少实际 USB 网卡对应的服务，旧服务绑定的接口已不存在。补齐服务并获取 DHCP 地址后，有线恢复，协商结果为 <code>100baseTX full-duplex</code>。</p>
+<p>这个结果说明当时那条以太网链路的协商速率是 100 Mbps，不是运营商套餐的上限。Wi-Fi 显示的连接速率也属于无线链路指标，不能直接当作应用下载速度。服务器面板里的每月流量额度则是累计传输量，与 Mbps 带宽又是两个单位。</p>
+<p>后续连接环境发生过变化，另一次有线记录已是千兆全双工，因此不能把下面超过 100 Mbps 的结果套到前述百兆链路上。换不同目标做限量测试后，也发现“代理固定只能跑 36 Mbps”的解释并不成立：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>测试</th>
+<th>当时结果</th>
+<th>可以说明的范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cloudflare 页面完整测试</td>
+<td>下载约 142 Mbps，上传约 44.6 Mbps</td>
+<td>该次完整页面测试的结果</td>
+</tr>
+<tr>
+<td>同一页面的 1 MB 阶段</td>
+<td>中位数约 35.7 Mbps</td>
+<td>小文件阶段可能明显低于完整结果</td>
+</tr>
+<tr>
+<td>Mac 经代理下载 Cloudflare 测试文件</td>
+<td>约 134 Mbps</td>
+<td>当时代理路径可以超过 36 Mbps</td>
+</tr>
+<tr>
+<td>Apple 限量双连接下载</td>
+<td>直连约 186 Mbps，代理约 165 Mbps</td>
+<td>同一目标下代理有开销，但并非固定 36 Mbps</td>
+</tr>
+<tr>
+<td>VPS 本机短时入站下载</td>
+<td>约 1.47 Gbps</td>
+<td>服务器在该短样本中能够超过千兆</td>
+</tr>
+</tbody>
+</table></div>
+<p>这些不是同一轮测试的所有分支，不能拼成一张精确的带宽损耗图。最后一项也没有证明 VPS 套餐的端口上限，更不能保证从家里到服务器的跨境链路达到同样速度。</p>
+<p>测速还要检查 HTTP 状态码。一次多连接样本拿到的是 <code>403</code>，应作为无效吞吐样本排除；测速网页里的 WebRTC 或 UDP 指标，也不能直接当作 VLESS TCP 隧道的丢包率。</p>
+<h2 id="dns-结果不同是否就会让代理变慢">DNS 结果不同是否就会让代理变慢</h2>
+<p>针对 Claude 和 Anthropic，做过一轮相邻的企业 VPN 开启、关闭、重新开启测试。过程中没有清理 DNS 缓存，也没有修改代理配置。</p>
+<p>结果很明确：VPN 开启时，系统解析出现一组特定 CNAME 和地址；关闭后恢复为公共解析结果；重新开启后又回到前一组。同期直接查询家庭路由器和通过代理查询公共 DoH，返回的仍是公共结果。</p>
+<p>这说明差异与 <strong>VPN 启用后的 DNS 路径</strong> 有关。它还不足以说明是客户端 Bug、恶意污染，或之前整机断网的根因。</p>
+<p>接下来保持 Host、SNI 和证书校验不变，对不同地址实际建立连接。在当时的正常 Clash 代理路径上，Anthropic 普通域名请求与固定公共 IP 请求的首字节耗时中位数分别约为 <code>804 ms</code> 和 <code>807 ms</code>；Claude 为 <code>801 ms</code> 和 <code>794 ms</code>，差别很小。</p>
+<p>还有一个更容易误判的现象：连接面板里显示过某个解析地址，正常域名请求却能成功；强制代理节点连接这个地址时反而发生 TLS 错误。对于保留域名的 VLESS TCP 请求，目标可能交给远端继续解析；实际行为还受 metadata 状态影响。因此，<strong>单看客户端的 <code>destinationIP</code>，不能证明服务器最终拨号的就是这个地址</strong>。<a class="link" href="https://github.com/MetaCubeX/mihomo/blob/v1.19.32/adapter/outbound/vless.go"  target="_blank" rel="noopener"
+    >Mihomo v1.19.32 VLESS 实现</a>、<a class="link" href="https://github.com/MetaCubeX/mihomo/blob/v1.19.32/constant/metadata.go"  target="_blank" rel="noopener"
+    >metadata 处理</a></p>
+<p>另一轮在 VPN 关闭时，把 Mac 经过代理的请求与 VPS 本机请求放在同一时段比较：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>目标</th>
+<th>Mac 经代理的首字节耗时</th>
+<th>VPS 本机的首字节耗时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anthropic trace</td>
+<td>约 818 ms</td>
+<td>约 43 ms</td>
+</tr>
+<tr>
+<td>Claude trace</td>
+<td>约 801 ms</td>
+<td>约 28 ms</td>
+</tr>
+</tbody>
+</table></div>
+<p>Mac 到节点端口的 TCP 建连中位数约 195 ms；同一连接复用后，请求耗时从约 787 ms 降到约 198 ms、192 ms。这个组合更支持继续检查客户端到节点的链路和连接建立成本，而不是直接给目标网站固定 IP。这里测的是小型 HTTP trace 请求，不是模型首 token 时间。</p>
+<h2 id="只给-clash-增加内部-dns-分流">只给 Clash 增加内部 DNS 分流</h2>
+<p>最后增加 DNS 分流，目的是明确不同域名的解析路径。它没有把整台 Mac 的 DNS 都改成交给 Clash，也不以提高所有网站速度为前提。</p>
+<p>采用的分工是：</p>
+<ul>
+<li>公司域名、局域网域名和未匹配域名继续用 <code>system</code>。</li>
+<li>国内域名集合使用国内 DNS。</li>
+<li>Claude 相关域名通过 <code>ClaudeAI</code> 查询境外 DoH，其他已知境外域名经 <code>DNS_Proxy</code> 查询。</li>
+<li>节点域名单独配置直接可用的解析器，避免“先有代理才能查 DNS、先查 DNS 才能连接代理”的循环。</li>
+</ul>
+<p>下面是脱敏后的 <strong>配置片段</strong>。它要求已有 <code>ClaudeAI</code>、<code>DNS_Proxy</code> 策略组，以及 <code>cn-domains</code>、<code>proxy-domains</code> 规则集；应将名称对应到自己的配置，不能单独当作完整订阅启动。</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">dns</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">listen</span><span class="p">:</span><span class="w"> </span><span class="m">127.0.0.1</span><span class="p">:</span><span class="m">1053</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">enhanced-mode</span><span class="p">:</span><span class="w"> </span><span class="l">redir-host</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ipv6</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">prefer-h3</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">use-hosts</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">use-system-hosts</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">respect-rules</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">default-nameserver</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="m">223.5.5.5</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="m">119.29.29.29</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">proxy-server-nameserver</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="s2">&#34;223.5.5.5#DIRECT&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="s2">&#34;119.29.29.29#DIRECT&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">nameserver</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">system</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">nameserver-policy</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">&#34;+.corp.example&#34;: </span><span class="p">[</span><span class="l">system]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">&#34;+.local&#34;: </span><span class="p">[</span><span class="l">system]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">&#34;+.lan&#34;: </span><span class="p">[</span><span class="l">system]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">&#34;+.arpa&#34;: </span><span class="p">[</span><span class="l">system]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">&#34;localhost&#34;: </span><span class="p">[</span><span class="l">system]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="s2">&#34;+.anthropic.com&#34;</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://1.1.1.1/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://8.8.8.8/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="s2">&#34;+.claude.ai&#34;</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://1.1.1.1/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://8.8.8.8/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="s2">&#34;+.claude.com&#34;</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://1.1.1.1/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://8.8.8.8/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="s2">&#34;+.claude.dev&#34;</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://1.1.1.1/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://8.8.8.8/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="s2">&#34;+.claudemcpclient.com&#34;</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://1.1.1.1/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://8.8.8.8/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="s2">&#34;+.claudemcpcontent.com&#34;</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://1.1.1.1/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://8.8.8.8/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="s2">&#34;+.claudeusercontent.com&#34;</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://1.1.1.1/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://8.8.8.8/dns-query#ClaudeAI&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="s2">&#34;rule-set:proxy-domains&#34;</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://1.1.1.1/dns-query#DNS_Proxy&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;https://8.8.8.8/dns-query#DNS_Proxy&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="s2">&#34;rule-set:cn-domains&#34;</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;223.5.5.5#DIRECT&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;119.29.29.29#DIRECT&#34;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p><code>nameserver-policy</code> 指定域名的解析上游，<code>#ClaudeAI</code> 指定上游连接使用的代理组。没有另设 <code>direct-nameserver</code>，让直接连接的解析也继续遵循域名策略，避免用公共 DNS 覆盖公司域名的解析路径。<a class="link" href="https://wiki.metacubex.one/config/dns/"  target="_blank" rel="noopener"
+    >Mihomo DNS 配置</a></p>
+<p>这里保留未知域名走 <code>system</code>，是为了兼容未完整列出的内网名称。所以，<strong>流量兜底走代理，与未知域名的 DNS 也走海外 DoH，是两项不同设置。</strong> 本次只实现了前者。</p>
+<p><code>system</code> 也有版本边界：v1.19.32 在 macOS 上读取 <code>/etc/resolv.conf</code> 的 nameserver 列表，约五分钟的刷新阈值由查询触发，并非完整复刻 macOS 的 scoped DNS 选择机制。切换 VPN 后的行为需要另外验证。<a class="link" href="https://github.com/MetaCubeX/mihomo/blob/v1.19.32/dns/system.go"  target="_blank" rel="noopener"
+    >system DNS 实现</a>、<a class="link" href="https://github.com/MetaCubeX/mihomo/blob/v1.19.32/dns/system_posix.go"  target="_blank" rel="noopener"
+    >POSIX 解析器读取</a></p>
+<h2 id="先隔离验证再应用">先隔离验证再应用</h2>
+<p>修改前备份工作配置、生成的运行配置、策略选择和应用设置，再运行核心配置校验。</p>
+<p>真正应用前，先启动临时实例：使用另一个代理端口、独立控制接口和规则缓存，不改变系统代理。临时实例必须等规则集全部加载完成再测试；API 已经开始监听，不代表所有规则和数据文件都已就绪。</p>
+<p>验证包括公司域名的系统访问与显式代理访问、Claude 和 Anthropic 的 HTTPS 请求、国内网站，以及 1053 的 TCP 和 UDP 查询。还要看实际命中的规则，不能只凭 YAML 内容判断已经生效。</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 查看系统仍在使用哪些 DNS</span>
+</span></span><span class="line"><span class="cl">scutil --dns
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 单独验证 Clash 内部解析，替换示例公司域名</span>
+</span></span><span class="line"><span class="cl">dig @127.0.0.1 -p <span class="m">1053</span> devops.corp.example A
+</span></span><span class="line"><span class="cl">dig @127.0.0.1 -p <span class="m">1053</span> claude.ai A +tcp
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># curl 显式走 Clash，避免依赖它是否读取系统代理</span>
+</span></span><span class="line"><span class="cl">curl --proxy http://127.0.0.1:7897 --noproxy <span class="s1">&#39;&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --connect-timeout <span class="m">8</span> --max-time <span class="m">15</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -o /dev/null -w <span class="s1">&#39;code=%{http_code} total=%{time_total}\n&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  https://claude.ai/cdn-cgi/trace
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 验证系统解析和路由；仍可能经过企业 VPN</span>
+</span></span><span class="line"><span class="cl">curl --noproxy <span class="s1">&#39;*&#39;</span> --connect-timeout <span class="m">5</span> --max-time <span class="m">10</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -o /dev/null -w <span class="s1">&#39;code=%{http_code}\n&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  http://devops.corp.example/
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>正式应用后，公司入口返回正常 <code>302</code> 跳转，Claude、Anthropic、百度、B 站请求返回 <code>200</code>，Google 探针返回 <code>204</code>。公司规则、订阅每小时更新、40 条路由规则和策略组选择都保留；系统 DNS 没有改动，TUN 仍关闭。这些结果验证的是解析与请求连通性，不代表所有登录流程、Claude Code 任务或长连接都已覆盖。</p>
+<p>首次并发验证中，境外 DoH 曾耗时约 4.4 秒，Claude 请求约 7.67 秒。随后在同一网络同时运行旧、新配置，两轮 Claude 总耗时分别是 <code>1.920 / 1.926 秒</code> 和 <code>1.277 / 1.280 秒</code>，未见明显回归。冷启动开销和链路波动仍然存在。</p>
+<p>此前在内部 DNS 关闭时，做过保持 Clash 进程不变、反复关闭和连接企业 VPN 的测试，公司内网和外网请求能够恢复；但新 DNS 配置后的对应测试被中断，尚未完成。因此目前能确认的是这份配置已生效、当前路径可用，不能据此承诺以后切网都无需等待或重启。</p>
+<p>下次遇到异常，我会先保留当时的进程、路由、DNS 和请求结果，再逐项切换。只有保留下失败现场，才有机会分清究竟是解析器没有切换、节点链路波动，还是应用持有的旧连接还没恢复。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/macos/">MacOS</a>
+        
+            <a href="/tags/clash-verge-rev/">Clash Verge Rev</a>
+        
+            <a href="/tags/mihomo/">Mihomo</a>
+        
+            <a href="/tags/vpn/">VPN</a>
+        
+            <a href="/tags/dns/">DNS</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/%E6%96%90%E8%AE%AF-k2-%E4%BB%8E-padavan-%E5%88%B7-openwrt-24.10.8/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">斐讯 K2 从 Padavan 刷 OpenWrt 24.10.8</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>145</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>139</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#先分清系统代理和-vpn-的职责">先分清系统代理和 VPN 的职责</a></li>
+    <li><a href="#迁移时把节点和本地规则分开">迁移时把节点和本地规则分开</a>
+      <ol>
+        <li><a href="#只给有证据的目标增加覆盖规则">只给有证据的目标增加覆盖规则</a></li>
+        <li><a href="#规则仓库和客户端如何配合">规则仓库和客户端如何配合</a></li>
+      </ol>
+    </li>
+    <li><a href="#把-36-mbps-拆成可以验证的问题">把 36 Mbps 拆成可以验证的问题</a></li>
+    <li><a href="#dns-结果不同是否就会让代理变慢">DNS 结果不同是否就会让代理变慢</a></li>
+    <li><a href="#只给-clash-增加内部-dns-分流">只给 Clash 增加内部 DNS 分流</a></li>
+    <li><a href="#先隔离验证再应用">先隔离验证再应用</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
+
+
+
+    </body>
+</html>
