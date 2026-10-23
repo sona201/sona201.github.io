@@ -580,6 +580,10 @@
     {
       "source": "博客/tcp/macos-clash-vpn-split-dns.md",
       "target": "content/post/tcp/macos-clash-vpn-split-dns.md"
+    },
+    {
+      "source": "博客/ai/ai-design-context-practice.md",
+      "target": "content/post/ai/ai-design-context-practice.md"
     }
   ]
 }
