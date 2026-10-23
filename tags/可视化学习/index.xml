@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>可视化学习 on Ricardo</title>
+        <link>https://sona201.github.io/tags/%E5%8F%AF%E8%A7%86%E5%8C%96%E5%AD%A6%E4%B9%A0/</link>
+        <description>Recent content in 可视化学习 on Ricardo</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Fri, 23 Oct 2026 02:20:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/%E5%8F%AF%E8%A7%86%E5%8C%96%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>让 AI 输出更可靠：界面设计、可视化学习与项目规则</title>
+        <link>https://sona201.github.io/posts/ai-design-context-practice/</link>
+        <pubDate>Fri, 23 Oct 2026 02:20:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/ai-design-context-practice/</guid>
+        <description>&lt;p&gt;让 AI 做一个页面，第一版能跑，却总觉得哪里不对。让它解释一个原理，文字读起来很顺，合上以后又说不清。给项目写了很多规则，下一次修改仍然会引入另一套组件，或者漏掉关键检查。&lt;/p&gt;
+&lt;p&gt;最近读到四条分享，分别谈界面间距、用画布学习 Transformer、前端依赖约束，以及如何编写 &lt;code&gt;CLAUDE.md&lt;/code&gt;。它们的主题不同，但放在一起，可以得到一个值得实践的方向：&lt;strong&gt;先把要求变成具体的关系和约束，再检查实际结果，最后保留有效经验。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这是我对四条内容的综合理解，不是四位作者共同提出的框架。下面先概括原帖，再说明哪些经验可以落地、哪些表述需要修正。&lt;/p&gt;
+&lt;h2 id=&#34;四条分享分别解决什么问题&#34;&gt;四条分享分别解决什么问题&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;来源&lt;/th&gt;
+&lt;th&gt;原帖的主要意思&lt;/th&gt;
+&lt;th&gt;我会怎样使用&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a class=&#34;link&#34; href=&#34;https://x.com/MichaelFilipiuk/status/2111383736243859714&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Michael Filipiuk：界面间距&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;页面让人觉得不协调时，可以先检查 spacing&lt;/td&gt;
+&lt;td&gt;先检查分组、对齐和留白，再调整装饰&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a class=&#34;link&#34; href=&#34;https://x.com/antiAIvo/status/2112031880082244044&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;纳米AI：用 Claude Design 学习&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;用画布把 Transformer 的概念组织成连续的解释步骤&lt;/td&gt;
+&lt;td&gt;用图建立关系，再用计算和自测检验理解&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a class=&#34;link&#34; href=&#34;https://x.com/jakevin7/status/2112244985156481059&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;卡比卡比：前端提示词&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;复用成熟组件，统一设计语言，限制重复依赖&lt;/td&gt;
+&lt;td&gt;明确现有技术栈、复用入口和新增依赖条件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a class=&#34;link&#34; href=&#34;https://x.com/vincemask/status/2052368318825402507&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Vince：CLAUDE.md 的八条经验&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;精简规则、明确禁区、按需读取文档，并积累经验&lt;/td&gt;
+&lt;td&gt;保留稳定约束，把检查接入已有工具&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;本文依据可读取的原帖正文及 Vince 长文中的代码示例整理；没有把附带视频或画布演示当成经过复现实验的效果证明。文中的提示词和流程是进一步整理的建议。&lt;/p&gt;
+&lt;h2 id=&#34;界面不协调先看元素之间的关系&#34;&gt;界面不协调，先看元素之间的关系&lt;/h2&gt;
+&lt;p&gt;Michael 的提醒很适合作为排查入口，但不能把所有视觉问题都归因于间距。文字层级、颜色对比、信息密度和交互逻辑同样可能出问题。&lt;/p&gt;
+&lt;p&gt;间距容易被忽略，是因为它看起来只是几个 CSS 数值，实际上会影响用户如何理解关系。标签离哪个输入框更近，两个按钮是否属于同一组，哪个区域是主内容，都可以通过距离表达。&lt;/p&gt;
+&lt;p&gt;假设一个表单中，标签与输入框相隔很远，相邻字段却挤在一起。用户需要额外判断每个标签对应谁。即使按钮、边框和配色都来自成熟组件库，页面仍然可能显得混乱。&lt;/p&gt;
+&lt;p&gt;我会按三个层次检查：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;组件内部&lt;/strong&gt;：标签与输入框、图标与文字、标题与说明之间是否形成清晰关系。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;组件之间&lt;/strong&gt;：同组内容是否靠近，不同组之间是否有足够区分。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;页面整体&lt;/strong&gt;：容器边距、内容宽度和操作区位置是否一致。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Carbon 等设计系统用 spacing token 管理间距，让组件和页面布局共享一套尺度。值得借鉴的是这种一致性，而不是照搬某个像素数。&lt;a class=&#34;link&#34; href=&#34;https://www.carbondesignsystem.com/building-blocks/foundations/spacing/overview&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Carbon spacing 文档&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;例如，一个新项目可以先试用 &lt;code&gt;4 / 8 / 12 / 16 / 24 / 32&lt;/code&gt; 这组候选尺度，再按实际布局调整。已有项目则应优先沿用现有 token。窄屏、长标题和错误提示都可能暴露例外，不能为了数字整齐牺牲可读性。&lt;/p&gt;
+&lt;p&gt;给 AI 的要求也可以从“做得高级一点”改成：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;文本&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;先阅读现有页面与样式变量，复用当前设计语言。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;检查标签和输入框、同组字段、不同分区之间的距离。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;相同语义的区域使用一致间距，新增数值需要说明用途。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;在窄屏、长文本、空数据和错误提示下检查布局。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;完成后说明调整了哪些关系，并给出可以复核的页面结果。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;这种要求让视觉反馈更具体。下一轮可以讨论某组字段是否应该靠近，而不是继续追加“更精致”“更有质感”。&lt;/p&gt;
+&lt;h2 id=&#34;画布适合建立理解还需要一次独立检验&#34;&gt;画布适合建立理解，还需要一次独立检验&lt;/h2&gt;
+&lt;p&gt;纳米AI 的帖子描述了一次学习尝试：让 Claude Design 把 Transformer 的解释组织到画布上，从 RNN 的瓶颈串到注意力和整体架构。作者提到生成了 21 个步骤，这是个人体验，不能据此保证相同提示总能得到正确或同样完整的结果。&lt;/p&gt;
+&lt;p&gt;Claude Design 的官方介绍也强调从描述生成视觉初稿，再通过画布进行修改。本文关注的是这种“把解释展开并迭代”的方式，不依赖特定菜单入口或套餐。&lt;a class=&#34;link&#34; href=&#34;https://claude.com/product/design&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Claude Design 产品介绍&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;画图特别适合暴露文字容易掩盖的问题：箭头指向哪里，数据有没有经过某一步，同一个符号前后是否改变含义，概念之间到底是因果关系还是分类关系。&lt;/p&gt;
+&lt;p&gt;以注意力为例，可以要求画出输入如何得到 Q、K、V，匹配分数经过什么处理，又怎样用于组合 V。但还应要求模型标注维度、说明示意图的简化，并区分原始 Transformer 与后续架构变体。完整图也不能因为篇幅有限就悄悄省掉前馈网络、残差连接等关键部分。&lt;a class=&#34;link&#34; href=&#34;https://arxiv.org/html/1706.03762v7&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Transformer 原论文&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;一个更适合学习的请求是：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;文本&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;把这个概念画成分步图，标注每一步的输入、输出与关键假设。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;先用一个小例子贯穿，不要一开始堆满术语。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;数值示例应能手工复算；注明哪些细节被简化。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;列出容易混淆的关系，并给出原始论文或官方资料链接。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;最后给我三道换一个场景也能回答的问题，先不要展示答案。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;真正的验收是：关掉图以后，能否重新解释关系、计算一个小例子，并指出图的适用边界。画面流畅只是帮助理解的条件，不能替代正确性检查。&lt;/p&gt;
+&lt;p&gt;想继续学习具体架构，可以看已有的&lt;a class=&#34;link&#34; href=&#34;https://sona201.github.io/posts/neural-network-architectures-transformer-mamba/&#34; &gt;神经网络架构图解&lt;/a&gt;；学习路线、检验标准和反馈方法则放在&lt;a class=&#34;link&#34; href=&#34;https://sona201.github.io/posts/gemini-learning-prompts/&#34; &gt;自学 Prompt 笔记&lt;/a&gt;里。这里不再重复展开完整推导。&lt;/p&gt;
+&lt;h2 id=&#34;指定组件和依赖是在减少无谓选择&#34;&gt;指定组件和依赖，是在减少无谓选择&lt;/h2&gt;
+&lt;p&gt;卡比卡比的帖子列举了 shadcn/ui、Lucide、Motion、react-resizable-panels、dnd-kit 和 Zustand 等选项。更值得保留的经验是：同类能力有明确来源，生成页面时就更容易保持一致。&lt;/p&gt;
+&lt;p&gt;这些名称是原帖中的例子，不是一份所有项目都应安装的清单。已有 Vue 项目不能因为提示词里写了 React 生态组件，就顺手引入另一套技术栈；一个简单表单也没有必要提前装上拖拽和复杂动画依赖。&lt;/p&gt;
+&lt;p&gt;我更倾向于先问三个问题：项目已经有什么？这次缺少什么？新增以后由谁维护？&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;需要约束的内容&lt;/th&gt;
+&lt;th&gt;比较含糊的写法&lt;/th&gt;
+&lt;th&gt;更容易执行的写法&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;组件&lt;/td&gt;
+&lt;td&gt;使用成熟方案&lt;/td&gt;
+&lt;td&gt;先检查项目现有表单、弹窗和表格封装&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;视觉&lt;/td&gt;
+&lt;td&gt;风格统一&lt;/td&gt;
+&lt;td&gt;复用主题变量、间距尺度及现有图标来源&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;状态&lt;/td&gt;
+&lt;td&gt;状态管理合理&lt;/td&gt;
+&lt;td&gt;共享状态沿用当前方案，局部状态留在组件内&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;依赖&lt;/td&gt;
+&lt;td&gt;不要乱装库&lt;/td&gt;
+&lt;td&gt;新增前说明现有能力缺口和重复依赖情况&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;验收&lt;/td&gt;
+&lt;td&gt;页面可以使用&lt;/td&gt;
+&lt;td&gt;检查提交、失败恢复、权限及窄屏操作&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;shadcn/ui 强调开放的组件代码与可组合方式，这有利于按项目需要修改。不过，代码进入项目以后，相应的维护和升级也需要有人负责。&lt;a class=&#34;link&#34; href=&#34;https://ui.shadcn.com/docs&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;shadcn/ui 官方介绍&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;首轮生成得更整齐是有价值的，但一次生成的演示页仍需经过真实数据、交互和构建检查，才能判断是否适合交付。&lt;/p&gt;
+&lt;h2 id=&#34;把稳定约束留下来让下一次不必重讲&#34;&gt;把稳定约束留下来，让下一次不必重讲&lt;/h2&gt;
+&lt;p&gt;前面几节的要求，如果每次都重新输入，很容易遗漏。Vince 的文章建议把稳定约定放进 &lt;code&gt;CLAUDE.md&lt;/code&gt;，精简常驻内容、写清限制、指向详细文档，并把重复错误转化成经验。这些方向值得采用，但有几处需要校正。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;200 行是建议，不是 CLAUDE.md 的硬上限。&lt;/strong&gt; 官方建议文件尽量短，并给出少于 200 行的目标；不要把它理解为第 201 行开始失效。用 &lt;code&gt;@&lt;/code&gt; 导入拆分文件也不会自动减少上下文，因为导入内容仍会展开加载。&lt;a class=&#34;link&#34; href=&#34;https://code.claude.com/docs/en/memory#write-effective-instructions&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;官方指令文件说明&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;规则文件可以指路，但要说清触发条件。&lt;/strong&gt; 仅列出十几个文档路径，仍然要靠模型猜测何时读取。写成“修改回调处理前，先读异步协议和重复事件测试”，更接近实际工作。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Hook 不会因为写进 Markdown 就自动生效。&lt;/strong&gt; 原文的 &lt;code&gt;.claude/hooks/pre-tool-use.json&lt;/code&gt; 示例不能直接当作标准项目配置使用。项目级 Hook 通常注册在 &lt;code&gt;.claude/settings.json&lt;/code&gt;；编辑后的格式化应匹配 &lt;code&gt;PostToolUse&lt;/code&gt;。文件路径应从实际事件输入获取，不能假定存在 &lt;code&gt;${CLAUDE_FILES}&lt;/code&gt;。只匹配 &lt;code&gt;Edit|Write&lt;/code&gt; 也覆盖不了 Bash 写文件。&lt;a class=&#34;link&#34; href=&#34;https://code.claude.com/docs/en/hooks&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;官方 Hook 参考&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;因此，规则、Hook、测试和 CI 要分别承担自己的职责。已有项目如果配置了提交检查和构建验证，应优先接入这些入口，而不是再建立一套没人维护的脚本。&lt;/p&gt;
+&lt;p&gt;对 &lt;code&gt;AGENTS.md&lt;/code&gt; 或 &lt;code&gt;CLAUDE.md&lt;/code&gt;，我会采用下面的内容分配；具体文件的加载方式仍需按所用工具确认：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;放在哪里&lt;/th&gt;
+&lt;th&gt;放什么&lt;/th&gt;
+&lt;th&gt;避免什么&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;根规则文件&lt;/td&gt;
+&lt;td&gt;项目定位、关键边界、文档读取条件、验证入口&lt;/td&gt;
+&lt;td&gt;大段历史、重复规则和任务流水账&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;模块说明&lt;/td&gt;
+&lt;td&gt;局部接口、状态约束、已知陷阱&lt;/td&gt;
+&lt;td&gt;把所有调用方都应知道的红线藏在深层目录&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;专题文档&lt;/td&gt;
+&lt;td&gt;当前设计、协议、迁移范围和决策依据&lt;/td&gt;
+&lt;td&gt;混淆已实现能力与未来草案&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;任务记录&lt;/td&gt;
+&lt;td&gt;当前进度、未验证假设、阻塞原因&lt;/td&gt;
+&lt;td&gt;把一次推测提升为长期规则&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;自动检查&lt;/td&gt;
+&lt;td&gt;格式、静态检查、行为测试和构建&lt;/td&gt;
+&lt;td&gt;把“测试执行过”误认为“所有风险已覆盖”&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;长期记忆的分类与维护已经在&lt;a class=&#34;link&#34; href=&#34;https://sona201.github.io/posts/magpie-ai-automation-workflow/&#34; &gt;Magpie 自动维护流程&lt;/a&gt;中讨论。这里沿用同一个原则：经验需要来源和适用范围，也需要纠正与删除；没有必要仅为了“记忆”再造一个与现有文档重复的事实源。&lt;/p&gt;
+&lt;h2 id=&#34;一份小型项目约定可以怎样写&#34;&gt;一份小型项目约定可以怎样写&lt;/h2&gt;
+&lt;p&gt;下面是根据上述讨论整理的模板，路径和命令都是示例，使用前应替换为仓库真实入口。它适合帮助确定内容结构，不是可以直接安装的工具配置。&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;markdown&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gh&#34;&gt;# 项目协作约定
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gh&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gu&#34;&gt;## 开始任务
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gu&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 先阅读目标实现、直接调用方、相关测试与配置。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 复用已有组件、依赖和模块边界；不顺手重构无关部分。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 缺失信息影响正确性时说明；低风险且可逆的选择可合理假设。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gu&#34;&gt;## 按任务读取
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gu&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 修改界面：先读 docs/ui.md，查看相似页面和主题变量。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 修改 API：先读 docs/api.md，核对调用方和兼容行为。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 修改异步流程：先读 docs/async.md，核对重复、超时和取消语义。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 文档若标为草案，不把目标设计当成当前事实。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gu&#34;&gt;## 界面与依赖
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gu&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 同类组件沿用现有实现，相同语义使用一致间距。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 新增依赖前说明缺口，检查是否已有相同能力。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 检查窄屏、长文本、空数据、加载和失败状态。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gu&#34;&gt;## 验证与交付
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gu&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 运行本次行为对应的测试，以及受影响的静态检查和构建。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 用实际命令替换这里的验证描述，并记录结果。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 区分已验证、未验证和环境阻塞，不把推测写成结论。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 反复出现且已确认的问题，更新对应规则或自动检查。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;不用一次把所有规定写齐。先选择一个经常返工的页面或模块，把最常见的两三个问题改写成可以检查的规则，然后观察下一次任务是否减少了同类错误。&lt;/p&gt;
+&lt;h2 id=&#34;从一轮具体修改开始&#34;&gt;从一轮具体修改开始&lt;/h2&gt;
+&lt;p&gt;假设要给现有后台增加一个查询页，我会这样组织一次任务：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;读取相似页面、组件封装、API 和主题变量，确定可以复用的部分。&lt;/li&gt;
+&lt;li&gt;用简图列出筛选、结果、详情和错误状态，先确认信息关系。&lt;/li&gt;
+&lt;li&gt;沿用现有组件和依赖，调整布局中的分组、间距与操作层级。&lt;/li&gt;
+&lt;li&gt;用长文本、空结果、请求失败和窄屏检查页面，再运行对应测试与构建。&lt;/li&gt;
+&lt;li&gt;只把这次验证过、未来仍有价值的约束写回项目文档。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这轮工作的完成标准应落在结果上：页面是否清楚、解释是否能复算、代码是否遵守项目契约、检查是否真正执行。四条分享提供了不同入口，最终都需要回到这些可以观察的证据。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

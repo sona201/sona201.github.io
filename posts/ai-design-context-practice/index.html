@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='从四条实践分享出发，把界面间距、画布学习、组件复用和 CLAUDE.md 串成一套可执行的方法：给出具体约束，让结果可检查，再把有效经验留在项目里。'>
+<title>让 AI 输出更可靠：界面设计、可视化学习与项目规则</title>
+
+<link rel='canonical' href='https://sona201.github.io/posts/ai-design-context-practice/'>
+
+<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='让 AI 输出更可靠：界面设计、可视化学习与项目规则'>
+<meta property='og:description' content='从四条实践分享出发，把界面间距、画布学习、组件复用和 CLAUDE.md 串成一套可执行的方法：给出具体约束，让结果可检查，再把有效经验留在项目里。'>
+<meta property='og:url' content='https://sona201.github.io/posts/ai-design-context-practice/'>
+<meta property='og:site_name' content='Ricardo'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='AI 编程' /><meta property='article:tag' content='界面设计' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='可视化学习' /><meta property='article:tag' content='工程实践' /><meta property='article:published_time' content='2026-10-23T02:20:00&#43;08:00'/><meta property='article:modified_time' content='2026-10-23T02:20:00&#43;08:00'/>
+<meta name="twitter:title" content="让 AI 输出更可靠：界面设计、可视化学习与项目规则">
+<meta name="twitter:description" content="从四条实践分享出发，把界面间距、画布学习、组件复用和 CLAUDE.md 串成一套可执行的方法：给出具体约束，让结果可检查，再把有效经验留在项目里。">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XEF98HG0J"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3XEF98HG0J');
+        }
+      </script>
+    
+  
+
+
+    </head>
+    <body class="site-shell 
+    article-page">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<header class="top-navigation">
+    <div class="top-navigation__inner">
+        <a class="top-navigation__brand" href="/">Ricardo</a>
+
+        <nav class="top-navigation__menu" aria-label="主导航">
+            
+            
+                
+                
+                <a href="/"
+                   
+                   >
+                    主页
+                </a>
+            
+                
+                
+                <a href="/%E5%85%B3%E4%BA%8E/"
+                   
+                   >
+                    关于
+                </a>
+            
+                
+                
+                <a href="/archives/"
+                   
+                   >
+                    归档
+                </a>
+            
+                
+                
+                <a href="/tags/"
+                   
+                   >
+                    标签
+                </a>
+            
+                
+                
+                <a href="/search/"
+                   
+                   >
+                    搜索
+                </a>
+            
+                
+                
+                <a href="/%E5%8F%8B%E9%93%BE/"
+                   
+                   >
+                    友链
+                </a>
+            
+        </nav>
+
+        
+            <button class="top-navigation__theme" id="dark-mode-toggle" type="button" aria-label="切换浅色或深色模式" title="切换浅色或深色模式">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            </button>
+        
+    </div>
+</header>
+<div class="container main-container site-layout">
+            <main id="main-content" class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        
+            <h1 class="article-title">让 AI 输出更可靠：界面设计、可视化学习与项目规则</h1>
+        
+        <p class="article-subtitle">从四条实践分享出发，把界面间距、画布学习、组件复用和 CLAUDE.md 串成一套可执行的方法：给出具体约束，让结果可检查，再把有效经验留在项目里。</p>
+    </div>
+
+    
+    
+        <div class="article-time">
+            
+                <span class="article-meta-categories">
+                    <a href="/categories/ai/">AI</a>
+                </span>
+            
+            
+                <time datetime="2026-10-23">2026-10-23</time>
+            
+            <span>阅读时长: 9 分钟</span>
+        </div>
+    
+
+    
+</div>
+
+</header>
+
+    <div class="reading-tools" role="group" aria-label="阅读辅助" hidden>
+    <span class="reading-tools__label">阅读辅助</span>
+    <div class="reading-tools__buttons">
+        <button type="button" data-reading-option="focus" aria-pressed="false" title="隐藏侧栏，集中阅读正文；Esc 退出">专注模式</button>
+        <button type="button" data-reading-option="guide" aria-pressed="false" title="突出当前段落；鼠标指向段落或用 Alt + 上下方向键切换">段落导读</button>
+        <button type="button" data-reading-option="bionic" aria-pressed="false" title="加粗英文词首，中文保持原样">英文词首加粗</button>
+    </div>
+    <span class="reading-tools__status" role="status" aria-live="polite"></span>
+</div>
+<section class="article-content"><p>让 AI 做一个页面，第一版能跑，却总觉得哪里不对。让它解释一个原理，文字读起来很顺，合上以后又说不清。给项目写了很多规则，下一次修改仍然会引入另一套组件，或者漏掉关键检查。</p>
+<p>最近读到四条分享，分别谈界面间距、用画布学习 Transformer、前端依赖约束，以及如何编写 <code>CLAUDE.md</code>。它们的主题不同，但放在一起，可以得到一个值得实践的方向：<strong>先把要求变成具体的关系和约束，再检查实际结果，最后保留有效经验。</strong></p>
+<p>这是我对四条内容的综合理解，不是四位作者共同提出的框架。下面先概括原帖，再说明哪些经验可以落地、哪些表述需要修正。</p>
+<h2 id="四条分享分别解决什么问题">四条分享分别解决什么问题</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>来源</th>
+<th>原帖的主要意思</th>
+<th>我会怎样使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a class="link" href="https://x.com/MichaelFilipiuk/status/2111383736243859714"  target="_blank" rel="noopener"
+    >Michael Filipiuk：界面间距</a></td>
+<td>页面让人觉得不协调时，可以先检查 spacing</td>
+<td>先检查分组、对齐和留白，再调整装饰</td>
+</tr>
+<tr>
+<td><a class="link" href="https://x.com/antiAIvo/status/2112031880082244044"  target="_blank" rel="noopener"
+    >纳米AI：用 Claude Design 学习</a></td>
+<td>用画布把 Transformer 的概念组织成连续的解释步骤</td>
+<td>用图建立关系，再用计算和自测检验理解</td>
+</tr>
+<tr>
+<td><a class="link" href="https://x.com/jakevin7/status/2112244985156481059"  target="_blank" rel="noopener"
+    >卡比卡比：前端提示词</a></td>
+<td>复用成熟组件，统一设计语言，限制重复依赖</td>
+<td>明确现有技术栈、复用入口和新增依赖条件</td>
+</tr>
+<tr>
+<td><a class="link" href="https://x.com/vincemask/status/2052368318825402507"  target="_blank" rel="noopener"
+    >Vince：CLAUDE.md 的八条经验</a></td>
+<td>精简规则、明确禁区、按需读取文档，并积累经验</td>
+<td>保留稳定约束，把检查接入已有工具</td>
+</tr>
+</tbody>
+</table></div>
+<p>本文依据可读取的原帖正文及 Vince 长文中的代码示例整理；没有把附带视频或画布演示当成经过复现实验的效果证明。文中的提示词和流程是进一步整理的建议。</p>
+<h2 id="界面不协调先看元素之间的关系">界面不协调，先看元素之间的关系</h2>
+<p>Michael 的提醒很适合作为排查入口，但不能把所有视觉问题都归因于间距。文字层级、颜色对比、信息密度和交互逻辑同样可能出问题。</p>
+<p>间距容易被忽略，是因为它看起来只是几个 CSS 数值，实际上会影响用户如何理解关系。标签离哪个输入框更近，两个按钮是否属于同一组，哪个区域是主内容，都可以通过距离表达。</p>
+<p>假设一个表单中，标签与输入框相隔很远，相邻字段却挤在一起。用户需要额外判断每个标签对应谁。即使按钮、边框和配色都来自成熟组件库，页面仍然可能显得混乱。</p>
+<p>我会按三个层次检查：</p>
+<ol>
+<li><strong>组件内部</strong>：标签与输入框、图标与文字、标题与说明之间是否形成清晰关系。</li>
+<li><strong>组件之间</strong>：同组内容是否靠近，不同组之间是否有足够区分。</li>
+<li><strong>页面整体</strong>：容器边距、内容宽度和操作区位置是否一致。</li>
+</ol>
+<p>Carbon 等设计系统用 spacing token 管理间距，让组件和页面布局共享一套尺度。值得借鉴的是这种一致性，而不是照搬某个像素数。<a class="link" href="https://www.carbondesignsystem.com/building-blocks/foundations/spacing/overview"  target="_blank" rel="noopener"
+    >Carbon spacing 文档</a></p>
+<p>例如，一个新项目可以先试用 <code>4 / 8 / 12 / 16 / 24 / 32</code> 这组候选尺度，再按实际布局调整。已有项目则应优先沿用现有 token。窄屏、长标题和错误提示都可能暴露例外，不能为了数字整齐牺牲可读性。</p>
+<p>给 AI 的要求也可以从“做得高级一点”改成：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">先阅读现有页面与样式变量，复用当前设计语言。
+</span></span><span class="line"><span class="cl">检查标签和输入框、同组字段、不同分区之间的距离。
+</span></span><span class="line"><span class="cl">相同语义的区域使用一致间距，新增数值需要说明用途。
+</span></span><span class="line"><span class="cl">在窄屏、长文本、空数据和错误提示下检查布局。
+</span></span><span class="line"><span class="cl">完成后说明调整了哪些关系，并给出可以复核的页面结果。
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>这种要求让视觉反馈更具体。下一轮可以讨论某组字段是否应该靠近，而不是继续追加“更精致”“更有质感”。</p>
+<h2 id="画布适合建立理解还需要一次独立检验">画布适合建立理解，还需要一次独立检验</h2>
+<p>纳米AI 的帖子描述了一次学习尝试：让 Claude Design 把 Transformer 的解释组织到画布上，从 RNN 的瓶颈串到注意力和整体架构。作者提到生成了 21 个步骤，这是个人体验，不能据此保证相同提示总能得到正确或同样完整的结果。</p>
+<p>Claude Design 的官方介绍也强调从描述生成视觉初稿，再通过画布进行修改。本文关注的是这种“把解释展开并迭代”的方式，不依赖特定菜单入口或套餐。<a class="link" href="https://claude.com/product/design"  target="_blank" rel="noopener"
+    >Claude Design 产品介绍</a></p>
+<p>画图特别适合暴露文字容易掩盖的问题：箭头指向哪里，数据有没有经过某一步，同一个符号前后是否改变含义，概念之间到底是因果关系还是分类关系。</p>
+<p>以注意力为例，可以要求画出输入如何得到 Q、K、V，匹配分数经过什么处理，又怎样用于组合 V。但还应要求模型标注维度、说明示意图的简化，并区分原始 Transformer 与后续架构变体。完整图也不能因为篇幅有限就悄悄省掉前馈网络、残差连接等关键部分。<a class="link" href="https://arxiv.org/html/1706.03762v7"  target="_blank" rel="noopener"
+    >Transformer 原论文</a></p>
+<p>一个更适合学习的请求是：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">把这个概念画成分步图，标注每一步的输入、输出与关键假设。
+</span></span><span class="line"><span class="cl">先用一个小例子贯穿，不要一开始堆满术语。
+</span></span><span class="line"><span class="cl">数值示例应能手工复算；注明哪些细节被简化。
+</span></span><span class="line"><span class="cl">列出容易混淆的关系，并给出原始论文或官方资料链接。
+</span></span><span class="line"><span class="cl">最后给我三道换一个场景也能回答的问题，先不要展示答案。
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>真正的验收是：关掉图以后，能否重新解释关系、计算一个小例子，并指出图的适用边界。画面流畅只是帮助理解的条件，不能替代正确性检查。</p>
+<p>想继续学习具体架构，可以看已有的<a class="link" href="/posts/neural-network-architectures-transformer-mamba/" >神经网络架构图解</a>；学习路线、检验标准和反馈方法则放在<a class="link" href="/posts/gemini-learning-prompts/" >自学 Prompt 笔记</a>里。这里不再重复展开完整推导。</p>
+<h2 id="指定组件和依赖是在减少无谓选择">指定组件和依赖，是在减少无谓选择</h2>
+<p>卡比卡比的帖子列举了 shadcn/ui、Lucide、Motion、react-resizable-panels、dnd-kit 和 Zustand 等选项。更值得保留的经验是：同类能力有明确来源，生成页面时就更容易保持一致。</p>
+<p>这些名称是原帖中的例子，不是一份所有项目都应安装的清单。已有 Vue 项目不能因为提示词里写了 React 生态组件，就顺手引入另一套技术栈；一个简单表单也没有必要提前装上拖拽和复杂动画依赖。</p>
+<p>我更倾向于先问三个问题：项目已经有什么？这次缺少什么？新增以后由谁维护？</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>需要约束的内容</th>
+<th>比较含糊的写法</th>
+<th>更容易执行的写法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>组件</td>
+<td>使用成熟方案</td>
+<td>先检查项目现有表单、弹窗和表格封装</td>
+</tr>
+<tr>
+<td>视觉</td>
+<td>风格统一</td>
+<td>复用主题变量、间距尺度及现有图标来源</td>
+</tr>
+<tr>
+<td>状态</td>
+<td>状态管理合理</td>
+<td>共享状态沿用当前方案，局部状态留在组件内</td>
+</tr>
+<tr>
+<td>依赖</td>
+<td>不要乱装库</td>
+<td>新增前说明现有能力缺口和重复依赖情况</td>
+</tr>
+<tr>
+<td>验收</td>
+<td>页面可以使用</td>
+<td>检查提交、失败恢复、权限及窄屏操作</td>
+</tr>
+</tbody>
+</table></div>
+<p>shadcn/ui 强调开放的组件代码与可组合方式，这有利于按项目需要修改。不过，代码进入项目以后，相应的维护和升级也需要有人负责。<a class="link" href="https://ui.shadcn.com/docs"  target="_blank" rel="noopener"
+    >shadcn/ui 官方介绍</a></p>
+<p>首轮生成得更整齐是有价值的，但一次生成的演示页仍需经过真实数据、交互和构建检查，才能判断是否适合交付。</p>
+<h2 id="把稳定约束留下来让下一次不必重讲">把稳定约束留下来，让下一次不必重讲</h2>
+<p>前面几节的要求，如果每次都重新输入，很容易遗漏。Vince 的文章建议把稳定约定放进 <code>CLAUDE.md</code>，精简常驻内容、写清限制、指向详细文档，并把重复错误转化成经验。这些方向值得采用，但有几处需要校正。</p>
+<p><strong>200 行是建议，不是 CLAUDE.md 的硬上限。</strong> 官方建议文件尽量短，并给出少于 200 行的目标；不要把它理解为第 201 行开始失效。用 <code>@</code> 导入拆分文件也不会自动减少上下文，因为导入内容仍会展开加载。<a class="link" href="https://code.claude.com/docs/en/memory#write-effective-instructions"  target="_blank" rel="noopener"
+    >官方指令文件说明</a></p>
+<p><strong>规则文件可以指路，但要说清触发条件。</strong> 仅列出十几个文档路径，仍然要靠模型猜测何时读取。写成“修改回调处理前，先读异步协议和重复事件测试”，更接近实际工作。</p>
+<p><strong>Hook 不会因为写进 Markdown 就自动生效。</strong> 原文的 <code>.claude/hooks/pre-tool-use.json</code> 示例不能直接当作标准项目配置使用。项目级 Hook 通常注册在 <code>.claude/settings.json</code>；编辑后的格式化应匹配 <code>PostToolUse</code>。文件路径应从实际事件输入获取，不能假定存在 <code>${CLAUDE_FILES}</code>。只匹配 <code>Edit|Write</code> 也覆盖不了 Bash 写文件。<a class="link" href="https://code.claude.com/docs/en/hooks"  target="_blank" rel="noopener"
+    >官方 Hook 参考</a></p>
+<p>因此，规则、Hook、测试和 CI 要分别承担自己的职责。已有项目如果配置了提交检查和构建验证，应优先接入这些入口，而不是再建立一套没人维护的脚本。</p>
+<p>对 <code>AGENTS.md</code> 或 <code>CLAUDE.md</code>，我会采用下面的内容分配；具体文件的加载方式仍需按所用工具确认：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>放在哪里</th>
+<th>放什么</th>
+<th>避免什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>根规则文件</td>
+<td>项目定位、关键边界、文档读取条件、验证入口</td>
+<td>大段历史、重复规则和任务流水账</td>
+</tr>
+<tr>
+<td>模块说明</td>
+<td>局部接口、状态约束、已知陷阱</td>
+<td>把所有调用方都应知道的红线藏在深层目录</td>
+</tr>
+<tr>
+<td>专题文档</td>
+<td>当前设计、协议、迁移范围和决策依据</td>
+<td>混淆已实现能力与未来草案</td>
+</tr>
+<tr>
+<td>任务记录</td>
+<td>当前进度、未验证假设、阻塞原因</td>
+<td>把一次推测提升为长期规则</td>
+</tr>
+<tr>
+<td>自动检查</td>
+<td>格式、静态检查、行为测试和构建</td>
+<td>把“测试执行过”误认为“所有风险已覆盖”</td>
+</tr>
+</tbody>
+</table></div>
+<p>长期记忆的分类与维护已经在<a class="link" href="/posts/magpie-ai-automation-workflow/" >Magpie 自动维护流程</a>中讨论。这里沿用同一个原则：经验需要来源和适用范围，也需要纠正与删除；没有必要仅为了“记忆”再造一个与现有文档重复的事实源。</p>
+<h2 id="一份小型项目约定可以怎样写">一份小型项目约定可以怎样写</h2>
+<p>下面是根据上述讨论整理的模板，路径和命令都是示例，使用前应替换为仓库真实入口。它适合帮助确定内容结构，不是可以直接安装的工具配置。</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">markdown</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="cl"><span class="gh"># 项目协作约定
+</span></span></span><span class="line"><span class="cl"><span class="gh"></span>
+</span></span><span class="line"><span class="cl"><span class="gu">## 开始任务
+</span></span></span><span class="line"><span class="cl"><span class="gu"></span><span class="k">-</span> 先阅读目标实现、直接调用方、相关测试与配置。
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 复用已有组件、依赖和模块边界；不顺手重构无关部分。
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 缺失信息影响正确性时说明；低风险且可逆的选择可合理假设。
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="gu">## 按任务读取
+</span></span></span><span class="line"><span class="cl"><span class="gu"></span><span class="k">-</span> 修改界面：先读 docs/ui.md，查看相似页面和主题变量。
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 修改 API：先读 docs/api.md，核对调用方和兼容行为。
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 修改异步流程：先读 docs/async.md，核对重复、超时和取消语义。
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 文档若标为草案，不把目标设计当成当前事实。
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="gu">## 界面与依赖
+</span></span></span><span class="line"><span class="cl"><span class="gu"></span><span class="k">-</span> 同类组件沿用现有实现，相同语义使用一致间距。
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 新增依赖前说明缺口，检查是否已有相同能力。
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 检查窄屏、长文本、空数据、加载和失败状态。
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="gu">## 验证与交付
+</span></span></span><span class="line"><span class="cl"><span class="gu"></span><span class="k">-</span> 运行本次行为对应的测试，以及受影响的静态检查和构建。
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 用实际命令替换这里的验证描述，并记录结果。
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 区分已验证、未验证和环境阻塞，不把推测写成结论。
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 反复出现且已确认的问题，更新对应规则或自动检查。
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>不用一次把所有规定写齐。先选择一个经常返工的页面或模块，把最常见的两三个问题改写成可以检查的规则，然后观察下一次任务是否减少了同类错误。</p>
+<h2 id="从一轮具体修改开始">从一轮具体修改开始</h2>
+<p>假设要给现有后台增加一个查询页，我会这样组织一次任务：</p>
+<ol>
+<li>读取相似页面、组件封装、API 和主题变量，确定可以复用的部分。</li>
+<li>用简图列出筛选、结果、详情和错误状态，先确认信息关系。</li>
+<li>沿用现有组件和依赖，调整布局中的分组、间距与操作层级。</li>
+<li>用长文本、空结果、请求失败和窄屏检查页面，再运行对应测试与构建。</li>
+<li>只把这次验证过、未来仍有价值的约束写回项目文档。</li>
+</ol>
+<p>这轮工作的完成标准应落在结果上：页面是否清楚、解释是否能复算、代码是否遵守项目契约、检查是否真正执行。四条分享提供了不同入口，最终都需要回到这些可以观察的证据。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ai-%E7%BC%96%E7%A8%8B/">AI 编程</a>
+        
+            <a href="/tags/%E7%95%8C%E9%9D%A2%E8%AE%BE%E8%AE%A1/">界面设计</a>
+        
+            <a href="/tags/claude-code/">Claude Code</a>
+        
+            <a href="/tags/%E5%8F%AF%E8%A7%86%E5%8C%96%E5%AD%A6%E4%B9%A0/">可视化学习</a>
+        
+            <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/magpie-ai-automation-workflow/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Magpie 的 AI 自动维护流程与最小实现</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/neural-network-architectures-transformer-mamba/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">图解神经网络架构 从 MLP 到 Transformer 与 Mamba</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/posts/ai-agent-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0crewai-%E4%B8%8E-react/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent 学习笔记：CrewAI 与 ReAct</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sona201" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Ricardo
+    </section>
+    
+    <section class="powerby">
+        
+            记录自己 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+    <aside class="sidebar right-sidebar site-sidebar homepage-profile-sidebar sticky article-sidebar" aria-label="站点侧栏">
+    <section class="homepage-profile-card"><img class="homepage-profile-card__avatar" src="/img/avatar_hufbfcea9f1bb65e4c2f78f711c295467e_18327_160x0_resize_box_3.png" width="160" height="159" alt="Ricardo 的头像"><div>
+            <h2>Ricardo</h2>
+            <p>人到中年，专业捧哏</p>
+        </div>
+
+        <div class="homepage-profile-card__stats">
+            <div><strong>146</strong><span>文章</span></div>
+            <div><strong>20</strong><span>分类</span></div>
+            <div><strong>143</strong><span>标签</span></div>
+        </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#四条分享分别解决什么问题">四条分享分别解决什么问题</a></li>
+    <li><a href="#界面不协调先看元素之间的关系">界面不协调，先看元素之间的关系</a></li>
+    <li><a href="#画布适合建立理解还需要一次独立检验">画布适合建立理解，还需要一次独立检验</a></li>
+    <li><a href="#指定组件和依赖是在减少无谓选择">指定组件和依赖，是在减少无谓选择</a></li>
+    <li><a href="#把稳定约束留下来让下一次不必重讲">把稳定约束留下来，让下一次不必重讲</a></li>
+    <li><a href="#一份小型项目约定可以怎样写">一份小型项目约定可以怎样写</a></li>
+    <li><a href="#从一轮具体修改开始">从一轮具体修改开始</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+</aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script><script type="text/javascript" src="/ts/custom.js" defer></script>
+
+
+
+    </body>
+</html>
