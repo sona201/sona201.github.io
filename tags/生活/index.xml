@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>生活 on Ricardo</title>
+        <link>https://sona201.github.io/tags/%E7%94%9F%E6%B4%BB/</link>
+        <description>Recent content in 生活 on Ricardo</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Sat, 24 Oct 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/%E7%94%9F%E6%B4%BB/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>从微波炉“蒸”螃蟹说起</title>
+        <link>https://sona201.github.io/posts/microwave-crab-steaming-reasoning/</link>
+        <pubDate>Sat, 24 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/microwave-crab-steaming-reasoning/</guid>
+        <description>&lt;p&gt;今天看到同事用微波炉“蒸”螃蟹，我有点意外。两只生螃蟹装在玻璃饭盒里，加了水和几片姜，再放进微波炉加热。这和我原来对蒸螃蟹的认识不太一样。&lt;/p&gt;
+&lt;p&gt;同事给我解释说，蒸螃蟹用的是水，微波炉里加的也是水，原理其实是一样的。&lt;/p&gt;
+&lt;p&gt;我印象中，微波炉和蒸锅的加热原理是有区别的，不过具体差在哪儿，一时也说不清。当时没有和同事争论，想着先自己查一查：两种方式到底是怎么把螃蟹加热的？都有水，是不是就能说原理一样？&lt;/p&gt;
+&lt;p&gt;于是，我先去看了普通蒸锅是怎么加热的。锅里的水受热变成蒸汽，蒸汽碰到较冷的食物表面，凝结并放出热量，热再向食物内部传递。这里的水和蒸汽，起着把热量传给食物的作用。&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;再看微波炉，加热过程就不太一样了。食物本身可以吸收微波能量而产热，并不只是靠外面的热量传进来。盒里的水也会被加热，产生的湿热环境同样参与烹调。也就是说，把食物加水放进微波炉，既有微波加热，也有热量的传递，不能只按蒸锅的方式去理解。&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;查到这里，原来那个模糊的印象总算具体了一些。两种做法都有水参与，但水在里面起什么作用、食物怎样获得热量，还是有区别的。只说“都有水”，确实没有把这些过程说清楚。&lt;/p&gt;
+&lt;p&gt;不过，原理不同，是不是就意味着微波炉不能这样做螃蟹？&lt;/p&gt;
+&lt;p&gt;好像也不能这么说。加热的过程不同，最后仍然可能把食物做熟。就像换了锅和灶，不一定就做不出同样的菜。原理上的区别解释了两种方法怎么工作，却还不能直接说明哪一种做出来更好，或者眼前这盒螃蟹有没有熟透。&lt;/p&gt;
+&lt;p&gt;那就得接着看，这些区别到底会怎样影响加热的结果。&lt;/p&gt;
+&lt;p&gt;比如，整只螃蟹的不同部位是不是都能充分受热。盒里的水已经热了，不代表蟹肉各处都热到了。其实，普通蒸锅也需要时间让热往里面传，水开了，并不等于刚放进去的螃蟹立刻就熟。说到底，还是得看食物本身受热的情况。&lt;/p&gt;
+&lt;p&gt;查资料时，我还看到一项关于微波蒸汽烹调龙虾尾的研究。研究者测量了不同部位的温度，发现即使有蒸汽参与，实验中仍出现了明显温差。&lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt; 看来，加了水、产生了蒸汽，也不意味着受热不均的问题就解决了。&lt;/p&gt;
+&lt;p&gt;不过，这项研究测的是龙虾尾，做法和设备条件未必与这盒螃蟹相同。加热过程中有温差，也不等于加热结束时一定没熟。它让我知道还要留意不同部位的受热情况，但拿它来判断同事这次做得怎么样，依据还是不够。&lt;/p&gt;
+&lt;p&gt;再回头看，最初的疑问里，其实混着几个不同的问题。“微波炉和蒸锅是不是同一种加热方式”，查资料可以弄清楚；“微波炉能不能做螃蟹”，还要看具体怎么做；至于“这一次有没有做好”，就得知道实际过程和结果了。原理查清楚了，后面的问题还得接着看。&lt;/p&gt;
+&lt;p&gt;说到具体做法，我也问过 AI，网上有没有人用这种方法做螃蟹。这类经验可以继续找，不过现在再看，就不只是看“能不能做”了，还得留意用了什么容器、放了多少螃蟹、功率和时间是多少，以及怎么判断已经熟透。只知道“有人这样做过”，还没法知道他的做法和眼前这一盒是不是一回事。&lt;/p&gt;
+&lt;p&gt;平常参考别人的做法时，很容易记住一个时间，比如加热几分钟。但想想看，这几分钟其实对应着一组条件。换了机器、食物大小或者数量，还能不能照用？前面查的原理，到这里就能帮着理解了：知道热量怎样进入食物，才比较容易看出，哪些步骤和条件可能会影响结果。&lt;/p&gt;
+&lt;p&gt;回到当时那盒螃蟹，能确定的是有两只，每只大约四两，放在加水的玻璃饭盒里。至于有没有加盖、用了多大功率、加热多久，还有最后熟得怎么样，这些都没有确认。&lt;/p&gt;
+&lt;p&gt;所以，查完原理，我还想接着弄清楚的，已经是更具体的问题了。比如，同样是两只螃蟹，加盖和不加盖会有什么影响？换一台功率不同的微波炉，加热时间又该怎么调整？知道了两种方式有区别，这些区别在实际做法里意味着什么，还可以继续往下查。&lt;/p&gt;
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://extension.okstate.edu/fact-sheets/steam-basics-for-food-processors&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Oklahoma State University：Steam Basics for Food Processors&lt;/a&gt;，关于蒸汽凝结放热的说明。&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.fda.gov/radiation-emitting-products/resources-you-radiation-emitting-products/microwave-ovens&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;FDA：Microwave Ovens&lt;/a&gt;，关于食物吸收微波能量及内部热传导的说明。本文讨论普通微波模式，不把组合机的纯蒸汽模式一并算入。&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:3&#34;&gt;
+&lt;p&gt;Gregory J. Fleischman，2016，&lt;a class=&#34;link&#34; href=&#34;https://www.sciencedirect.com/science/article/pii/S0362028X22093188&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Nonuniformity of Temperatures in Microwave Steam Heating of Lobster Tail&lt;/a&gt;，&lt;em&gt;Journal of Food Protection&lt;/em&gt;，79(11)，2000–2004。&amp;#160;&lt;a href=&#34;#fnref:3&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
