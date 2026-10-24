@@ -7,7 +7,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/django-management-shell-source-notes/'>
 
-<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Django 4.0 命令管理与 shell 启动流程'>
+<link rel="stylesheet" href="/scss/style.min.3b59a605b204ccb91d88a36dc5b43d350983066997290bdf521c4e4a9c48edd7.css"><meta property='og:title' content='Django 4.0 命令管理与 shell 启动流程'>
 <meta property='og:description' content='python manage.py help shell Python 1 2 3 4 from django.core.management import ManagementUtility ManagementUtility().main_help_text() &amp;#34;\nType &amp;#39;pydevconsole.py help &amp;lt;subcommand&amp;gt;&amp;#39; for help on a specific subcommand.\n\nAvailable subcommands:\n\n[auth]\n changepassword\n createsuperuser\n\n[channels]\n runworker\n\n[contenttypes]\n remove_stale_contenttypes\n\n[django]\n check\n compilemessages\n createcachetable\n dbshell\n diffsettings\n dumpdata\n flush\n inspectdb\n loaddata\n makemessages\n makemigrations\n migrate\n sendtestemail\n shell\n showmigrations\n sqlflush\n sqlmigrate\n sqlsequencereset\n squashmigrations\n startapp\n startproject\n test\n testserver\n\n[sessions]\n clearsessions\n\n[staticfiles]\n collectstatic\n findstatic\n runserver&amp;#34; print(ManagementUtility().main_help_text()) 判断继承类有没有该方法 文本'>
 <meta property='og:url' content='https://sona201.github.io/posts/django-management-shell-source-notes/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -90,6 +90,14 @@
                    
                    >
                     归档
+                </a>
+            
+                
+                
+                <a href="/categories/"
+                   
+                   >
+                    分类
                 </a>
             
                 

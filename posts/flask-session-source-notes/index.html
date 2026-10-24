@@ -7,7 +7,7 @@
 
 <link rel='canonical' href='https://sona201.github.io/posts/flask-session-source-notes/'>
 
-<link rel="stylesheet" href="/scss/style.min.381666b046989160068375e05cbf968ef82246c695d18a7a20c01e36bc1c3469.css"><meta property='og:title' content='Flask session 使用与源码笔记'>
+<link rel="stylesheet" href="/scss/style.min.3b59a605b204ccb91d88a36dc5b43d350983066997290bdf521c4e4a9c48edd7.css"><meta property='og:title' content='Flask session 使用与源码笔记'>
 <meta property='og:description' content='设置session Python 1 2 3 4 5 6 7 8 9 10 11 12 13 14 from flask import Flask, session app = Flask(__name__) import os app.secret_key = os.environ[&amp;#39;FLASK_SECRET_KEY&amp;#39;] @app.route(&amp;#39;/x1&amp;#39;) def index(): session[&amp;#39;k1&amp;#39;] = 123 return &amp;#34;index&amp;#34; @app.route(&amp;#39;/x2&amp;#39;) def order(): print(session[&amp;#39;k1&amp;#39;]) return &amp;#34;order&amp;#34; Python 1 obj[&amp;#39;xxxx&amp;#39;] = 123 # __setitem__方法'>
 <meta property='og:url' content='https://sona201.github.io/posts/flask-session-source-notes/'>
 <meta property='og:site_name' content='Ricardo'>
@@ -90,6 +90,14 @@
                    
                    >
                     归档
+                </a>
+            
+                
+                
+                <a href="/categories/"
+                   
+                   >
+                    分类
                 </a>
             
                 
