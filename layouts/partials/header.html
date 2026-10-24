@@ -6,8 +6,8 @@
             {{ $currentPage := . }}
             {{ range .Site.Menus.main }}
                 {{ $active := or (eq $currentPage.Title .Name) (or ($currentPage.HasMenuCurrent "main" .) ($currentPage.IsMenuCurrent "main" .)) }}
-                {{ if and (eq .Identifier "tags") (in (slice "taxonomy" "term") $currentPage.Kind) }}
-                    {{ $active = eq $currentPage.Data.Plural "tags" }}
+                {{ if and (in (slice "categories" "tags") .Identifier) (in (slice "taxonomy" "term") $currentPage.Kind) }}
+                    {{ $active = eq $currentPage.Data.Plural .Identifier }}
                 {{ end }}
                 <a href="{{ .URL }}"
                    {{ if $active }}class="current" aria-current="page"{{ end }}
