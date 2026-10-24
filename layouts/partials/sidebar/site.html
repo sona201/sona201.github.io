@@ -40,9 +40,15 @@
         </div>
 
         <div class="homepage-profile-card__stats">
-            <div><strong>{{ len $posts }}</strong><span>文章</span></div>
-            <div><strong>{{ len $categories }}</strong><span>分类</span></div>
-            <div><strong>{{ $tagCount }}</strong><span>标签</span></div>
+            <a href="{{ "archives/" | relURL }}">
+                <div><strong>{{ len $posts }}</strong><span>文章</span></div>
+            </a>
+            <a href="{{ "categories/" | relURL }}">
+                <div><strong>{{ len $categories }}</strong><span>分类</span></div>
+            </a>
+            <a href="{{ "tags/" | relURL }}">
+                <div><strong>{{ $tagCount }}</strong><span>标签</span></div>
+            </a>
         </div>
 
         {{- range $site.Menus.social -}}
