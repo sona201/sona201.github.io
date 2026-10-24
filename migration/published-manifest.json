@@ -588,6 +588,10 @@
     {
       "source": "博客/life/at-the-end.md",
       "target": "content/post/life/at-the-end.md"
+    },
+    {
+      "source": "博客/think/microwave-crab-steaming-reasoning.md",
+      "target": "content/post/think/microwave-crab-steaming-reasoning.md"
     }
   ]
 }
