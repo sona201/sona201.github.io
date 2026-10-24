@@ -1,0 +1,41 @@
+/* Keep the complete navigation usable on narrow screens. */
+@media (max-width: 767px) {
+    :root { --page-header-height: 112px; }
+
+    .top-navigation__inner {
+        min-height: 0;
+        padding: 8px 12px 6px;
+        gap: 4px 12px;
+    }
+
+    .top-navigation__brand {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
+
+    .top-navigation__menu {
+        height: auto;
+        gap: 0;
+        padding-bottom: 0;
+        overflow: visible;
+
+        a {
+            display: inline-flex;
+            flex: 1 1 0;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            min-height: 44px;
+            padding: 6px 4px;
+            font-size: 14px;
+        }
+    }
+
+    .top-navigation__theme#dark-mode-toggle {
+        width: 44px;
+        height: 44px;
+    }
+
+    .reading-tools button { min-height: 44px; }
+}
