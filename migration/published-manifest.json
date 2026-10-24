@@ -584,6 +584,10 @@
     {
       "source": "博客/ai/ai-design-context-practice.md",
       "target": "content/post/ai/ai-design-context-practice.md"
+    },
+    {
+      "source": "博客/life/at-the-end.md",
+      "target": "content/post/life/at-the-end.md"
     }
   ]
 }
