@@ -592,6 +592,10 @@
     {
       "source": "博客/think/microwave-crab-steaming-reasoning.md",
       "target": "content/post/think/microwave-crab-steaming-reasoning.md"
+    },
+    {
+      "source": "博客/ai/cc-switch-magpie-config-and-docs.md",
+      "target": "content/post/ai/cc-switch-magpie-config-and-docs.md"
     }
   ]
 }
