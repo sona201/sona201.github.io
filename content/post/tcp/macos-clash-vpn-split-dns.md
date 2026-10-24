@@ -1,8 +1,8 @@
 ---
 title: "在 macOS 上让企业 VPN 与 Clash 共存"
-description: "一次从 Shadowrocket 迁移到 Clash Verge Rev 的实际记录，梳理企业 VPN、系统代理、内部 DNS 分流、订阅更新和测速排查之间的关系。"
+description: "记录 macOS 企业 VPN 与 Clash 共存的配置过程，以及 Claude 规则前置、服务 DNS 策略补齐、订阅更新和实际连接验证。"
 date: "2026-10-21T00:00:00+08:00"
-lastmod: "2026-10-21T00:00:00+08:00"
+lastmod: "2026-10-24T00:00:00+08:00"
 categories: ["网络"]
 tags: ["macOS", "Clash Verge Rev", "Mihomo", "VPN", "DNS"]
 slug: "macos-clash-vpn-split-dns"
@@ -13,7 +13,7 @@ draft: false
 
 排查中还遇到了另一个问题：关闭代理测速能到两百多 Mbps，代理测速页面上却曾看到约 36 Mbps。最初很容易把这些现象归到同一个原因，但实际涉及物理链路、VPN 路由、DNS、代理节点和测速方法。
 
-最后采用的组合是 **企业 VPN 保持公司要求的模式，Clash 使用系统代理，TUN 关闭，并只给 Clash 内部增加 DNS 分流**。公司规则保存在本地，节点订阅单独更新。本文记录这套配置的形成过程，以及每项测试能说明什么。
+最后采用的组合是 **企业 VPN 保持公司要求的模式，Clash 使用系统代理，TUN 关闭，并只给 Clash 内部增加 DNS 分流**。公司规则保存在本地，节点订阅单独更新。本文记录这套配置的形成过程，以及每项测试能说明什么。10 月 22 日，又继续调整了 Claude 的规则顺序，并补齐常用服务的 DNS 策略；两轮修改的测试结果分开记录。
 
 文中的公司域名、内网地址和服务器地址均使用示例值；不包含原始配置、订阅链接或账户截图。配置行为以本次使用的 Clash Verge Rev 2.5.8 和 Mihomo v1.19.32 为准。
 
@@ -70,10 +70,12 @@ rules:
 
 没有因此把整个 Apple 域名体系都设为直连。
 
-Claude 的情况则是域名覆盖不足。原规则集已包含 `anthropic.com` 和 `claude.ai`，后来补充了以下五个后缀，并统一交给 `ClaudeAI`：
+Claude 最初遇到的是域名覆盖不足。原规则集已经包含 `anthropic.com` 和 `claude.ai`，先补了 `claude.com` 等五个后缀。10 月 22 日继续排查 DNS 时，又把前两个主域名也提到服务规则集之前。现在本地共有七条 Claude 覆盖规则，放在公司、私网和 Apple 精确规则之后：
 
 ```yaml
 rules:
+  - DOMAIN-SUFFIX,anthropic.com,ClaudeAI
+  - DOMAIN-SUFFIX,claude.ai,ClaudeAI
   - DOMAIN-SUFFIX,claude.com,ClaudeAI
   - DOMAIN-SUFFIX,claude.dev,ClaudeAI
   - DOMAIN-SUFFIX,claudemcpclient.com,ClaudeAI
@@ -81,7 +83,7 @@ rules:
   - DOMAIN-SUFFIX,claudeusercontent.com,ClaudeAI
 ```
 
-其中捕获到的 `bridge.claudeusercontent.com` 连接，从通用代理组改为命中 `ClaudeAI`。这些组当时仍使用同一个节点，因此这是归类上的修正，不能直接解释为换了出口或提升了速度。
+最初补五条规则时，捕获到的 `bridge.claudeusercontent.com` 连接从通用代理组改为命中 `ClaudeAI`，出口节点没有变化。后面再提前两个主域名，目的则是减少规则匹配过程中不必要的本地解析，下文会展开这次调整。
 
 最后把“漏网之鱼”的选择从 `DIRECT` 改为代理。模式仍是规则模式，国内站点和公司域名继续优先匹配前面的规则。需要接受的取舍是：未被国内规则收录的站点，也可能落到兜底代理。
 
@@ -134,16 +136,16 @@ Mac 到节点端口的 TCP 建连中位数约 195 ms；同一连接复用后，�
 
 ## 只给 Clash 增加内部 DNS 分流
 
-最后增加 DNS 分流，目的是明确不同域名的解析路径。它没有把整台 Mac 的 DNS 都改成交给 Clash，也不以提高所有网站速度为前提。
+10 月 20 日先增加了一层 Clash 内部 DNS 分流，目的是明确不同域名的解析路径。它没有把整台 Mac 的 DNS 都改成交给 Clash，也不以提高所有网站速度为前提。
 
-采用的分工是：
+第一版采用的分工是：
 
 - 公司域名、局域网域名和未匹配域名继续用 `system`。
 - 国内域名集合使用国内 DNS。
 - Claude 相关域名通过 `ClaudeAI` 查询境外 DoH，其他已知境外域名经 `DNS_Proxy` 查询。
 - 节点域名单独配置直接可用的解析器，避免“先有代理才能查 DNS、先查 DNS 才能连接代理”的循环。
 
-下面是脱敏后的 **配置片段**。它要求已有 `ClaudeAI`、`DNS_Proxy` 策略组，以及 `cn-domains`、`proxy-domains` 规则集；应将名称对应到自己的配置，不能单独当作完整订阅启动。
+下面保留这一版的脱敏 **配置片段**，便于说明后续增加了什么。它要求已有 `ClaudeAI`、`DNS_Proxy` 策略组，以及 `cn-domains`、`proxy-domains` 规则集；名称需要对应到自己的配置，不能单独当作完整订阅启动。10 月 22 日新增的服务策略在后文说明。
 
 ```yaml
 dns:
@@ -204,7 +206,7 @@ dns:
 
 `system` 也有版本边界：v1.19.32 在 macOS 上读取 `/etc/resolv.conf` 的 nameserver 列表，约五分钟的刷新阈值由查询触发，并非完整复刻 macOS 的 scoped DNS 选择机制。切换 VPN 后的行为需要另外验证。[system DNS 实现](https://github.com/MetaCubeX/mihomo/blob/v1.19.32/dns/system.go)、[POSIX 解析器读取](https://github.com/MetaCubeX/mihomo/blob/v1.19.32/dns/system_posix.go)
 
-## 先隔离验证再应用
+## 第一版 DNS 的隔离验证
 
 修改前备份工作配置、生成的运行配置、策略选择和应用设置，再运行核心配置校验。
 
@@ -232,10 +234,71 @@ curl --noproxy '*' --connect-timeout 5 --max-time 10 \
   http://devops.corp.example/
 ```
 
-正式应用后，公司入口返回正常 `302` 跳转，Claude、Anthropic、百度、B 站请求返回 `200`，Google 探针返回 `204`。公司规则、订阅每小时更新、40 条路由规则和策略组选择都保留；系统 DNS 没有改动，TUN 仍关闭。这些结果验证的是解析与请求连通性，不代表所有登录流程、Claude Code 任务或长连接都已覆盖。
+10 月 20 日正式应用后，公司入口返回正常 `302` 跳转，Claude、Anthropic、百度、B 站请求返回 `200`，Google 探针返回 `204`。公司规则、订阅每小时更新、当时的 40 条路由规则和策略组选择都保留；系统 DNS 没有改动，TUN 仍关闭。这些结果验证的是解析与请求连通性，不代表所有登录流程、Claude Code 任务或长连接都已覆盖。
 
 首次并发验证中，境外 DoH 曾耗时约 4.4 秒，Claude 请求约 7.67 秒。随后在同一网络同时运行旧、新配置，两轮 Claude 总耗时分别是 `1.920 / 1.926 秒` 和 `1.277 / 1.280 秒`，未见明显回归。冷启动开销和链路波动仍然存在。
 
-此前在内部 DNS 关闭时，做过保持 Clash 进程不变、反复关闭和连接企业 VPN 的测试，公司内网和外网请求能够恢复；但新 DNS 配置后的对应测试被中断，尚未完成。因此目前能确认的是这份配置已生效、当前路径可用，不能据此承诺以后切网都无需等待或重启。
+## 明确走代理的域名为什么还会先查 DNS
 
-下次遇到异常，我会先保留当时的进程、路由、DNS 和请求结果，再逐项切换。只有保留下失败现场，才有机会分清究竟是解析器没有切换、节点链路波动，还是应用持有的旧连接还没恢复。
+基础配置落地后，我继续读了 Sukka 的[代理环境中的 DNS 解析行为](https://blog.skk.moe/post/what-happend-to-dns-in-proxy/)和[DNS 配置技巧](https://blog.skk.moe/post/i-have-my-unique-dns-setup/)。其中一个细节值得回到自己的配置里看：显式代理请求已经带着域名，如果能直接命中域名代理规则，本地就不必先为 IP 分流查询一次 DNS。
+
+对照运行规则后，发现排在前面的 YouTube 集合混有三条没有 `no-resolve` 的 IP 规则。一个带域名、尚无目标 IP 的请求，如果没有命中前面的域名项，就会在这里尝试解析。`claude.ai` 和 `anthropic.com` 当时还依赖后面的 Claude 集合，因此到达自己的规则前，已经多了一次本地 DNS 等待。此前前置的 `claude.com` 等五个后缀不走这条路径。
+
+于是 10 月 22 日只增加了前面列出的两条域名规则，没有重排原有 40 条规则，也没有把所有 IP 规则一律改成 `no-resolve`。修改后共 42 条：公司和私网优先级不变，Claude 的两个主域名能更早进入 `ClaudeAI`；末尾的国内 IP 判断仍然保留。
+
+这次改的是**业务流量规则的位置**。Claude 的七个 DNS 后缀策略在第一版就已存在，并不是又新增了一套 Claude DNS。
+
+## 让服务规则和 DNS 策略对应起来
+
+再看其他服务时，发现“流量会走代理”也不代表“需要本地解析时一定查海外 DNS”。例如 `api.statsig.com`、`featuregates.org` 已在 OpenAI 服务规则中，却不在当时的通用海外 DNS 集合中；如果规则匹配触发解析，它们仍会使用默认的 `system`。
+
+因此复用现有服务集合，为九项服务补充了 `nameserver-policy`。每项仍查询 Cloudflare 和 Google DoH，查询连接经过对应服务组，而不是全部交给一个通用 DNS 组：
+
+| 新增 DNS 策略对应的服务 | DoH 连接使用的策略组 |
+| --- | --- |
+| YouTube | YouTube |
+| Google | Google |
+| GitHub | GitHub |
+| Spotify | Spotify |
+| Netflix | Netflix |
+| HBO | HBO |
+| Bing | Bing |
+| OpenAI | OpenAI |
+| Disney | Disney |
+
+以 OpenAI 为例，新增部分等价于下面的片段。`openai-rules` 是示例 provider 名称，需要替换成自己已有的规则集；这一项放在通用海外和国内集合策略之前。
+
+```yaml
+dns:
+  nameserver-policy:
+    "rule-set:openai-rules":
+      - "https://1.1.1.1/dns-query#OpenAI"
+      - "https://8.8.8.8/dns-query#OpenAI"
+```
+
+服务集合可能有重叠，所以 DNS 策略也沿用业务规则的顺序：YouTube、Google、GitHub、Spotify、Netflix、HBO、Bing、OpenAI、已有的 Claude、Disney，之后才是通用海外集合和国内集合。公司域名的 `system` 策略仍在前面。现有 Telegram 集合只有 IP，没有作为域名 DNS 策略加入。
+
+这也意味着 `google.cn`、`bing.com.cn` 等已被服务规则覆盖的域名，按照对应服务组解析。普通国内网站继续使用国内 DNS，不能把结果概括成“所有 `.cn` 都使用国内 DNS”。默认未知域名仍为 `system`，节点域名的独立解析器、系统 DNS 和 TUN 设置均未改变。[Mihomo DNS 策略说明](https://wiki.metacubex.one/config/dns/)
+
+## 对照请求是否真的少了一次解析
+
+这轮测试让正式 Clash 的 `7897` 和 `1053` 继续工作，旧、新配置分别在临时代理端口 `17897` 和 DNS 端口 `11053` 上运行，控制接口、缓存和规则文件也独立。等规则完整加载后，先发送带域名的 Claude、Anthropic 请求，再做显式 DNS 探针，避免先把待测域名查进缓存。
+
+旧实例出现了相应的本地 DNS 查询，最终命中 Claude 规则集；新实例直接命中 `DomainSuffix(claude.ai)` 和 `DomainSuffix(anthropic.com)`，这两次请求期间没有对应的本地解析日志。下面是这组相邻单次请求的 **curl 总耗时**：
+
+| 请求 | 原配置 | 前置规则后 |
+| --- | --- | --- |
+| Claude trace | 1.699 秒 | 0.817 秒 |
+| Anthropic trace | 1.025 秒 | 0.823 秒 |
+
+这些日志支持的是：本次测试路径少了一次为规则匹配而进行的本地解析。远端仍可能需要解析域名，也不能由两个样本推导长期平均提速。正式配置热加载后的复测里，Claude 又耗时约 2.10 秒、Anthropic 约 0.87 秒，链路本身仍会波动。
+
+正式验证中，公司入口通过系统路径和显式代理均返回 `302`；Claude、Anthropic、GitHub、百度、B 站返回 `200`，Google 返回 `204`。14 组 DNS 检查通过，包括上述九项服务的代表域名、OpenAI 的两个补漏域名及国内和公司域名；连接记录中也看到了九个服务组各自的 DoH 连接。这覆盖了 DNS 和小请求连通性，没有替代完整登录或流媒体播放测试。
+
+配置通过校验后，以热加载方式应用，Clash 核心进程和启动时间没有改变。原规则顺序、公司覆盖、策略选择、节点每小时更新和规则集每天更新都保留，系统 DNS、系统代理与 TUN 状态也与修改前一致。
+
+这次仍保留 `redir-host` 和系统代理模式，没有为了使用 Fake IP 改成整机接管。[Sukka 关于 DNS、CDN 和 Fake IP 的文章](https://blog.skk.moe/post/lets-talk-about-dns-cdn-fake-ip/)帮助区分了不同接管场景，但本机这次可直接验证的问题，是规则顺序造成的额外等待。
+
+此前在内部 DNS 关闭时，做过保持 Clash 进程不变、反复关闭和连接企业 VPN 的测试，公司内网和外网请求能够恢复。内部 DNS 启用后的重连测试被中断；10 月 22 日的优化又是在公司网络验证，没有开关企业 VPN，因此这项验证仍未完成。
+
+接下来要在允许连接企业 VPN 的环境里，保持 Clash 运行，记录关闭、重连后的系统解析器、路由和公司入口恢复时间。还需要把新建请求与已经建立的长连接分开看，确认切换时是否只要等待恢复，还是仍有需要处理的状态。
