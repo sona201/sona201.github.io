@@ -3,16 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://sona201.github.io/</loc>
-    <lastmod>2026-10-24T00:00:00+08:00</lastmod>
+    <lastmod>2026-10-24T13:53:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/categories/</loc>
-    <lastmod>2026-10-24T00:00:00+08:00</lastmod>
+    <lastmod>2026-10-24T13:53:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/post/</loc>
-    <lastmod>2026-10-24T00:00:00+08:00</lastmod>
+    <lastmod>2026-10-24T13:53:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/</loc>
-    <lastmod>2026-10-24T00:00:00+08:00</lastmod>
+    <lastmod>2026-10-24T13:53:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/categories/think/</loc>
     <lastmod>2026-10-24T00:00:00+08:00</lastmod>
@@ -45,15 +45,27 @@
     <lastmod>2026-10-24T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/categories/ai/</loc>
-    <lastmod>2026-10-23T02:20:00+08:00</lastmod>
+    <lastmod>2026-10-24T13:53:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/ai-%E7%BC%96%E7%A8%8B/</loc>
-    <lastmod>2026-10-23T02:20:00+08:00</lastmod>
+    <lastmod>2026-10-24T13:53:00+08:00</lastmod>
   </url><url>
-    <loc>https://sona201.github.io/tags/claude-code/</loc>
-    <lastmod>2026-10-23T02:20:00+08:00</lastmod>
+    <loc>https://sona201.github.io/tags/cc-switch/</loc>
+    <lastmod>2026-10-24T13:53:00+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/posts/cc-switch-magpie-config-and-docs/</loc>
+    <lastmod>2026-10-24T13:53:00+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/magpie/</loc>
+    <lastmod>2026-10-24T13:53:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/</loc>
+    <lastmod>2026-10-24T13:53:00+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/%E9%A1%B9%E7%9B%AE%E6%96%87%E6%A1%A3/</loc>
+    <lastmod>2026-10-24T13:53:00+08:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/tags/claude-code/</loc>
     <lastmod>2026-10-23T02:20:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/%E7%95%8C%E9%9D%A2%E8%AE%BE%E8%AE%A1/</loc>
@@ -111,9 +123,6 @@
     <lastmod>2026-10-14T14:56:36+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/ai/</loc>
-    <lastmod>2026-10-14T14:56:36+08:00</lastmod>
-  </url><url>
-    <loc>https://sona201.github.io/tags/magpie/</loc>
     <lastmod>2026-10-14T14:56:36+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/posts/magpie-ai-automation-workflow/</loc>
