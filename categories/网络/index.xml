@@ -14,7 +14,7 @@
         <guid>https://sona201.github.io/posts/macos-clash-vpn-split-dns/</guid>
         <description>&lt;p&gt;我的 Mac 需要同时访问公司内网、国内网站和海外服务。在家要连接企业 VPN，在公司使用办公网络；个人代理原先使用 Shadowrocket。麻烦出在切换网络时：有时公司页面打不开，有时多个网站同时异常，重开两个客户端后又恢复了。&lt;/p&gt;
 &lt;p&gt;排查中还遇到了另一个问题：关闭代理测速能到两百多 Mbps，代理测速页面上却曾看到约 36 Mbps。最初很容易把这些现象归到同一个原因，但实际涉及物理链路、VPN 路由、DNS、代理节点和测速方法。&lt;/p&gt;
-&lt;p&gt;最后采用的组合是 &lt;strong&gt;企业 VPN 保持公司要求的模式，Clash 使用系统代理，TUN 关闭，并只给 Clash 内部增加 DNS 分流&lt;/strong&gt;。公司规则保存在本地，节点订阅单独更新。本文记录这套配置的形成过程，以及每项测试能说明什么。&lt;/p&gt;
+&lt;p&gt;最后采用的组合是 &lt;strong&gt;企业 VPN 保持公司要求的模式，Clash 使用系统代理，TUN 关闭，并只给 Clash 内部增加 DNS 分流&lt;/strong&gt;。公司规则保存在本地，节点订阅单独更新。本文记录这套配置的形成过程，以及每项测试能说明什么。10 月 22 日，又继续调整了 Claude 的规则顺序，并补齐常用服务的 DNS 策略；两轮修改的测试结果分开记录。&lt;/p&gt;
 &lt;p&gt;文中的公司域名、内网地址和服务器地址均使用示例值；不包含原始配置、订阅链接或账户截图。配置行为以本次使用的 Clash Verge Rev 2.5.8 和 Mihomo v1.19.32 为准。&lt;/p&gt;
 &lt;h2 id=&#34;先分清系统代理和-vpn-的职责&#34;&gt;先分清系统代理和 VPN 的职责&lt;/h2&gt;
 &lt;p&gt;企业 VPN 被固定在全局模式，客户端不能切换为仅接管内网的模式。我能调整的是个人代理如何参与这条链路。&lt;/p&gt;
@@ -121,7 +121,7 @@
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;没有因此把整个 Apple 域名体系都设为直连。&lt;/p&gt;
-&lt;p&gt;Claude 的情况则是域名覆盖不足。原规则集已包含 &lt;code&gt;anthropic.com&lt;/code&gt; 和 &lt;code&gt;claude.ai&lt;/code&gt;，后来补充了以下五个后缀，并统一交给 &lt;code&gt;ClaudeAI&lt;/code&gt;：&lt;/p&gt;
+&lt;p&gt;Claude 最初遇到的是域名覆盖不足。原规则集已经包含 &lt;code&gt;anthropic.com&lt;/code&gt; 和 &lt;code&gt;claude.ai&lt;/code&gt;，先补了 &lt;code&gt;claude.com&lt;/code&gt; 等五个后缀。10 月 22 日继续排查 DNS 时，又把前两个主域名也提到服务规则集之前。现在本地共有七条 Claude 覆盖规则，放在公司、私网和 Apple 精确规则之后：&lt;/p&gt;
 &lt;div class=&#34;code-block&#34;&gt;
     &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;YAML&lt;/span&gt;&lt;/div&gt;
     &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
@@ -132,9 +132,13 @@
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;DOMAIN-SUFFIX,anthropic.com,ClaudeAI&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;DOMAIN-SUFFIX,claude.ai,ClaudeAI&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;DOMAIN-SUFFIX,claude.com,ClaudeAI&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;DOMAIN-SUFFIX,claude.dev,ClaudeAI&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;DOMAIN-SUFFIX,claudemcpclient.com,ClaudeAI&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
@@ -144,7 +148,7 @@
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;p&gt;其中捕获到的 &lt;code&gt;bridge.claudeusercontent.com&lt;/code&gt; 连接，从通用代理组改为命中 &lt;code&gt;ClaudeAI&lt;/code&gt;。这些组当时仍使用同一个节点，因此这是归类上的修正，不能直接解释为换了出口或提升了速度。&lt;/p&gt;
+&lt;p&gt;最初补五条规则时，捕获到的 &lt;code&gt;bridge.claudeusercontent.com&lt;/code&gt; 连接从通用代理组改为命中 &lt;code&gt;ClaudeAI&lt;/code&gt;，出口节点没有变化。后面再提前两个主域名，目的则是减少规则匹配过程中不必要的本地解析，下文会展开这次调整。&lt;/p&gt;
 &lt;p&gt;最后把“漏网之鱼”的选择从 &lt;code&gt;DIRECT&lt;/code&gt; 改为代理。模式仍是规则模式，国内站点和公司域名继续优先匹配前面的规则。需要接受的取舍是：未被国内规则收录的站点，也可能落到兜底代理。&lt;/p&gt;
 &lt;h3 id=&#34;规则仓库和客户端如何配合&#34;&gt;规则仓库和客户端如何配合&lt;/h3&gt;
 &lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/blackmatrix7/ios_rule_script&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
@@ -225,15 +229,15 @@
 &lt;/table&gt;
 &lt;p&gt;Mac 到节点端口的 TCP 建连中位数约 195 ms；同一连接复用后，请求耗时从约 787 ms 降到约 198 ms、192 ms。这个组合更支持继续检查客户端到节点的链路和连接建立成本，而不是直接给目标网站固定 IP。这里测的是小型 HTTP trace 请求，不是模型首 token 时间。&lt;/p&gt;
 &lt;h2 id=&#34;只给-clash-增加内部-dns-分流&#34;&gt;只给 Clash 增加内部 DNS 分流&lt;/h2&gt;
-&lt;p&gt;最后增加 DNS 分流，目的是明确不同域名的解析路径。它没有把整台 Mac 的 DNS 都改成交给 Clash，也不以提高所有网站速度为前提。&lt;/p&gt;
-&lt;p&gt;采用的分工是：&lt;/p&gt;
+&lt;p&gt;10 月 20 日先增加了一层 Clash 内部 DNS 分流，目的是明确不同域名的解析路径。它没有把整台 Mac 的 DNS 都改成交给 Clash，也不以提高所有网站速度为前提。&lt;/p&gt;
+&lt;p&gt;第一版采用的分工是：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;公司域名、局域网域名和未匹配域名继续用 &lt;code&gt;system&lt;/code&gt;。&lt;/li&gt;
 &lt;li&gt;国内域名集合使用国内 DNS。&lt;/li&gt;
 &lt;li&gt;Claude 相关域名通过 &lt;code&gt;ClaudeAI&lt;/code&gt; 查询境外 DoH，其他已知境外域名经 &lt;code&gt;DNS_Proxy&lt;/code&gt; 查询。&lt;/li&gt;
 &lt;li&gt;节点域名单独配置直接可用的解析器，避免“先有代理才能查 DNS、先查 DNS 才能连接代理”的循环。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;下面是脱敏后的 &lt;strong&gt;配置片段&lt;/strong&gt;。它要求已有 &lt;code&gt;ClaudeAI&lt;/code&gt;、&lt;code&gt;DNS_Proxy&lt;/code&gt; 策略组，以及 &lt;code&gt;cn-domains&lt;/code&gt;、&lt;code&gt;proxy-domains&lt;/code&gt; 规则集；应将名称对应到自己的配置，不能单独当作完整订阅启动。&lt;/p&gt;
+&lt;p&gt;下面保留这一版的脱敏 &lt;strong&gt;配置片段&lt;/strong&gt;，便于说明后续增加了什么。它要求已有 &lt;code&gt;ClaudeAI&lt;/code&gt;、&lt;code&gt;DNS_Proxy&lt;/code&gt; 策略组，以及 &lt;code&gt;cn-domains&lt;/code&gt;、&lt;code&gt;proxy-domains&lt;/code&gt; 规则集；名称需要对应到自己的配置，不能单独当作完整订阅启动。10 月 22 日新增的服务策略在后文说明。&lt;/p&gt;
 &lt;div class=&#34;code-block&#34;&gt;
     &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;YAML&lt;/span&gt;&lt;/div&gt;
     &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
@@ -350,7 +354,7 @@
 &lt;p&gt;&lt;code&gt;system&lt;/code&gt; 也有版本边界：v1.19.32 在 macOS 上读取 &lt;code&gt;/etc/resolv.conf&lt;/code&gt; 的 nameserver 列表，约五分钟的刷新阈值由查询触发，并非完整复刻 macOS 的 scoped DNS 选择机制。切换 VPN 后的行为需要另外验证。&lt;a class=&#34;link&#34; href=&#34;https://github.com/MetaCubeX/mihomo/blob/v1.19.32/dns/system.go&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;system DNS 实现&lt;/a&gt;、&lt;a class=&#34;link&#34; href=&#34;https://github.com/MetaCubeX/mihomo/blob/v1.19.32/dns/system_posix.go&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;POSIX 解析器读取&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;先隔离验证再应用&#34;&gt;先隔离验证再应用&lt;/h2&gt;
+&lt;h2 id=&#34;第一版-dns-的隔离验证&#34;&gt;第一版 DNS 的隔离验证&lt;/h2&gt;
 &lt;p&gt;修改前备份工作配置、生成的运行配置、策略选择和应用设置，再运行核心配置校验。&lt;/p&gt;
 &lt;p&gt;真正应用前，先启动临时实例：使用另一个代理端口、独立控制接口和规则缓存，不改变系统代理。临时实例必须等规则集全部加载完成再测试；API 已经开始监听，不代表所有规则和数据文件都已就绪。&lt;/p&gt;
 &lt;p&gt;验证包括公司域名的系统访问与显式代理访问、Claude 和 Anthropic 的 HTTPS 请求、国内网站，以及 1053 的 TCP 和 UDP 查询。还要看实际命中的规则，不能只凭 YAML 内容判断已经生效。&lt;/p&gt;
@@ -398,10 +402,119 @@
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;p&gt;正式应用后，公司入口返回正常 &lt;code&gt;302&lt;/code&gt; 跳转，Claude、Anthropic、百度、B 站请求返回 &lt;code&gt;200&lt;/code&gt;，Google 探针返回 &lt;code&gt;204&lt;/code&gt;。公司规则、订阅每小时更新、40 条路由规则和策略组选择都保留；系统 DNS 没有改动，TUN 仍关闭。这些结果验证的是解析与请求连通性，不代表所有登录流程、Claude Code 任务或长连接都已覆盖。&lt;/p&gt;
+&lt;p&gt;10 月 20 日正式应用后，公司入口返回正常 &lt;code&gt;302&lt;/code&gt; 跳转，Claude、Anthropic、百度、B 站请求返回 &lt;code&gt;200&lt;/code&gt;，Google 探针返回 &lt;code&gt;204&lt;/code&gt;。公司规则、订阅每小时更新、当时的 40 条路由规则和策略组选择都保留；系统 DNS 没有改动，TUN 仍关闭。这些结果验证的是解析与请求连通性，不代表所有登录流程、Claude Code 任务或长连接都已覆盖。&lt;/p&gt;
 &lt;p&gt;首次并发验证中，境外 DoH 曾耗时约 4.4 秒，Claude 请求约 7.67 秒。随后在同一网络同时运行旧、新配置，两轮 Claude 总耗时分别是 &lt;code&gt;1.920 / 1.926 秒&lt;/code&gt; 和 &lt;code&gt;1.277 / 1.280 秒&lt;/code&gt;，未见明显回归。冷启动开销和链路波动仍然存在。&lt;/p&gt;
-&lt;p&gt;此前在内部 DNS 关闭时，做过保持 Clash 进程不变、反复关闭和连接企业 VPN 的测试，公司内网和外网请求能够恢复；但新 DNS 配置后的对应测试被中断，尚未完成。因此目前能确认的是这份配置已生效、当前路径可用，不能据此承诺以后切网都无需等待或重启。&lt;/p&gt;
-&lt;p&gt;下次遇到异常，我会先保留当时的进程、路由、DNS 和请求结果，再逐项切换。只有保留下失败现场，才有机会分清究竟是解析器没有切换、节点链路波动，还是应用持有的旧连接还没恢复。&lt;/p&gt;
+&lt;h2 id=&#34;明确走代理的域名为什么还会先查-dns&#34;&gt;明确走代理的域名为什么还会先查 DNS&lt;/h2&gt;
+&lt;p&gt;基础配置落地后，我继续读了 Sukka 的&lt;a class=&#34;link&#34; href=&#34;https://blog.skk.moe/post/what-happend-to-dns-in-proxy/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;代理环境中的 DNS 解析行为&lt;/a&gt;和&lt;a class=&#34;link&#34; href=&#34;https://blog.skk.moe/post/i-have-my-unique-dns-setup/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;DNS 配置技巧&lt;/a&gt;。其中一个细节值得回到自己的配置里看：显式代理请求已经带着域名，如果能直接命中域名代理规则，本地就不必先为 IP 分流查询一次 DNS。&lt;/p&gt;
+&lt;p&gt;对照运行规则后，发现排在前面的 YouTube 集合混有三条没有 &lt;code&gt;no-resolve&lt;/code&gt; 的 IP 规则。一个带域名、尚无目标 IP 的请求，如果没有命中前面的域名项，就会在这里尝试解析。&lt;code&gt;claude.ai&lt;/code&gt; 和 &lt;code&gt;anthropic.com&lt;/code&gt; 当时还依赖后面的 Claude 集合，因此到达自己的规则前，已经多了一次本地 DNS 等待。此前前置的 &lt;code&gt;claude.com&lt;/code&gt; 等五个后缀不走这条路径。&lt;/p&gt;
+&lt;p&gt;于是 10 月 22 日只增加了前面列出的两条域名规则，没有重排原有 40 条规则，也没有把所有 IP 规则一律改成 &lt;code&gt;no-resolve&lt;/code&gt;。修改后共 42 条：公司和私网优先级不变，Claude 的两个主域名能更早进入 &lt;code&gt;ClaudeAI&lt;/code&gt;；末尾的国内 IP 判断仍然保留。&lt;/p&gt;
+&lt;p&gt;这次改的是&lt;strong&gt;业务流量规则的位置&lt;/strong&gt;。Claude 的七个 DNS 后缀策略在第一版就已存在，并不是又新增了一套 Claude DNS。&lt;/p&gt;
+&lt;h2 id=&#34;让服务规则和-dns-策略对应起来&#34;&gt;让服务规则和 DNS 策略对应起来&lt;/h2&gt;
+&lt;p&gt;再看其他服务时，发现“流量会走代理”也不代表“需要本地解析时一定查海外 DNS”。例如 &lt;code&gt;api.statsig.com&lt;/code&gt;、&lt;code&gt;featuregates.org&lt;/code&gt; 已在 OpenAI 服务规则中，却不在当时的通用海外 DNS 集合中；如果规则匹配触发解析，它们仍会使用默认的 &lt;code&gt;system&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;因此复用现有服务集合，为九项服务补充了 &lt;code&gt;nameserver-policy&lt;/code&gt;。每项仍查询 Cloudflare 和 Google DoH，查询连接经过对应服务组，而不是全部交给一个通用 DNS 组：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;新增 DNS 策略对应的服务&lt;/th&gt;
+&lt;th&gt;DoH 连接使用的策略组&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;YouTube&lt;/td&gt;
+&lt;td&gt;YouTube&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Google&lt;/td&gt;
+&lt;td&gt;Google&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;GitHub&lt;/td&gt;
+&lt;td&gt;GitHub&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spotify&lt;/td&gt;
+&lt;td&gt;Spotify&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Netflix&lt;/td&gt;
+&lt;td&gt;Netflix&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;HBO&lt;/td&gt;
+&lt;td&gt;HBO&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Bing&lt;/td&gt;
+&lt;td&gt;Bing&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;OpenAI&lt;/td&gt;
+&lt;td&gt;OpenAI&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Disney&lt;/td&gt;
+&lt;td&gt;Disney&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;以 OpenAI 为例，新增部分等价于下面的片段。&lt;code&gt;openai-rules&lt;/code&gt; 是示例 provider 名称，需要替换成自己已有的规则集；这一项放在通用海外和国内集合策略之前。&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;YAML&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;dns&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;nameserver-policy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;rule-set:openai-rules&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;s2&#34;&gt;&amp;#34;https://1.1.1.1/dns-query#OpenAI&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;s2&#34;&gt;&amp;#34;https://8.8.8.8/dns-query#OpenAI&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;服务集合可能有重叠，所以 DNS 策略也沿用业务规则的顺序：YouTube、Google、GitHub、Spotify、Netflix、HBO、Bing、OpenAI、已有的 Claude、Disney，之后才是通用海外集合和国内集合。公司域名的 &lt;code&gt;system&lt;/code&gt; 策略仍在前面。现有 Telegram 集合只有 IP，没有作为域名 DNS 策略加入。&lt;/p&gt;
+&lt;p&gt;这也意味着 &lt;code&gt;google.cn&lt;/code&gt;、&lt;code&gt;bing.com.cn&lt;/code&gt; 等已被服务规则覆盖的域名，按照对应服务组解析。普通国内网站继续使用国内 DNS，不能把结果概括成“所有 &lt;code&gt;.cn&lt;/code&gt; 都使用国内 DNS”。默认未知域名仍为 &lt;code&gt;system&lt;/code&gt;，节点域名的独立解析器、系统 DNS 和 TUN 设置均未改变。&lt;a class=&#34;link&#34; href=&#34;https://wiki.metacubex.one/config/dns/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Mihomo DNS 策略说明&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;对照请求是否真的少了一次解析&#34;&gt;对照请求是否真的少了一次解析&lt;/h2&gt;
+&lt;p&gt;这轮测试让正式 Clash 的 &lt;code&gt;7897&lt;/code&gt; 和 &lt;code&gt;1053&lt;/code&gt; 继续工作，旧、新配置分别在临时代理端口 &lt;code&gt;17897&lt;/code&gt; 和 DNS 端口 &lt;code&gt;11053&lt;/code&gt; 上运行，控制接口、缓存和规则文件也独立。等规则完整加载后，先发送带域名的 Claude、Anthropic 请求，再做显式 DNS 探针，避免先把待测域名查进缓存。&lt;/p&gt;
+&lt;p&gt;旧实例出现了相应的本地 DNS 查询，最终命中 Claude 规则集；新实例直接命中 &lt;code&gt;DomainSuffix(claude.ai)&lt;/code&gt; 和 &lt;code&gt;DomainSuffix(anthropic.com)&lt;/code&gt;，这两次请求期间没有对应的本地解析日志。下面是这组相邻单次请求的 &lt;strong&gt;curl 总耗时&lt;/strong&gt;：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;请求&lt;/th&gt;
+&lt;th&gt;原配置&lt;/th&gt;
+&lt;th&gt;前置规则后&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Claude trace&lt;/td&gt;
+&lt;td&gt;1.699 秒&lt;/td&gt;
+&lt;td&gt;0.817 秒&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Anthropic trace&lt;/td&gt;
+&lt;td&gt;1.025 秒&lt;/td&gt;
+&lt;td&gt;0.823 秒&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;这些日志支持的是：本次测试路径少了一次为规则匹配而进行的本地解析。远端仍可能需要解析域名，也不能由两个样本推导长期平均提速。正式配置热加载后的复测里，Claude 又耗时约 2.10 秒、Anthropic 约 0.87 秒，链路本身仍会波动。&lt;/p&gt;
+&lt;p&gt;正式验证中，公司入口通过系统路径和显式代理均返回 &lt;code&gt;302&lt;/code&gt;；Claude、Anthropic、GitHub、百度、B 站返回 &lt;code&gt;200&lt;/code&gt;，Google 返回 &lt;code&gt;204&lt;/code&gt;。14 组 DNS 检查通过，包括上述九项服务的代表域名、OpenAI 的两个补漏域名及国内和公司域名；连接记录中也看到了九个服务组各自的 DoH 连接。这覆盖了 DNS 和小请求连通性，没有替代完整登录或流媒体播放测试。&lt;/p&gt;
+&lt;p&gt;配置通过校验后，以热加载方式应用，Clash 核心进程和启动时间没有改变。原规则顺序、公司覆盖、策略选择、节点每小时更新和规则集每天更新都保留，系统 DNS、系统代理与 TUN 状态也与修改前一致。&lt;/p&gt;
+&lt;p&gt;这次仍保留 &lt;code&gt;redir-host&lt;/code&gt; 和系统代理模式，没有为了使用 Fake IP 改成整机接管。&lt;a class=&#34;link&#34; href=&#34;https://blog.skk.moe/post/lets-talk-about-dns-cdn-fake-ip/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Sukka 关于 DNS、CDN 和 Fake IP 的文章&lt;/a&gt;帮助区分了不同接管场景，但本机这次可直接验证的问题，是规则顺序造成的额外等待。&lt;/p&gt;
+&lt;p&gt;此前在内部 DNS 关闭时，做过保持 Clash 进程不变、反复关闭和连接企业 VPN 的测试，公司内网和外网请求能够恢复。内部 DNS 启用后的重连测试被中断；10 月 22 日的优化又是在公司网络验证，没有开关企业 VPN，因此这项验证仍未完成。&lt;/p&gt;
+&lt;p&gt;接下来要在允许连接企业 VPN 的环境里，保持 Clash 运行，记录关闭、重连后的系统解析器、路由和公司入口恢复时间。还需要把新建请求与已经建立的长连接分开看，确认切换时是否只要等待恢复，还是仍有需要处理的状态。&lt;/p&gt;
 </description>
         </item>
         <item>
