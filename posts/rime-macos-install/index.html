@@ -2,18 +2,18 @@
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='简介 rime是一款输入法，自定义配置的，为啥要搞这个，因为现在的信息泄露太严重了，实在忍不住了 安装 官网下载地址 mac 安装 Install via Homebrew: brew install --cask squirrel 开源配置 配'>
-<title>macOS Rime 安装与中英文切换配置</title>
+<meta name='description' content='记录鼠须管搭配雾凇拼音、小鹤双拼、万象语法模型和 ms_sogou 主题的实际配置，包括日常快捷键、配置维护、更新和恢复方法。'>
+<title>macOS 鼠须管使用记录：小鹤双拼、万象模型与 ms_sogou 主题</title>
 
 <link rel='canonical' href='https://sona201.github.io/posts/rime-macos-install/'>
 
-<link rel="stylesheet" href="/scss/style.min.3b59a605b204ccb91d88a36dc5b43d350983066997290bdf521c4e4a9c48edd7.css"><meta property='og:title' content='macOS Rime 安装与中英文切换配置'>
-<meta property='og:description' content='简介 rime是一款输入法，自定义配置的，为啥要搞这个，因为现在的信息泄露太严重了，实在忍不住了 安装 官网下载地址 mac 安装 Install via Homebrew: brew install --cask squirrel 开源配置 配'>
+<link rel="stylesheet" href="/scss/style.min.3b59a605b204ccb91d88a36dc5b43d350983066997290bdf521c4e4a9c48edd7.css"><meta property='og:title' content='macOS 鼠须管使用记录：小鹤双拼、万象模型与 ms_sogou 主题'>
+<meta property='og:description' content='记录鼠须管搭配雾凇拼音、小鹤双拼、万象语法模型和 ms_sogou 主题的实际配置，包括日常快捷键、配置维护、更新和恢复方法。'>
 <meta property='og:url' content='https://sona201.github.io/posts/rime-macos-install/'>
 <meta property='og:site_name' content='Ricardo'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-01-14T17:50:26&#43;08:00'/><meta property='article:modified_time' content='2024-01-14T17:50:26&#43;08:00'/>
-<meta name="twitter:title" content="macOS Rime 安装与中英文切换配置">
-<meta name="twitter:description" content="简介 rime是一款输入法，自定义配置的，为啥要搞这个，因为现在的信息泄露太严重了，实在忍不住了 安装 官网下载地址 mac 安装 Install via Homebrew: brew install --cask squirrel 开源配置 配">
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='RIME' /><meta property='article:tag' content='鼠须管' /><meta property='article:tag' content='小鹤双拼' /><meta property='article:tag' content='输入法' /><meta property='article:tag' content='macOS' /><meta property='article:published_time' content='2024-01-14T17:50:26&#43;08:00'/><meta property='article:modified_time' content='2026-10-25T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="macOS 鼠须管使用记录：小鹤双拼、万象模型与 ms_sogou 主题">
+<meta name="twitter:description" content="记录鼠须管搭配雾凇拼音、小鹤双拼、万象语法模型和 ms_sogou 主题的实际配置，包括日常快捷键、配置维护、更新和恢复方法。">
     <link rel="shortcut icon" href="/images/favicon.ico" />
 
   
@@ -156,9 +156,9 @@
     <div class="article-details">
     <div class="article-title-wrapper">
         
-            <h1 class="article-title">macOS Rime 安装与中英文切换配置</h1>
+            <h1 class="article-title">macOS 鼠须管使用记录：小鹤双拼、万象模型与 ms_sogou 主题</h1>
         
-        
+        <p class="article-subtitle">记录鼠须管搭配雾凇拼音、小鹤双拼、万象语法模型和 ms_sogou 主题的实际配置，包括日常快捷键、配置维护、更新和恢复方法。</p>
     </div>
 
     
@@ -172,7 +172,7 @@
             
                 <time datetime="2024-01-14">2024-01-14</time>
             
-            <span>阅读时长: 2 分钟</span>
+            <span>阅读时长: 9 分钟</span>
         </div>
     
 
@@ -190,76 +190,432 @@
     </div>
     <span class="reading-tools__status" role="status" aria-live="polite"></span>
 </div>
-<section class="article-content"><h2 id="简介">简介</h2>
-<p>rime是一款输入法，自定义配置的，为啥要搞这个，因为现在的信息泄露太严重了，实在忍不住了</p>
-<h2 id="安装">安装</h2>
-<p><a class="link" href="https://rime.im/download/"  target="_blank" rel="noopener"
-    >官网下载地址</a></p>
-<p>mac 安装 <code>Install via Homebrew: brew install --cask squirrel</code></p>
-<h2 id="开源配置">开源配置</h2>
-<h3 id="配置管理工具">配置管理工具</h3>
-<p><a class="link" href="https://github.com/rime/plum"  target="_blank" rel="noopener"
-    >一个叫东风破的配置管理插件</a></p>
+<section class="article-content"><p>最初使用 RIME，主要是出于输入隐私方面的考虑。这次重新配置鼠须管，我保留了熟悉的小鹤双拼。雾凇把双拼编码显示成完整拼音，这一点用起来不错；随后叠加万象语法模型改善整句选词，再把候选框换成字号较小的 <code>ms_sogou</code> 主题。</p>
+<p>下面按 <strong>2026 年 10 月 25 日的实际配置</strong>记录，方便日常查阅，也便于以后换电脑时恢复。本文更新原来的安装笔记，保留原地址。</p>
+<h2 id="当前用的是哪几部分">当前用的是哪几部分</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>部分</th>
+<th>本次配置</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>输入法引擎</td>
+<td>librime 1.16.0</td>
+<td>处理编码、词典、候选和输入方案</td>
+</tr>
+<tr>
+<td>macOS 客户端</td>
+<td>鼠须管 Squirrel 1.1.2</td>
+<td>接入系统输入源、显示候选窗口</td>
+</tr>
+<tr>
+<td>方案与词库</td>
+<td>雾凇拼音</td>
+<td>简体词库、中英混输及常用扩展功能</td>
+</tr>
+<tr>
+<td>主输入方案</td>
+<td>小鹤双拼 <code>double_pinyin_flypy</code></td>
+<td>使用小鹤键位，显示完整拼音</td>
+</tr>
+<tr>
+<td>备用方案</td>
+<td>雾凇全拼 <code>rime_ice</code></td>
+<td>需要时从方案选单切换</td>
+</tr>
+<tr>
+<td>语法模型</td>
+<td><code>wanxiang-lts-zh-hans.gram</code></td>
+<td>在本机改善整句选词；只挂到小鹤方案</td>
+</tr>
+<tr>
+<td>候选框</td>
+<td><code>ms_sogou</code></td>
+<td>白底蓝字、橙红首选，横排 5 个候选</td>
+</tr>
+</tbody>
+</table></div>
+<p>候选文字和顶部拼音是 <strong>14 pt</strong>，注释 <strong>12 pt</strong>，序号 <strong>11 pt</strong>。完整拼音放在候选框顶部独立一行。明暗主题目前都指定为 <code>ms_sogou</code>，因此系统切到深色模式时，候选框仍然是白底。</p>
+<p>万象模型离线运行，不需要云端 API。它主要调整已有拼音对应的选词结果；本次没有开启“一个词上屏后，自动弹出下一词”的预测功能，也没有添加 AI 续写功能。</p>
+<h2 id="日常怎么用">日常怎么用</h2>
+<p>在 macOS 菜单栏选择“鼠须管”，再按 <strong>Control + 反引号</strong>打开方案选单，选择“小鹤双拼”。<code>F4</code> 也可以打开选单，是否需要配合 <code>Fn</code> 取决于 Mac 的功能键设置。</p>
+<h3 id="常用按键">常用按键</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>按键</th>
+<th>当前行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>空格</td>
+<td>确认当前候选并上屏</td>
+</tr>
+<tr>
+<td>数字 <code>1</code>–<code>5</code></td>
+<td>选择本页对应候选</td>
+</tr>
+<tr>
+<td>左 Shift / 右 Shift</td>
+<td>切换中英文；有未确认的输入时，先输出原始编码</td>
+</tr>
+<tr>
+<td>Enter</td>
+<td>输出原始双拼编码，例如 <code>nihc</code></td>
+</tr>
+<tr>
+<td>Control + Enter</td>
+<td>输出转换后的完整拼音，例如 <code>ni hao</code></td>
+</tr>
+<tr>
+<td>Esc</td>
+<td>取消尚未上屏的输入</td>
+</tr>
+<tr>
+<td><code>-</code> / <code>=</code></td>
+<td>候选框出现时，上一页 / 下一页</td>
+</tr>
+<tr>
+<td>Tab / Shift + Tab</td>
+<td>编辑拼音时，移动到下一个 / 上一个音节</td>
+</tr>
+<tr>
+<td>Option + 左右方向键</td>
+<td>编辑拼音时，按音节移动光标</td>
+</tr>
+<tr>
+<td>Control + Shift + 3</td>
+<td>切换中文 / 英文标点</td>
+</tr>
+<tr>
+<td>Control + Shift + 4</td>
+<td>切换简体 / 繁体</td>
+</tr>
+</tbody>
+</table></div>
+<p>这里最容易混淆的是 <strong>空格和 Enter</strong>：要把候选“你好”输入到文稿中，应按空格；按 Enter 得到的是原始编码 <code>nihc</code>。同样，当前 Tab 用来移动音节，不是翻页或 AI 补全。</p>
+<p>Shift 使用的是 <code>commit_code</code>。例如输入 <code>nihc</code> 后还没有选词，直接按 Shift，会输出 <code>nihc</code> 并切到英文。如果想保留中文，先按空格确认，再按 Shift。</p>
+<p>Terminal、iTerm2、kitty 和 SecureCRT 配成了默认英文，在这些应用中需要中文时再切换。VS Code 没有加这项默认英文配置。</p>
+<h3 id="试打样例">试打样例</h3>
+<p>下面是本次使用 RIME 引擎、在不带个人用户词频的临时目录中得到的测试结果。日常候选还会受个人词频影响。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>小鹤编码</th>
+<th>完整拼音提示</th>
+<th>本次首选</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nihc</code></td>
+<td><code>ni hao</code></td>
+<td>你好</td>
+</tr>
+<tr>
+<td><code>uurufa</code></td>
+<td><code>shu ru fa</code></td>
+<td>输入法</td>
+</tr>
+<tr>
+<td><code>jbtmtmqihfhc</code></td>
+<td><code>jin tian tian qi hen hao</code></td>
+<td>今天天气很好</td>
+</tr>
+<tr>
+<td><code>vuzdliwu</code></td>
+<td><code>zhu zai li wu</code></td>
+<td>住在里屋</td>
+</tr>
+</tbody>
+</table></div>
+<p>最后一组在未挂模型时，首选是“住在礼物”；挂上万象后变成“住在里屋”。这说明模型在这组样例中起了作用，不代表所有句子都会更准确。</p>
+<h3 id="几个方便的小功能">几个方便的小功能</h3>
+<p>以下触发词对应当前的小鹤双拼方案，在中文状态输入后从候选中选择：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>输入</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>date</code></td>
+<td>当前日期</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>当前时间</td>
+</tr>
+<tr>
+<td><code>week</code></td>
+<td>星期</td>
+</tr>
+<tr>
+<td><code>lunar</code></td>
+<td>农历</td>
+</tr>
+<tr>
+<td><code>cC1+2</code></td>
+<td>计算器示例</td>
+</tr>
+<tr>
+<td><code>Vhelp</code></td>
+<td>符号输入帮助</td>
+</tr>
+</tbody>
+</table></div>
+<p>自定义短语使用 <code>custom_phrase_double.txt</code>。全拼的 <code>custom_phrase.txt</code> 是另一个文件，不要改错。</p>
+<h2 id="安装与配置文件">安装与配置文件</h2>
+<p>新电脑先安装鼠须管，下面的命令不需要在已经配置好的电脑上重做：</p>
 <div class="code-block">
-    <div class="code-block__header"><span class="code-block__language">Bash</span></div>
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
     <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">curl -fsSL https://raw.githubusercontent.com/rime/plum/master/rime-install <span class="p">|</span> bash
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">brew install --cask squirrel-app
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
 </div>
-<h3 id="别人的配置">别人的配置</h3>
-<p><a class="link" href="https://github.com/iDvel/rime-ice"  target="_blank" rel="noopener"
-    >一个叫雾凇拼音的配置</a></p>
-<p>通过东风破plus安装</p>
+<p>然后进入“系统设置 → 键盘 → 文字输入 → 编辑 → 添加”，在简体中文输入源中添加“鼠须管”。安装后若列表中没有出现，按官方说明注销再登录；有未保存的工作时，先保存再注销。</p>
+<p>雾凇可通过 RIME 的配置管理工具“东风破 / plum”安装：</p>
 <div class="code-block">
-    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 首次获取 plum；已有这个目录时直接进入，不要重复 clone。</span>
+</span></span><span class="line"><span class="cl">git clone https://github.com/rime/plum.git <span class="s2">&#34;</span><span class="nv">$HOME</span><span class="s2">/plum&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> <span class="s2">&#34;</span><span class="nv">$HOME</span><span class="s2">/plum&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装雾凇完整方案和词库。</span>
+</span></span><span class="line"><span class="cl">bash rime-install iDvel/rime-ice
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 适配小鹤双拼，以及英文派生和部件反查规则。</span>
+</span></span><span class="line"><span class="cl">bash rime-install iDvel/rime-ice:others/recipes/config:schema<span class="o">=</span>double_pinyin_flypy
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>已有 RIME 配置时，先备份再执行安装或更新。随后将下面的个人补丁合并进去，重新部署。</p>
+<h3 id="文件各管什么">文件各管什么</h3>
+<p>用户目录是 <code>~/Library/Rime/</code>，也可以从鼠须管菜单的“用户设定”打开。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>文件</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default.custom.yaml</code></td>
+<td>启用的方案、候选数量、Shift 切换</td>
+</tr>
+<tr>
+<td><code>squirrel.custom.yaml</code></td>
+<td>主题、字体、排版和应用默认中英文</td>
+</tr>
+<tr>
+<td><code>double_pinyin_flypy.custom.yaml</code></td>
+<td>当前只放万象模型补丁</td>
+</tr>
+<tr>
+<td><code>melt_eng.custom.yaml</code></td>
+<td>英文派生规则适配小鹤</td>
+</tr>
+<tr>
+<td><code>radical_pinyin.custom.yaml</code></td>
+<td>部件反查规则适配小鹤</td>
+</tr>
+<tr>
+<td><code>custom_phrase_double.txt</code></td>
+<td>小鹤方案的自定义短语</td>
+</tr>
+<tr>
+<td><code>wanxiang-lts-zh-hans.gram</code></td>
+<td>万象简体语法模型文件</td>
+</tr>
+<tr>
+<td><code>build/</code></td>
+<td>部署生成的文件，用于核对生效结果，不直接编辑</td>
+</tr>
+</tbody>
+</table></div>
+<p>个人修改放在 <code>.custom.yaml</code> 中，上游的 <code>default.yaml</code>、<code>squirrel.yaml</code> 和方案文件尽量保留原样。一个文件只有一个顶层 <code>patch:</code>；已有配置时，把新条目合并到它下面，不要再追加一个同名 <code>patch:</code>。</p>
+<p>改完配置后，在鼠须管菜单选择“重新部署”，或在鼠须管进程运行时执行：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="s2">&#34;/Library/Input Methods/Squirrel.app/Contents/MacOS/Squirrel&#34;</span> --reload
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h3 id="全局习惯">全局习惯</h3>
+<p><code>default.custom.yaml</code>：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">patch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">schema_list</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l">double_pinyin_flypy</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l">rime_ice</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">menu/page_size</span><span class="p">:</span><span class="w"> </span><span class="m">5</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ascii_composer/switch_key/Shift_L</span><span class="p">:</span><span class="w"> </span><span class="l">commit_code</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ascii_composer/switch_key/Shift_R</span><span class="p">:</span><span class="w"> </span><span class="l">commit_code</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>本机已在方案选单中选定“小鹤双拼”，选择状态保存在 <code>user.yaml</code>。以后切换备用全拼也用方案选单，不必手工编辑这个运行状态文件。</p>
+<p>双拼配套补丁分别是：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c"># melt_eng.custom.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">patch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">speller/algebra</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">__include</span><span class="p">:</span><span class="w"> </span><span class="l">melt_eng.schema.yaml:/algebra_double_pinyin_flypy</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c"># radical_pinyin.custom.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">patch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">speller/algebra</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">__include</span><span class="p">:</span><span class="w"> </span><span class="l">radical_pinyin.schema.yaml:/algebra_double_pinyin_flypy</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<h2 id="万象模型">万象模型</h2>
+<p>鼠须管 1.1.2 的安装包已经带有 <code>librime-octagram</code> 插件，本次是在它之上添加模型文件和方案补丁，没有更换输入引擎。</p>
+<p>在已安装 plum 的情况下，雾凇提供了现成配方：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
     <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cd plum
-</span></span><span class="line"><span class="cl">bash rime-install iDvel/rime-ice:others/recipes/full
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="nb">cd</span> <span class="s2">&#34;</span><span class="nv">$HOME</span><span class="s2">/plum&#34;</span>
+</span></span><span class="line"><span class="cl">bash rime-install iDvel/rime-ice:others/recipes/grammar:schema<span class="o">=</span>double_pinyin_flypy
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
 </div>
-<h3 id="mac-增加-rime-输入法">mac 增加 rime 输入法</h3>
-<p>系统配置 -&gt; 键盘 -&gt; 文字输入 -&gt; 输入法 -&gt; 编辑</p>
-<p><img src="/images/rime_add1.png"
-	
-	
-	
-	loading="lazy"
-	
-		alt="rime_add1"
-	
-	
->
-<img src="/images/rime_add2.png"
-	
-	
-	
-	loading="lazy"
-	
-		alt="rime_add2"
-	
-	
-></p>
-<h3 id="使用习惯">使用习惯</h3>
-<p>日常习惯的搜狗的shift中英文切换方式，但rime需要手动配置 <br>
-<a class="link" href="https://github.com/iDvel/rime-ice/issues/133"  target="_blank" rel="noopener"
-    >配置链接</a></p>
-<p>点击鼠须管logo，点击用户设定，默认打开路径<code>/Users/example/Library/Rime/</code>目录，打开<code>default.yaml</code>文件</p>
-<p>参考下列配置</p>
+<p>也可以从<a class="link" href="https://github.com/amzxyz/rime-wanxiang-data/releases/tag/LTS"  target="_blank" rel="noopener"
+    >万象 LTS 发布页</a>下载 <code>wanxiang-lts-zh-hans.gram</code>，放入 <code>~/Library/Rime/</code>，再添加以下补丁。</p>
+<p>本次安装文件更新于 <strong>2026-10-19</strong>，大小为 <strong>398,497,836 字节，约 380 MiB</strong>，SHA-256 为：</p>
 <div class="code-block">
-    <div class="code-block__header"><span class="code-block__language">代码</span></div>
+    <div class="code-block__header"><span class="code-block__language">文本</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">9eedac1d836f3fdafb61b162035c8937253aedc106be40b2b957d9ab64e9ed89
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>LTS 地址上的文件仍可能更新。以后下载时以发布页当时的校验值为准，上面的值只对应本次安装文件。</p>
+<p><code>double_pinyin_flypy.custom.yaml</code>：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">patch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">grammar</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l">wanxiang-lts-zh-hans</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">collocation_max_length</span><span class="p">:</span><span class="w"> </span><span class="m">6</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">collocation_min_length</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">collocation_penalty</span><span class="p">:</span><span class="w"> </span>-<span class="m">14</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">non_collocation_penalty</span><span class="p">:</span><span class="w"> </span>-<span class="m">6</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">weak_collocation_penalty</span><span class="p">:</span><span class="w"> </span>-<span class="m">100</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">rear_penalty</span><span class="p">:</span><span class="w"> </span>-<span class="m">20</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">translator/contextual_suggestions</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">translator/max_homophones</span><span class="p">:</span><span class="w"> </span><span class="m">8</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>这些参数沿用<a class="link" href="https://github.com/iDvel/rime-ice/blob/da1fbe602e38f26db846fa10120ee64c2b0324c0/others/recipes/grammar.recipe.yaml"  target="_blank" rel="noopener"
+    >雾凇的模型配方</a>。其中 <code>contextual_suggestions: false</code> 是该配方的配置，不需要为了“启用模型”把它改成 <code>true</code>。</p>
+<p>重新部署后，<code>build/double_pinyin_flypy.schema.yaml</code> 中应出现 <code>grammar/language: wanxiang-lts-zh-hans</code>。运行时日志中的 <code>use grammar: wanxiang-lts-zh-hans</code> 和 <code>loading gram db:</code> 可以进一步确认实际加载；本次安装已核对过这些记录。</p>
+<p>完整拼音提示来自小鹤方案中的 <code>translator/preedit_format</code>。添加模型或换主题时不需要修改它。原来的词库引用 <code>dictionary: rime_ice</code>、拼写规则和拼音注释配置也都保留。</p>
+<h2 id="ms_sogou-主题">ms_sogou 主题</h2>
+<p>主题来自这份<a class="link" href="https://github.com/epoweripione/dotfiles/blob/f09f90ad77012c2e0645e86318571b15046fe375/conf/rime/squirrel.custom.yaml#L3"  target="_blank" rel="noopener"
+    >现成鼠须管配置</a>，配色名为 <code>ms_sogou</code>，作者标注为 Mark24Code。</p>
+<p>我保留了它的白底、蓝色候选和橙红色首选。原主题的注释是白色，在白底上看不清，这里改成深灰；候选和拼音从之前的 16 pt 缩到 14 pt。</p>
+<p>以下是 <code>squirrel.custom.yaml</code> 中与当前效果有关的配置。旧主题定义可以留着；合并时保留已有的应用配置和其他个人设置。</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">YAML</span></div>
     <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -282,41 +638,269 @@
 </span><span class="lnt">18
 </span><span class="lnt">19
 </span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 中西文切换
-</span></span><span class="line"><span class="cl">#
-</span></span><span class="line"><span class="cl"># 【good_old_caps_lock】 CapsLock 切换到大写或切换中英。
-</span></span><span class="line"><span class="cl"># （macOS 偏好设置的优先级更高，如果勾选【使用大写锁定键切换“ABC”输入法】则始终会切换输入法）
-</span></span><span class="line"><span class="cl">#
-</span></span><span class="line"><span class="cl"># 切换中英：
-</span></span><span class="line"><span class="cl"># 不同的选项表示：打字打到一半时按下了 CapsLock、Shift、Control 后： 
-</span></span><span class="line"><span class="cl"># commit_code  上屏原始的编码，然后切换到英文
-</span></span><span class="line"><span class="cl"># commit_text  上屏拼出的词句，然后切换到英文
-</span></span><span class="line"><span class="cl"># clear        清除未上屏内容，然后切换到英文
-</span></span><span class="line"><span class="cl"># inline_ascii 无输入时，切换中英；有输入时，切换到临时英文模式，按回车上屏后回到中文状态
-</span></span><span class="line"><span class="cl"># noop         屏蔽快捷键，不切换中英，但不要屏蔽 CapsLock
-</span></span><span class="line"><span class="cl">ascii_composer:
-</span></span><span class="line"><span class="cl">  good_old_caps_lock: true  # true | false
-</span></span><span class="line"><span class="cl">  switch_key:
-</span></span><span class="line"><span class="cl">    Caps_Lock: clear  # commit_code | commit_text | clear
-</span></span><span class="line"><span class="cl">    Shift_L: commit_code     # commit_code | commit_text | inline_ascii | clear | noop
-</span></span><span class="line"><span class="cl">    Shift_R: commit_code     # commit_code | commit_text | inline_ascii | clear | noop
-</span></span><span class="line"><span class="cl">    Control_L: noop   # commit_code | commit_text | inline_ascii | clear | noop
-</span></span><span class="line"><span class="cl">    Control_R: noop   # commit_code | commit_text | inline_ascii | clear | noop
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">patch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/color_scheme</span><span class="p">:</span><span class="w"> </span><span class="l">ms_sogou</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/color_scheme_dark</span><span class="p">:</span><span class="w"> </span><span class="l">ms_sogou</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/candidate_list_layout</span><span class="p">:</span><span class="w"> </span><span class="l">linear</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/text_orientation</span><span class="p">:</span><span class="w"> </span><span class="l">horizontal</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/inline_preedit</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/inline_candidate</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/font_face</span><span class="p">:</span><span class="w"> </span><span class="l">PingFangSC-Regular</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/font_point</span><span class="p">:</span><span class="w"> </span><span class="m">14</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/label_font_face</span><span class="p">:</span><span class="w"> </span><span class="l">Helvetica</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/label_font_point</span><span class="p">:</span><span class="w"> </span><span class="m">11</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/comment_font_face</span><span class="p">:</span><span class="w"> </span><span class="l">PingFangSC-Regular</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/comment_font_point</span><span class="p">:</span><span class="w"> </span><span class="m">12</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/candidate_format</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;[label] [candidate] [comment]&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/corner_radius</span><span class="p">:</span><span class="w"> </span><span class="m">6</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/hilited_corner_radius</span><span class="p">:</span><span class="w"> </span><span class="m">4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/border_width</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/border_height</span><span class="p">:</span><span class="w"> </span>-<span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/line_spacing</span><span class="p">:</span><span class="w"> </span><span class="m">4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/spacing</span><span class="p">:</span><span class="w"> </span><span class="m">5</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/translucency</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/mutual_exclusive</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/shadow_size</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/memorize_size</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">style/show_paging</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">app_options/com.apple.Terminal</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ascii_mode</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">no_inline</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">app_options/com.googlecode.iterm2</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ascii_mode</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">no_inline</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">app_options/net.kovidgoyal.kitty</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ascii_mode</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">no_inline</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">app_options/com.vandyke.SecureCRT</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ascii_mode</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">no_inline</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">preset_color_schemes/ms_sogou</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l">Mark24Code</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">搜狗／Sogou</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">color_space</span><span class="p">:</span><span class="w"> </span><span class="l">srgb</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">back_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0xFFFFFF&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">border_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0xFFFFFF&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">candidate_text_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0xD67F42&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">comment_text_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0x6C6560&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hilited_comment_text_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0x6C6560&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">label_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0x6C6560&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hilited_candidate_label_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0x0D4FE9&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hilited_back_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0xFFFFFF&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hilited_candidate_back_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0xFFFFFF&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hilited_candidate_text_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0x0D4FE9&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hilited_text_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0xD9884F&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">text_color</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0xD9884F&#39;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p><code>inline_preedit: false</code> 把完整拼音放到候选框顶部。若以后想让拼音回到文稿光标处，把这一项改为 <code>true</code>，重新部署即可；显示的拼音内容仍由原方案处理。</p>
+<p>鼠须管 1.1.2 中，顶部拼音与候选共用 <code>font_point</code>，没有独立的 <code>preedit_font_point</code>。序号和注释则有各自的字号设置。</p>
+<p>颜色使用 <strong>BGR / ABGR</strong>，不是常见的 RGB。配置中应保留带 <code>0x</code> 的字符串，例如 <code>'0xD67F42'</code>。用 YAML 工具生成文件时，不要把它转换成十进制数字，否则鼠须管可能无法解析，退回默认颜色。</p>
+<p><code>show_paging: true</code> 只显示翻页箭头。当前鼠须管不能仅靠主题实现搜狗那种“点击下拉，展开成多行多列网格”的交互。横排内容过长时可以自然换行，但不能把它当成固定列数的展开面板。</p>
+<h2 id="更新备份和恢复">更新、备份和恢复</h2>
+<h3 id="改配置前先备份">改配置前先备份</h3>
+<p>只修改主题或方案补丁时，可以先备份这些个人配置：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="nv">rime_backup</span><span class="o">=</span><span class="s2">&#34;</span><span class="nv">$HOME</span><span class="s2">/Library/Rime-backups/manual-</span><span class="k">$(</span>date +%Y%m%d-%H%M%S<span class="k">)</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">mkdir -p <span class="s2">&#34;</span><span class="nv">$rime_backup</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">cp <span class="s2">&#34;</span><span class="nv">$HOME</span><span class="s2">/Library/Rime/&#34;</span>*.custom.yaml <span class="s2">&#34;</span><span class="nv">$rime_backup</span><span class="s2">/&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
 </div>
-<p>将下面的<code>shift_L</code>/<code>Shift_R</code> 改为你想要的配置，我改成了<code>commit_code</code></p>
-<p>mac自带的切换输入法是 <code>Lock</code>，将大写切换键改成 <code>Shift-Lock</code></p>
-<p>这样就基本没有使用的不适</p>
+<p>这份备份只覆盖 <code>.custom.yaml</code>。自定义短语、用户词库和同步数据需要另外保存，不能把配置备份当成全部输入数据的备份。</p>
+<p>本次操作留下了三份配置备份，均位于 <code>~/Library/Rime-backups/</code>：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>目录名</th>
+<th>对应状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>before-wanxiang-20261024-202313</code></td>
+<td>添加万象前的小鹤配置</td>
+</tr>
+<tr>
+<td><code>before-theme-20261024-203612</code></td>
+<td>调整主题前，已添加万象</td>
+</tr>
+<tr>
+<td><code>before-ms-sogou-20261024-205613</code></td>
+<td>切换 ms_sogou 前的紧凑主题，已添加万象</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="只恢复主题">只恢复主题</h3>
+<p>例如，想恢复到切换 <code>ms_sogou</code> 之前的紧凑主题：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">cp <span class="s2">&#34;</span><span class="nv">$HOME</span><span class="s2">/Library/Rime-backups/before-ms-sogou-20261024-205613/squirrel.custom.yaml&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>   <span class="s2">&#34;</span><span class="nv">$HOME</span><span class="s2">/Library/Rime/squirrel.custom.yaml&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;/Library/Input Methods/Squirrel.app/Contents/MacOS/Squirrel&#34;</span> --reload
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>这里只恢复 <code>squirrel.custom.yaml</code>，不会改动小鹤键位和万象模型。不需要用整份旧目录覆盖当前用户词库。</p>
+<h3 id="暂时关闭万象模型">暂时关闭万象模型</h3>
+<p>当前的 <code>double_pinyin_flypy.custom.yaml</code> 只包含万象补丁。需要对比原来的输入效果时，可把它改名为 <code>double_pinyin_flypy.custom.yaml.disabled</code>，然后重新部署；恢复原文件名后再部署，就能重新启用。</p>
+<p>改名前确认目标备份名没有被占用。模型文件可以继续保留。如果以后在这个补丁里加入了其他个性化设置，就只移除 <code>grammar</code> 和本次添加的两个 <code>translator</code> 参数，不要停用整个文件。</p>
+<h3 id="更新雾凇方案和词库">更新雾凇方案和词库</h3>
+<p>备份后，在 plum 目录再次执行：</p>
+<div class="code-block">
+    <div class="code-block__header"><span class="code-block__language">Shell</span></div>
+    <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="nb">cd</span> <span class="s2">&#34;</span><span class="nv">$HOME</span><span class="s2">/plum&#34;</span>
+</span></span><span class="line"><span class="cl">bash rime-install iDvel/rime-ice
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<p>这个命令执行完整配方，会更新雾凇的词库、方案、Lua 和基础配置，不只是下载词库。完成后重新部署，检查小鹤方案仍在、完整拼音提示正常、万象模型仍加载。个人设置放在 <code>.custom.yaml</code> 中，可以减少更新上游配置时相互覆盖的情况。</p>
+<p>更新模型时单独使用万象配方或官方 LTS 下载页，不必为更新模型更换整套输入方案。<code>releases/latest</code> 可能指向词库或工具发布，不一定是语法模型。</p>
+<h2 id="遇到问题先看哪里">遇到问题先看哪里</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>检查项</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>输入的是英文字母，没有中文候选</td>
+<td>确认系统选中“鼠须管”，并检查是否处于英文模式；终端默认英文是当前配置</td>
+</tr>
+<tr>
+<td>按 Enter 没有输出候选中文</td>
+<td>当前 Enter 输出原始编码，空格才确认候选</td>
+</tr>
+<tr>
+<td>主题修改后没变化</td>
+<td>检查 YAML 缩进、是否只有一个 <code>patch:</code>，并执行重新部署；不要直接改 <code>build/</code></td>
+</tr>
+<tr>
+<td>颜色变灰或高亮不见了</td>
+<td>检查是否保留了 <code>0x</code> 十六进制字符串，而不是生成了十进制数字</td>
+</tr>
+<tr>
+<td>拼音提示位置不习惯</td>
+<td>调整 <code>squirrel.custom.yaml</code> 的 <code>style/inline_preedit</code>，不用改小鹤键位或万象补丁</td>
+</tr>
+<tr>
+<td>怀疑模型没有生效</td>
+<td>核对 <code>.gram</code> 文件名、<code>grammar/language</code>、重新部署结果及运行时模型加载日志</td>
+</tr>
+<tr>
+<td>只想回退外观</td>
+<td>恢复对应备份的 <code>squirrel.custom.yaml</code>，不覆盖整个 Rime 用户目录</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a class="link" href="https://rime.im/download/"  target="_blank" rel="noopener"
+    >RIME 官方下载与安装</a></li>
+<li><a class="link" href="https://github.com/iDvel/rime-ice"  target="_blank" rel="noopener"
+    >雾凇拼音：安装、双拼及语法模型说明</a></li>
+<li><a class="link" href="https://github.com/iDvel/rime-ice/blob/da1fbe602e38f26db846fa10120ee64c2b0324c0/double_pinyin_flypy.schema.yaml"  target="_blank" rel="noopener"
+    >雾凇的小鹤双拼方案</a></li>
+<li><a class="link" href="https://github.com/amzxyz/rime-wanxiang-data"  target="_blank" rel="noopener"
+    >万象语法模型与数据项目</a></li>
+<li><a class="link" href="https://github.com/rime/squirrel/blob/1.1.2/data/squirrel.yaml"  target="_blank" rel="noopener"
+    >鼠须管 1.1.2 的界面配置</a></li>
+<li><a class="link" href="https://github.com/epoweripione/dotfiles/blob/f09f90ad77012c2e0645e86318571b15046fe375/conf/rime/squirrel.custom.yaml#L3"  target="_blank" rel="noopener"
+    >ms_sogou 主题来源</a></li>
+</ul>
 
 </section>
 
 
     <footer class="article-footer">
     
+    <section class="article-tags">
+        
+            <a href="/tags/rime/">RIME</a>
+        
+            <a href="/tags/%E9%BC%A0%E9%A1%BB%E7%AE%A1/">鼠须管</a>
+        
+            <a href="/tags/%E5%B0%8F%E9%B9%A4%E5%8F%8C%E6%8B%BC/">小鹤双拼</a>
+        
+            <a href="/tags/%E8%BE%93%E5%85%A5%E6%B3%95/">输入法</a>
+        
+            <a href="/tags/macos/">MacOS</a>
+        
+    </section>
+
 
     
     <section class="article-copyright">
@@ -330,7 +914,19 @@
 
         <span>Licensed under CC BY-NC-SA 4.0</span>
     </section>
-    </footer>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 Oct 25, 2026 00:00 UTC
+        </span>
+    </section></footer>
 
 
     
@@ -572,7 +1168,7 @@
                 <div><strong>21</strong><span>分类</span></div>
             </a>
             <a href="/tags/">
-                <div><strong>151</strong><span>标签</span></div>
+                <div><strong>155</strong><span>标签</span></div>
             </a>
         </div><a class="homepage-profile-card__link" href="https://github.com/sona201/" target="_blank" rel="noopener">GitHub ↗</a></section>
     <section class="widget archives">
@@ -593,16 +1189,32 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#简介">简介</a></li>
-    <li><a href="#安装">安装</a></li>
-    <li><a href="#开源配置">开源配置</a>
+    <li><a href="#当前用的是哪几部分">当前用的是哪几部分</a></li>
+    <li><a href="#日常怎么用">日常怎么用</a>
       <ol>
-        <li><a href="#配置管理工具">配置管理工具</a></li>
-        <li><a href="#别人的配置">别人的配置</a></li>
-        <li><a href="#mac-增加-rime-输入法">mac 增加 rime 输入法</a></li>
-        <li><a href="#使用习惯">使用习惯</a></li>
+        <li><a href="#常用按键">常用按键</a></li>
+        <li><a href="#试打样例">试打样例</a></li>
+        <li><a href="#几个方便的小功能">几个方便的小功能</a></li>
       </ol>
     </li>
+    <li><a href="#安装与配置文件">安装与配置文件</a>
+      <ol>
+        <li><a href="#文件各管什么">文件各管什么</a></li>
+        <li><a href="#全局习惯">全局习惯</a></li>
+      </ol>
+    </li>
+    <li><a href="#万象模型">万象模型</a></li>
+    <li><a href="#ms_sogou-主题">ms_sogou 主题</a></li>
+    <li><a href="#更新备份和恢复">更新、备份和恢复</a>
+      <ol>
+        <li><a href="#改配置前先备份">改配置前先备份</a></li>
+        <li><a href="#只恢复主题">只恢复主题</a></li>
+        <li><a href="#暂时关闭万象模型">暂时关闭万象模型</a></li>
+        <li><a href="#更新雾凇方案和词库">更新雾凇方案和词库</a></li>
+      </ol>
+    </li>
+    <li><a href="#遇到问题先看哪里">遇到问题先看哪里</a></li>
+    <li><a href="#参考">参考</a></li>
   </ol>
 </nav>
         </div>
