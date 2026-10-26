@@ -596,6 +596,10 @@
     {
       "source": "博客/ai/cc-switch-magpie-config-and-docs.md",
       "target": "content/post/ai/cc-switch-magpie-config-and-docs.md"
+    },
+    {
+      "source": "博客/tools/heroes3-mac-tinkering-notes.md",
+      "target": "content/post/tools/heroes3-mac-tinkering-notes.md"
     }
   ]
 }
