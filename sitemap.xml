@@ -3,16 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://sona201.github.io/</loc>
-    <lastmod>2026-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/categories/</loc>
-    <lastmod>2026-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/post/</loc>
-    <lastmod>2026-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/</loc>
-    <lastmod>2026-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/categories/think/</loc>
     <lastmod>2026-10-24T00:00:00+08:00</lastmod>
@@ -84,7 +84,7 @@
     <lastmod>2026-10-24T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/macos/</loc>
-    <lastmod>2026-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/mihomo/</loc>
     <lastmod>2026-10-24T00:00:00+08:00</lastmod>
@@ -318,7 +318,7 @@
     <lastmod>2025-05-29T00:18:11+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/categories/tools/</loc>
-    <lastmod>2026-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/learning/</loc>
     <lastmod>2025-05-11T00:23:12+08:00</lastmod>
@@ -644,9 +644,6 @@
     <loc>https://sona201.github.io/posts/github-project-search/</loc>
     <lastmod>2024-01-14T17:50:26+08:00</lastmod>
   </url><url>
-    <loc>https://sona201.github.io/posts/rime-macos-install/</loc>
-    <lastmod>2026-10-25T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://sona201.github.io/posts/python2-apache-cgi-notes/</loc>
     <lastmod>2024-01-14T17:50:26+08:00</lastmod>
   </url><url>
@@ -654,7 +651,7 @@
     <lastmod>2024-01-14T17:50:26+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/rime/</loc>
-    <lastmod>2026-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/posts/zsh-oh-my-zsh-setup/</loc>
     <lastmod>2024-01-14T17:50:26+08:00</lastmod>
@@ -663,13 +660,16 @@
     <lastmod>2024-01-14T17:50:26+08:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/%E8%BE%93%E5%85%A5%E6%B3%95/</loc>
-    <lastmod>2026-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/%E9%BC%A0%E9%A1%BB%E7%AE%A1/</loc>
-    <lastmod>2026-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/tags/%E5%B0%8F%E9%B9%A4%E5%8F%8C%E6%8B%BC/</loc>
-    <lastmod>2026-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://sona201.github.io/posts/rime-macos-install/</loc>
+    <lastmod>2026-10-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://sona201.github.io/posts/git-change-commit-author/</loc>
     <lastmod>2024-01-14T17:49:40+08:00</lastmod>
