@@ -1,0 +1,142 @@
+/* Shared design values. Keep color modes and responsive values in this file. */
+:root {
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
+    --space-12: 48px;
+
+    --radius-small: 4px;
+    --radius-control: 6px;
+    --radius-card: 8px;
+    --radius-panel: 12px;
+
+    --sys-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC",
+        "Helvetica Neue", Arial, sans-serif;
+    --base-font-family: var(--sys-font-family);
+    --article-font-family: var(--base-font-family);
+    --code-font-family: "SFMono-Regular", "SF Mono", Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    --font-small: 1.3rem;
+    --font-ui: 1.4rem;
+    --font-code: 1.4rem;
+    --font-body: 1.7rem;
+    --font-entry: 1.8rem;
+    --font-subsection: 1.9rem;
+    --font-card-title: 2rem;
+    --font-section: 2.4rem;
+    --font-page-title: 2.8rem;
+    --line-body: 1.85;
+    --line-summary: 1.75;
+    --line-heading: 1.5;
+    --line-meta: 1.6;
+    --line-code: 1.65;
+
+    --site-width: 1140px;
+    --sidebar-width: 260px;
+    --page-header-height: 64px;
+    --page-gutter: var(--space-6);
+    --page-top-space: var(--space-10);
+    --layout-gap: var(--space-8);
+    --card-padding: var(--space-6);
+    --article-padding: var(--space-8);
+    --section-separation: var(--space-8);
+    --card-border-radius: var(--radius-card);
+    --article-font-size: var(--font-body);
+    --article-line-height: var(--line-body);
+
+    /* Sukka text/link palette with the requested neutral white/gray surfaces. */
+    --surface-page: #fafafa;
+    --surface-card: #ffffff;
+    --surface-selected: #f2f2f2;
+    --surface-accent: #f2f2f2;
+    --surface-navigation: var(--surface-page);
+    --text-body: #17181a;
+    --text-primary: #17181a;
+    --text-secondary: #3b3c41;
+    --text-muted: #6a6b73;
+    --text-heading: #17181a;
+    --border-subtle: #e6e6e6;
+    --color-accent: #2f6fed;
+    --color-accent-strong: #2f6fed;
+    --color-on-accent: #ffffff;
+    --color-gold: #8a6212;
+    --surface-gold: #fbe89a;
+    --surface-guide: #fbe89a;
+    --surface-code-inline: #f2f2f2;
+    --text-code-inline: #17181a;
+    --surface-table-stripe: #ffffff;
+    --shadow-card: none;
+}
+
+:root[data-scheme="dark"] {
+    --surface-page: #101012;
+    --surface-card: #171719;
+    --surface-selected: #1f1f22;
+    --surface-accent: #1f1f22;
+    --surface-navigation: #101012;
+    --text-body: #ececee;
+    --text-primary: #ececee;
+    --text-secondary: #c6c6cb;
+    --text-muted: #94959d;
+    --text-heading: #ececee;
+    --border-subtle: #26262a;
+    --color-accent: #7ea6ff;
+    --color-accent-strong: #7ea6ff;
+    --color-on-accent: #101012;
+    --color-gold: #e0b64a;
+    --surface-gold: #5b4c0c;
+    --surface-guide: #5b4c0c;
+    --surface-code-inline: #1f1f22;
+    --text-code-inline: #ececee;
+    --surface-table-stripe: #171719;
+    --shadow-card: none;
+}
+
+/* Bridge Stack's variables in both modes, matching its dark-mode specificity. */
+:root, :root[data-scheme="dark"] {
+    --body-background: var(--surface-page);
+    --card-background: var(--surface-card);
+    --card-background-selected: var(--surface-selected);
+    --body-text-color: var(--text-body);
+    --card-text-color-main: var(--text-primary);
+    --card-text-color-secondary: var(--text-secondary);
+    --card-text-color-tertiary: var(--text-muted);
+    --card-separator-color: var(--border-subtle);
+    --accent-color: var(--color-accent);
+    --accent-color-darker: var(--color-accent-strong);
+    --accent-color-text: var(--color-on-accent);
+    --reading-accent-soft: var(--surface-accent);
+    --reading-navigation: var(--surface-navigation);
+    --reading-heading: var(--text-heading);
+    --reading-gold: var(--color-gold);
+    --reading-gold-soft: var(--surface-gold);
+    --reading-guide: var(--surface-guide);
+    --reading-shadow: var(--shadow-card);
+    --blockquote-background-color: var(--surface-accent);
+    --blockquote-border-size: 3px;
+    --code-background-color: var(--surface-code-inline);
+    --code-text-color: var(--text-code-inline);
+    --table-border-color: var(--border-subtle);
+    --tr-even-background-color: var(--surface-table-stripe);
+}
+
+@media (max-width: 767px) {
+    :root {
+        --font-card-title: var(--font-entry);
+        --font-page-title: 2.4rem;
+        --font-section: 2.1rem;
+        --font-subsection: var(--font-entry);
+        --font-code: var(--font-small);
+        --page-header-height: 112px;
+        --page-gutter: var(--space-4);
+        --page-top-space: var(--space-6);
+        --card-padding: var(--space-4);
+        --article-padding: var(--space-6) var(--space-4);
+    }
+}
