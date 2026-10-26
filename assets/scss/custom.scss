@@ -28,7 +28,7 @@ button, input, select, textarea { font-family: inherit; }
 
 .article-page .main-article {
     padding: var(--article-padding);
-    border: 1px solid transparent;
+    border: 1px solid var(--card-separator-color);
     border-radius: var(--radius-panel);
     background: transparent;
     box-shadow: none;
