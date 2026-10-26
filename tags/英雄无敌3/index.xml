@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>英雄无敌3 on Ricardo</title>
+        <link>https://sona201.github.io/tags/%E8%8B%B1%E9%9B%84%E6%97%A0%E6%95%8C3/</link>
+        <description>Recent content in 英雄无敌3 on Ricardo</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Tue, 27 Oct 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/%E8%8B%B1%E9%9B%84%E6%97%A0%E6%95%8C3/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>在 Mac 上折腾《死亡阴影》：从能启动到回退的一次流水账</title>
+        <link>https://sona201.github.io/posts/heroes3-mac-tinkering-notes/</link>
+        <pubDate>Tue, 27 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/heroes3-mac-tinkering-notes/</guid>
+        <description>&lt;p&gt;本来是想在 Mac 上玩游戏。我先把一个 GitHub 项目发给 Codex，问它怎么安装。几轮聊下来，游戏从《王国之泪》换成了《英雄无敌 III：死亡阴影》，事情也从“找一个能执行 Windows 文件的工具”，慢慢变成了解压目录修复、图形兼容、声音组件、启动器、退出按钮，还有辅助功能权限。&lt;/p&gt;
+&lt;p&gt;到最后，我说了一句：“反而搞复杂了。”&lt;/p&gt;
+&lt;p&gt;趁对话记录还在，把这次过程按顺序记下来。它更像一份折腾流水账：有些设置确实在这台机器上起了作用，有些判断后来被截图推翻，还有一些改动最后被撤回了。&lt;/p&gt;
+&lt;h2 id=&#34;10-月-19-日先看了王国之泪那个项目&#34;&gt;10 月 19 日，先看了《王国之泪》那个项目&lt;/h2&gt;
+&lt;p&gt;最开始发过去的是 &lt;a class=&#34;link&#34; href=&#34;https://github.com/ly05010419/MacNativeGames&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;MacNativeGames&lt;/a&gt;。我以为先弄清楚项目怎么安装，就能继续往下做。&lt;/p&gt;
+&lt;p&gt;查完才知道，按当时的说明，它需要自己提供《王国之泪》的游戏文件和 &lt;code&gt;prod.keys&lt;/code&gt;，再通过脚本生成 Mac App。仓库本身没有游戏，也没有现成的完整游戏安装包。&lt;/p&gt;
+&lt;p&gt;我还专门问了一下，所谓“游戏本体 1.0.0，格式为 &lt;code&gt;.xci&lt;/code&gt; 或 &lt;code&gt;.nsp&lt;/code&gt;”到底是什么。弄清楚后，我说自己没有买过《王国之泪》，这条路就先放下了。&lt;/p&gt;
+&lt;p&gt;系统也是一道门槛。最初检查到我的机器是 M1 Pro、32 GB 内存、macOS 15.5，而项目当时要求 macOS 26 以上。后来我说系统已经升级，实际读到的版本是 27.0.1。系统要求过了，游戏数据这一步仍然得另行准备。&lt;/p&gt;
+&lt;h2 id=&#34;10-月-21-日换成死亡阴影&#34;&gt;10 月 21 日，换成《死亡阴影》&lt;/h2&gt;
+&lt;p&gt;接着我想起《死亡阴影》，问能不能用 Windows 模拟器在 Mac 上玩。&lt;/p&gt;
+&lt;p&gt;最初讨论了 CrossOver，也提到了 Mac 上的 VCMI。两条路的区别和这次选择有关：我想接着用以前的 Windows 游戏文件；VCMI 则是使用原游戏资源的重写引擎，AI 等行为与原版有区别。&lt;/p&gt;
+&lt;p&gt;我记得以前听说过一个名字像“wins”的工具，可以执行 Windows 文件。问过才对上名字，大概说的是 Wine，或者 Wineskin。讨论随后转到了 Wineskin 的后继项目 Sikarugir：创建一个独立的运行环境，把完整游戏目录放进去，再指定 &lt;code&gt;Heroes3.exe&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;那时还只是说方案。我记得自己有旧压缩包，但文件还没找出来。&lt;/p&gt;
+&lt;h2 id=&#34;10-月-26-日找到旧包先修解压目录&#34;&gt;10 月 26 日，找到旧包，先修解压目录&lt;/h2&gt;
+&lt;p&gt;后来我把游戏目录的位置给了 Codex。真正开始检查文件，才发现第一个问题甚至还没到 Wine 那一层。&lt;/p&gt;
+&lt;p&gt;Windows 路径里的反斜杠，被解压工具保留成了文件名的一部分。看起来像这样：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;文本&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;英雄无敌3死亡阴影有广告安装包\Data\H3bitmap.lod
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;英雄无敌3死亡阴影有广告安装包\Maps\某张地图.h3m
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;这些文件挤在同一层目录里，&lt;code&gt;Data&lt;/code&gt;、&lt;code&gt;Maps&lt;/code&gt;、&lt;code&gt;Mp3&lt;/code&gt; 并没有真正形成应有的子目录。程序即使能被执行，也未必能按预期找到资源。&lt;/p&gt;
+&lt;p&gt;目录里既有一个大约 300 MB 的打包安装程序，也有已经展开的游戏主体。于是这次用了展开的数据，没有执行那个打包安装器。按原来的反斜杠路径，在副本中重建了目录。&lt;/p&gt;
+&lt;p&gt;整理出的游戏主体一共 824 个文件，约 341 MiB。主程序资源显示是中文版《死亡阴影》3.1，32 位 Windows 程序；主要资源包、Miles/Bink/Smacker 的 DLL 和中文字库都在。整理后逐个比较了文件大小和 SHA-256，副本内容与原文件一致。&lt;/p&gt;
+&lt;p&gt;原本准备安装 Sikarugir，不过 Homebrew 的第三方安装项信任步骤被自动审批拦住了。这时检查发现，电脑里其实已经有 Whisky 和 Rosetta 2，于是改为复用现有的 Whisky/Wine。Wine 报告的版本是 7.7，并且包含运行 32 位 Windows 程序的组件。&lt;/p&gt;
+&lt;p&gt;游戏在一个新的独立环境里测试，原目录留着。后来我担心下载目录里的东西被误删，又把原始资料移到了文稿目录。实际运行使用的仍是整理后的独立副本。&lt;/p&gt;
+&lt;h2 id=&#34;能开程序了图形又卡了一步&#34;&gt;能开程序了，图形又卡了一步&lt;/h2&gt;
+&lt;p&gt;直接启动之后，进程存在，但没有得到正常可用的画面。日志里出现过 WineD3D 的 &lt;code&gt;GL_INVALID_FRAMEBUFFER_OPERATION&lt;/code&gt;，换成虚拟桌面模式也没有解决。&lt;/p&gt;
+&lt;p&gt;接下来用了 &lt;a class=&#34;link&#34; href=&#34;https://github.com/FunkyFr3sh/cnc-ddraw&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;cnc-ddraw&lt;/a&gt;。它的支持列表里有《英雄无敌 III》。这次把 &lt;code&gt;ddraw.dll&lt;/code&gt; 放在游戏主程序旁边，通过 Wine 的 DLL override 让游戏加载它。&lt;/p&gt;
+&lt;p&gt;为了先把画面显示出来，选择了 GDI 渲染、800×600 窗口模式。配置里既设置了全局项，也设置了 &lt;code&gt;[Heroes3]&lt;/code&gt; 项，避免游戏专用配置覆盖全局值。&lt;/p&gt;
+&lt;p&gt;这一步之后，我终于看到了主菜单。&lt;/p&gt;
+&lt;p&gt;但进入新游戏时，又发现地图列表是空的。&lt;/p&gt;
+&lt;h2 id=&#34;没有地图实际是游戏在找光盘&#34;&gt;“没有地图”，实际是游戏在找光盘&lt;/h2&gt;
+&lt;p&gt;最开始沿着地图路径查。文件在不在、工作目录对不对、注册表里的安装位置有没有写进去，都检查了一遍。Wine 自己能列出 669 张地图，游戏的 &lt;code&gt;AppPath&lt;/code&gt; 也指向了正确位置。&lt;/p&gt;
+&lt;p&gt;还查了地图文件本身。绝大部分是 gzip 压缩的 H3M；两个看起来像“解压失败”的文件，其实是未压缩的旧版地图。包里也混有不同资料片、MOD 格式的地图，不能指望所有地图都由同一个原版程序加载，但这还解释不了为什么整个列表都空了。&lt;/p&gt;
+&lt;p&gt;当时 Wine 用的是西文代码页 &lt;code&gt;1252&lt;/code&gt;，目录里又有不少中文地图名，于是把这个独立环境调整到了简体中文 &lt;code&gt;936&lt;/code&gt;。改完后仍然不行。&lt;/p&gt;
+&lt;p&gt;真正把问题说清楚的是我发过去的一张截图。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/heroes3-mac-tinkering/cd-not-found.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;游戏提示未找到《死亡阴影》光盘，并说明单人场景和战役不能使用&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;提示写得很直接：没有发现《死亡阴影》游戏光盘，因此不能进行单人场景和战役，也不能建立多人游戏。&lt;/p&gt;
+&lt;p&gt;看到这张图，才知道之前讨论的“地图空白”，实际是游戏主动限制了功能。继续查地图目录，并不能解决这个提示。&lt;/p&gt;
+&lt;p&gt;随后检查安装设置，发现游戏创建的注册表项里没有 &lt;code&gt;CDDrive&lt;/code&gt;。当时切换过字符编码，还出现了两种名称略有差异的游戏注册表项。把相关项的 &lt;code&gt;CDDrive&lt;/code&gt; 补成 &lt;code&gt;C:&lt;/code&gt;，保留正确的 &lt;code&gt;AppPath&lt;/code&gt; 后，再次启动，我就能选择地图并进入游戏了。GOG 的帮助文档里也有针对这类光盘提示的 &lt;code&gt;CDDrive&lt;/code&gt; 排查说明。&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/heroes3-mac-tinkering/map-selection-1.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;修复光盘提示后，游戏能够显示地图列表，其中也能看到“贝克街221号”&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;到这里，才算从“程序有进程”走到了“可以开始一局”。&lt;/p&gt;
+&lt;h2 id=&#34;跑起来以后又开始处理卡顿和断音&#34;&gt;跑起来以后，又开始处理卡顿和断音&lt;/h2&gt;
+&lt;p&gt;能进入游戏，不等于玩起来舒服。开场画面和整个游戏都卡卡的，我又让 Codex 帮忙看怎么优化。&lt;/p&gt;
+&lt;p&gt;先做了进程和线程采样。游戏进程的 CPU 占用有过约 100%～170% 的读数，窗口绘制也有开销。当时使用的是 GDI 软件渲染，于是先只把渲染器换成 OpenGL，保持其他设置不变。&lt;/p&gt;
+&lt;p&gt;画面能显示，但仍然卡。&lt;/p&gt;
+&lt;p&gt;第二轮取消了 cnc-ddraw 默认的单核绑定，也就是 &lt;code&gt;singlecpu=false&lt;/code&gt;。这轮我的反馈是：“基本流畅了，声音会断断续续。”&lt;/p&gt;
+&lt;p&gt;接着才单独处理声音。Whisky 的问题记录里，有同款游戏在 Wine 7.7 上声音异常、CPU 占用偏高的报告，也有人提到用原生 DirectSound 组件处理。&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;这次没有运行整套 DirectX 安装器，而是下载旧版 DirectX 组件包，核对 Winetricks 源码中的 SHA-256，再提取 32 位 &lt;code&gt;dsound.dll&lt;/code&gt;，只放进这个游戏目录。加载日志确认，游戏确实使用了本地的 &lt;code&gt;DDRAW.dll&lt;/code&gt; 和 &lt;code&gt;DSOUND.DLL&lt;/code&gt;。&lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;声音正常了，新的问题却是没有画面。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/heroes3-mac-tinkering/black-screen.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;加入声音兼容组件后出现的黑色游戏窗口，按 Esc 也没有恢复画面&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;先把 OpenGL 退回 GDI，仍然黑屏。后来又关闭了开场动画，也就是把游戏设置中的 &lt;code&gt;Show Intro&lt;/code&gt; 改为 &lt;code&gt;0&lt;/code&gt;。这一次能直接看到主菜单，地图和声音也都正常了。&lt;/p&gt;
+&lt;p&gt;所以，最后保留下来的组合是：GDI、取消单核绑定、本地 DirectSound 组件，以及跳过开场动画。中间试过 OpenGL，不代表最后用的也是 OpenGL。&lt;/p&gt;
+&lt;p&gt;那次正常运行时，CPU 采样大约是 4%～6%。这个数字只记作当时的观察：前后没有做严格的同场景、同操作帧率测试。尤其有一轮 CPU 已经很低，窗口却是黑的，光看占用下降，确实不能说明游戏已经优化好了。&lt;/p&gt;
+&lt;h2 id=&#34;后半段从退出问题折腾到了启动器&#34;&gt;后半段，从退出问题折腾到了启动器&lt;/h2&gt;
+&lt;p&gt;后面我又发现，能回主菜单，但整个游戏不容易退出。&lt;/p&gt;
+&lt;p&gt;这部分的反馈和测试比前面更绕。有一次点了“退出”再按 Enter，能够关闭；后来又遇到确认后黑屏或卡住。中间怀疑过退出确认框没有重绘，也试过恢复单核绑定、给画面设置最低刷新频率，但没有得到稳定的结果。&lt;/p&gt;
+&lt;p&gt;随后连图标也成了问题。原来的简版启动器被设成后台应用，Dock 里没有正常的应用入口，位置又在用户的应用目录里。我说找不到图标后，Codex 做了一个带图标、控制窗口和“退出游戏”按钮的原生启动器，还把应用放到了系统的应用目录，并加了桌面快捷方式。&lt;/p&gt;
+&lt;p&gt;这层控制窗口通过 Wine 的结束会话命令尝试关闭游戏。一次检查里，后台进程确实结束了；下一轮却又出现“正在等待程序”，提示程序没有响应。后来还加入了明确说明无响应处理方式的退出确认。&lt;/p&gt;
+&lt;p&gt;事情已经从“我想关掉游戏”，变成了要理解游戏自己的退出按钮、Mac 窗口的红色按钮、Wine 的关闭请求、外层启动器以及无响应时的处理。&lt;/p&gt;
+&lt;p&gt;还有一次，自动检查退出后的窗口又把应用唤起了，干扰了验证。这里不能简单地把“又看到了窗口”都归为同一种退出故障。&lt;/p&gt;
+&lt;h2 id=&#34;我还试着让-ai-接着玩三天&#34;&gt;我还试着让 AI 接着玩三天&lt;/h2&gt;
+&lt;p&gt;中间我又让 Codex 接着玩这一局，后来把范围说具体：先推进三个游戏日，再存档。&lt;/p&gt;
+&lt;p&gt;当时游戏停在“贝克街221号”的城镇界面。普通的电脑控制工具识别不了 Wine 的游戏窗口，于是又讨论了系统级截图和鼠标键盘控制。我允许它尝试，也同意为一个只操作游戏窗口的控制助手开启辅助功能权限。&lt;/p&gt;
+&lt;p&gt;画面能截到，点击却没有生效。检查结果显示，系统还没有允许这个助手发送键鼠事件。接下来又进入系统设置，尝试把命令行助手加入权限列表；没成功后，再把它包装成标准 Mac 应用。&lt;/p&gt;
+&lt;p&gt;于是，本来想让它多玩三个游戏日，又多出了一套控制工具和授权流程。这三个游戏日最终没有推进，也没有完成接手后的新存档。&lt;/p&gt;
+&lt;h2 id=&#34;最后先退回简单的版本&#34;&gt;最后，先退回简单的版本&lt;/h2&gt;
+&lt;p&gt;到这里，我的直接感受就是：之前启动退出还正常，这会儿反而不正常，事情搞复杂了。&lt;/p&gt;
+&lt;p&gt;最后采取的是回退。保留整理好的游戏数据、声音和画面修复，以及桌面入口，撤掉后加的控制窗口、强制退出包装和游戏控制助手，恢复原来的直接启动方式。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/heroes3-mac-tinkering/map-selection-2.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;另一张地图选择截图，原游戏包里还带有不少其他场景&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;回退后留下的几项关键设置，大致是这些。这里只记录这次用过的状态，不当作适用于所有版本的完整安装模板：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;ini&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;[ddraw]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;na&#34;&gt;renderer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;gdi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;na&#34;&gt;windowed&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;na&#34;&gt;width&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;800&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;na&#34;&gt;height&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;600&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;na&#34;&gt;maxfps&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;60&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;[Heroes3]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;na&#34;&gt;renderer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;gdi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;na&#34;&gt;singlecpu&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;na&#34;&gt;game_handles_close&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Wine 启动时保留了本地绘图和声音组件的加载设置：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Shell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nv&#34;&gt;WINEDLLOVERRIDES&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;ddraw=n,b;dsound=n,b;mscoree,mshtml=&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;另外还有简体中文环境、正确的安装目录、&lt;code&gt;CDDrive=C:&lt;/code&gt;，以及关闭开场动画。实际运行的副本放在独立的 Wine 环境里，文稿目录中的原始资料保留着。&lt;/p&gt;
+&lt;p&gt;记录到这里，能确认的是：中途已经实测到主菜单、地图和声音正常，最后也完成了简版启动器的回退。退出问题出现过反复，回退完成后做的是入口和签名检查，没有再完成一轮从开局、存档到退出的完整验证，不能把它写成“所有问题都解决了”。&lt;/p&gt;
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://support.gog.com/hc/de/articles/214062465-Heroes-of-Might-and-Magic-3-Complete&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;GOG 帮助：《Heroes of Might and Magic 3: Complete》&lt;/a&gt;，其中有“Shadow of Death-CD-ROM nicht gefunden”与 &lt;code&gt;CDDrive&lt;/code&gt; 设置的说明。&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/Whisky-App/Whisky/issues/252&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Whisky 问题记录 #252&lt;/a&gt;、&lt;a class=&#34;link&#34; href=&#34;https://github.com/Whisky-App/Whisky/issues/783&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;#783&lt;/a&gt;。这里把它们作为排查线索；不同游戏版本和渲染组合的结果并不一致。&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:3&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/Winetricks/winetricks/blob/master/src/winetricks&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Winetricks 源码&lt;/a&gt;，可查 &lt;code&gt;helper_directx_dl&lt;/code&gt; 与 &lt;code&gt;load_dsound&lt;/code&gt;。本次只提取游戏需要的声音 DLL，没有替换 macOS 的系统组件。&amp;#160;&lt;a href=&#34;#fnref:3&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
