@@ -6,7 +6,706 @@
         <description>Recent content in DNS on Ricardo</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Wed, 21 Oct 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/dns/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 26 Oct 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://sona201.github.io/tags/dns/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>家庭网络折腾笔记</title>
+        <link>https://sona201.github.io/posts/home-network-monitoring-vlan-vpn/</link>
+        <pubDate>Mon, 26 Oct 2026 00:00:00 +0800</pubDate>
+        
+        <guid>https://sona201.github.io/posts/home-network-monitoring-vlan-vpn/</guid>
+        <description>&lt;p&gt;看了 Sukka 的&lt;a class=&#34;link&#34; href=&#34;https://blog.skk.moe/post/home-network-setup/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;家庭网络组网方案&lt;/a&gt;，我想先把自己准备折腾家庭网络的原因记下来，再决定需要哪些设备。&lt;/p&gt;
+&lt;p&gt;我希望能看清家里谁在用网、外面哪些连接在访问家里的设备，发现攻击或异常流量时尽早收到提醒。物联网设备的访问范围也需要限制，VPN 和 DNS 要能按需求分流。遇到卡顿时，最好能沿着链路查出原因，知道该调整配置、换线，还是升级设备。&lt;/p&gt;
+&lt;p&gt;目前先整理需求和验证办法，设备型号、户型、宽带速率和预算留到盘点现网时补齐。我也想排查 App 是否在后台参与 PCDN 或共享带宽，具体行为还要靠流量和终端记录确认。&lt;/p&gt;
+&lt;h2 id=&#34;先让流量能对应到具体设备&#34;&gt;先让流量能对应到具体设备&lt;/h2&gt;
+&lt;p&gt;只有一张全家上传、下载总量图，还回答不了我关心的问题。我想查到的是：某个时间段里，哪台设备连接了哪个地址，用了多少带宽，是否被防火墙放行。如果目标是 NAS，还想继续确认访问的是哪个服务、有没有登录成功。&lt;/p&gt;
+&lt;p&gt;这需要把几类记录对应起来。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;想知道的事情&lt;/th&gt;
+&lt;th&gt;需要的数据&lt;/th&gt;
+&lt;th&gt;能判断到哪一步&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;哪台设备在跑流量&lt;/td&gt;
+&lt;td&gt;设备名称、当时的 IPv4/IPv6 地址、DHCP 租约与邻居表、MAC、交换机端口或 AP、上下行统计&lt;/td&gt;
+&lt;td&gt;找到设备及其接入位置；IPv6 临时地址未必出现在 DHCP 租约中，需要另存地址关联历史&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;谁在访问家里的服务&lt;/td&gt;
+&lt;td&gt;连接起止时间、来源和目标 IP、端口、协议、方向、防火墙动作及 NAT 映射&lt;/td&gt;
+&lt;td&gt;区分连接尝试、被阻止的请求和已建立的会话&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;是否真的访问了 NAS 文件&lt;/td&gt;
+&lt;td&gt;NAS 的登录、文件共享、Web 服务或容器日志&lt;/td&gt;
+&lt;td&gt;确认账户、操作与结果，具体范围取决于服务的日志设置&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;哪个 App 或容器发起连接&lt;/td&gt;
+&lt;td&gt;终端上的进程连接记录、容器日志或宿主机记录&lt;/td&gt;
+&lt;td&gt;把网络行为进一步对应到程序&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;流量是否异常&lt;/td&gt;
+&lt;td&gt;每台设备的日常流量、时段、目标分布和连接数量&lt;/td&gt;
+&lt;td&gt;发现偏离平时行为的情况，作为进一步排查的线索&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;例如，网关能记录一次连接的源和目标，NAS 的 SMB 日志则可能记录具体文件操作。两者要用时间、地址和会话信息关联起来，不能因为看到连接到 NAS，就认定文件已经被读取。&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;外部地址可以附上 ASN、运营商和大致地区，帮助理解连接来自哪类网络。不过，IP 归属地无法直接说明背后是谁；代理、VPN 和共享出口都会影响判断。&lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;h3 id=&#34;网关之外还有观察盲区&#34;&gt;网关之外还有观察盲区&lt;/h3&gt;
+&lt;p&gt;同一个 VLAN 里的设备通常直接通过交换机或 AP 通信，不必经过主路由。只在网关上开监控，就可能漏掉电视扫描同网段设备、电脑直接访问 NAS 等行为。需要深入观察这些路径时，可以补交换机端口镜像和流量采集器，或者先启用目标设备的服务日志。镜像哪些端口、是否包含收发两个方向、镜像口是否会过载，都影响覆盖范围。&lt;sup id=&#34;fnref:4&#34;&gt;&lt;a href=&#34;#fn:4&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;设备身份最好在 LAN 或 VLAN 入口、SNAT 和代理重新建立连接之前记录。到 WAN 或 VPN 隧道外侧再看，可能只剩网关地址或隧道端点。TUN 本身传递的是 IP 包，并不天然抹掉来源 IP；关键是流量在哪里被转换、在哪里采集。&lt;sup id=&#34;fnref:5&#34;&gt;&lt;a href=&#34;#fn:5&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;5&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;加密也会限制可见性。TLS、QUIC 和 VPN 的业务内容，不能靠普通抓包直接读出来；DNS 日志只覆盖经过该解析器的查询。设备自带 DoH 或 VPN 时，还需要终端侧记录。DPI 的应用分类可以辅助定位，但不能保证认出手机里具体哪个 App。Suricata 这类检测工具也不直接解密加密流量。&lt;sup id=&#34;fnref:6&#34;&gt;&lt;a href=&#34;#fn:6&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;6&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;h2 id=&#34;告警要给出可以继续查的线索&#34;&gt;告警要给出可以继续查的线索&lt;/h2&gt;
+&lt;p&gt;我希望尽早发现攻击迹象，但监控无法保证在攻击发生前预知。比较实际的做法，是持续收集证据，在扫描、异常登录或流量变化出现时提醒，再决定是否需要阻断。&lt;/p&gt;
+&lt;p&gt;先关注这几类事件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;新设备加入网络，或者已有设备出现在意料之外的接入位置。&lt;/li&gt;
+&lt;li&gt;IoT 设备持续尝试访问电脑、NAS 或管理网段。&lt;/li&gt;
+&lt;li&gt;NAS 连续登录失败，或服务日志出现异常账户活动。&lt;/li&gt;
+&lt;li&gt;某台设备在平时空闲的时段持续上传，目标和连接数量明显变化。&lt;/li&gt;
+&lt;li&gt;IDS 命中需要关注的规则，或重要设备的日志、监控采集突然中断。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;告警里要带设备名、源和目标、时间范围、触发条件、相关流量及日志入口。已被防火墙挡住的零散扫描可以汇总；允许通过的可疑连接、NAS 异常登录和持续上传，更值得及时查看。IDS 负责检测，IPS 可以按策略阻断，两者都需要结合误报和实际影响调整。&lt;/p&gt;
+&lt;p&gt;对于疑似 PCDN，我会先观察持续上行、多目标连接、空闲时段活动等特征，再在设备上排查进程或容器。暂停可疑程序、保留前后对照，比仅凭某个域名或一次高上传更有说服力。系统更新、云备份、视频和正常 P2P 也可能产生类似表现；例如 Windows 的传递优化本来就可以向其他设备上传更新内容。&lt;sup id=&#34;fnref:7&#34;&gt;&lt;a href=&#34;#fn:7&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;7&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;处理时可以先对可疑设备限速，必要时临时阻断外联，再关闭确认不需要的带宽共享功能、停用相关程序或容器，观察流量是否恢复。已知域名和地址的拦截规则只能辅助，目标变化或共用 CDN 都会影响效果；不宜仅凭流量特征自动封禁整台设备。&lt;/p&gt;
+&lt;p&gt;阈值先按设备的正常用途建立，避免给摄像头、NAS 和手机套同一条标准。重复事件需要聚合和冷却，日志则要有轮转、保留周期和统一时间。长连接还需要实时计数或周期记录：如果会话结束后才落一条日志，持续跑流量时可能迟迟没有提醒。&lt;/p&gt;
+&lt;h2 id=&#34;用-vlan-约束物联网设备的访问范围&#34;&gt;用 VLAN 约束物联网设备的访问范围&lt;/h2&gt;
+&lt;p&gt;听说 IoT 设备可能扫描内网，是我想划分 VLAN 的原因之一。这里先把它当作需要限制的风险，不认定家里的设备已经在做这件事。&lt;/p&gt;
+&lt;p&gt;VLAN 把设备分到不同的二层网络，跨网段能不能访问，还要由防火墙决定。初步可以按用途分组，具体 VLAN ID 和地址段等盘点完现网再定。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;分组&lt;/th&gt;
+&lt;th&gt;放哪些设备&lt;/th&gt;
+&lt;th&gt;初步访问规则&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;日常设备&lt;/td&gt;
+&lt;td&gt;自己的电脑、手机&lt;/td&gt;
+&lt;td&gt;按需访问 NAS 和 IoT 服务；只有指定管理设备能进入管理面&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;服务设备&lt;/td&gt;
+&lt;td&gt;NAS、家庭服务、DNS&lt;/td&gt;
+&lt;td&gt;按服务开放端口，管理端口单独限制&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IoT&lt;/td&gt;
+&lt;td&gt;电视、摄像头、智能家居&lt;/td&gt;
+&lt;td&gt;允许必要 DNS、校时、云服务及控制器通信，阻止主动访问其他无关内网服务&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;访客&lt;/td&gt;
+&lt;td&gt;临时接入设备&lt;/td&gt;
+&lt;td&gt;允许上网，默认不访问内网；投屏按需要单独放行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;网络管理&lt;/td&gt;
+&lt;td&gt;路由器、交换机、AP 的管理接口&lt;/td&gt;
+&lt;td&gt;只允许指定管理设备或获准的管理 VPN 客户端访问&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;跨 VLAN 先采用默认拒绝，再加需要的访问规则，并允许已建立连接的回包。例如，电脑可以主动访问某个 IoT 服务，IoT 可以回应这次连接，但不能因此任意连接电脑。若设备需要主动向 Home Assistant 之类的控制器上报，再增加具体地址和端口的例外。&lt;sup id=&#34;fnref:8&#34;&gt;&lt;a href=&#34;#fn:8&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;8&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;同一 IoT VLAN 内的设备仍可能互相访问。需要进一步隔离时，要检查交换机 ACL、端口隔离和 AP 客户端隔离的实际覆盖范围，不能只勾一个 Wi-Fi 选项就认为有线、跨 AP 的设备也全部隔离了。&lt;sup id=&#34;fnref1:8&#34;&gt;&lt;a href=&#34;#fn:8&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;8&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;这些规则要同时检查 IPv4 和 IPv6。只限制 IPv4 私有网段，不能证明 IPv6 路径也被限制；同时需要保留 IPv6 正常运行所需的 ICMPv6。&lt;sup id=&#34;fnref:9&#34;&gt;&lt;a href=&#34;#fn:9&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;9&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;投屏、打印和智能家居发现也要单独验证。mDNS 可以在指定 VLAN 和指定服务间转发，但“能发现设备”和“实际服务端口可以连接”是两步。配置时逐项放行需要的发现和控制流量，避免因为一次投屏失败就撤掉整个隔离策略。&lt;sup id=&#34;fnref:10&#34;&gt;&lt;a href=&#34;#fn:10&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;10&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;h2 id=&#34;vpn-和-dns-分流要分别验证&#34;&gt;VPN 和 DNS 分流要分别验证&lt;/h2&gt;
+&lt;p&gt;我把 VPN 需求先拆开：人在外面回家访问 NAS，是远程接入；家里某些设备或服务使用另一个互联网出口，是出站分流；工作电脑上的企业 VPN，则还有公司客户端自己的路由和 DNS 要求。这几条路径需要分别记录。&lt;/p&gt;
+&lt;p&gt;现有的 &lt;a class=&#34;link&#34; href=&#34;https://sona201.github.io/posts/macos-clash-vpn-split-dns/&#34; &gt;macOS 企业 VPN 与 Clash 共存笔记&lt;/a&gt; 已经记录了终端侧的配置。后续增加家庭网关分流时，要检查有没有让同一连接重复经过代理或 VPN。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;对象&lt;/th&gt;
+&lt;th&gt;DNS 怎么处理&lt;/th&gt;
+&lt;th&gt;业务连接怎么走&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;家庭内网名称&lt;/td&gt;
+&lt;td&gt;交给家庭 DNS，远程接入时也要能到达它&lt;/td&gt;
+&lt;td&gt;走家庭内网或回家 VPN，并受服务访问规则限制&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;公司内网名称&lt;/td&gt;
+&lt;td&gt;使用公司要求的解析路径&lt;/td&gt;
+&lt;td&gt;按企业 VPN 策略处理，避免被家庭代理规则覆盖&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;适合直连的服务&lt;/td&gt;
+&lt;td&gt;选用从本地可达、解析合适的上游&lt;/td&gt;
+&lt;td&gt;走家庭宽带出口&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;指定走 VPN 或代理的服务&lt;/td&gt;
+&lt;td&gt;根据解析需求配置上游及查询路径&lt;/td&gt;
+&lt;td&gt;命中对应出口规则&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;VPN 或代理节点自身的域名&lt;/td&gt;
+&lt;td&gt;保留不依赖该隧道的启动解析路径&lt;/td&gt;
+&lt;td&gt;避免连接节点时又被送回同一条隧道&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;DNS 分流决定向谁查询，业务分流决定连接从哪里出去。&lt;/strong&gt; 两者要配合，但配好一项不会自动完成另一项。Mihomo 就把域名解析策略和业务路由规则分开配置。&lt;sup id=&#34;fnref:11&#34;&gt;&lt;a href=&#34;#fn:11&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;11&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;验收时，需要同时看解析结果、命中的连接规则和实际出口，分别测试 A、AAAA 及对应的 IPv4、IPv6 连接。还要明确出口故障后的行为：停止访问、切换备用出口，还是允许直连。需要固定走指定出口的服务，拟采用故障后停止访问；其他服务是否允许回退，按用途再定，并通过断开隧道测试确认。&lt;/p&gt;
+&lt;p&gt;家庭 DNS 暂时按独立服务考虑，由各网段访问它的必要端口。是否需要高可用要结合停机影响决定，不能默认给客户端填一个公共“备用 DNS”就仍然保持相同的过滤和分流策略。&lt;/p&gt;
+&lt;h2 id=&#34;用-l2tp-接入朋友并联机英雄无敌3&#34;&gt;用 L2TP 接入朋友并联机英雄无敌3&lt;/h2&gt;
+&lt;p&gt;这部分先确定使用群晖 VPN Server 的 L2TP/IPsec。计划由我在家里的电脑上开《英雄无敌3》房间，朋友从外面连接 VPN，再通过游戏电脑的内网 IP 加入。NAS 负责 VPN 接入和转发，游戏仍运行在电脑上。&lt;/p&gt;
+&lt;p&gt;下面按双方使用 Windows 10/11、经典版游戏提供 TCP/IP 联机入口来写。实际游戏版本、DSM 版本和地址还要核对；以下是配置与验收步骤，不代表这些设置已经在家里的设备上生效。&lt;/p&gt;
+&lt;h3 id=&#34;先填好地址和访问范围&#34;&gt;先填好地址和访问范围&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;项目&lt;/th&gt;
+&lt;th&gt;本文示例&lt;/th&gt;
+&lt;th&gt;配置前确认&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;VPN 公网入口&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;vpn.example.net&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;替换成当前可用的公网 IP 或 DDNS；不是 QuickConnect ID&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NAS 内网 IP&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;192.168.50.10&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;用 DHCP 保留或固定配置保持地址稳定&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;游戏电脑 IP&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;192.168.50.20&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;给实际参与联机的网卡做 DHCP 地址保留&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;家庭网关 IP&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;192.168.50.1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;用于核对回程路由和隔离测试&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;L2TP 地址池&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;10.27.30.0/24&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;以 VPN Server 当前分配范围为准，不能照抄示例覆盖现有配置&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;朋友的 VPN 连接名称&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;H3-Home&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;后面的 PowerShell 命令使用这个名称&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;VPN 地址池、双方家庭网络和已有 VPN 网段尽量不要重叠。需要处理地址冲突时，先调整地址规划；相同的私网地址在双方各代表一台设备，会让路由选择和排障变得含糊。&lt;/p&gt;
+&lt;p&gt;目标是让朋友访问游戏电脑所需的游戏通信，同时拒绝访问 NAS 服务、路由器管理页面、其他家庭设备和其他 VPN 客户端，也不借用我家的出口上网。**只给客户端添加游戏电脑的 &lt;code&gt;/32&lt;/code&gt; 路由，是分流配置，不能代替服务端访问控制。**朋友能够修改自己的路由表。&lt;/p&gt;
+&lt;h3 id=&#34;第一步-准备群晖账号和-l2tp-接入&#34;&gt;第一步 准备群晖账号和 L2TP 接入&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;在 DSM 的“控制面板 → 用户与群组”中，为每位朋友建立独立的普通账号，例如 &lt;code&gt;h3-friend-a&lt;/code&gt;，不要加入 &lt;code&gt;administrators&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;检查这些账号的共享文件夹权限及应用权限，撤掉不需要的访问，尤其检查默认用户组继承的权限。若某项应用权限会影响 VPN 登录，再按实际提示核对，不用管理员账号绕过。&lt;/li&gt;
+&lt;li&gt;在“VPN Server → 权限”中，只为这些账号启用 L2TP/IPsec 接入，其他 VPN 协议按需关闭；检查是否存在新用户默认获准接入的设置。&lt;/li&gt;
+&lt;li&gt;在“VPN Server → L2TP/IPsec”检查服务已启用，记下当前动态地址池、连接数上限和 IPsec 预共享密钥。沿用现有可用配置；修改预共享密钥会影响所有使用它的客户端。&lt;/li&gt;
+&lt;li&gt;各人的账号密码分别保存，预共享密钥通过私密渠道交付，不写进笔记、截图或脚本。预共享密钥与每个人的账号密码是两项凭据。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;VPN Server 的用户权限管理控制的是谁可以登录 VPN，并不等于已经限制其能访问哪些 LAN 设备。&lt;sup id=&#34;fnref:12&#34;&gt;&lt;a href=&#34;#fn:12&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;12&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;若目前已经能从外网连回家，保持现有端口映射。只有入口尚未打通时，才按群晖文档检查 L2TP/IPsec 使用的 UDP 500、1701、4500 及路由器、防火墙配置；这里不向公网新增游戏、DSM 或 SMB 的端口映射。DDNS 只负责名称解析，不能解决运营商 CGNAT 或未处理的多层 NAT。&lt;sup id=&#34;fnref:13&#34;&gt;&lt;a href=&#34;#fn:13&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;13&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;h3 id=&#34;第二步-确认服务端隔离策略&#34;&gt;第二步 确认服务端隔离策略&lt;/h3&gt;
+&lt;p&gt;这里需要先区分两个层次：NAS 自己收到的请求，以及 NAS 替朋友转发到局域网的请求。对于同一 LAN 上的 NAS 和游戏电脑，解密后的流量可能直接经过交换机，主路由的跨 VLAN 规则未必会被经过。&lt;/p&gt;
+&lt;p&gt;在 Linux 的常规路由路径中，这两类流量分别经过 &lt;code&gt;INPUT&lt;/code&gt; 和 &lt;code&gt;FORWARD&lt;/code&gt;。因此，不能只在游戏电脑上放行程序，或者只设置 DSM 的共享权限，就认为其他设备也被保护了。&lt;sup id=&#34;fnref:14&#34;&gt;&lt;a href=&#34;#fn:14&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;14&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;我准备采用下面的服务端策略。它是需要落实到实际设备的规则表，不是 DSM 界面中已经存在的一组开关。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;处理位置&lt;/th&gt;
+&lt;th&gt;匹配对象&lt;/th&gt;
+&lt;th&gt;动作&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;NAS 本机输入&lt;/td&gt;
+&lt;td&gt;从受控游戏 VPN 接口进入、目标为 NAS 任意本机地址的内层流量&lt;/td&gt;
+&lt;td&gt;拒绝；包括 DSM、SMB、SSH 等服务&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NAS 转发&lt;/td&gt;
+&lt;td&gt;从受控游戏 VPN 接口进入，来源属于预期地址池，目标为游戏电脑 &lt;code&gt;192.168.50.20&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;按游戏需要允许 TCP/UDP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;返回方向&lt;/td&gt;
+&lt;td&gt;游戏电脑对上述连接的 &lt;code&gt;Established/Related&lt;/code&gt; 回包&lt;/td&gt;
+&lt;td&gt;允许&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NAS 转发&lt;/td&gt;
+&lt;td&gt;从受控游戏 VPN 接口进入的其余流量&lt;/td&gt;
+&lt;td&gt;拒绝；覆盖其他 LAN、其他 VPN 客户端及互联网目标&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;游戏 VPN 的 IPv6&lt;/td&gt;
+&lt;td&gt;本方案只使用 IPv4；该受控接口上的 IPv6 输入和转发&lt;/td&gt;
+&lt;td&gt;拒绝，不改全家的 IPv6 设置&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;这些是隧道解密后的规则，不应把建立 L2TP/IPsec 所需的外层握手一起挡住。规则还需要排在已有宽泛放行之前；最终拒绝要覆盖受控接口，不能仅拒绝预期地址池，否则来源不符合预期的包可能绕过。&lt;/p&gt;
+&lt;p&gt;**群晖普通防火墙界面不能直接当成任意 LAN 目标的访问控制界面。**若实际版本没有能管理这段转发流量的功能，就需要在 NAS 的实际转发链上实现规则，或者让这段流量必经一台能持久管理策略的防火墙。给 NAS 单独划一个 VLAN 也不自动完成这件事：仍要检查经过的路径、NAT 后看到的来源，以及该 VLAN 内还有哪些设备。&lt;/p&gt;
+&lt;p&gt;在决定具体规则前，可以在 NAS 的本地管理通道中运行以下只读命令，保存接口、路由、NAT 和现有规则。&lt;code&gt;iptables&lt;/code&gt;、&lt;code&gt;ip6tables&lt;/code&gt; 的读取通常需要管理员或 root 权限，应通过可恢复的本地管理入口取得权限；权限不足不代表没有规则。输出保留在自己的管理记录里，不包含账号密码和预共享密钥：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Bash&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ip address
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ip route
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;iptables -S INPUT
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;iptables -S FORWARD
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;iptables -t nat -S
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;iptables -nvL INPUT --line-numbers
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;iptables -nvL FORWARD --line-numbers
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ip6tables -S
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;不同 DSM 版本可用的命令和防火墙实现可能不同。需要把朋友的一次登录、分配地址与新增接口对应起来。不要未经确认就用 &lt;code&gt;ppp+&lt;/code&gt; 匹配：它会匹配所有以 &lt;code&gt;ppp&lt;/code&gt; 开头的接口，可能同时包含其他 VPN 或 PPPoE，编号也可能随重连变化。&lt;sup id=&#34;fnref:15&#34;&gt;&lt;a href=&#34;#fn:15&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;15&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;如果所有 L2TP 用户共用一个地址池，把整池限制成“只访问游戏电脑”也会限制我自己的 L2TP 账号。想继续用 L2TP 管理 NAS，就需要能可靠区分会话的服务端策略或独立实例；不能假定建一个朋友用户组就会获得独立地址池。另一种安排是 L2TP 专供游戏，自己通过本地网络或已有 OpenVPN 管理，但切换前要确认原有管理连接仍可用。&lt;/p&gt;
+&lt;p&gt;这一段必须按实际 DSM 版本、接口和既有规则生成配置，不能把通用 &lt;code&gt;iptables&lt;/code&gt; 命令当成已验证的群晖脚本。保存基线、保留本地管理入口，不清空系统规则，也不全局修改默认策略。&lt;strong&gt;服务端规则和后面的负向测试未完成前，只能记为 VPN 接入可用，不能记为“朋友已被限制在游戏电脑”。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;第三步-朋友在-windows-建立连接并分流&#34;&gt;第三步 朋友在 Windows 建立连接并分流&lt;/h3&gt;
+&lt;p&gt;先由我用自己的测试账号验证服务端规则，再让朋友接入。Windows 的“设置 → 网络和 Internet → VPN → 添加 VPN”中填写：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;字段&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;VPN 提供商&lt;/td&gt;
+&lt;td&gt;Windows 内置&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;连接名称&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;H3-Home&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;服务器名称或地址&lt;/td&gt;
+&lt;td&gt;实际公网 IP 或 DDNS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;VPN 类型&lt;/td&gt;
+&lt;td&gt;使用预共享密钥的 L2TP/IPsec&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;预共享密钥&lt;/td&gt;
+&lt;td&gt;我提供的 IPsec 预共享密钥&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;登录信息类型&lt;/td&gt;
+&lt;td&gt;用户名和密码&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;用户名和密码&lt;/td&gt;
+&lt;td&gt;该朋友自己的普通 VPN 账号&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;保存后，先断开连接，在创建该 VPN 的同一个 Windows 用户下打开 PowerShell。下面只修改 &lt;code&gt;H3-Home&lt;/code&gt;，不要用它改公司 VPN：&lt;sup id=&#34;fnref:16&#34;&gt;&lt;a href=&#34;#fn:16&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;16&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;powershell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c&#34;&gt;# 先确认连接确实存在，并记下原来的 SplitTunneling 状态&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;Get-VpnConnection&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Name&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;H3-Home&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c&#34;&gt;# 普通上网保留本地出口，只增加游戏电脑的目标路由&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;Set-VpnConnection&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Name&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;H3-Home&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-SplitTunneling&lt;/span&gt; &lt;span class=&#34;vm&#34;&gt;$true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;Add-VpnConnectionRoute&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-ConnectionName&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;H3-Home&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-DestinationPrefix&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;192.168.50.20/32&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c&#34;&gt;# 重新连接 VPN 后查看实际地址和路由&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;ipconfig&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;print&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;如果路由已经存在，不要重复添加。上述命令按当前用户的 VPN 配置编写；若使用的是所有用户连接，需要管理员权限，并在对应 VPN 命令中一致使用 &lt;code&gt;-AllUserConnection&lt;/code&gt;。&lt;sup id=&#34;fnref:17&#34;&gt;&lt;a href=&#34;#fn:17&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;17&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;检查游戏电脑的 &lt;code&gt;/32&lt;/code&gt; 路由是否指向 VPN，其他上网流量是否仍走朋友原来的出口。这个连接直接使用游戏电脑 IP，不需要为了联机把朋友的全部 DNS 改成我家的 DNS；若连接后出现解析异常，再检查 VPN 下发的解析器和接口选择。&lt;/p&gt;
+&lt;p&gt;若 L2TP 连不上，先核对账号权限、预共享密钥、公网入口、端口和 NAT。Windows 的 NAT-T 兼容问题要按错误现象及微软说明处理，不默认修改所有人的注册表。&lt;sup id=&#34;fnref:18&#34;&gt;&lt;a href=&#34;#fn:18&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;18&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;h3 id=&#34;第四步-放行游戏程序并建立房间&#34;&gt;第四步 放行游戏程序并建立房间&lt;/h3&gt;
+&lt;p&gt;双方先核对游戏版本、补丁和 Mod。HD Mod 与育碧 HD Edition 不同；这里不要求为联机安装 HotA 或改变原来的玩法。经典版 LAN/TCP/IP 联机需要的 DirectPlay，可以在 Windows“启用或关闭 Windows 功能 → 旧版组件 → DirectPlay”中启用。具体入口随版本略有差别。&lt;sup id=&#34;fnref:19&#34;&gt;&lt;a href=&#34;#fn:19&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;19&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;在我开房的游戏电脑上，先检查 Windows 防火墙实际看到的来源。如果 NAS 保留了 VPN 客户端源地址，可以使用 VPN 地址池作为来源范围；如果 NAS 做了 SNAT，电脑可能只看到 NAS 的内网 IP。这时 Windows 规则要使用实际来源，朋友身份和访问目标的限制仍由 NAS 转发规则承担。&lt;/p&gt;
+&lt;p&gt;如果保留 VPN 源地址，还要检查游戏电脑的回程：到朋友 VPN 地址的路由应能经 NAS 返回，可以由家庭网关的静态路由或游戏电脑的主机路由实现。先用 &lt;code&gt;route print -4&lt;/code&gt; 核对实际路径，再决定在哪一层补路由，不直接照抄示例改变现网。&lt;/p&gt;
+&lt;p&gt;如果电脑只看到 NAS 地址，则还要检查已有的“本地子网允许”规则。它们可能已经允许这批转发流量访问 SMB、远程桌面等服务；新增游戏程序规则不会撤销这些旧权限，需要收窄相关服务的来源范围，并通过负向测试确认。&lt;/p&gt;
+&lt;p&gt;下面是在房主电脑上、以管理员身份运行的示例。先把路径改成实际运行游戏的程序，不要填启动器；HD 或 HotA 的可执行文件名可能不同：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;powershell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$h3GameExe&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;C:\Games\Heroes3\Heroes3.exe&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$h3VpnSource&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;10.27.30.0/24&amp;#39;&lt;/span&gt;  &lt;span class=&#34;c&#34;&gt;# 仅在实际保留 VPN 源地址时使用&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-not&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;Test-Path&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-LiteralPath&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$h3GameExe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;请先填写实际游戏程序路径&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;New-NetFirewallRule&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Name&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;H3-L2TP-TCP&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-DisplayName&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Heroes3 from game VPN TCP&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Direction&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Inbound&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Action&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Allow&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Program&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$h3GameExe&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Protocol&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TCP&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-RemoteAddress&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$h3VpnSource&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Profile&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Any&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;New-NetFirewallRule&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Name&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;H3-L2TP-UDP&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-DisplayName&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Heroes3 from game VPN UDP&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Direction&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Inbound&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Action&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Allow&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Program&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$h3GameExe&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Protocol&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UDP&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-RemoteAddress&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$h3VpnSource&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Profile&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Any&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;规则只为该程序放行来自指定范围的流量，没有向公网开放游戏端口。检查旧的游戏放行项和拒绝项，避免已有宽泛允许扩大范围，或已有显式拒绝挡住新规则；Windows 的显式拒绝优先于允许，不能用“一条拒绝所有，再添加允许游戏”来模拟有顺序的路由器规则。&lt;sup id=&#34;fnref:20&#34;&gt;&lt;a href=&#34;#fn:20&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;20&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;随后我在游戏的“多人游戏 → TCP/IP”中创建房间，朋友连接 L2TP 后使用 &lt;code&gt;192.168.50.20&lt;/code&gt; 加入。NAS 地址不是房主地址。房间不自动出现在列表中时，先尝试按 IP 查找，不把整个家庭网络桥接出去。&lt;/p&gt;
+&lt;p&gt;如果能够找到房间却进不去，或进入后卡住，要继续检查 DirectPlay、游戏版本、程序路径、回程路由和 NAT。若实际游戏要求房主向朋友发起新的反向连接，应把对应通信加入服务端策略，并在朋友电脑上只放行游戏程序所需的来源；不要直接允许所有 LAN 主机访问 VPN 客户端。多人游戏如果要求朋友之间直接通信，也与“只能访问房主电脑”的严格目标存在冲突，需要按实际版本测试后再决定是否增加例外。&lt;/p&gt;
+&lt;h3 id=&#34;第五步-同时验证联机和隔离&#34;&gt;第五步 同时验证联机和隔离&lt;/h3&gt;
+&lt;p&gt;第一轮先由我在手机热点或其他外网用测试电脑完成，再邀请朋友测试。所有示例地址换成实际值。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;验证项&lt;/th&gt;
+&lt;th&gt;预期结果&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;L2TP 登录&lt;/td&gt;
+&lt;td&gt;群晖连接列表出现正确账号、分配地址和连接时间&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;游戏会话&lt;/td&gt;
+&lt;td&gt;能进地图、进行几个回合、保存并重新载入游戏&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NAS 的 DSM、SMB、SSH&lt;/td&gt;
+&lt;td&gt;经 VPN 访问均被服务端拒绝&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;路由器管理页面和另一台家庭设备&lt;/td&gt;
+&lt;td&gt;经 VPN 访问被拒绝&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;游戏电脑的文件共享、远程桌面&lt;/td&gt;
+&lt;td&gt;通过 VPN 均不能访问；包括来源被 SNAT 成 NAS 地址的情况&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;普通互联网访问&lt;/td&gt;
+&lt;td&gt;仍使用测试电脑当前宽带或热点出口&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;断线重连与多人接入&lt;/td&gt;
+&lt;td&gt;地址或接口编号变化后，访问范围仍正确&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;**负向测试必须保证流量真的进入 VPN。**只配置游戏 &lt;code&gt;/32&lt;/code&gt; 路由时，NAS 打不开可能只是没有路由，不能证明服务端成功拦截。可以在自己的受控测试电脑上临时添加 NAS 的 VPN 路由，再检查已知开启的服务端口和服务端拒绝计数：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;powershell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c&#34;&gt;# 仅用于隔离验收，若这条路由原本已存在则不要重复添加&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;Add-VpnConnectionRoute&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-ConnectionName&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;H3-Home&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-DestinationPrefix&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;192.168.50.10/32&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c&#34;&gt;# 按需重连后，先用 route print -4 确认路由确实走 VPN&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;Test-NetConnection&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-ComputerName&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;192.168.50.10&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Port&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;5001&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;Test-NetConnection&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-ComputerName&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;192.168.50.10&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Port&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;445&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c&#34;&gt;# 测完移除本次添加的测试路由&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;Remove-VpnConnectionRoute&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-ConnectionName&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;H3-Home&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-DestinationPrefix&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;192.168.50.10/32&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;5001 和 445 只是示例；NAS 服务端口若改过，要替换为实际端口。再用相同办法测试网关和另一台有已知服务的设备。只有确认请求已进入隧道、命中服务端拒绝规则，才能把失败归因于隔离，而不是目标服务没开或路由错误。&lt;/p&gt;
+&lt;p&gt;还要在 VPN 重连、VPN Server 重启、DSM 防火墙重新应用配置、NAS 重启后重复关键测试。手工添加的规则可能被重载影响；定时任务过一段时间补回规则，也不能证明中间没有放行窗口。如果要长期持续保证隔离，需要可靠的规则持久化及启动顺序，或使用能持久管理策略的必经防火墙。&lt;/p&gt;
+&lt;h3 id=&#34;结束联机和撤销配置&#34;&gt;结束联机和撤销配置&lt;/h3&gt;
+&lt;p&gt;朋友暂时不用时，在 VPN Server 断开该连接并撤销账号的 L2TP 权限；以后不再使用则禁用账号。仅修改密码不应被当成已经断开现有会话，需再查连接列表。&lt;/p&gt;
+&lt;p&gt;测试期间新增的 Windows 规则可以按名称单独撤销，不影响其他防火墙规则：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;powershell&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c&#34;&gt;# 在房主电脑上删除本节新增的游戏规则&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;Remove-NetFirewallRule&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Name&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;H3-L2TP-TCP&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;H3-L2TP-UDP&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c&#34;&gt;# 在朋友电脑上删除本节新增的游戏路由&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;Remove-VpnConnectionRoute&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-ConnectionName&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;H3-Home&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-DestinationPrefix&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;192.168.50.20/32&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;NAS 端的规则按实施前的基线逐项撤销，不全局清空防火墙。撤销隔离前先停止朋友接入；只有确认已有客户端断开，才恢复对应策略。&lt;/p&gt;
+&lt;h2 id=&#34;网络卡顿时逐段缩小范围&#34;&gt;网络卡顿时逐段缩小范围&lt;/h2&gt;
+&lt;p&gt;我希望性能尽可能好，也希望知道实际限制在哪里。先画出从设备到目标的路径，再逐段测，比只看一次公网测速更有用。&lt;/p&gt;
+&lt;p&gt;下面是待验证的组网草图。跨 VLAN 路由暂定由网关承担；如果以后改由三层交换机转发，隔离规则和采集位置也要随之调整。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sona201.github.io/images/home-network/home-network-topology.svg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;家庭网络规划示意：互联网经光猫、主网关和交换机，连接有线电脑、NAS 与无线 AP。&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;测试路径&lt;/th&gt;
+&lt;th&gt;先看什么&lt;/th&gt;
+&lt;th&gt;能帮助缩小哪一段范围&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;两台性能足够的有线主机，同交换机、同 VLAN&lt;/td&gt;
+&lt;td&gt;协商速率、吞吐、CPU、重传和端口错误&lt;/td&gt;
+&lt;td&gt;建立不经过 Wi-Fi、VPN 和公网的基准&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;换成待测线材、墙内链路或端口&lt;/td&gt;
+&lt;td&gt;换前后的相同测试结果、CRC/FCS 错误增量&lt;/td&gt;
+&lt;td&gt;比较网线、接头、面板和端口的影响&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;相同主机跨 VLAN&lt;/td&gt;
+&lt;td&gt;网关 CPU、转发吞吐、丢包&lt;/td&gt;
+&lt;td&gt;检查跨 VLAN 路由与策略处理能力&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;无线设备到同一有线测试服务器&lt;/td&gt;
+&lt;td&gt;信号、重试、信道占用、AP 上联速率&lt;/td&gt;
+&lt;td&gt;检查覆盖、干扰、终端无线能力和 AP 上联&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;有线设备访问公网&lt;/td&gt;
+&lt;td&gt;多个测试目标、上下行、延迟&lt;/td&gt;
+&lt;td&gt;进一步检查 WAN、拨号性能、运营商和远端路径&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;同一路径逐项开启 VPN、IDS/IPS、QoS&lt;/td&gt;
+&lt;td&gt;前后吞吐、CPU 和负载下延迟&lt;/td&gt;
+&lt;td&gt;找出新增处理带来的变化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;最后测试 NAS 文件复制&lt;/td&gt;
+&lt;td&gt;网络结果、磁盘、CPU、SMB 或应用状态&lt;/td&gt;
+&lt;td&gt;区分网络限制和存储、协议或服务限制&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;可以用 &lt;code&gt;iperf3&lt;/code&gt; 建立内网基准。下面只是在两台自己的测试主机上运行的示例，把 &lt;code&gt;SERVER_IP&lt;/code&gt; 替换为服务端地址：&lt;/p&gt;
+&lt;div class=&#34;code-block&#34;&gt;
+    &lt;div class=&#34;code-block__header&#34;&gt;&lt;span class=&#34;code-block__language&#34;&gt;Bash&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 服务端主机&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;iperf3 -s
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 客户端主机依次测试&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;iperf3 -c SERVER_IP -t &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;iperf3 -c SERVER_IP -t &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt; -R
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;iperf3 -c SERVER_IP -t &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt; -P &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;依次记录单流、反向和四条并发流的结果；&lt;code&gt;-R&lt;/code&gt; 是反方向发送，另外的 &lt;code&gt;--bidir&lt;/code&gt; 才是同时双向测试。多流更快只能说明单流还受其他因素限制，不能据此认定线材或链路完全没有问题。&lt;sup id=&#34;fnref:21&#34;&gt;&lt;a href=&#34;#fn:21&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;21&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;端口协商到 2.5GbE，也不代表持续传输就一定正常。测速时要看两端和交换机的错误计数增量，区分 CRC/FCS 错误与一般丢弃；后者也可能来自队列或处理能力。发现问题后，每轮只替换一根线、一个端口或一个测试端，保留可比较的结果。&lt;sup id=&#34;fnref:22&#34;&gt;&lt;a href=&#34;#fn:22&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;22&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;还要在上传和下载负载下同时观察延迟。测速数字很高，满载时视频会议仍然卡顿，可能和排队有关；可以比较到网关、内网服务器和多个公网目标的表现，再考虑 QoS 或 SQM。单个公网目标的 ICMP 丢包不足以证明自家链路有问题。Flent 的 RRUL 测试就是把吞吐和负载下延迟放在一起观察。&lt;sup id=&#34;fnref:23&#34;&gt;&lt;a href=&#34;#fn:23&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;23&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;h2 id=&#34;按这些要求筛设备和安排下一步&#34;&gt;按这些要求筛设备和安排下一步&lt;/h2&gt;
+&lt;p&gt;现在回头看，设备选型要问的不只是端口有没有万兆，还包括：正常连接能否记录、长期连接能否及时更新、日志可以保存多久、采集是否抽样、是否支持导出，以及开启实际要用的功能后还能达到什么吞吐。&lt;/p&gt;
+&lt;p&gt;以 UniFi 为例，2026 年 10 月查到的官方文档将 UCG Ultra 的 Traffic Flows 列为仅记录被阻止的连接；UCG Max、UCG Fiber 等才列出允许和阻止的连接记录，完整功能还受版本和存储条件影响。官方 IPFIX 导出注明是采样数据，活动日志导出也不等于全部会话日志都能实时导出。因此，要满足这篇笔记的需求，不能直接沿用旧文章的入门网关推荐。&lt;sup id=&#34;fnref1:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;主网关、网管交换机、AP、DNS 和日志采集服务可以分别承担职责。第一阶段先利用设备已有的统计和日志；发现明确盲区后，再考虑增加流量分析或 IDS 采集器。监控服务要限制访问，日志存储故障也不应拖垮主路由；如果采集器放在 NAS 上，NAS 自己故障时会丢失哪些记录，也要提前考虑。&lt;/p&gt;
+&lt;p&gt;接下来按下面的顺序推进：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;盘点现网。&lt;/strong&gt; 记下光猫、路由器、交换机、AP、NAS、网卡和线材，标出端口连接关系、协商速率、宽带上下行，以及远程接入可用的地址条件。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;建立基准。&lt;/strong&gt; 给设备补名称和地址对应关系，记录当前内网、Wi-Fi、公网和 NAS 的表现，收集正常时段的流量。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;先验证一组隔离。&lt;/strong&gt; 选一台 IoT 设备迁入独立 VLAN，检查不能访问的服务确实被限制、需要的控制与发现仍可用，再逐步迁移。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;逐类验证 VPN 和 DNS。&lt;/strong&gt; 从少量域名和设备开始，对照查询路径、业务出口、IPv6 以及故障回退行为。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;接通并试验告警。&lt;/strong&gt; 用受控的连接尝试、短时上传和测试账户登录失败，确认能收到包含设备与目标信息的通知；同时确认停止采集也能被发现。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;第一份需要补齐的材料，是家里现有设备和连线的拓扑图。有了这张图和有线基准，才能判断哪些能力现有设备就能补上，哪些确实需要购买或更换。&lt;/p&gt;
+&lt;h2 id=&#34;资料与相关笔记&#34;&gt;资料与相关笔记&lt;/h2&gt;
+&lt;p&gt;通用组网资料的核对日期为 2026 年 10 月 26 日，L2TP 联机步骤补充于 2026 年 10 月 27 日。具体产品的功能、日志范围和默认策略以实际安装版本为准。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.skk.moe/post/home-network-setup/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Sukka 的家庭网络组网方案&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://sona201.github.io/posts/macos-clash-vpn-split-dns/&#34; &gt;在 macOS 上让企业 VPN 与 Clash 共存&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://help.ui.com/hc/en-us/articles/32201256219799-Traffic-Flows-and-Traffic-Logging-in-UniFi-Network&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Ubiquiti：Traffic Flows 与日志记录&lt;/a&gt;，包括网关观察范围、型号限制、存储和导出方式。&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&amp;#160;&lt;a href=&#34;#fnref1:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://kb.synology.com/en-global/DSM/help/DSM/AdminCenter/file_winmacnfs_win&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Synology：SMB 服务与传输日志&lt;/a&gt;，用于核对群晖 NAS 的服务日志范围。&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:3&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://support.maxmind.com/knowledge-base/articles/maxmind-geolocation-accuracy&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;MaxMind：地理定位准确性&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:3&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:4&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.cisco.com/c/en/us/support/docs/switches/catalyst-6500-series-switches/10570-41.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Cisco：交换机端口镜像 SPAN&lt;/a&gt;，具体覆盖范围和限制仍需查实际交换机手册。&amp;#160;&lt;a href=&#34;#fnref:4&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:5&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://docs.kernel.org/networking/tuntap.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Linux：TUN/TAP 接口&lt;/a&gt;；&lt;a class=&#34;link&#34; href=&#34;https://wiki.nftables.org/wiki-nftables/index.php/Performing_Network_Address_Translation_%28NAT%29&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;nftables：DNAT 与 SNAT&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:5&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:6&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://docs.suricata.io/en/latest/configuration/suricata-yaml.html#encrypted-traffic&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Suricata：加密流量处理&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:6&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:7&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://support.microsoft.com/en-us/windows/deployment/updates-lifecycle/delivery-optimization-in-windows&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Microsoft：Windows 传递优化&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:7&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:8&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://help.ui.com/hc/en-us/articles/18965560820247-Implementing-Network-and-Client-Isolation-in-UniFi&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Ubiquiti：网络和客户端隔离&lt;/a&gt;；&lt;a class=&#34;link&#34; href=&#34;https://help.ui.com/hc/en-us/articles/115003173168-Zone-Based-Firewalls-in-UniFi&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Zone-Based Firewall&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:8&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&amp;#160;&lt;a href=&#34;#fnref1:8&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:9&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.rfc-editor.org/rfc/rfc4890.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;RFC 4890：ICMPv6 防火墙过滤建议&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:9&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:10&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://help.ui.com/hc/en-us/articles/12648701398807-UniFi-Gateway-Multicast-DNS-mDNS-Proxy&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Ubiquiti：mDNS Proxy&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:10&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:11&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://wiki.metacubex.one/config/dns/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Mihomo DNS 配置&lt;/a&gt;；&lt;a class=&#34;link&#34; href=&#34;https://wiki.metacubex.one/config/rules/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Mihomo 路由规则&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:11&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:12&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.synology.com/en-global/dsm/7.2/software_spec/vpn_server&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Synology：VPN Server 技术规格&lt;/a&gt;，用户和组的 VPN 接入权限与连接日志。&amp;#160;&lt;a href=&#34;#fnref:12&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:13&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://kb.synology.com/en-global/DSM/tutorial/What_network_ports_are_used_by_Synology_services&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Synology：服务使用的网络端口&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:13&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:14&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.netfilter.org/documentation/HOWTO/packet-filtering-HOWTO-6.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Netfilter：数据包的过滤路径&lt;/a&gt;，用于解释 INPUT 与 FORWARD 的分工，不构成对某个 DSM 版本的配置保证。&amp;#160;&lt;a href=&#34;#fnref:14&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:15&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.iptables.org/documentation/HOWTO/packet-filtering-HOWTO-7.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;iptables：接口匹配&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:15&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:16&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://kb.synology.com/en-global/DSM/tutorial/How_do_I_connect_to_Synology_VPN_Server_via_Windows_PC&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Synology：Windows 连接 VPN Server&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:16&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:17&#34;&gt;
+&lt;p&gt;Microsoft：&lt;a class=&#34;link&#34; href=&#34;https://learn.microsoft.com/en-us/powershell/module/vpnclient/set-vpnconnection&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Set-VpnConnection&lt;/a&gt;、&lt;a class=&#34;link&#34; href=&#34;https://learn.microsoft.com/en-us/powershell/module/vpnclient/add-vpnconnectionroute&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Add-VpnConnectionRoute&lt;/a&gt;、&lt;a class=&#34;link&#34; href=&#34;https://learn.microsoft.com/en-us/powershell/module/vpnclient/remove-vpnconnectionroute&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Remove-VpnConnectionRoute&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:17&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:18&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/configure-l2tp-ipsec-server-behind-nat-t-device&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Microsoft：NAT-T 后的 L2TP/IPsec 连接&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:18&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:19&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://h3hota.com/en/faq&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;HotA 项目 FAQ&lt;/a&gt;，第 35 项说明无大厅 LAN/TCP/IP 联机的 DirectPlay 依赖；兼容性仍按实际游戏版本验证。&amp;#160;&lt;a href=&#34;#fnref:19&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:20&#34;&gt;
+&lt;p&gt;Microsoft：&lt;a class=&#34;link&#34; href=&#34;https://learn.microsoft.com/en-us/powershell/module/netsecurity/new-netfirewallrule&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;New-NetFirewallRule&lt;/a&gt;、&lt;a class=&#34;link&#34; href=&#34;https://learn.microsoft.com/en-us/windows/security/operating-system-security/network-security/windows-firewall/rules&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Windows 防火墙规则优先关系&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:20&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:21&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://software.es.net/iperf/invoking.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;ESnet：iperf3 参数说明&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:21&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:22&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kernel.org/doc/html/v6.12/networking/statistics.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Linux：网络接口统计&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:22&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:23&#34;&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://flent.org/intro.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Flent：RRUL 与负载下延迟&lt;/a&gt;。&amp;#160;&lt;a href=&#34;#fnref:23&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+        </item>
+        <item>
         <title>在 macOS 上让企业 VPN 与 Clash 共存</title>
         <link>https://sona201.github.io/posts/macos-clash-vpn-split-dns/</link>
         <pubDate>Wed, 21 Oct 2026 00:00:00 +0800</pubDate>
