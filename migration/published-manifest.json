@@ -600,6 +600,10 @@
     {
       "source": "博客/tools/heroes3-mac-tinkering-notes.md",
       "target": "content/post/tools/heroes3-mac-tinkering-notes.md"
+    },
+    {
+      "source": "博客/tcp/home-network-monitoring-vlan-vpn-notes.md",
+      "target": "content/post/tcp/home-network-monitoring-vlan-vpn-notes.md"
     }
   ]
 }
