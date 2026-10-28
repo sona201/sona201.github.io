@@ -29,7 +29,7 @@ import site_checks
 
 BASE_URL = 'https://sona201.github.io/'
 STATE_TAG = 'pages-state'
-MAX_ARCHIVE = 512 * 1024 * 1024
+MAX_ARCHIVE = 1024 * 1024 * 1024
 TERMINAL = {'succeed', 'deployment_failed', 'deployment_content_failed', 'deployment_cancelled', 'deployment_lost'}
 
 
@@ -359,7 +359,7 @@ def wait_terminal(client, workflow_sha, *, cancel=False, timeout=120):
     while time.monotonic() < deadline:
         result = client.request(path)
         if result.get('status') in TERMINAL:
-            return
+            return result['status']
         if cancel and not cancellation_sent:
             client.request(path + '/cancel', 'POST')
             cancellation_sent = True
@@ -385,7 +385,12 @@ def quiesce(work, client, deployment_status='', deployment_outcome=''):
     if pending.get('id') != tx['id']:
         raise ReleaseError('Another transaction owns pending state')
     if deployment_outcome not in {'', 'skipped'} and deployment_status != 'succeed':
-        wait_terminal(client, tx['workflow_sha'], cancel=True)
+        status = wait_terminal(client, tx['workflow_sha'], cancel=True)
+        if status == 'succeed':
+            expected = (work / 'site' / snapshot.GENERATION_FILE).read_bytes()
+            observed = fetch_public(snapshot.GENERATION_FILE + '?snapshot=' + tx['id'])
+            if observed != expected:
+                raise ReleaseError('Deployment success may belong to an earlier run with the same SHA; pending state retained')
     output(recovery_needed=True)
 
 
