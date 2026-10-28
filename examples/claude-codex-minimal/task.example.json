@@ -1,0 +1,10 @@
+{
+  "id": "pagination-001",
+  "goal": "修复筛选后分页总数错误，保留现有响应字段。",
+  "context": "这是任务卡示例：执行前必须换成目标项目的真实文件、约束与验收命令。",
+  "allowed_paths": ["src/pagination.py", "tests/test_pagination.py"],
+  "constraints": ["不增加依赖", "不修改公共 API", "不提交、切换分支或推送代码"],
+  "acceptance": ["total 使用筛选后的数量", "覆盖空结果和最后一页", "现有分页行为不回归"],
+  "checks": ["python3 -m unittest discover -s tests -v"],
+  "handoff": "首次执行。补充上下文时只写与本任务有关的已确认事实。"
+}

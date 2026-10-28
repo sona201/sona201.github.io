@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/runner.py\" context --runs-dir \"${CLAUDE_PROJECT_DIR}/.runs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

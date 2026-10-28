@@ -1,0 +1,13 @@
+{
+  "codex_command": ["codex"],
+  "worker": {
+    "model": "gpt-6.1-sol",
+    "effort": "medium",
+    "timeout_seconds": 1800
+  },
+  "reviewer": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "timeout_seconds": 900
+  }
+}

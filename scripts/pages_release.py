@@ -31,6 +31,9 @@ BASE_URL = 'https://sona201.github.io/'
 STATE_TAG = 'pages-state'
 MAX_ARCHIVE = 1024 * 1024 * 1024
 TERMINAL = {'succeed', 'deployment_failed', 'deployment_content_failed', 'deployment_cancelled', 'deployment_lost'}
+BEGIN_STEP = 'Persist the pending deployment transaction'
+DEPLOY_STEPS = ('Deploy candidate through official GitHub Pages action',
+                'Restore the previous complete site through GitHub Pages')
 
 
 class ReleaseError(ValueError):
@@ -261,11 +264,7 @@ def prepare(args, client):
     if state.get('pending') and not recovering:
         raise ReleaseError('An interrupted transaction is pending. Run Blog rollback with deployment_commit=active.')
     if recovering and state.get('pending'):
-        pending = state['pending']
-        run = client.request('/actions/runs/' + str(pending['run_id']))
-        if run['status'] != 'completed':
-            raise ReleaseError('The interrupted workflow is still active')
-        wait_terminal(client, pending['workflow_sha'], cancel=True)
+        confirm_pending_deployment_stopped(client, state['pending'])
     base = state['active']
     download_snapshot(client, base, work / 'previous', work / 'download-previous')
     if not recovering:
@@ -365,6 +364,82 @@ def wait_terminal(client, workflow_sha, *, cancel=False, timeout=120):
             cancellation_sent = True
         time.sleep(5)
     raise ReleaseError('Could not confirm the Pages deployment terminated; pending state retained')
+
+
+def confirm_no_deployment_started(client, pending, run):
+    """Use the original attempt's explicit skipped steps, never a 404 alone."""
+    run_id = str(pending['run_id'])
+    attempt = str(pending.get('run_attempt', ''))
+    if (not re.fullmatch(r'[1-9][0-9]*', attempt)
+            or run.get('id') != int(run_id) or run.get('run_attempt') != int(attempt)):
+        raise ReleaseError('Cannot bind the interrupted transaction to the current run attempt')
+    jobs, seen, total = [], set(), None
+    # Read every page before deciding: a later page can contain another transaction.
+    for page in range(1, 11):
+        result = client.request(f'/actions/runs/{run_id}/attempts/{attempt}/jobs?per_page=100&page={page}')
+        count, batch = result.get('total_count'), result.get('jobs')
+        if (type(count) is not int or not 0 < count <= 1000
+                or not isinstance(batch, list) or not 0 < len(batch) <= 100
+                or (total is not None and total != count)):
+            raise ReleaseError('Incomplete or inconsistent interrupted-attempt jobs')
+        total = count
+        for job in batch:
+            if (not isinstance(job, dict) or type(job.get('id')) is not int
+                    or job['id'] in seen or job.get('run_id') != int(run_id)
+                    or ('run_attempt' in job and job['run_attempt'] != int(attempt))
+                    or job.get('status') != 'completed'):
+                raise ReleaseError('Interrupted-attempt jobs do not match the completed run')
+            seen.add(job['id'])
+            jobs.append(job)
+        if len(jobs) == total:
+            break
+        if len(jobs) > total or len(batch) != 100:
+            raise ReleaseError('Incomplete or inconsistent interrupted-attempt jobs')
+    else:
+        raise ReleaseError('Too many interrupted-attempt jobs to verify safely')
+    transactions = [job for job in jobs if job.get('name') in {'publish / transaction', 'rollback / transaction'}]
+    if len(transactions) != 1 or not isinstance(transactions[0].get('steps'), list):
+        raise ReleaseError('Cannot identify one interrupted Pages transaction job')
+    steps = transactions[0]['steps']
+    selected = []
+    for name in (BEGIN_STEP, *DEPLOY_STEPS):
+        matches = [step for step in steps if isinstance(step, dict) and step.get('name') == name]
+        if len(matches) != 1 or type(matches[0].get('number')) is not int:
+            raise ReleaseError('Missing or ambiguous Pages transaction step evidence')
+        selected.append(matches[0])
+    begin, deploy, restore = selected
+    if (not 0 < begin['number'] < deploy['number'] < restore['number']
+            or begin.get('status') != 'completed'
+            or begin.get('conclusion') not in {'success', 'failure', 'cancelled', 'timed_out'}
+            or any(step.get('status') != 'completed' or step.get('conclusion') != 'skipped'
+                   for step in (deploy, restore))):
+        raise ReleaseError('A Pages deployment may have started; pending state retained')
+    # Do not borrow skipped steps from a rerun, including a rerun begun during pagination.
+    current = client.request('/actions/runs/' + run_id)
+    if (current.get('id') != int(run_id) or current.get('run_attempt') != int(attempt)
+            or current.get('status') != 'completed'):
+        raise ReleaseError('The interrupted workflow changed while checking deployment evidence')
+
+
+def confirm_pending_deployment_stopped(client, pending):
+    run_id = str(pending.get('run_id', ''))
+    if not re.fullmatch(r'[1-9][0-9]*', run_id):
+        raise ReleaseError('Invalid interrupted workflow identity')
+    workflow_sha = publish_site.full_sha(pending['workflow_sha'])
+    run = client.request('/actions/runs/' + run_id)
+    if run.get('status') != 'completed':
+        raise ReleaseError('The interrupted workflow is still active')
+    try:
+        deployment = client.request('/pages/deployments/' + workflow_sha)
+    except HTTPError as error:
+        if error.code != 404:
+            raise
+        error.close()
+        confirm_no_deployment_started(client, pending, run)
+        return
+    if deployment.get('status') not in TERMINAL:
+        # A later lookup/cancellation failure is ambiguous, not proof of absence.
+        wait_terminal(client, workflow_sha, cancel=True)
 
 
 def quiesce(work, client, deployment_status='', deployment_outcome=''):

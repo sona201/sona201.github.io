@@ -1,5 +1,6 @@
 """Exercise release transactions without changing GitHub or the live site."""
 import copy
+import io
 import json
 from pathlib import Path
 import sys
@@ -7,6 +8,7 @@ import tempfile
 from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
+from urllib.error import HTTPError
 from urllib.request import Request
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -232,6 +234,192 @@ class ReleaseTransactionTests(unittest.TestCase):
         self.assertEqual(compose.call_args.kwargs["pr_number"], 7)
         self.assertIsNone(compose.call_args.kwargs["identity"])
         self.assertIsNone(compose.call_args.kwargs["site"])
+
+
+class InterruptedDeploymentRecoveryTests(unittest.TestCase):
+    def setUp(self):
+        self.pending = {'run_id': '321', 'run_attempt': '2', 'workflow_sha': 'c' * 40}
+        self.run = {'id': 321, 'run_attempt': 2, 'status': 'completed'}
+        self.job = {'id': 901, 'run_id': 321, 'run_attempt': 2, 'status': 'completed',
+                    'name': 'publish / transaction', 'head_sha': 'd' * 40, 'steps': [
+            {'name': 'Persist the pending deployment transaction', 'number': 10,
+             'status': 'completed', 'conclusion': 'cancelled'},
+            {'name': 'Deploy candidate through official GitHub Pages action', 'number': 11,
+             'status': 'completed', 'conclusion': 'skipped'},
+            {'name': 'Restore the previous complete site through GitHub Pages', 'number': 16,
+             'status': 'completed', 'conclusion': 'skipped'},
+        ]}
+        self.pages = {1: {'total_count': 1, 'jobs': [self.job]}}
+        self.deployment_error = 404
+        self.client = Mock()
+        self.client.request.side_effect = self.request
+
+    def request(self, path):
+        if path == '/actions/runs/321':
+            return copy.deepcopy(self.run)
+        if path == '/pages/deployments/' + 'c' * 40:
+            if self.deployment_error:
+                error = HTTPError('https://api.github.com' + path, self.deployment_error, 'Test response', {}, io.BytesIO())
+                self.addCleanup(error.close)
+                raise error
+            return {'status': 'succeed'}
+        prefix = '/actions/runs/321/attempts/2/jobs?per_page=100&page='
+        if path.startswith(prefix):
+            return copy.deepcopy(self.pages[int(path[len(prefix):])])
+        self.fail('Unexpected request: ' + path)
+
+    def recover(self):
+        releases.confirm_pending_deployment_stopped(self.client, self.pending)
+
+    def test_completed_attempt_with_both_deployments_skipped_can_recover(self):
+        self.recover()
+        self.assertEqual(self.client.request.call_count, 4)
+        self.assertIn('/attempts/2/jobs?', self.client.request.call_args_list[2].args[0])
+
+    def test_prepare_active_continues_after_proven_predeployment_interruption(self):
+        base = {'tag': 'pages-snapshot-base', 'release_id': 10, 'manifest_sha256': 'a' * 64}
+        state = {'schema_version': 1, 'active': base, 'pending': self.pending}
+        with tempfile.TemporaryDirectory() as temporary:
+            work = Path(temporary) / 'recovery'
+            args = SimpleNamespace(work=work, kind='rollback', target='active', site=None, context=None)
+            with patch.object(releases, 'load_state', return_value=({'id': 1}, state)), \
+                    patch.object(releases, 'download_snapshot') as download, \
+                    patch.object(releases, 'verify_tree') as verify, \
+                    patch.object(releases.snapshot, 'compose') as compose, \
+                    patch.object(releases, 'upload_snapshot', return_value=base), \
+                    patch.dict(releases.os.environ, {'GITHUB_RUN_ID': '456', 'GITHUB_RUN_ATTEMPT': '1',
+                                                    'GITHUB_SHA': 'e' * 40}):
+                releases.prepare(args, self.client)
+            download.assert_called_once()
+            verify.assert_not_called()
+            self.assertEqual(compose.call_args.kwargs['site'], work / 'previous')
+            self.assertEqual(json.loads((work / 'transaction.json').read_text())['recovering_pending'], self.pending)
+
+    def test_known_terminal_deployment_keeps_legacy_pending_compatible(self):
+        self.deployment_error = None
+        self.pending.pop('run_attempt')
+        self.recover()
+        self.assertEqual(self.client.request.call_count, 2)
+
+    def test_job_attempt_field_is_optional_on_the_attempt_specific_endpoint(self):
+        self.job.pop('run_attempt')
+        self.job['name'] = 'rollback / transaction'
+        self.recover()
+
+    def test_running_original_workflow_is_never_overridden(self):
+        self.run['status'] = 'in_progress'
+        with self.assertRaisesRegex(ValueError, 'still active'):
+            self.recover()
+        self.client.request.assert_called_once_with('/actions/runs/321')
+
+    def test_non_404_deployment_error_never_uses_skipped_step_fallback(self):
+        for code in (403, 500):
+            with self.subTest(code=code):
+                self.deployment_error = code
+                self.client.reset_mock()
+                with self.assertRaises(HTTPError):
+                    self.recover()
+                self.assertEqual(self.client.request.call_count, 2)
+
+    def test_404_during_quiescence_is_not_treated_as_no_deployment(self):
+        self.deployment_error = None
+        original = self.request
+        self.client.request.side_effect = lambda path: (
+            {'status': 'deployment_in_progress'} if path.startswith('/pages/deployments/') else original(path))
+        error = HTTPError('test', 404, 'Missing', {}, io.BytesIO())
+        self.addCleanup(error.close)
+        with patch.object(releases, 'wait_terminal', side_effect=error) as wait:
+            with self.assertRaises(HTTPError):
+                self.recover()
+        wait.assert_called_once_with(self.client, 'c' * 40, cancel=True)
+        self.assertEqual(self.client.request.call_count, 2)
+
+    def test_never_uses_another_run_or_attempt_as_absence_evidence(self):
+        for change in ({'id': 999}, {'run_attempt': 3}):
+            with self.subTest(change=change):
+                self.run.update(change)
+                with self.assertRaisesRegex(ValueError, 'Cannot bind'):
+                    self.recover()
+                self.run = {'id': 321, 'run_attempt': 2, 'status': 'completed'}
+        self.pending.pop('run_attempt')
+        with self.assertRaisesRegex(ValueError, 'Cannot bind'):
+            self.recover()
+
+    def test_executed_or_ambiguous_candidate_and_restore_steps_block_recovery(self):
+        for index in (1, 2):
+            for conclusion in ('success', 'failure', 'cancelled', 'timed_out', None):
+                with self.subTest(step=index, conclusion=conclusion):
+                    self.job['steps'][index]['conclusion'] = conclusion
+                    with self.assertRaisesRegex(ValueError, 'may have started'):
+                        self.recover()
+            self.job['steps'][index]['conclusion'] = 'skipped'
+            self.job['steps'][index]['status'] = 'queued'
+            with self.assertRaisesRegex(ValueError, 'may have started'):
+                self.recover()
+            self.job['steps'][index]['status'] = 'completed'
+
+    def test_missing_duplicate_or_reordered_steps_are_not_evidence(self):
+        original = copy.deepcopy(self.job['steps'])
+        variants = [original[:-1], original + [original[1]],
+                    [{**original[0], 'number': 12}, *original[1:]]]
+        for steps in variants:
+            with self.subTest(steps=steps):
+                self.job['steps'] = steps
+                with self.assertRaises(ValueError):
+                    self.recover()
+
+    def test_wrong_job_identity_or_incomplete_job_is_rejected(self):
+        original = copy.deepcopy(self.job)
+        for change in ({'run_id': 999}, {'run_attempt': 1}, {'status': 'in_progress'}, {'id': None}):
+            with self.subTest(change=change):
+                self.job.update(change)
+                with self.assertRaisesRegex(ValueError, 'do not match'):
+                    self.recover()
+                self.job.clear()
+                self.job.update(copy.deepcopy(original))
+
+    def paginated_jobs(self):
+        others = [{'id': number, 'run_id': 321, 'status': 'completed', 'name': 'other'}
+                  for number in range(100)]
+        self.pages = {1: {'total_count': 101, 'jobs': others},
+                      2: {'total_count': 101, 'jobs': [self.job]}}
+
+    def test_reads_later_job_pages_before_accepting_evidence(self):
+        self.paginated_jobs()
+        self.recover()
+        self.assertIn('/attempts/2/jobs?per_page=100&page=2', self.client.request.call_args_list[3].args[0])
+
+    def test_duplicate_transaction_on_later_page_blocks_recovery(self):
+        self.paginated_jobs()
+        self.pages[1]['jobs'][0] = {**self.job, 'id': 900}
+        with self.assertRaisesRegex(ValueError, 'one interrupted'):
+            self.recover()
+
+    def test_partial_changing_or_duplicate_pagination_blocks_recovery(self):
+        for case in ('partial', 'changing', 'duplicate', 'empty'):
+            with self.subTest(case=case):
+                self.paginated_jobs()
+                if case == 'partial':
+                    self.pages[1]['jobs'].pop()
+                elif case == 'changing':
+                    self.pages[2]['total_count'] = 102
+                elif case == 'duplicate':
+                    self.pages[2]['jobs'][0] = self.pages[1]['jobs'][0]
+                else:
+                    self.pages[2]['jobs'] = []
+                with self.assertRaises(ValueError):
+                    self.recover()
+
+    def test_rerun_started_during_evidence_check_blocks_recovery(self):
+        original = self.request
+        def request(path):
+            result = original(path)
+            if '/attempts/2/jobs?' in path:
+                self.run.update(run_attempt=3, status='in_progress')
+            return result
+        self.client.request.side_effect = request
+        with self.assertRaisesRegex(ValueError, 'changed while checking'):
+            self.recover()
 
 
 class RedirectAndDeploymentTests(unittest.TestCase):

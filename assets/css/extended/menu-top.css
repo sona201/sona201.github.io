@@ -1,0 +1,149 @@
+/* 将左侧侧边栏菜单改为顶部横向导航栏（适配 hugo-theme-stack） */
+
+/* 1) 主容器改为纵向排列：顶部为导航栏，下面是内容区 */
+.main-container {
+  flex-direction: column;
+}
+
+/* 2) 顶部导航条样式：占满宽度、置顶、背景与阴影、层级提高 */
+.left-sidebar.sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: var(--card-background);
+  box-shadow: var(--shadow-l2);
+  border-radius: 0;
+}
+
+/* 3) 隐藏左侧布局占位相关样式，移除可能的固定宽度 */
+.left-sidebar.sidebar.compact {
+  width: 100%;
+}
+
+/* 4) 站点信息（头像+标题）在顶部靠左展示，缩小头像尺寸，避免占位过大 */
+.left-sidebar.sidebar header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+}
+
+.left-sidebar.sidebar .site-avatar img.site-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.left-sidebar.sidebar .site-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.left-sidebar.sidebar .site-name {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.left-sidebar.sidebar .site-description {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* 5) 顶部导航菜单改为横向排列 */
+.left-sidebar.sidebar .menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  margin: 0 0 0 auto; /* 把菜单推到右侧 */
+  overflow: visible; /* 不要强制滚动条 */
+}
+
+.left-sidebar.sidebar .menu li {
+  padding: 0;
+}
+
+.left-sidebar.sidebar .menu a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--body-text-color);
+  padding: 8px 6px;
+  border-radius: 8px;
+}
+
+.left-sidebar.sidebar .menu li.current a {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+/* 6) 底部一排（语言切换/暗色切换）横向并入菜单尾部 */
+.left-sidebar.sidebar .menu .menu-bottom-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 8px;
+}
+
+/* 7) 顶部的社交链接做简化，靠左显示为图标行（可选） */
+.left-sidebar.sidebar .social-menu {
+  display: none; /* 如需显示，改为 flex 并调整位置 */
+}
+
+/* 8) 隐藏汉堡按钮（顶部横向导航不再需要） */
+#toggle-menu {
+  display: none;
+}
+
+/* 9) 内容区与顶部导航间距，避免贴边 */
+.main.full-width {
+  padding-top: 12px;
+}
+
+/* 10) 移动端微调：导航换行显示，头像更小 */
+@media (max-width: 768px) {
+  .left-sidebar.sidebar {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .left-sidebar.sidebar .site-avatar img.site-logo {
+    width: 32px;
+    height: 32px;
+  }
+  .left-sidebar.sidebar .menu {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-left: 0;
+  }
+}
+
+/* 11) 修正菜单滚动条行为 */
+.menu {
+  overflow-y: auto;
+}
+
+/* 12) 防止代码块横向溢出引起页面抖动（轻度优化） */
+.article-content .highlight {
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 100%;
+}
+
+
+
+
+
