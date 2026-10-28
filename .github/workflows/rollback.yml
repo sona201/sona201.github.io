@@ -4,48 +4,24 @@ on:
   workflow_dispatch:
     inputs:
       deployment_commit:
-        description: 'Full 40-character commit from sona201.github.io/master to restore'
+        description: 'Verified pages-snapshot-* tag, legacy master SHA, or active to recover an interrupted deployment'
         required: true
         type: string
 
 permissions:
-  contents: read
+  contents: write
+  actions: read
+  pull-requests: read
+  pages: write
+  id-token: write
 
 jobs:
   rollback:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    concurrency:
-      group: blog-pages-publish
-      queue: max
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: main
-          path: source
-          persist-credentials: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: '3.13'
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: sona201/sona201.github.io
-          ref: master
-          path: pages
-          fetch-depth: 0
-          token: ${{ secrets.PERSONAL_TOKEN }}
-      - name: Restore a historical static site as a new commit
-        env:
-          RESTORE_COMMIT: ${{ inputs.deployment_commit }}
-        run: |
-          python3 source/scripts/publish_site.py rollback --repo-dir pages --commit "$RESTORE_COMMIT" --output "$RUNNER_TEMP/deployment.json"
-          python3 source/scripts/recover_site.py --verify-only --repo-dir pages
-      - name: Rollback summary
-        if: always()
-        env:
-          VERIFY_RESULT: ${{ job.status }}
-        run: |
-          python3 source/scripts/deployment_summary.py --deployment "$RUNNER_TEMP/deployment.json" \
-            --url https://sona201.github.io/ --verification "$VERIFY_RESULT"
+    if: >-
+      github.repository == 'sona201/sona201.github.io' &&
+      github.ref == 'refs/heads/main' &&
+      vars.PAGES_DEPLOY_ENABLED == 'true'
+    uses: ./.github/workflows/pages-transaction.yml
+    with:
+      mode: rollback
+      target: ${{ inputs.deployment_commit }}
