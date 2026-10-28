@@ -1,0 +1,1 @@
+Temporary preview lifecycle validation. This unmerged change is used only to verify automatic cleanup after retargeting the PR.
