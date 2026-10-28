@@ -5,11 +5,14 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened, ready_for_review, labeled]
+    types: [opened, synchronize, reopened, ready_for_review, labeled, edited]
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  TZ: UTC
 
 concurrency:
   group: blog-checks-${{ github.event.pull_request.number || github.ref }}
@@ -51,6 +54,7 @@ jobs:
         run: |
           python3 -m unittest discover -s tests -v
           python3 -m unittest discover -s examples/magpie-agent-loop-demo -v
+          RUN_PROCESS_GROUP_TESTS=1 python3 -m unittest discover -s examples/claude-codex-minimal -p 'test_runner.py' -v
       - name: Validate workflow syntax with pinned actionlint
         run: |
           curl -fsSL https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz -o "$RUNNER_TEMP/actionlint.tar.gz"
@@ -62,6 +66,7 @@ jobs:
         run: |
           python3 scripts/sync_obsidian_blog.py --audit-public
           python3 scripts/check_public_manifest.py
+          python3 scripts/public_privacy.py check
       - name: Build and check static site
         env:
           BUILD_KIND: ${{ steps.build.outputs.kind }}
@@ -73,6 +78,7 @@ jobs:
           hugo --config "$config" --baseURL "$BUILD_URL" --cleanDestinationDir
           python3 scripts/site_checks.py stamp --site public --base-url "$BUILD_URL" \
             --source-sha "$BUILD_SHA" --run-id "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --kind "$BUILD_KIND"
+          python3 scripts/public_privacy.py check --site public
       - name: Save the exact verified site
         id: artifact
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

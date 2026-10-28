@@ -67,6 +67,88 @@ class PublicationAuthorityTests(unittest.TestCase):
         self.pr["state"] = "closed"
         self.assertEqual(context.resolve("pull_request_target", event, "owner/blog", self.get)["action"], "cleanup")
 
+    def test_retargeted_preview_is_cleaned_on_edit_close_and_unlabel(self):
+        self.pr["base"]["ref"] = "maintenance"
+        for action in ("edited", "closed", "unlabeled"):
+            with self.subTest(action=action):
+                event = {"action": action, "pull_request": {"number": 42}}
+                self.assertEqual(context.resolve("pull_request_target", event, "owner/blog", self.get),
+                                 {"action": "cleanup", "pr_number": "42"})
+
+    def test_edited_valid_preview_is_not_removed_and_fork_cannot_request_cleanup(self):
+        event = {"action": "edited", "pull_request": {"number": 42}}
+        self.assertEqual(context.resolve("pull_request_target", event, "owner/blog", self.get), {"action": "skip"})
+        self.pr["base"]["ref"] = "maintenance"
+        self.pr["head"]["repo"]["full_name"] = "stranger/blog"
+        self.assertEqual(context.resolve("pull_request_target", event, "owner/blog", self.get), {"action": "skip"})
+
+    def test_cleanup_uses_current_api_labels_and_base_instead_of_stale_event(self):
+        event = {"action": "unlabeled", "label": {"name": "preview"}, "pull_request": {"number": 42}}
+        self.assertEqual(context.resolve("pull_request_target", event, "owner/blog", self.get), {"action": "skip"})
+        self.pr["labels"] = []
+        self.assertEqual(context.resolve("pull_request_target", event, "owner/blog", self.get),
+                         {"action": "cleanup", "pr_number": "42"})
+
+    def test_unhandled_target_event_cannot_trigger_cleanup(self):
+        self.pr["state"] = "closed"
+        event = {"action": "opened", "pull_request": {"number": 42}}
+        self.assertEqual(context.resolve("pull_request_target", event, "owner/blog", self.get), {"action": "skip"})
+
+    def test_retargeted_pr_is_never_published_from_an_old_successful_build(self):
+        self.pr["base"]["ref"] = "maintenance"
+        self.assertEqual(self.resolve(), {"action": "skip"})
+
+    def test_main_dispatch_rechecks_retargeted_closed_and_revoked_preview(self):
+        original = copy.deepcopy(self.pr)
+        for state in ("retargeted", "closed", "revoked"):
+            self.pr = copy.deepcopy(original)
+            if state == "retargeted": self.pr["base"]["ref"] = "maintenance"
+            if state == "closed": self.pr["state"] = "closed"
+            if state == "revoked": self.pr["labels"] = []
+            for ref in ("main", "refs/heads/main"):
+                with self.subTest(state=state, ref=ref):
+                    event = {"ref": ref, "inputs": {"cleanup_pr": "42"}}
+                    result = context.resolve("workflow_dispatch", event, "owner/blog", self.get,
+                                             workflow_ref="refs/heads/main")
+                    self.assertEqual(result, {"action": "cleanup", "pr_number": "42"})
+
+    def test_dispatch_cannot_bypass_current_preview_authority_or_fork_limit(self):
+        event = {"ref": "main", "inputs": {"cleanup_pr": "42"}}
+        self.assertEqual(context.resolve("workflow_dispatch", event, "owner/blog", self.get,
+                                         workflow_ref="refs/heads/main"), {"action": "skip"})
+        self.pr["state"] = "closed"
+        self.pr["head"]["repo"]["full_name"] = "stranger/blog"
+        self.assertEqual(context.resolve("workflow_dispatch", event, "owner/blog", self.get,
+                                         workflow_ref="refs/heads/main"), {"action": "skip"})
+
+    def test_dispatch_requires_main_runtime_ref_and_positive_pr_input(self):
+        def forbidden_get(path):
+            self.fail("Invalid dispatch must not fetch a PR: " + path)
+        for event_ref, runtime_ref, number in (
+                ("feature", "refs/heads/main", "42"),
+                ("main", "refs/heads/feature", "42"),
+                ("main", None, "42"),
+                ("main", "refs/heads/main", ""),
+                ("main", "refs/heads/main", "0"),
+                ("main", "refs/heads/main", "-1"),
+                ("main", "refs/heads/main", "42/../1"),
+                ("main", "refs/heads/main", 42)):
+            with self.subTest(event_ref=event_ref, runtime_ref=runtime_ref, number=number):
+                event = {"ref": event_ref, "inputs": {"cleanup_pr": number}}
+                self.assertEqual(context.resolve("workflow_dispatch", event, "owner/blog", forbidden_get,
+                                                 workflow_ref=runtime_ref), {"action": "skip"})
+
+    def test_incomplete_api_response_cannot_authorize_cleanup(self):
+        original = copy.deepcopy(self.pr)
+        event = {"ref": "main", "inputs": {"cleanup_pr": "42"}}
+        for field in ("state", "base", "labels"):
+            with self.subTest(field=field):
+                self.pr = copy.deepcopy(original)
+                del self.pr[field]
+                with self.assertRaisesRegex(ValueError, "Incomplete PR state"):
+                    context.resolve("workflow_dispatch", event, "owner/blog", self.get,
+                                    workflow_ref="refs/heads/main")
+
 
 class ArtifactExtractionTests(unittest.TestCase):
     def test_valid_archive_and_rejection_of_traversal_links_and_control_files(self):

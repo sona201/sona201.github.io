@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       deployment_commit:
-        description: 'Verified pages-snapshot-* tag, legacy master SHA, or active to recover an interrupted deployment'
+        description: 'Privacy-approved pages-snapshot-* tag, or active to recover an interrupted deployment'
         required: true
         type: string
 

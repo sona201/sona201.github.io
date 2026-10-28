@@ -166,18 +166,19 @@ python3 -m unittest discover -s . -p 'test_runner.py' -v
 
 测试用临时 Git 仓库和假的 Codex 进程验证编排逻辑，不调用任何模型、不消耗模型额度。它们不能证明真实模型可用，也不能代替 Claude Code 后台通知的现场联调。
 
-交付时运行 10 项测试：**9 项通过，1 项跳过**。通过项包括成功交接、审核发现问题、异常/缺失 JSON、脏工作区、重复目录、HEAD 变化、隐藏暂存改动、审核中代码变化，以及重复取消的模拟信号顺序；成功用例还验证 `verify` 能识别后续代码变化。真实超时/子进程终止测试需要允许进程组信号的环境，本次未完成该项实测。可在满足条件的普通终端显式运行：
+默认运行 10 项测试，其中真实进程组终止测试按环境要求跳过。其余测试覆盖成功交接、审核发现问题、异常/缺失 JSON、脏工作区、重复目录、HEAD 变化、隐藏暂存改动、审核中代码变化，以及重复取消的模拟信号顺序；成功用例还验证 `verify` 能识别后续代码变化。真实超时/子进程终止测试需要允许进程组信号的环境，可在满足条件的普通终端显式运行：
 
 ```bash
 RUN_PROCESS_GROUP_TESTS=1 python3 -m unittest discover -s . -p 'test_runner.py' -v
 ```
 
-模拟信号测试不等于真实进程终止已验证。交付前检查进程列表，未发现本次模拟 CLI 的残留进程。
+模拟信号测试不等于真实进程终止已验证。如果显式测试返回 `Operation not permitted`，说明当前环境不允许完成进程组信号检查，不能把这项记为通过；应在允许该操作的环境复测，并确认测试子进程已结束。
 
-本次环境检查中，`claude 2.1.283` 可以启动；PATH 中的 `codex` 报错：
+使用前检查当前机器上的 CLI，不依赖本文记录的历史安装状态：
 
-```text
-Error: Missing optional dependency @openai/codex-darwin-x64
+```bash
+claude --version
+python3 runner.py doctor --config config.local.json
 ```
 
-没有修改全局安装。因此真实 Codex 调用、账户对 `gpt-6.1-sol` 的访问权限，以及 Claude → Codex → review → 通知的完整链路尚未实测。先修复或指定可用的 Codex CLI，使 `doctor` 通过，再用一个小而可验证的真实任务做首轮联调。
+`doctor` 成功只证明配置中的 Codex CLI 能启动。若启动失败，检查 PATH 或在本地配置中指定可用的 `codex_command`；无需为此覆盖全局设置。真实模型调用、账户对所选模型的访问权限，以及 Claude → Codex → review → 通知的完整链路仍需单独验证。先让 `doctor` 通过，再用一个小而可验证的真实任务做首轮联调。

@@ -1,9 +1,11 @@
 """Exercise release transactions without changing GitHub or the live site."""
 import copy
+import hashlib
 import io
 import json
 from pathlib import Path
 import sys
+import shutil
 import tempfile
 from types import SimpleNamespace
 import unittest
@@ -226,6 +228,7 @@ class ReleaseTransactionTests(unittest.TestCase):
                 patch.object(releases, "download_snapshot"), \
                 patch.object(releases, "verify_tree"), \
                 patch.object(releases.snapshot, "compose") as compose, \
+                patch.object(releases, "reconcile_previews", return_value=[9]), \
                 patch.object(releases, "upload_snapshot", return_value=self.candidate), \
                 patch.dict(releases.os.environ, {"GITHUB_RUN_ID": "321", "GITHUB_RUN_ATTEMPT": "2",
                                                 "GITHUB_SHA": "c" * 40}):
@@ -234,6 +237,10 @@ class ReleaseTransactionTests(unittest.TestCase):
         self.assertEqual(compose.call_args.kwargs["pr_number"], 7)
         self.assertIsNone(compose.call_args.kwargs["identity"])
         self.assertIsNone(compose.call_args.kwargs["site"])
+        self.assertEqual(json.loads((args.work / 'transaction.json').read_text())['removed_previews'], [9])
+        with patch.dict(releases.os.environ, {'GITHUB_STEP_SUMMARY': str(self.work / 'summary.md')}), patch('builtins.print'):
+            releases.summary(args.work)
+        self.assertIn('pr-9', (self.work / 'summary.md').read_text())
 
 
 class InterruptedDeploymentRecoveryTests(unittest.TestCase):
@@ -250,6 +257,8 @@ class InterruptedDeploymentRecoveryTests(unittest.TestCase):
              'status': 'completed', 'conclusion': 'skipped'},
         ]}
         self.pages = {1: {'total_count': 1, 'jobs': [self.job]}}
+        self.attempts = {2: {'id': 321, 'run_attempt': 2, 'status': 'completed'}}
+        self.later_pages = {}
         self.deployment_error = 404
         self.client = Mock()
         self.client.request.side_effect = self.request
@@ -263,9 +272,14 @@ class InterruptedDeploymentRecoveryTests(unittest.TestCase):
                 self.addCleanup(error.close)
                 raise error
             return {'status': 'succeed'}
-        prefix = '/actions/runs/321/attempts/2/jobs?per_page=100&page='
+        prefix = '/actions/runs/321/attempts/'
         if path.startswith(prefix):
-            return copy.deepcopy(self.pages[int(path[len(prefix):])])
+            rest = path[len(prefix):]
+            if '/' not in rest:
+                return copy.deepcopy(self.attempts[int(rest)])
+            attempt, page = rest.split('/jobs?per_page=100&page=')
+            pages = self.pages if int(attempt) == 2 else self.later_pages[int(attempt)]
+            return copy.deepcopy(pages[int(page)])
         self.fail('Unexpected request: ' + path)
 
     def recover(self):
@@ -273,8 +287,8 @@ class InterruptedDeploymentRecoveryTests(unittest.TestCase):
 
     def test_completed_attempt_with_both_deployments_skipped_can_recover(self):
         self.recover()
-        self.assertEqual(self.client.request.call_count, 4)
-        self.assertIn('/attempts/2/jobs?', self.client.request.call_args_list[2].args[0])
+        self.assertEqual(self.client.request.call_count, 5)
+        self.assertIn('/attempts/2/jobs?', self.client.request.call_args_list[3].args[0])
 
     def test_prepare_active_continues_after_proven_predeployment_interruption(self):
         base = {'tag': 'pages-snapshot-base', 'release_id': 10, 'manifest_sha256': 'a' * 64}
@@ -286,6 +300,7 @@ class InterruptedDeploymentRecoveryTests(unittest.TestCase):
                     patch.object(releases, 'download_snapshot') as download, \
                     patch.object(releases, 'verify_tree') as verify, \
                     patch.object(releases.snapshot, 'compose') as compose, \
+                    patch.object(releases, 'reconcile_previews', return_value=[]), \
                     patch.object(releases, 'upload_snapshot', return_value=base), \
                     patch.dict(releases.os.environ, {'GITHUB_RUN_ID': '456', 'GITHUB_RUN_ATTEMPT': '1',
                                                     'GITHUB_SHA': 'e' * 40}):
@@ -335,7 +350,7 @@ class InterruptedDeploymentRecoveryTests(unittest.TestCase):
         self.assertEqual(self.client.request.call_count, 2)
 
     def test_never_uses_another_run_or_attempt_as_absence_evidence(self):
-        for change in ({'id': 999}, {'run_attempt': 3}):
+        for change in ({'id': 999}, {'run_attempt': 1}):
             with self.subTest(change=change):
                 self.run.update(change)
                 with self.assertRaisesRegex(ValueError, 'Cannot bind'):
@@ -387,7 +402,7 @@ class InterruptedDeploymentRecoveryTests(unittest.TestCase):
     def test_reads_later_job_pages_before_accepting_evidence(self):
         self.paginated_jobs()
         self.recover()
-        self.assertIn('/attempts/2/jobs?per_page=100&page=2', self.client.request.call_args_list[3].args[0])
+        self.assertIn('/attempts/2/jobs?per_page=100&page=2', self.client.request.call_args_list[4].args[0])
 
     def test_duplicate_transaction_on_later_page_blocks_recovery(self):
         self.paginated_jobs()
@@ -420,6 +435,218 @@ class InterruptedDeploymentRecoveryTests(unittest.TestCase):
         self.client.request.side_effect = request
         with self.assertRaisesRegex(ValueError, 'changed while checking'):
             self.recover()
+
+    def add_blocked_rerun(self, attempt):
+        self.run['run_attempt'] = attempt
+        self.attempts[attempt] = {'id': 321, 'run_attempt': attempt, 'status': 'completed'}
+        job = copy.deepcopy(self.job)
+        job.update(id=900 + attempt, run_attempt=attempt)
+        job['steps'][0]['conclusion'] = 'skipped'
+        job['steps'].insert(0, {'name': 'Prepare a complete immutable site snapshot', 'number': 7,
+                                'status': 'completed', 'conclusion': 'failure'})
+        self.later_pages[attempt] = {1: {'total_count': 1, 'jobs': [job]}}
+        return job
+
+    def test_completed_reruns_blocked_in_prepare_do_not_prevent_recovery(self):
+        self.add_blocked_rerun(3)
+        self.add_blocked_rerun(4)
+        self.recover()
+        for attempt in (2, 3, 4):
+            self.assertIn(unittest.mock.call(f'/actions/runs/321/attempts/{attempt}'),
+                          self.client.request.call_args_list)
+
+    def test_any_later_attempt_that_deployed_blocks_recovery(self):
+        for index in (2, 3):
+            with self.subTest(index=index):
+                job = self.add_blocked_rerun(3)
+                job['steps'][index]['conclusion'] = 'failure'
+                with self.assertRaisesRegex(ValueError, 'may have started'):
+                    self.recover()
+
+    def test_skipped_begin_without_failed_prepare_is_not_evidence(self):
+        job = self.add_blocked_rerun(3)
+        job['steps'][0]['conclusion'] = 'skipped'
+        with self.assertRaisesRegex(ValueError, 'stopped before'):
+            self.recover()
+
+    def test_original_attempt_cannot_claim_a_skipped_begin(self):
+        self.job['steps'][0]['conclusion'] = 'skipped'
+        with self.assertRaisesRegex(ValueError, 'may have started'):
+            self.recover()
+
+    def test_each_attempt_metadata_must_match_and_be_completed(self):
+        for change in ({'id': 999}, {'run_attempt': 3}, {'status': 'in_progress'}):
+            with self.subTest(change=change):
+                self.attempts[2] = {'id': 321, 'run_attempt': 2, 'status': 'completed', **change}
+                with self.assertRaisesRegex(ValueError, 'completed interrupted'):
+                    self.recover()
+
+
+class PreviewReconciliationTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.previous = self.root / 'previous'
+        self.previous.mkdir()
+        self.component(self.previous)
+        (self.previous / 'deployment-info.json').write_text(json.dumps({
+            'schema_version': 1, 'snapshot_id': 'pages-snapshot-test'}))
+        for number in (7, 8):
+            self.component(self.previous / 'previews' / f'pr-{number}', number)
+        self.site = self.root / 'candidate'
+        shutil.copytree(self.previous, self.site)
+        self.client = Mock(repo='owner/site')
+        self.prs = {number: {'number': number, 'state': 'open', 'base': {'ref': 'main'},
+            'head': {'sha': 'b' * 40, 'repo': {'full_name': 'owner/site'}},
+            'labels': [{'name': 'preview'}]} for number in (7, 8)}
+        self.client.request.side_effect = lambda path: self.prs[int(path.rsplit('/', 1)[-1])]
+        self.previous_files = self.files(self.previous)
+
+    def files(self, root):
+        return {path.relative_to(root).as_posix(): path.read_bytes() for path in root.rglob('*') if path.is_file()}
+
+    def component(self, root, number=None):
+        root.mkdir(parents=True, exist_ok=True)
+        (root / 'index.html').write_text('reviewed public content')
+        (root / 'build-info.json').write_text(json.dumps({
+            'schema_version': 1, 'source_sha': 'a' * 40, 'run_id': '1-1',
+            'kind': 'production' if number is None else 'preview',
+            'base_url': 'https://example.invalid/' + (f'previews/pr-{number}/' if number else '')}))
+        (root / 'site-manifest.json').write_text(json.dumps({'schema_version': 1, 'files': {
+            name: hashlib.sha256(body).hexdigest() for name, body in self.files(root).items()}}))
+
+    def test_authorized_preview_is_retained_even_if_pr_head_changed(self):
+        self.assertEqual(releases.reconcile_previews(self.site, self.client), [])
+        self.assertEqual(self.files(self.site), self.previous_files)
+
+    def test_retired_preview_is_removed_only_from_candidate(self):
+        for reason in ('closed', 'retargeted', 'unlabeled', 'other_repo', 'deleted_repo'):
+            with self.subTest(reason=reason):
+                shutil.rmtree(self.site)
+                shutil.copytree(self.previous, self.site)
+                pr = copy.deepcopy(self.prs[8])
+                pr['number'] = 7
+                if reason == 'closed':
+                    pr['state'] = 'closed'
+                elif reason == 'retargeted':
+                    pr['base']['ref'] = 'maintenance'
+                elif reason == 'unlabeled':
+                    pr['labels'] = []
+                elif reason == 'other_repo':
+                    pr['head']['repo']['full_name'] = 'other/site'
+                else:
+                    pr['head']['repo'] = None
+                self.prs[7] = pr
+                self.assertEqual(releases.reconcile_previews(self.site, self.client), [7])
+                self.assertFalse((self.site / 'previews/pr-7').exists())
+                self.assertTrue((self.site / 'previews/pr-8').exists())
+                self.assertEqual(self.files(self.previous), self.previous_files)
+                self.assertEqual(set(releases.snapshot.validate(self.site)['previews']), {'8'})
+
+    def test_api_404_does_not_delete_a_preview_or_partially_change_candidate(self):
+        self.prs[7]['state'] = 'closed'
+        error = HTTPError('test', 404, 'not found', {}, io.BytesIO())
+        self.addCleanup(error.close)
+        self.client.request.side_effect = [self.prs[7], error]
+        with self.assertRaises(HTTPError):
+            releases.reconcile_previews(self.site, self.client)
+        self.assertEqual(self.files(self.site), self.previous_files)
+        self.assertEqual(self.files(self.previous), self.previous_files)
+
+    def test_missing_or_inconsistent_authority_does_not_authorize_deletion(self):
+        original = copy.deepcopy(self.prs[7])
+        for change in ({'number': 9}, {'state': 'unknown'}, {'base': {}}, {'head': {}},
+                       {'labels': None}, {'labels': [{}]}, {'head': {'repo': {}}}):
+            with self.subTest(change=change):
+                self.prs[7] = {**original, **change}
+                with self.assertRaises(ValueError):
+                    releases.reconcile_previews(self.site, self.client)
+                self.assertEqual(self.files(self.site), self.previous_files)
+
+    def test_invalid_snapshot_is_rejected_before_any_authority_lookup(self):
+        (self.site / 'previews/pr-7/index.html').write_text('unexpected change')
+        with self.assertRaises(ValueError):
+            releases.reconcile_previews(self.site, self.client)
+        self.client.request.assert_not_called()
+
+
+class PrivacyRollbackPolicyTests(unittest.TestCase):
+    def setUp(self):
+        self.policy = releases.privacy_policy()
+        self.baseline = {**self.policy['reviewed_baselines'][0], 'release_id': 10}
+        self.future = {'tag': 'pages-snapshot-900-1', 'release_id': 11,
+                       'manifest_sha256': 'b' * 64,
+                       'privacy_policy_version': self.policy['policy_version'],
+                       'privacy_gate_passed': True}
+
+    def test_exact_reviewed_baseline_is_allowed_without_relying_on_source_history(self):
+        self.assertEqual(releases.require_safe_snapshot(self.baseline), self.baseline)
+        for change in ({'tag': 'pages-snapshot-other'}, {'manifest_sha256': 'f' * 64}):
+            with self.subTest(change=change), self.assertRaisesRegex(ValueError, 'privacy policy'):
+                releases.require_safe_snapshot({**self.baseline, **change})
+
+    def test_future_snapshot_requires_current_policy_and_successful_gate(self):
+        self.assertEqual(releases.require_safe_snapshot(self.future), self.future)
+        for change in ({'privacy_policy_version': 'old'}, {'privacy_gate_passed': False},
+                       {'privacy_gate_passed': 'true'}, {'privacy_policy_version': None}):
+            with self.subTest(change=change), self.assertRaisesRegex(ValueError, 'privacy policy'):
+                releases.require_safe_snapshot({**self.future, **change})
+
+    def test_verified_alone_does_not_authorize_a_historical_rollback(self):
+        client = Mock()
+        client.request.return_value = {'id': 10, 'body': json.dumps({
+            'verified': True, 'manifest_sha256': 'a' * 64})}
+        with self.assertRaisesRegex(ValueError, 'privacy policy'):
+            releases.pointer_for_tag(client, 'pages-snapshot-old')
+
+    def test_release_body_cannot_spoof_the_reviewed_baseline_tag(self):
+        client = Mock()
+        client.request.return_value = {'id': 10, 'body': json.dumps({**self.baseline, 'verified': True})}
+        with self.assertRaisesRegex(ValueError, 'privacy policy'):
+            releases.pointer_for_tag(client, 'pages-snapshot-old')
+
+    def test_unsafe_baseline_is_rejected_before_download(self):
+        client = Mock()
+        with self.assertRaisesRegex(ValueError, 'privacy policy'):
+            releases.download_snapshot(client, {'tag': 'pages-snapshot-old', 'release_id': 10,
+                                               'manifest_sha256': 'a' * 64}, Path('unused'), Path('unused'))
+        client.request.assert_not_called()
+
+    def test_legacy_sha_is_rejected_before_any_state_or_filesystem_change(self):
+        client = Mock()
+        with tempfile.TemporaryDirectory() as temporary:
+            work = Path(temporary) / 'unused'
+            args = SimpleNamespace(kind='rollback', target='c' * 40, work=work)
+            with self.assertRaisesRegex(ValueError, 'Legacy SHA'):
+                releases.prepare(args, client)
+            self.assertFalse(work.exists())
+        client.request.assert_not_called()
+
+    def test_failed_gate_never_creates_a_release(self):
+        client = Mock()
+        with tempfile.TemporaryDirectory() as temporary, \
+                patch.object(releases, 'run_privacy_gate', side_effect=ValueError('rejected')), \
+                patch.object(releases.snapshot, 'make_archive') as archive:
+            with self.assertRaisesRegex(ValueError, 'rejected'):
+                releases.upload_snapshot(client, Path(temporary), Path(temporary), 'pages-snapshot-900-1')
+        archive.assert_not_called()
+        client.request.assert_not_called()
+
+    def test_successful_trusted_gate_attests_the_new_release(self):
+        client = Mock()
+        client.request.side_effect = [{'commit': {'sha': 'c' * 40}}, {'id': 11}]
+        def archive(site, zip_path, manifest_path, **kwargs):
+            zip_path.write_bytes(b'test archive')
+            manifest_path.write_text('{}')
+        with tempfile.TemporaryDirectory() as temporary, \
+                patch.object(releases, 'run_privacy_gate') as gate, \
+                patch.object(releases.snapshot, 'make_archive', side_effect=archive):
+            pointer = releases.upload_snapshot(client, Path(temporary), Path(temporary), 'pages-snapshot-900-1')
+        gate.assert_called_once()
+        self.assertTrue(pointer['privacy_gate_passed'])
+        self.assertEqual(pointer['privacy_policy_version'], self.policy['policy_version'])
+        self.assertTrue(json.loads(client.request.call_args.args[2]['body'])['privacy_gate_passed'])
 
 
 class RedirectAndDeploymentTests(unittest.TestCase):

@@ -238,6 +238,47 @@ class PublicExportTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Configure the vault once"):
             sync.configured_vault(self.blog)
 
+    def test_require_clean_distinguishes_changes_without_writing_or_changing_default(self):
+        import contextlib
+        import io
+        entry = self.entry()
+        self.mappings([entry])
+        self.put(self.vault, entry["source"], "---\ndraft: false\n---\nPublic\n")
+        args = ["--blog", str(self.blog), "--vault", str(self.vault), "--manifest", str(self.manifest)]
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(sync.main(args + ["--check"]), 0)
+            self.assertEqual(sync.main(args + ["--check", "--require-clean"]), 2)
+            self.assertEqual(sync.main(args + ["--require-clean"]), 2)
+            self.assertFalse((self.blog / entry["target"]).exists())
+            self.assertEqual(sync.main(args + ["--apply"]), 0)
+            self.assertEqual(sync.main(args + ["--check", "--require-clean"]), 0)
+
+    def test_require_clean_also_detects_missing_referenced_images(self):
+        import contextlib
+        import io
+        entry = self.entry()
+        self.mappings([entry])
+        self.put(self.vault, entry["source"], "---\ndraft: false\n---\n![图](../../附件/博客/images/one.png)\n")
+        self.put(self.vault, "附件/博客/images/one.png", "image")
+        _, notes, _ = self.plan()
+        for target, data in notes:
+            sync.atomic_write(target, data)
+        args = ["--blog", str(self.blog), "--vault", str(self.vault), "--manifest", str(self.manifest), "--require-clean"]
+        with contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(sync.main(args), 2)
+        report = json.loads(output.getvalue())
+        self.assertEqual(report["summary"]["article_changes"], 0)
+        self.assertEqual(report["summary"]["new_images"], 1)
+        self.assertFalse((self.blog / "static/images/one.png").exists())
+
+    def test_require_clean_rejects_mutating_and_audit_modes(self):
+        import contextlib
+        import io
+        for mode in (["--apply"], ["--audit-public"], ["--set-vault", str(self.vault)]):
+            with self.subTest(mode=mode), contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as error:
+                sync.main(["--require-clean", *mode])
+            self.assertEqual(error.exception.code, 2)
+
 
 if __name__ == "__main__":
     unittest.main()

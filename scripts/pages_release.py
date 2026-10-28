@@ -34,6 +34,7 @@ TERMINAL = {'succeed', 'deployment_failed', 'deployment_content_failed', 'deploy
 BEGIN_STEP = 'Persist the pending deployment transaction'
 DEPLOY_STEPS = ('Deploy candidate through official GitHub Pages action',
                 'Restore the previous complete site through GitHub Pages')
+PRIVACY_POLICY = Path(__file__).resolve().parents[1] / 'config/pages-privacy-policy.json'
 
 
 class ReleaseError(ValueError):
@@ -126,6 +127,41 @@ def check_pointer(pointer):
     return pointer
 
 
+def privacy_policy():
+    policy = read_json(PRIVACY_POLICY)
+    if (policy.get('schema_version') != 1
+            or not isinstance(policy.get('policy_version'), str) or not policy['policy_version']
+            or not isinstance(policy.get('reviewed_baselines'), list)):
+        raise ReleaseError('Invalid Pages privacy policy')
+    for baseline in policy['reviewed_baselines']:
+        if (not isinstance(baseline, dict)
+                or not re.fullmatch(r'pages-snapshot-[A-Za-z0-9-]+', baseline.get('tag', ''))
+                or not re.fullmatch(r'[0-9a-f]{64}', baseline.get('manifest_sha256', ''))):
+            raise ReleaseError('Invalid reviewed privacy baseline')
+    return policy
+
+
+def require_safe_snapshot(pointer):
+    check_pointer(pointer)
+    policy = privacy_policy()
+    if any(pointer['tag'] == baseline['tag'] and pointer['manifest_sha256'] == baseline['manifest_sha256']
+           for baseline in policy['reviewed_baselines']):
+        return pointer
+    if (pointer.get('privacy_policy_version') != policy['policy_version']
+            or pointer.get('privacy_gate_passed') is not True):
+        raise ReleaseError('Snapshot is outside the reviewed privacy policy; rollback is blocked')
+    return pointer
+
+
+def run_privacy_gate(site):
+    # Execute the trusted checkout's scanner, never code or attestations from a build.
+    try:
+        subprocess.run([sys.executable, str(Path(__file__).with_name('public_privacy.py')),
+                        'check', '--site', str(site)], check=True)
+    except subprocess.CalledProcessError as error:
+        raise ReleaseError('The trusted public privacy gate rejected the snapshot') from error
+
+
 def load_state(client):
     release = client.request('/releases/tags/' + STATE_TAG)
     state = json.loads(release['body'])
@@ -142,7 +178,7 @@ def write_state(client, release, state):
 
 
 def download_snapshot(client, pointer, destination, downloads):
-    check_pointer(pointer)
+    require_safe_snapshot(pointer)
     release = client.request('/releases/' + str(pointer['release_id']))
     if release['tag_name'] != pointer['tag']:
         raise ReleaseError('Snapshot tag changed')
@@ -160,12 +196,16 @@ def download_snapshot(client, pointer, destination, downloads):
 
 
 def upload_snapshot(client, site, work, tag, *, allow_legacy=False):
+    policy = privacy_policy()
+    run_privacy_gate(site)
     bundle = work / 'bundle'
     bundle.mkdir()
     snapshot.make_archive(site, bundle / 'site.zip', bundle / 'snapshot.json', allow_legacy=allow_legacy)
     # Tags always point at trusted default-branch code, never PR code.
     trusted_sha = client.request('/branches/main')['commit']['sha']
-    metadata = {'schema_version': 1, 'manifest_sha256': digest(bundle / 'snapshot.json'), 'allow_legacy': allow_legacy}
+    metadata = {'schema_version': 1, 'manifest_sha256': digest(bundle / 'snapshot.json'),
+                'allow_legacy': allow_legacy, 'privacy_policy_version': policy['policy_version'],
+                'privacy_gate_passed': True}
     release = client.request('/releases', 'POST', {'tag_name': tag, 'target_commitish': trusted_sha,
         'name': tag, 'body': json.dumps(metadata, sort_keys=True), 'draft': False, 'prerelease': True, 'make_latest': 'false'})
     for path in [bundle / 'site.zip', bundle / 'snapshot.json']:
@@ -180,7 +220,7 @@ def pointer_for_tag(client, tag):
     metadata = json.loads(release['body'])
     if metadata.get('verified') is not True:
         raise ReleaseError('Rollback target must be a verified snapshot')
-    return check_pointer({'tag': tag, 'release_id': release['id'], **metadata})
+    return require_safe_snapshot({**metadata, 'tag': tag, 'release_id': release['id']})
 
 
 def verified_release(client, pointer):
@@ -256,7 +296,44 @@ def legacy_checkout(commit, destination):
         target.write_bytes(publish_site.git(repo, 'cat-file', 'blob', blob, raw=True))
 
 
+def reconcile_previews(site, client, *, allow_legacy=False):
+    """Remove explicitly unauthorized previews from the candidate, never its baseline."""
+    info = snapshot.validate(site, allow_legacy=allow_legacy)
+    removed = []
+    for number in sorted(info['previews'], key=int):
+        pr = client.request('/pulls/' + number)
+        # Missing/deleted repository is explicit revocation; missing response fields
+        # or API errors are uncertainty and must not authorize deletion.
+        if not isinstance(pr, dict):
+            raise ReleaseError('Invalid PR response while reconciling previews')
+        base, head, labels = pr.get('base'), pr.get('head'), pr.get('labels')
+        if (pr.get('number') != int(number) or pr.get('state') not in {'open', 'closed'}
+                or not isinstance(base, dict) or not isinstance(base.get('ref'), str) or not base['ref']
+                or not isinstance(head, dict) or 'repo' not in head
+                or not isinstance(labels, list)
+                or any(not isinstance(label, dict) or not isinstance(label.get('name'), str) for label in labels)):
+            raise ReleaseError('Incomplete PR authority while reconciling previews')
+        repository = head['repo']
+        if repository is not None and (not isinstance(repository, dict)
+                or not isinstance(repository.get('full_name'), str) or not repository['full_name']):
+            raise ReleaseError('Incomplete PR repository while reconciling previews')
+        authorized = (pr['state'] == 'open' and base['ref'] == 'main'
+                      and repository is not None and repository['full_name'] == client.repo
+                      and any(label['name'] == 'preview' for label in labels))
+        if not authorized:
+            removed.append(int(number))
+    # Resolve every PR before changing even the candidate, so partial API failures
+    # leave both trees intact. Head SHA is deliberately not an authorization check.
+    for number in removed:
+        shutil.rmtree(site / 'previews' / f'pr-{number}')
+    if removed:
+        snapshot.validate(site, allow_legacy=allow_legacy)
+    return removed
+
+
 def prepare(args, client):
+    if args.kind == 'rollback' and re.fullmatch(r'[0-9a-fA-F]{40}', args.target or ''):
+        raise ReleaseError('Legacy SHA rollback is disabled by the privacy policy')
     work = args.work
     work.mkdir(parents=True, exist_ok=False)
     release, state = load_state(client)
@@ -283,9 +360,6 @@ def prepare(args, client):
     if args.kind == 'rollback':
         if args.target == 'active':
             site = work / 'previous'
-        elif re.fullmatch(r'[0-9a-fA-F]{40}', args.target or ''):
-            site = work / 'rollback-target'
-            legacy_checkout(args.target, site)
         else:
             pointer = pointer_for_tag(client, args.target or '')
             site = work / 'rollback-target'
@@ -298,11 +372,13 @@ def prepare(args, client):
     allow_legacy = bool(base.get('allow_legacy')) or args.kind == 'rollback'
     snapshot.compose(work / 'previous', work / 'site', kind=args.kind, snapshot_id=tag,
                      site=site, identity=identity, pr_number=pr_number, allow_legacy=allow_legacy)
+    removed_previews = reconcile_previews(work / 'site', client, allow_legacy=allow_legacy)
     candidate = upload_snapshot(client, work / 'site', work, tag, allow_legacy=allow_legacy)
     transaction = {'schema_version': 1, 'id': tag, 'kind': args.kind, 'base': base,
         'candidate': candidate, 'state_release_id': release['id'], 'run_id': run_id,
         'run_attempt': attempt, 'workflow_sha': os.environ['GITHUB_SHA'],
         'pr_number': pr_number, 'base_url': BASE_URL + f'previews/pr-{pr_number}/' if args.kind == 'preview' else BASE_URL,
+        'removed_previews': removed_previews,
         'verified': False, 'restored': False, 'recovering_pending': state.get('pending') if recovering else None}
     save_json(work / 'transaction.json', transaction)
     output(snapshot_id=tag, recovery_needed=False)
@@ -366,13 +442,11 @@ def wait_terminal(client, workflow_sha, *, cancel=False, timeout=120):
     raise ReleaseError('Could not confirm the Pages deployment terminated; pending state retained')
 
 
-def confirm_no_deployment_started(client, pending, run):
-    """Use the original attempt's explicit skipped steps, never a 404 alone."""
-    run_id = str(pending['run_id'])
-    attempt = str(pending.get('run_attempt', ''))
-    if (not re.fullmatch(r'[1-9][0-9]*', attempt)
-            or run.get('id') != int(run_id) or run.get('run_attempt') != int(attempt)):
-        raise ReleaseError('Cannot bind the interrupted transaction to the current run attempt')
+def completed_attempt_jobs(client, run_id, attempt):
+    metadata = client.request(f'/actions/runs/{run_id}/attempts/{attempt}')
+    if (metadata.get('id') != int(run_id) or metadata.get('run_attempt') != int(attempt)
+            or metadata.get('status') != 'completed'):
+        raise ReleaseError('Cannot bind a completed interrupted workflow attempt')
     jobs, seen, total = [], set(), None
     # Read every page before deciding: a later page can contain another transaction.
     for page in range(1, 11):
@@ -397,6 +471,10 @@ def confirm_no_deployment_started(client, pending, run):
             raise ReleaseError('Incomplete or inconsistent interrupted-attempt jobs')
     else:
         raise ReleaseError('Too many interrupted-attempt jobs to verify safely')
+    return jobs
+
+
+def confirm_attempt_never_deployed(jobs, *, original):
     transactions = [job for job in jobs if job.get('name') in {'publish / transaction', 'rollback / transaction'}]
     if len(transactions) != 1 or not isinstance(transactions[0].get('steps'), list):
         raise ReleaseError('Cannot identify one interrupted Pages transaction job')
@@ -408,15 +486,41 @@ def confirm_no_deployment_started(client, pending, run):
             raise ReleaseError('Missing or ambiguous Pages transaction step evidence')
         selected.append(matches[0])
     begin, deploy, restore = selected
+    begin_allowed = {'success', 'failure', 'cancelled', 'timed_out'}
+    if not original:
+        begin_allowed.add('skipped')
+    # A rerun can fail in prepare because pending still exists, before begin runs.
+    # Require that explicit failure rather than assuming skipped means no execution.
+    if begin.get('conclusion') == 'skipped' and not original:
+        preparations = [step for step in steps if isinstance(step, dict)
+                        and step.get('name') == 'Prepare a complete immutable site snapshot']
+        if (len(preparations) != 1 or preparations[0].get('status') != 'completed'
+                or preparations[0].get('conclusion') != 'failure'
+                or type(preparations[0].get('number')) is not int
+                or not 0 < preparations[0]['number'] < begin['number']):
+            raise ReleaseError('Cannot prove the later attempt stopped before beginning deployment')
     if (not 0 < begin['number'] < deploy['number'] < restore['number']
             or begin.get('status') != 'completed'
-            or begin.get('conclusion') not in {'success', 'failure', 'cancelled', 'timed_out'}
+            or begin.get('conclusion') not in begin_allowed
             or any(step.get('status') != 'completed' or step.get('conclusion') != 'skipped'
                    for step in (deploy, restore))):
         raise ReleaseError('A Pages deployment may have started; pending state retained')
-    # Do not borrow skipped steps from a rerun, including a rerun begun during pagination.
+
+
+def confirm_no_deployment_started(client, pending, run):
+    """Audit the original and every later attempt; a 404 alone proves nothing."""
+    run_id = str(pending['run_id'])
+    first = str(pending.get('run_attempt', ''))
+    latest = run.get('run_attempt')
+    if (not re.fullmatch(r'[1-9][0-9]*', first) or run.get('id') != int(run_id)
+            or type(latest) is not int or latest < int(first) or latest - int(first) >= 100):
+        raise ReleaseError('Cannot bind the interrupted transaction to the current run attempts')
+    for attempt in range(int(first), latest + 1):
+        jobs = completed_attempt_jobs(client, run_id, attempt)
+        confirm_attempt_never_deployed(jobs, original=attempt == int(first))
+    # A new attempt during the audit invalidates the evidence collected so far.
     current = client.request('/actions/runs/' + run_id)
-    if (current.get('id') != int(run_id) or current.get('run_attempt') != int(attempt)
+    if (current.get('id') != int(run_id) or current.get('run_attempt') != latest
             or current.get('status') != 'completed'):
         raise ReleaseError('The interrupted workflow changed while checking deployment evidence')
 
@@ -510,7 +614,8 @@ def summary(work):
     lines = ['## Pages publication', '', f"Snapshot: `{tx.get('id', 'preparation failed')}`",
              f"Previous: `{tx.get('base', {}).get('tag', '')}`", f"Operation: {tx.get('kind', '')}",
              f"Verified: {tx.get('verified', False)}; restored: {tx.get('restored', False)}; committed: {tx.get('committed', False)}",
-             '', 'Site: ' + tx.get('base_url', BASE_URL), '', 'Rollback: run Blog rollback with a verified pages-snapshot-* tag or an old master commit. Use active to recover an interrupted transaction.']
+             'Unauthorized previews removed from candidate: ' + (', '.join(f'pr-{number}' for number in tx.get('removed_previews', [])) or 'none'),
+             '', 'Site: ' + tx.get('base_url', BASE_URL), '', 'Rollback: use a verified pages-snapshot-* tag allowed by the privacy policy. Legacy master SHAs are blocked. Use active to recover an interrupted transaction.']
     result = '\n'.join(lines) + '\n'
     print(result)
     if os.environ.get('GITHUB_STEP_SUMMARY'):

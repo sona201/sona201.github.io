@@ -22,17 +22,19 @@ def github_get(repo, suffix):
         return json.load(response)
 
 
-def resolve(event_name, event, repo, get):
+def resolve(event_name, event, repo, get, *, workflow_ref=None):
     skip = {"action": "skip"}
-    if event_name == "pull_request_target":
-        number = int(event["pull_request"]["number"])
-        pr = get(f"pulls/{number}")
-        if pr.get("base", {}).get("ref") != "main" or pr.get("head", {}).get("repo", {}).get("full_name") != repo:
+    if event_name == "workflow_dispatch":
+        number = event.get("inputs", {}).get("cleanup_pr", "")
+        if (workflow_ref != "refs/heads/main" or event.get("ref") not in {"main", "refs/heads/main"}
+                or not isinstance(number, str) or not re.fullmatch(r"[1-9][0-9]*", number)):
             return skip
-        closed = event.get("action") == "closed" and pr["state"] == "closed"
-        revoked = (event.get("action") == "unlabeled" and event.get("label", {}).get("name") == "preview"
-                   and "preview" not in [label["name"] for label in pr.get("labels", [])])
-        return {"action": "cleanup", "pr_number": str(number)} if closed or revoked else skip
+        return preview_cleanup(int(number), repo, get)
+    if event_name == "pull_request_target":
+        if event.get("action") not in {"closed", "unlabeled", "edited"}:
+            return skip
+        number = int(event["pull_request"]["number"])
+        return preview_cleanup(number, repo, get)
     if event_name != "workflow_run":
         return skip
     run = get(f"actions/runs/{int(event['workflow_run']['id'])}")
@@ -61,6 +63,20 @@ def resolve(event_name, event, repo, get):
         return skip
     return {**result, "action": "preview", "pr_number": str(number),
             "base_url": f"{SITE_URL}previews/pr-{number}/"}
+
+
+def preview_cleanup(number, repo, get):
+    """Recheck current authority, including previews whose PR left main."""
+    pr = get(f"pulls/{int(number)}")
+    if pr.get("head", {}).get("repo", {}).get("full_name") != repo:
+        return {"action": "skip"}
+    state, base, labels = pr.get("state"), pr.get("base", {}).get("ref"), pr.get("labels")
+    if (state not in {"open", "closed"} or not isinstance(base, str) or not base
+            or not isinstance(labels, list)
+            or any(not isinstance(label, dict) or not isinstance(label.get("name"), str) for label in labels)):
+        raise ValueError("Incomplete PR state cannot authorize preview cleanup")
+    authorized = state == "open" and base == "main" and "preview" in [label["name"] for label in labels]
+    return {"action": "skip"} if authorized else {"action": "cleanup", "pr_number": str(int(number))}
 
 
 def unpack(download, destination):
@@ -113,7 +129,8 @@ def main():
         return
     repo = os.environ["GITHUB_REPOSITORY"]
     event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
-    context = resolve(os.environ["GITHUB_EVENT_NAME"], event, repo, lambda path: github_get(repo, path))
+    context = resolve(os.environ["GITHUB_EVENT_NAME"], event, repo, lambda path: github_get(repo, path),
+                      workflow_ref=os.environ.get("GITHUB_REF"))
     if args.command == "recheck":
         if context != json.loads(args.context.read_text()) or context["action"] == "skip":
             raise SystemExit("Publication is stale, revoked or no longer authorized")

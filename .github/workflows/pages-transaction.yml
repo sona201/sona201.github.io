@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       target:
-        description: 'Verified snapshot tag or legacy master commit for rollback'
+        description: 'Privacy-approved snapshot tag or active for recovery'
         required: false
         default: ''
         type: string
@@ -164,3 +164,15 @@ jobs:
           (steps.begin.outcome == 'success' || steps.begin.outcome == 'failure') &&
           steps.commit.outcome != 'success'
         run: exit 1
+      - name: Plan and apply snapshot retention after verified publication
+        if: always() && steps.commit.outcome == 'success'
+        id: retention
+        continue-on-error: true
+        run: |
+          python3 source/scripts/pages_retention.py plan --output "$RUNNER_TEMP/pages-retention-plan.json"
+          python3 source/scripts/pages_retention.py apply --plan "$RUNNER_TEMP/pages-retention-plan.json"
+      - name: Report snapshot maintenance failure without undoing publication
+        if: always() && steps.retention.outcome == 'failure'
+        run: |
+          echo '::warning::The site is verified, but snapshot retention failed. Review this run before retrying maintenance.'
+          echo 'Snapshot retention needs attention; the verified site remains published.' >> "$GITHUB_STEP_SUMMARY"

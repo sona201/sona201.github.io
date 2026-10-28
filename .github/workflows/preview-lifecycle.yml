@@ -1,0 +1,46 @@
+name: Blog preview lifecycle
+
+on:
+  pull_request_target:
+    types: [edited, closed, unlabeled]
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  dispatch-cleanup:
+    if: >-
+      github.repository == 'sona201/sona201.github.io' &&
+      vars.PAGES_DEPLOY_ENABLED == 'true' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      # Never check out or execute PR code. The privileged transaction runs on main.
+      - name: Request a current authorization check on main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          number = int(os.environ['PR_NUMBER'])
+          if number < 1:
+              raise SystemExit('Invalid PR number')
+          url = ('https://api.github.com/repos/' + os.environ['REPOSITORY']
+                 + '/actions/workflows/publish.yml/dispatches')
+          request = urllib.request.Request(url, method='POST',
+              data=json.dumps({'ref': 'main', 'inputs': {'cleanup_pr': str(number)}}).encode(),
+              headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
+                       'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json',
+                       'X-GitHub-Api-Version': '2022-11-28'})
+          with urllib.request.urlopen(request, timeout=30) as response:
+              if response.status != 204:
+                  raise SystemExit('Unexpected workflow dispatch response')
+          print(f'Queued preview authorization check for PR {number} on main.')
+          PY

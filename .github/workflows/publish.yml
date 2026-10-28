@@ -4,9 +4,12 @@ on:
   workflow_run:
     workflows: [Blog checks]
     types: [completed]
-  pull_request_target:
-    branches: [main]
-    types: [closed, unlabeled]
+  workflow_dispatch:
+    inputs:
+      cleanup_pr:
+        description: 'PR number whose preview authorization should be checked'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -20,7 +23,8 @@ jobs:
     if: >-
       github.repository == 'sona201/sona201.github.io' &&
       vars.PAGES_DEPLOY_ENABLED == 'true' &&
-      (github.event_name == 'pull_request_target' || github.event.workflow_run.conclusion == 'success')
+      ((github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+       github.event.workflow_run.conclusion == 'success')
     uses: ./.github/workflows/pages-transaction.yml
     with:
       mode: publish

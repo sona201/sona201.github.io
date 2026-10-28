@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "policy_version": "2026-10-29-v1",
+  "reviewed_baselines": [
+    {
+      "tag": "pages-snapshot-40663809678-1",
+      "manifest_sha256": "aa8385ef8a31e08bb200cf1aac83fe8eca3ae15dfea2157d40c77bf481394437"
+    }
+  ]
+}

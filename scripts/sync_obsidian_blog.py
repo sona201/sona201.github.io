@@ -302,12 +302,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--vault", type=Path, help="Override OBSIDIAN_VAULT and the local vault configuration")
     parser.add_argument("--manifest", type=Path)
     parser.add_argument("--report", type=Path)
+    parser.add_argument("--require-clean", action="store_true",
+                        help="With --check, return exit code 2 if articles or images need syncing")
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument("--check", action="store_true", help="Plan the reviewed export without writing (default)")
     modes.add_argument("--apply", action="store_true", help="Overwrite reviewed public articles after the complete plan passes")
     modes.add_argument("--audit-public", action="store_true", help="Check blog publication flags and local image paths; no vault needed")
     modes.add_argument("--set-vault", type=Path, help="Save a vault path in the gitignored local configuration")
     args = parser.parse_args(argv)
+    if args.require_clean and (args.apply or args.audit_public or args.set_vault):
+        parser.error("--require-clean is only supported with --check (the default mode)")
     try:
         if args.set_vault:
             report = configure_vault(args.blog, args.set_vault)
@@ -324,7 +328,8 @@ def main(argv: list[str] | None = None) -> int:
                     if not target.exists() or target.read_bytes() != data:
                         atomic_write(target, data)
                 report["mode"] = "apply"
-            code = 0
+            code = 2 if args.require_clean and (report["summary"]["article_changes"]
+                                                or report["summary"]["new_images"]) else 0
     except (ValueError, OSError, json.JSONDecodeError) as exc:
         report = {"version": 1, "mode": "error", "error": str(exc)}
         code = 1
