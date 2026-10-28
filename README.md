@@ -66,6 +66,8 @@ Hugo 版本固定在 `.hugo-version`，本地也使用相同版本。Actions 固
 
 正式发布只在 `sona201/sona201.github.io` 仓库、仓库变量 `PAGES_DEPLOY_ENABLED` 为字符串 `true` 时运行。变量缺失或为其他值时仍可执行构建检查，但不会部署。
 
+首次切换前，保持发布开关关闭，运行一次 **Blog Pages bootstrap**，将已经核验的当前 `master` 完整提交 SHA 填入 `legacy_commit`。它会检查 `master` 未变、导出静态文件、验证线上基线并保存首份 Release 快照及状态指针，不部署网站。状态指针已存在时拒绝再次初始化。
+
 仓库 Settings → Pages → Source 应设为 **GitHub Actions**，默认分支为 `main`；`github-pages` environment 仅允许 `main` 部署。更换发布方式前先备份配置和已验证站点，停止旧发布与回滚工作流并等在途任务结束，再启用新入口。切换失败时，先停止新部署，再恢复原 Pages 分支发布配置并核验旧站，避免两套发布器同时工作。
 
 ## PR 预览

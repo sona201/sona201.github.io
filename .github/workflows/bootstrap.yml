@@ -1,0 +1,79 @@
+name: Blog Pages bootstrap
+
+on:
+  workflow_dispatch:
+    inputs:
+      legacy_commit:
+        description: 'Full 40-character current master commit verified on the existing website'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  bootstrap:
+    if: >-
+      github.repository == 'sona201/sona201.github.io' &&
+      github.ref == 'refs/heads/main' &&
+      vars.PAGES_DEPLOY_ENABLED != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: blog-pages-publish
+      queue: max
+      cancel-in-progress: false
+    env:
+      GH_TOKEN: ${{ github.token }}
+      LEGACY_COMMIT: ${{ inputs.legacy_commit }}
+    steps:
+      - name: Checkout trusted migration tools
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+      - name: Checkout the existing published static site
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: master
+          path: legacy
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Require the exact legacy commit and export regular site contents
+        run: |
+          python3 - <<'PY'
+          import io
+          import os
+          from pathlib import Path
+          import re
+          import subprocess
+          import tarfile
+
+          commit = os.environ['LEGACY_COMMIT']
+          if not re.fullmatch(r'[0-9a-fA-F]{40}', commit):
+              raise SystemExit('legacy_commit must be a full 40-character commit SHA')
+          current = subprocess.check_output(['git', '-C', 'legacy', 'rev-parse', 'HEAD'], text=True).strip()
+          if current != commit.lower():
+              raise SystemExit('master changed; verify the new published commit before bootstrapping')
+          destination = Path(os.environ['RUNNER_TEMP']) / 'bootstrap-input'
+          destination.mkdir()
+          archive = subprocess.check_output(['git', '-C', 'legacy', 'archive', '--format=tar', 'HEAD'])
+          with tarfile.open(fileobj=io.BytesIO(archive), mode='r:') as bundle:
+              bundle.extractall(destination, filter='data')
+          PY
+      - name: Validate the live baseline and save the initial release snapshot
+        run: |
+          python3 source/scripts/pages_release.py bootstrap --work "$RUNNER_TEMP/pages-bootstrap" \
+            --site "$RUNNER_TEMP/bootstrap-input" --legacy-commit "$LEGACY_COMMIT"
+      - name: Record the baseline snapshot
+        run: |
+          {
+            echo '## Pages baseline saved'
+            echo "Legacy master commit: $LEGACY_COMMIT"
+            echo "Snapshot: pages-snapshot-bootstrap-${LEGACY_COMMIT,,}"
+            echo 'The live website and Pages publishing settings were not changed by this workflow.'
+          } >> "$GITHUB_STEP_SUMMARY"

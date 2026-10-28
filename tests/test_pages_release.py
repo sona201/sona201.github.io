@@ -181,10 +181,38 @@ class ReleaseTransactionTests(unittest.TestCase):
     def test_quiesce_allows_restore_after_terminal_confirmation(self):
         self.state["pending"] = self.pending()
         read, write = self.state_mocks()
-        with read, write, patch.object(releases, "wait_terminal") as wait, \
+        with read, write, patch.object(releases, "wait_terminal", return_value="deployment_cancelled") as wait, \
                 patch.object(releases, "output") as output:
             releases.quiesce(self.work, self.client, deployment_outcome="failure")
         wait.assert_called_once_with(self.client, self.transaction["workflow_sha"], cancel=True)
+        output.assert_called_once_with(recovery_needed=True)
+
+    def test_failed_action_cannot_use_older_same_sha_success_to_authorize_restore(self):
+        self.state["pending"] = self.pending()
+        candidate_marker = json.dumps({"schema_version": 1, "snapshot_id": self.transaction["id"]}).encode()
+        (self.work / "site").mkdir()
+        (self.work / "site" / releases.snapshot.GENERATION_FILE).write_bytes(candidate_marker)
+        older_marker = json.dumps({"schema_version": 1, "snapshot_id": "pages-snapshot-older"}).encode()
+        read, write = self.state_mocks()
+        with read, write as save, patch.object(releases, "wait_terminal", return_value="succeed"), \
+                patch.object(releases, "fetch_public", return_value=older_marker), \
+                patch.object(releases, "output") as output, self.assertRaises(ValueError):
+            releases.quiesce(self.work, self.client, deployment_outcome="failure")
+        save.assert_not_called()
+        output.assert_not_called()
+
+    def test_failed_action_can_restore_after_candidate_generation_is_confirmed(self):
+        self.state["pending"] = self.pending()
+        marker = json.dumps({"schema_version": 1, "snapshot_id": self.transaction["id"]}).encode()
+        (self.work / "site").mkdir()
+        (self.work / "site" / releases.snapshot.GENERATION_FILE).write_bytes(marker)
+        read, write = self.state_mocks()
+        with read, write, patch.object(releases, "wait_terminal", return_value="succeed"), \
+                patch.object(releases, "fetch_public", return_value=marker) as fetch, \
+                patch.object(releases, "output") as output:
+            releases.quiesce(self.work, self.client, deployment_outcome="failure")
+        self.assertIn(releases.snapshot.GENERATION_FILE, fetch.call_args.args[0])
+        self.assertIn(self.transaction["id"], fetch.call_args.args[0])
         output.assert_called_once_with(recovery_needed=True)
 
     def test_prepare_cleanup_accepts_minimal_authorization_context(self):
