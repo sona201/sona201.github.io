@@ -146,6 +146,10 @@
       "target": "content/post/Linux/shell-dash-standard-input.md"
     },
     {
+      "source": "博客/Linux/ssh-remote-command-environment.md",
+      "target": "content/post/Linux/ssh-remote-command-environment.md"
+    },
+    {
       "source": "博客/Linux/strace-notes.md",
       "target": "content/post/Linux/strace-notes.md"
     },
