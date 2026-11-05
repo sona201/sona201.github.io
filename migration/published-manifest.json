@@ -608,6 +608,10 @@
     {
       "source": "博客/tcp/home-network-monitoring-vlan-vpn-notes.md",
       "target": "content/post/tcp/home-network-monitoring-vlan-vpn-notes.md"
+    },
+    {
+      "source": "博客/english/english-learning-log.md",
+      "target": "content/post/english/english-learning-log.md"
     }
   ]
 }
