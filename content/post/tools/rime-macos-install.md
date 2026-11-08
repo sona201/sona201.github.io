@@ -1,8 +1,8 @@
 ---
 title: "重新配置鼠须管：小鹤双拼、万象模型和候选框"
-description: "从小鹤双拼和完整拼音提示开始，记录万象模型更新、英文缩写输入、ms_sogou 候选框调整，以及 Fcitx5 下拉候选方案的调研。"
+description: "记录小鹤双拼、万象模型、英文输入和候选框调整，以及 Mac 通讯录与飞书联系人姓名导入词库的过程。"
 date: "2024-01-14T17:50:26+08:00"
-lastmod: "2026-10-26"
+lastmod: "2026-11-08"
 categories: ["tools"]
 tags: ["RIME", "鼠须管", "小鹤双拼", "输入法", "macOS"]
 slug: "rime-macos-install"
@@ -13,7 +13,7 @@ draft: false
 
 配置好以后，又碰到了几个具体问题。比如输入英文缩写 `sdp`，候选框里却出现了 `sai p` 和“赛跑”；换上搜狗配色之后，也没有得到搜狗那种向下展开的候选框。这些问题涉及的配置其实不在同一个地方，正好一起记下来。
 
-下面对应的是 **2026 年 10 月 26 日**的使用状态：鼠须管 Squirrel 1.1.2，内置 librime 1.16.0，使用雾凇词库、小鹤双拼和万象模型。文章沿用以前安装笔记的地址，后续有调整再接着更新。
+基础配置对应 **2026 年 10 月 26 日**的使用状态：鼠须管 Squirrel 1.1.2，内置 librime 1.16.0，使用雾凇词库、小鹤双拼和万象模型。**11 月 8 日**又补充了 Mac 通讯录和飞书联系人姓名的导入记录。文章沿用以前安装笔记的地址，后续有调整再接着更新。
 
 ## 先把小鹤双拼配好
 
@@ -104,11 +104,90 @@ patch:
 
 中英混输本身已经启用了，方案里挂载了 `melt_eng` 英文翻译器和 `cn_en` 中英混合词汇。例如输入 `hello`，首选就是 `hello`，按空格后仍留在中文状态，不用来回切换。陌生缩写和已有英文单词的区别，主要在于词库能不能找到对应候选，以及它和拼音是否重码。雾凇作者也专门写过[英文输入体验的说明](https://dvel.me/posts/make-rime-en-better/)。
 
-如果一个缩写经常用，可以把它加进英文词库，或者写进小鹤的 `custom_phrase_double.txt`。全拼使用的是另一个文件 `custom_phrase.txt`，不要改错。这次还没有添加 `sdp` 词条，也没有调整中英文权重。
+如果一个缩写经常用，可以把它加进英文词库，或者写进小鹤的 `custom_phrase_double.txt`。全拼使用的是另一个文件 `custom_phrase.txt`，不要改错。10 月那次没有添加 `sdp` 词条，也没有调整中英文权重。
 
 另外几个日常操作也顺手记在这里：数字 `1`–`5` 选本页候选，`-` 和 `=` 翻页，Esc 取消输入。Tab 和 Shift + Tab 用来移动到下一个、上一个音节，不是补全；Option + 左右方向键也可以按音节移动。Control + Shift + 3 切换中英文标点，Control + Shift + 4 切换简繁体。
 
 雾凇还带了一些小功能，在中文状态输入 `date`、`time`、`week`、`lunar` 可以得到日期、时间、星期和农历；`cC1+2` 可以计算，`Vhelp` 可以查看符号输入帮助。这些触发词对应本文的小鹤方案。
+
+## 把 Mac 通讯录和飞书联系人加入词库
+
+**2026 年 11 月 8 日**，又给这套配置补了联系人姓名。先读 Mac 通讯录，再取飞书里和我有过单聊的工作联系人，把姓名整理成 Rime 词库。这样平时输入拼音时，就可以直接选择联系人姓名。
+
+Mac 这一批通过系统通讯录读取，只提取姓名。157 条联系人记录去重后，得到 156 个不同的显示名；加上多音字读音和英文别名，最终写入 159 条中文词条、6 条英文词条。
+
+飞书选择的是单聊联系人，用已经登录的 `lark-cli` 分页读取：
+
+```sh
+lark-cli im +chat-list --as user --types p2p \
+  --page-size 100 --page-all --page-limit 100 --format json
+```
+
+这一步取的是会话列表和对方显示名，不需要读取聊天正文。本次共读完 4 页、324 个单聊会话，再按 `p2p_target_type=user` 筛选，留下 256 位用户，排除 68 个机器人。取完后还核对了分页结果，确认没有剩余页面。这个范围对应我当前可见的单聊联系人，不代表整个公司的通讯录。
+
+飞书的显示名常把中文姓名和英文昵称写在一起，所以整理时把两者拆开，各自作为候选。去重后得到 253 个中文姓名、193 个英文名，其中 1 个中文姓名已经在 Mac 联系人词库里，最终新增的是 **252 个中文姓名、193 个英文名**。部分中文姓名保留了两种读音，因此新中文词库有 256 条词条。
+
+两批姓名分别保存成四个文件，都放在 `~/Library/Rime/`：
+
+| 来源 | 中文词库 | 英文词库 |
+| --- | --- | --- |
+| Mac 通讯录 | `contacts.dict.yaml` | `contacts_en.dict.yaml` |
+| 飞书单聊联系人 | `feishu_contacts.dict.yaml` | `feishu_contacts_en.dict.yaml` |
+
+中文词条写无声调的完整拼音，音节之间用空格分开，不需要另写一套小鹤双拼编码。前面的小鹤和备用全拼共用 `rime_ice` 词典，部署时会按方案处理编码。[Rime 的词典说明](https://github.com/rime/home/wiki/RimeWithSchemata#碼表與詞典)也说明了这种共用方式和词条格式。
+
+下面用虚构姓名演示 `feishu_contacts.dict.yaml` 的格式：
+
+```text
+# Rime dictionary
+# encoding: utf-8
+
+---
+name: feishu_contacts
+version: "2026-11-08"
+sort: by_weight
+...
+张三	zhang san	100
+```
+
+词条的三列分别是文字、编码和权重，列与列之间必须用真正的 **Tab** 分隔。网页复制或编辑器设置可能把 Tab 换成空格，写入前要检查。英文词库的表头同理，`name` 改为对应的文件名，例如 `feishu_contacts_en`；本次英文编码统一取小写字母，候选文字保留原来的大小写，虚构条目可以写成：
+
+```text
+ExampleName	examplename	100
+```
+
+中文读音先由 macOS 的转写功能生成，再补上姓氏和常见多音字的读音规则。这里不能把自动转写当成人名读音的最终确认；有歧义的姓名先保留备选读音，日后再按本人读法修正。另一个细节是 `ü`，去掉声调时仍要保留它和 `u` 的区别，再转成词库使用的 `v`，例如“吕”是 `lv`。
+
+词库文件放好以后，还要挂到入口词库里。本次在 `rime_ice.dict.yaml` 的 `import_tables` 中加入两份中文词库，保留原有条目：
+
+```yaml
+import_tables:
+  - cn_dicts/8105
+  - contacts
+  - feishu_contacts
+  - cn_dicts/base
+  - cn_dicts/ext
+  - cn_dicts/tencent
+  - cn_dicts/others
+```
+
+英文则挂到 `melt_eng.dict.yaml`：
+
+```yaml
+import_tables:
+  - contacts_en
+  - feishu_contacts_en
+  - en_dicts/en_ext
+  - en_dicts/en
+```
+
+这里记录的是这台电脑当时的列表；合并时还要保留自己额外启用的词库。挂载方法可以对照雾凇的[中文入口词库](https://github.com/iDvel/rime-ice/blob/main/rime_ice.dict.yaml)和[英文入口词库](https://github.com/iDvel/rime-ice/blob/main/melt_eng.dict.yaml)。这次直接改了这两个入口文件，它们属于上游配置，之后更新雾凇要检查这四个挂载项是否仍在，不能只保存 `.custom.yaml`。
+
+修改前先备份入口文件，再写入联系人词库，最后执行前面的 `--reload` 重新部署。两批操作的备份另外放在 `~/Library/Rime/backups/`，对应 `contacts-20261108-230202` 和 `feishu-contacts-20261108-231928`。
+
+部署后，用本机 librime 在独立的用户目录里逐条检查候选，避免测试写入日常使用的用户词频。四份词库合计 614 条词条，在小鹤和全拼下各测一遍，共 1,228 项，最终都能找到对应候选。不过“能找到”不等于首选：三个很短的英文昵称，在全拼下输入小写时排到了 300 名之后，首字母改成大写后才进入前两个候选。这次验证的是词条已经可用，实际排序还要看输入和使用习惯。
+
+目前这是一次性导入的姓名快照。以后新增联系人或有人改名，需要重新提取、去重并生成对应词库，再重新部署；还没有设置定时同步。实际姓名词库留在本机，博客里只记录方法和统计结果。
 
 ## 给整句选词加一个模型
 
@@ -238,7 +317,7 @@ cp "$HOME/Library/Rime/"*.custom.yaml "$rime_backup/"
 
 这个命令只保存个人补丁。如果要改模型，还要备份 `.gram`；自定义短语、用户词库和同步数据也需要另外保存，不能以为备份几个 YAML 就包含了全部输入数据。
 
-这几次操作的备份都在 `~/Library/Rime-backups/`：
+前面几次模型和主题操作的备份在 `~/Library/Rime-backups/`：
 
 - `before-wanxiang-20261024-202313`：首次加万象之前的小鹤配置。
 - `before-theme-20261024-203612`：加好万象、还没调整主题时的配置。
@@ -253,7 +332,7 @@ cp "$HOME/Library/Rime-backups/before-ms-sogou-20261024-205613/squirrel.custom.y
 "/Library/Input Methods/Squirrel.app/Contents/MacOS/Squirrel" --reload
 ```
 
-这样不会改到词库和模型。只退回模型时，也只取出旧 `.gram`，先复制到 Rime 目录内的临时文件，再替换正式文件并重新部署，避免直接覆盖正在被进程映射的内容。最新备份中的 `manifest.json` 保存升级前状态，`update-result.json` 保存这次更新的校验值和验证结果。
+这样不会改到词库和模型。只退回模型时，也只取出旧 `.gram`，先复制到 Rime 目录内的临时文件，再替换正式文件并重新部署，避免直接覆盖正在被进程映射的内容。模型更新备份中的 `manifest.json` 保存升级前状态，`update-result.json` 保存这次更新的校验值和验证结果。
 
 如果只是想比较有无万象的效果，现在的 `double_pinyin_flypy.custom.yaml` 只包含模型补丁，可以临时改名为 `double_pinyin_flypy.custom.yaml.disabled` 后重新部署。恢复原文件名再部署，就重新启用了。改名前确认目标名称没有被占用；以后如果这个文件还加入了别的设置，就只移除 `grammar` 和本次添加的两个 `translator` 参数，不能再把整个文件停用。
 
@@ -264,7 +343,7 @@ cd "$HOME/plum"
 bash rime-install iDvel/rime-ice
 ```
 
-这个配方会更新词库、方案、Lua 和基础配置，不只是词库文件。更新后再部署，试一下小鹤、完整拼音提示和模型是否正常。个人设置留在 `.custom.yaml` 里，就是为了减少这类更新相互覆盖的情况。
+这个配方会更新词库、方案、Lua 和基础配置，不只是词库文件。更新后先检查联系人词库的挂载项，再部署，试一下小鹤、完整拼音提示和模型是否正常。个人设置留在 `.custom.yaml` 里，就是为了减少这类更新相互覆盖的情况。
 
 ## 留一份完整的候选框配置
 
