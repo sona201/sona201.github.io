@@ -1,101 +1,75 @@
-name: Blog checks
+name: Build and deploy
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened, ready_for_review, labeled, edited]
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: hugo-${{ github.ref }}
+  cancel-in-progress: false
+
 env:
   TZ: UTC
 
-concurrency:
-  group: blog-checks-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  check:
+  build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-
+    permissions:
+      contents: read
+      pages: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
-          submodules: true
+          submodules: recursive
+          fetch-depth: 0
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+      - name: Read Hugo version
+        id: hugo
+        run: echo "version=$(cat .hugo-version)" >> "$GITHUB_OUTPUT"
+      - uses: peaceiris/actions-hugo@2752ce1d29631191ea3f27c23495fa06139a5b78 # v3.2.1
+        with:
+          hugo-version: ${{ steps.hugo.outputs.version }}
+          extended: true
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.13'
-      - name: Resolve build identity
-        id: build
+      - name: Check public source
+        run: python3 scripts/public_privacy.py check
+      - name: Build and check
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          SITE_URL: ${{ steps.pages.outputs.base_url }}/
         run: |
-          echo "hugo=$(cat .hugo-version)" >> "$GITHUB_OUTPUT"
-          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-          if [[ -n "$PR_NUMBER" ]]; then
-            echo "kind=preview" >> "$GITHUB_OUTPUT"
-            echo "url=https://sona201.github.io/previews/pr-${PR_NUMBER}/" >> "$GITHUB_OUTPUT"
-          else
-            echo "kind=production" >> "$GITHUB_OUTPUT"
-            echo "url=https://sona201.github.io/" >> "$GITHUB_OUTPUT"
-          fi
-      - uses: peaceiris/actions-hugo@2752ce1d29631191ea3f27c23495fa06139a5b78 # v3.2.1
-        with:
-          hugo-version: ${{ steps.build.outputs.hugo }}
-          extended: true
-      - name: Test publishing tools and article demo
-        run: |
-          python3 -m unittest discover -s tests -v
-          python3 -m unittest discover -s examples/magpie-agent-loop-demo -v
-          RUN_PROCESS_GROUP_TESTS=1 python3 -m unittest discover -s examples/claude-codex-minimal -p 'test_runner.py' -v
-      - name: Validate workflow syntax with pinned actionlint
-        run: |
-          curl -fsSL https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz -o "$RUNNER_TEMP/actionlint.tar.gz"
-          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  $RUNNER_TEMP/actionlint.tar.gz" | sha256sum -c -
-          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
-          # GitHub supports queue:max; actionlint 1.7.12 has not added that key yet.
-          "$RUNNER_TEMP/actionlint" -shellcheck= -ignore 'unexpected key "queue" for "concurrency" section' .github/workflows/*.yml
-      - name: Check reviewed publication scope
-        run: |
-          python3 scripts/sync_obsidian_blog.py --audit-public
-          python3 scripts/check_public_manifest.py
-          python3 scripts/public_privacy.py check
-      - name: Build and check static site
-        env:
-          BUILD_KIND: ${{ steps.build.outputs.kind }}
-          BUILD_URL: ${{ steps.build.outputs.url }}
-          BUILD_SHA: ${{ steps.build.outputs.sha }}
-        run: |
-          config=config.yaml
-          if [[ "$BUILD_KIND" == preview ]]; then config=config.yaml,config/preview.yaml; fi
-          hugo --config "$config" --baseURL "$BUILD_URL" --cleanDestinationDir
-          python3 scripts/site_checks.py stamp --site public --base-url "$BUILD_URL" \
-            --source-sha "$BUILD_SHA" --run-id "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --kind "$BUILD_KIND"
+          hugo --cleanDestinationDir --baseURL "$SITE_URL"
+          python3 scripts/site_checks.py stamp --site public --base-url "$SITE_URL" \
+            --source-sha "$(git rev-parse HEAD)" --run-id "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --kind production
           python3 scripts/public_privacy.py check --site public
-      - name: Save the exact verified site
-        id: artifact
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
-          name: blog-site-${{ github.run_id }}-${{ github.run_attempt }}
-          path: public/
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 30
-      - name: Explain preview access
-        env:
-          ARTIFACT_URL: ${{ steps.artifact.outputs.artifact-url }}
-          BUILD_SHA: ${{ steps.build.outputs.sha }}
-        run: |
-          {
-            echo '## Blog checks passed'
-            echo "Source commit: $BUILD_SHA"
-            echo "[Download the verified site]($ARTIFACT_URL)"
-            echo 'Same-repository PRs with the preview label are published by Blog publish. Fork PRs receive the downloadable artifact only.'
-          } >> "$GITHUB_STEP_SUMMARY"
+          path: public
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5

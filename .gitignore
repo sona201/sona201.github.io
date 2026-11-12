@@ -5,3 +5,7 @@ assets/jsconfig.json
 .DS_Store
 __pycache__/
 .obsidian-vault.json
+
+# Obsidian 的通用写作设置入库，窗口、缓存与插件配置不入库
+.obsidian/*
+!.obsidian/app.json
